@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111a31">
+<title>Code Sword — C Language Quest</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<style>
+:root{--ink:#17243b;--muted:#77849a;--line:#e8edf4;--paper:#fff;--wash:#f5f7fb;--blue:#4e6cf5;--blue-dark:#354fe0;--mint:#dff8ef;--green:#168761;--amber:#f2a93b;--rose:#faedf0;--shadow:0 12px 38px rgba(35,54,91,.07);--radius:20px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--wash);color:var(--ink);font:15px/1.65 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+button,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;background:#111a31;border-right:1px solid #27314a;padding:26px 17px;display:flex;flex-direction:column;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;padding:1px 8px 30px}
+.brand-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,#f3f8ff 0%,#c8dcff 52%,#a9c7ff 100%);color:#fff;display:grid;place-items:center;box-shadow:0 8px 23px rgba(83,123,204,.28),inset 0 1px rgba(255,255,255,.92)}
+.brand-mark svg{width:36px;height:36px;display:block}
+.brand-name{font-size:16px;font-weight:850;letter-spacing:.15px;color:#f4f7ff}
+.brand-sub{font-size:10px;color:#9ba9c4;margin-top:2px;letter-spacing:.8px}
+.nav-label{font-size:10px;font-weight:800;color:#7887a5;letter-spacing:1.4px;padding:8px 12px 10px;text-transform:uppercase}
+.nav{display:grid;gap:6px}
+.nav-btn{display:flex;align-items:center;gap:12px;border:0;background:transparent;color:#aab6cf;text-align:left;padding:12px 13px;border-radius:12px;font-weight:650;transition:.18s}
+.nav-btn:hover{background:#1b2945;color:#fff}
+.nav-btn.active{background:linear-gradient(100deg,#25385f,#213254);color:#fff;box-shadow:inset 3px 0 #86a0ff}
+.nav-icon{width:20px;text-align:center;font-size:17px}
+.side-bottom{margin-top:auto}
+.side-card{border:1px solid #2a3a5b;background:linear-gradient(145deg,#182743,#1d2d4c);border-radius:16px;padding:15px;color:#f2f5fc}
+.side-card strong{font-size:13px}
+.side-card p{font-size:12px;color:#a9b5cb;margin:6px 0 12px}
+.side-mini{font-size:11px;color:#8190ae;margin-top:15px;padding:0 7px}
+.main{min-width:0}
+.topbar{height:72px;background:rgba(255,255,255,.84);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4vw,54px);position:sticky;top:0;z-index:4}
+.top-title{font-size:13px;color:#7d899c;font-weight:600}
+.top-right{display:flex;align-items:center;gap:13px}.reset-button{white-space:nowrap;padding:7px 10px;font-size:11px}
+.streak{border:1px solid var(--line);padding:7px 11px;border-radius:999px;background:#fff;font-size:12px;color:#6f7c90}
+.avatar{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#111a31;color:#f2bf58;box-shadow:0 5px 14px #17243b24}
+.avatar svg{width:23px;height:23px;display:block}
+.content{max-width:1180px;margin:auto;padding:35px clamp(20px,4vw,54px) 65px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#7888d8;font-weight:800}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(27px,3.3vw,40px);line-height:1.2;letter-spacing:-1.4px;margin:9px 0 9px}
+h2{font-size:23px;letter-spacing:-.5px;margin-bottom:7px}
+h3{font-size:16px;margin-bottom:6px}
+.subhead{color:var(--muted);margin:0}
+.hero{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(230px,.78fr);gap:20px;margin-bottom:23px}
+.hero-main{position:relative;overflow:hidden;border-radius:24px;background:linear-gradient(122deg,#111a31 0%,#202f58 56%,#3c5ae0 100%);padding:32px 34px;color:#fff;min-height:258px;box-shadow:0 20px 48px #24396c35}
+.hero-main:after{content:"";position:absolute;width:240px;height:240px;border:1px solid #ffffff24;border-radius:50%;right:-48px;top:-70px;box-shadow:0 0 0 28px #ffffff0c,0 0 0 58px #ffffff08}
+.hero-main:before{content:"";position:absolute;width:120px;height:120px;border-radius:38px;transform:rotate(34deg);right:82px;bottom:-73px;background:#ffffff14}
+.hero-main .eyebrow{color:#dce3ff}
+.hero-main h1{max-width:570px}
+.hero-main p{color:#e8ecff;max-width:550px;margin-bottom:22px}
+.hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
+.btn{border:0;border-radius:11px;padding:11px 16px;font-weight:750;transition:transform .16s,background .16s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 6px 15px #415ee52b}
+.btn-primary:hover{background:var(--blue-dark)}
+.hero-main .btn-primary{background:#fff;color:#354fe0;box-shadow:none}
+.btn-soft{background:#f2f4ff;color:#5067dc}
+.btn-ghost{background:transparent;color:#77849a;border:1px solid var(--line)}
+.btn-small{padding:8px 12px;font-size:12px;border-radius:9px}
+.hero-link{font-size:12px;color:#edf0ff;font-weight:650}
+.hero-progress{background:#fff;border-radius:24px;padding:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between}
+.progress-top{display:flex;justify-content:space-between;align-items:flex-start}
+.progress-kicker{color:var(--muted);font-size:12px}
+.progress-number{font-size:30px;font-weight:800;letter-spacing:-1.5px;margin-top:3px}
+.progress-ring{width:57px;height:57px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--blue) var(--pct),#edf0f6 0);position:relative}
+.progress-ring:before{content:"";position:absolute;inset:6px;background:#fff;border-radius:50%}
+.progress-ring span{position:relative;font-size:13px;font-weight:800;color:var(--blue)}
+.progress-bar{height:7px;background:#eef1f6;border-radius:8px;overflow:hidden;margin:13px 0 10px}
+.progress-bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#546ef3,#39b898);transition:width .3s}
+.progress-foot{display:flex;justify-content:space-between;font-size:11px;color:#94a0b1}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:29px}
+.stat{background:#fff;border:1px solid #edf0f5;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:12px}
+.stat-icon{width:37px;height:37px;border-radius:12px;background:#eff2ff;color:#5268e6;display:grid;place-items:center;font-size:17px}
+.stat:nth-child(2) .stat-icon{background:#fff4e2;color:#d99328}
+.stat:nth-child(3) .stat-icon{background:#e6f8f1;color:#238e6a}
+.stat:nth-child(4) .stat-icon{background:#f7edf8;color:#ad63ad}
+.stat-num{font-size:19px;font-weight:800;line-height:1.1}
+.stat-label{font-size:11px;color:#8b97a9;margin-top:4px}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:0 0 14px}
+.section-head p{color:var(--muted);font-size:13px;margin:0}
+.course-library{margin:0 0 24px;padding:20px;border:1px solid rgba(255,255,255,.82);border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(255,255,255,.42));box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.86);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%)}
+.course-library-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+.course-library-head h2{margin:5px 0 4px;font-size:19px}
+.course-library-head p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+.course-library-total{flex:none;padding:6px 10px;border-radius:999px;background:rgba(93,113,226,.1);color:#5268dc;font-size:10px;font-weight:800}
+.course-entry{position:relative;display:grid;grid-template-columns:48px minmax(0,1fr) auto 20px;align-items:center;gap:13px;width:100%;min-height:76px;padding:13px 16px 17px;border:1px solid rgba(143,160,240,.27);border-radius:17px;background:linear-gradient(115deg,rgba(255,255,255,.9),rgba(236,241,255,.78));color:var(--ink);text-align:left;cursor:pointer;overflow:hidden;box-shadow:0 9px 24px rgba(49,67,131,.07),inset 0 1px #fff;transition:transform .26s cubic-bezier(.2,.8,.2,1),box-shadow .26s,border-color .26s}
+.course-entry:hover{transform:translateY(-3px);border-color:rgba(105,126,239,.55);box-shadow:0 17px 34px rgba(49,67,131,.13),inset 0 1px #fff}
+.course-entry:focus-visible{outline:3px solid rgba(89,112,235,.42);outline-offset:3px}
+.course-entry-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:linear-gradient(145deg,#647df8,#435bdc);color:#fff;font-size:23px;font-weight:900;box-shadow:0 7px 16px rgba(68,91,221,.26),inset 0 1px rgba(255,255,255,.38)}
+.course-entry-copy{display:grid;gap:4px;min-width:0}
+.course-entry-copy strong{font-size:15px;letter-spacing:.01em}
+.course-entry-copy small{overflow:hidden;color:#76839a;font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+.course-entry-progress{color:#75819a;font-size:10px;font-weight:750;white-space:nowrap}
+.course-entry-arrow{color:#566fe5;font-size:20px;font-weight:700;transition:transform .2s}
+.course-entry:hover .course-entry-arrow{transform:translate(2px,-2px)}
+.course-entry-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(100,119,223,.1)}
+.course-entry-bar i{display:block;height:100%;border-radius:0 4px 4px 0;background:linear-gradient(90deg,#57c5a0,#7284f5);transition:width .6s ease}
+.course-route{scroll-margin-top:82px}
+.course-route-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px;padding:15px 17px;border:1px solid rgba(255,255,255,.78);border-radius:17px;background:linear-gradient(130deg,rgba(233,239,255,.76),rgba(255,255,255,.46));box-shadow:inset 0 1px rgba(255,255,255,.9)}
+.course-route-heading-main{display:flex;align-items:center;gap:11px}
+.course-route-heading h2{margin:0 0 3px;font-size:15px}
+.course-route-heading p{margin:0;color:var(--muted);font-size:11px}
+.course-route-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,#647df8,#435bdc);color:#fff;font-weight:900}
+.track{margin-bottom:23px}
+.track-head{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.track-dot{width:10px;height:10px;border-radius:50%;background:#697bf1;box-shadow:0 0 0 4px #697bf116}
+.track-title{font-size:14px;font-weight:800}
+.track-note{font-size:11px;color:#9aa5b5}
+.level-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.level-card{background:#fff;border:1px solid #edf0f5;border-radius:16px;padding:16px;position:relative;transition:.2s;min-height:141px;cursor:pointer}
+.level-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#dce2ff}
+.level-card.locked{cursor:not-allowed;background:#fafbfd;opacity:.76}
+.level-card.completed{border-color:#d7efe6;background:linear-gradient(145deg,#fff,#fafffd)}
+.level-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.level-num{font-size:10px;font-weight:800;color:#8895a8;background:#f2f4f8;border-radius:7px;padding:4px 7px}
+.level-state{font-size:14px}
+.level-card h3{font-size:14px;margin:0 0 5px}
+.level-card p{font-size:11px;color:#8a96a8;margin:0;line-height:1.55}
+.level-meta{font-size:10px;color:#a1aabc;margin-top:11px}
+.panel{background:#fff;border:1px solid #edf0f5;border-radius:20px;padding:23px;box-shadow:0 6px 22px #283c6705}
+.page-header{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:23px}
+.page-header .subhead{font-size:13px}
+.lesson-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.75fr);gap:18px;align-items:start}
+.lesson-main{display:grid;gap:15px}
+.lesson-title-row{display:flex;align-items:center;gap:13px}
+.lesson-badge{width:45px;height:45px;border-radius:14px;background:#edf0ff;display:grid;place-items:center;color:#5369e6;font-size:18px;font-weight:800}
+.lesson-title-row h2{margin:0 0 3px}
+.meta-line{font-size:11px;color:#909cad}
+.lesson-copy{color:#526177;font-size:14px;line-height:1.85}
+.lesson-copy p:last-child{margin-bottom:0}
+.codebox{border-radius:13px;background:#172238;color:#e7edf9;overflow:hidden}
+.codebar{height:34px;border-bottom:1px solid #ffffff16;display:flex;align-items:center;justify-content:space-between;padding:0 13px;color:#aeb9cb;font-size:10px}
+.dots{display:flex;gap:5px}
+.dots i{width:7px;height:7px;background:#ff7774;border-radius:50%}
+.dots i:nth-child(2){background:#f5c45d}.dots i:nth-child(3){background:#66d1a0}
+pre{margin:0;padding:16px;overflow:auto;color:#dce6fb;font:12px/1.75 "SFMono-Regular",Consolas,"Liberation Mono",monospace;white-space:pre}
+.takeaway{display:grid;gap:9px}
+.takeaway-item{display:flex;gap:9px;font-size:12px;color:#647288}
+.tick{color:#3ba883;font-weight:900}
+.challenge-card{border-color:#e5e9ff}
+.challenge-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.challenge-label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800}
+.chip{font-size:10px;background:#eef0ff;color:#5368db;border-radius:999px;padding:5px 9px;font-weight:750}
+.challenge-copy{font-size:13px;color:#5d6a7e;line-height:1.7}
+.quiz-question{font-weight:700;font-size:14px;margin:10px 0 12px}
+.option-list{display:grid;gap:8px}
+.option{width:100%;text-align:left;background:#fff;border:1px solid #e8edf4;padding:10px 12px;border-radius:11px;font-size:12px;color:#55647a;transition:.15s}
+.option:hover{border-color:#bac5ff;background:#fafbff}
+.option.selected{border-color:#7486f6;background:#f0f2ff;color:#384fd0}
+.option.correct{border-color:#80c8a9;background:#f2fbf6;color:#16704f}
+.option.wrong{border-color:#e8a5ac;background:#fff5f6;color:#b44954}
+.feedback{padding:10px 12px;border-radius:10px;font-size:12px;margin-top:11px}
+.feedback.ok{background:#eaf8f1;color:#187450}
+.feedback.no{background:#fff3f3;color:#ac4b55}
+.exercise textarea{width:100%;min-height:145px;resize:vertical;border:1px solid #e2e7f0;border-radius:12px;padding:13px;background:#fbfcfe;color:#21314a;font:12px/1.65 "SFMono-Regular",Consolas,monospace;outline:none}
+.exercise textarea:focus{border-color:#8594f6;box-shadow:0 0 0 3px #6077ef18}
+.exercise-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.hint{font-size:11px;color:#7b89a0;margin-top:10px}
+.lock-note{font-size:12px;color:#a0a9b7;background:#f7f8fb;padding:11px 13px;border-radius:10px}
+.summary-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.summary-hero{background:linear-gradient(120deg,#304de1,#657cf1);color:#fff;border-radius:22px;padding:25px 28px;position:relative;overflow:hidden}
+.summary-hero h2{font-size:25px}
+.summary-hero p{color:#e6eaff;font-size:13px;max-width:600px}
+.summary-hero .summary-emoji{position:absolute;right:28px;top:25px;font-size:45px;opacity:.95}
+.skill-list{display:grid;gap:9px}
+.skill-row{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border:1px solid #edf0f5;border-radius:12px;font-size:12px}
+.skill-state{color:#208260;font-weight:750}
+.blank-state{padding:30px;text-align:center;color:#8995a7}
+.footer-note{font-size:10px;color:#9ca6b4;text-align:center;margin-top:28px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#17243b;color:#fff;padding:12px 16px;border-radius:12px;box-shadow:var(--shadow);font-size:13px;z-index:15;transition:.25s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.mobile-menu{display:none}
+@media(max-width:980px){.app{grid-template-columns:215px minmax(0,1fr)}.hero{grid-template-columns:1fr}.hero-progress{min-height:170px}.level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.reset-button{padding:5px 7px;font-size:9px}.top-right{gap:6px}.app{display:block}.sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;height:67px;padding:7px 9px;border-right:0;border-top:1px solid var(--line);display:block}.brand,.nav-label,.side-bottom{display:none}.nav{height:100%;display:flex;justify-content:space-around;gap:3px}.nav-btn{flex:1;justify-content:center;flex-direction:column;gap:1px;padding:4px 2px;font-size:9px}.nav-icon{font-size:16px}.topbar{height:60px;padding:0 12px}.top-title{max-width:72px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.streak{font-size:0;padding:7px 9px}.streak span{font-size:12px}.content{padding:24px 16px 92px}.hero-main{padding:25px 22px;min-height:270px}.hero-progress{padding:20px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:12px}.level-grid{grid-template-columns:1fr}.lesson-layout,.summary-grid{grid-template-columns:1fr}.page-header{align-items:flex-start;flex-direction:column}.panel{padding:18px}.hero-main h1{font-size:29px}.top-title{font-size:12px}}
+
+/* Code Sword · frosted glass polish */
+:root{--ink:#18243d;--muted:#73819b;--line:rgba(255,255,255,.72);--paper:rgba(255,255,255,.68);--wash:#edf2fb;--blue:#526df5;--blue-dark:#3d57df;--shadow:0 18px 48px rgba(41,62,112,.11),0 2px 8px rgba(41,62,112,.04);--radius:22px}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 12% 4%,rgba(170,197,255,.34),transparent 34%),radial-gradient(ellipse at 88% 18%,rgba(207,190,255,.28),transparent 30%),linear-gradient(145deg,#f6f8fd 0%,#edf2fb 55%,#f7f8fd 100%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 76% 75%,rgba(119,174,255,.13),transparent 28%),radial-gradient(circle at 18% 82%,rgba(170,157,255,.10),transparent 24%)}
+.sidebar{background:linear-gradient(160deg,rgba(17,27,52,.94),rgba(19,31,59,.87));border-right:1px solid rgba(255,255,255,.13);box-shadow:10px 0 38px rgba(21,34,68,.08);backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%)}
+.brand-mark,.avatar{border:1px solid rgba(255,255,255,.19);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nav-btn{transition:background .28s cubic-bezier(.2,.8,.2,1),color .24s,transform .24s,box-shadow .24s}
+.nav-btn:hover{background:rgba(255,255,255,.1);transform:translateX(2px)}
+.nav-btn.active{background:linear-gradient(110deg,rgba(99,127,255,.28),rgba(255,255,255,.09));box-shadow:inset 0 0 0 1px rgba(255,255,255,.11),inset 3px 0 #9eb2ff,0 7px 24px rgba(4,10,28,.12)}
+.side-card{background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.045));border-color:rgba(255,255,255,.16);box-shadow:inset 0 1px rgba(255,255,255,.12),0 14px 32px rgba(0,0,0,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.topbar{background:rgba(248,250,255,.66);border-bottom-color:rgba(255,255,255,.76);box-shadow:0 7px 28px rgba(48,65,105,.035);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%)}
+.streak,.avatar{border:1px solid rgba(255,255,255,.8);box-shadow:0 5px 18px rgba(39,57,104,.07),inset 0 1px rgba(255,255,255,.85)}
+.content{animation:content-arrive .48s cubic-bezier(.2,.75,.25,1) both}
+@keyframes content-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero-main{isolation:isolate;background:radial-gradient(circle at 85% 10%,rgba(117,157,255,.57),transparent 31%),linear-gradient(125deg,#111a31 0%,#1e315c 52%,#415ee9 100%);border:1px solid rgba(255,255,255,.22);box-shadow:0 24px 60px rgba(43,66,139,.24),inset 0 1px rgba(255,255,255,.32)}
+.hero-main:after{border-color:rgba(255,255,255,.29);box-shadow:0 0 0 28px rgba(255,255,255,.075),0 0 0 58px rgba(255,255,255,.045),0 0 48px rgba(177,197,255,.18)}
+.hero-main:before{background:linear-gradient(135deg,rgba(255,255,255,.24),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px rgba(255,255,255,.22);backdrop-filter:blur(2px)}
+.hero-progress,.stat,.panel,.level-card,.summary-hero{background:linear-gradient(145deg,rgba(255,255,255,.83),rgba(255,255,255,.57));border:1px solid rgba(255,255,255,.88);box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.88);backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%)}
+.hero-progress{border-radius:24px}
+.stat{transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s}
+.stat:hover{transform:translateY(-3px);box-shadow:0 22px 45px rgba(41,62,112,.14),inset 0 1px #fff}
+.progress-ring{box-shadow:0 5px 20px rgba(77,102,231,.15),inset 0 1px rgba(255,255,255,.75)}
+.progress-ring:before{background:rgba(255,255,255,.92);box-shadow:inset 0 1px 4px rgba(47,65,111,.08)}
+.progress-bar{background:rgba(112,130,170,.12);box-shadow:inset 0 1px 2px rgba(48,61,97,.08)}
+.progress-bar i{box-shadow:0 0 12px rgba(75,192,170,.3);transition:width .72s cubic-bezier(.2,.8,.2,1)}
+.track-head{padding-left:3px}
+.track-dot{box-shadow:0 0 0 5px rgba(105,123,241,.12),0 0 15px rgba(105,123,241,.25)}
+.level-grid{perspective:900px}
+.level-card{overflow:hidden;isolation:isolate;transition:transform .32s cubic-bezier(.2,.8,.2,1),box-shadow .32s,border-color .32s,background .32s;box-shadow:0 9px 26px rgba(42,58,100,.055),inset 0 1px rgba(255,255,255,.95)}
+.level-card:before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;background:radial-gradient(240px circle at var(--shine-x,50%) var(--shine-y,50%),rgba(255,255,255,.9),transparent 60%);transition:opacity .3s;pointer-events:none}
+.level-card:hover{transform:translateY(-5px) scale(1.012);box-shadow:0 24px 46px rgba(46,64,118,.15),inset 0 1px rgba(255,255,255,.98);border-color:rgba(129,151,255,.58)}
+.level-card:hover:before{opacity:.7}
+.level-card.completed{background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(226,250,241,.72));border-color:rgba(113,202,164,.4)}
+.level-card.locked{background:linear-gradient(145deg,rgba(249,250,253,.73),rgba(238,241,247,.62));box-shadow:inset 0 1px rgba(255,255,255,.8);backdrop-filter:blur(12px)}
+.level-num,.chip{border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 1px rgba(255,255,255,.8)}
+.panel{border-radius:22px;box-shadow:0 12px 36px rgba(41,62,112,.075),inset 0 1px rgba(255,255,255,.9);transition:box-shadow .28s,border-color .28s}
+.panel:hover{border-color:rgba(255,255,255,.98);box-shadow:0 18px 43px rgba(41,62,112,.10),inset 0 1px rgba(255,255,255,.95)}
+.lesson-badge,.stat-icon{box-shadow:inset 0 1px rgba(255,255,255,.9),0 5px 14px rgba(72,93,165,.08)}
+.codebox{border:1px solid rgba(255,255,255,.18);box-shadow:0 15px 34px rgba(16,28,53,.16),inset 0 1px rgba(255,255,255,.13)}
+.option{background:rgba(255,255,255,.58);border-color:rgba(197,207,229,.66);box-shadow:inset 0 1px rgba(255,255,255,.9);transition:transform .2s,background .2s,border-color .2s,box-shadow .2s}
+.option:hover{transform:translateX(3px);border-color:rgba(124,144,246,.68);background:rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(65,84,148,.09),inset 0 1px #fff}
+.option.selected{box-shadow:0 5px 18px rgba(86,108,225,.11),inset 0 1px #fff}
+.option.correct{box-shadow:0 5px 18px rgba(59,168,131,.12),inset 0 1px #fff}
+.exercise textarea{background:rgba(249,251,255,.72);border-color:rgba(197,207,229,.78);box-shadow:inset 0 2px 5px rgba(49,66,111,.035);transition:border-color .2s,box-shadow .2s,background .2s}
+.exercise textarea:focus{background:rgba(255,255,255,.92);border-color:#8594f6;box-shadow:0 0 0 4px rgba(96,119,239,.12),0 8px 22px rgba(64,86,166,.08),inset 0 1px #fff}
+.btn{position:relative;overflow:hidden;isolation:isolate;transition:transform .2s cubic-bezier(.2,.8,.2,1),background .2s,box-shadow .2s,border-color .2s}
+.btn:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.32) 48%,transparent 75%);transform:translateX(-130%);transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.btn:hover:before{transform:translateX(130%)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active,.nav-btn:active,.option:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,#627afa,#4964ed);box-shadow:0 8px 19px rgba(70,95,225,.27),inset 0 1px rgba(255,255,255,.29)}
+.btn-primary:hover{background:linear-gradient(135deg,#7188ff,#526cf1);box-shadow:0 12px 25px rgba(70,95,225,.34),inset 0 1px rgba(255,255,255,.36)}
+.hero-main .btn-primary{background:linear-gradient(135deg,#fff,#eaf0ff);box-shadow:0 8px 22px rgba(8,17,46,.18),inset 0 1px #fff}
+.btn-soft{background:linear-gradient(135deg,rgba(242,244,255,.96),rgba(224,230,255,.86));box-shadow:inset 0 1px #fff,0 5px 13px rgba(62,82,153,.07)}
+.btn-ghost{background:rgba(255,255,255,.48);border-color:rgba(187,198,222,.62);box-shadow:inset 0 1px rgba(255,255,255,.9)}
+.btn-ghost:hover{background:rgba(255,255,255,.86);border-color:rgba(145,160,217,.6);box-shadow:0 7px 18px rgba(48,66,119,.08),inset 0 1px #fff}
+.feedback{border:1px solid rgba(255,255,255,.72);box-shadow:inset 0 1px rgba(255,255,255,.75);animation:feedback-in .28s ease-out both}
+@keyframes feedback-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.summary-hero{background:radial-gradient(circle at 92% 8%,rgba(199,211,255,.36),transparent 30%),linear-gradient(125deg,rgba(48,77,225,.94),rgba(101,124,241,.9));box-shadow:0 22px 50px rgba(64,87,204,.22),inset 0 1px rgba(255,255,255,.35)}
+.summary-hero .summary-emoji{filter:drop-shadow(0 8px 14px rgba(27,40,117,.22));animation:emoji-float 3.8s ease-in-out infinite}
+@keyframes emoji-float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
+.skill-row{background:rgba(255,255,255,.42);border-color:rgba(255,255,255,.78);box-shadow:inset 0 1px rgba(255,255,255,.8);transition:transform .2s,background .2s}
+.skill-row:hover{transform:translateX(3px);background:rgba(255,255,255,.75)}
+.toast{background:rgba(20,31,57,.86);border:1px solid rgba(255,255,255,.18);box-shadow:0 16px 42px rgba(19,29,57,.24),inset 0 1px rgba(255,255,255,.16);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.sidebar .btn:active{transform:scale(.97)}
+@media(max-width:700px){.sidebar{background:rgba(18,28,52,.88);border-top-color:rgba(255,255,255,.18);box-shadow:0 -10px 34px rgba(19,31,63,.18);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%)}.nav-btn.active{box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);transform:translateY(-1px)}.hero-progress,.panel,.level-card,.stat{backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Keep typography crisp while retaining the glass-inspired surfaces. */
+.sidebar,.side-card,.topbar,.streak,.avatar,.hero-progress,.stat,.panel,.level-card,.summary-hero,.toast,.skill-row,.exercise textarea,.btn-ghost{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.sidebar{background:linear-gradient(160deg,#172442 0%,#1a2b50 100%)}
+.topbar{background:rgba(250,251,255,.94)}
+.hero-progress,.stat,.panel,.level-card{background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(247,249,255,.93))}
+.level-card.completed{background:linear-gradient(145deg,#fff,#f0fbf6)}
+.level-card.locked{background:linear-gradient(145deg,#fafbfe,#f1f3f8)}
+.summary-hero{background:radial-gradient(circle at 92% 8%,rgba(199,211,255,.24),transparent 30%),linear-gradient(125deg,#304de1,#657cf1)}
+.content{animation:content-fade-in .22s ease-out both}
+@keyframes content-fade-in{from{opacity:.78}to{opacity:1}}
+.level-card:hover,.stat:hover,.nav-btn:hover,.option:hover,.skill-row:hover,.btn:hover{transform:none}
+.level-card:hover{box-shadow:0 20px 42px rgba(46,64,118,.13),inset 0 1px #fff}
+.stat:hover{box-shadow:0 18px 40px rgba(41,62,112,.12),inset 0 1px #fff}
+.option:hover{box-shadow:0 6px 18px rgba(65,84,148,.09),inset 0 1px #fff}
+.skill-row:hover{background:rgba(255,255,255,.9)}
+.btn:active,.nav-btn:active,.option:active{transform:none;filter:brightness(.97)}
+.btn:hover{filter:brightness(1.025)}
+.hero-main .btn-primary:hover{filter:brightness(.97)}
+.hero-progress,.stat,.panel,.level-card{box-shadow:0 12px 34px rgba(41,62,112,.075),inset 0 1px rgba(255,255,255,.98)}
+@media(max-width:700px){.sidebar{background:#172442}.hero-progress,.panel,.level-card,.stat{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
+.nav-icon,.stat-icon,.level-state,.track-dot,.tick,.brand-mark svg,.avatar svg,.challenge-label>span:first-child{transform-origin:center;transition:transform .28s cubic-bezier(.2,1.6,.35,1),filter .28s}
+.nav-btn:hover .nav-icon,.stat:hover .stat-icon,.level-card:hover .level-state,.track-head:hover .track-dot,.takeaway-item:hover .tick,.brand-mark:hover svg,.avatar:hover svg,.challenge-label:hover>span:first-child{transform:scale(1.34);filter:drop-shadow(0 3px 5px rgba(88,111,239,.3))}
+.stat:hover .stat-icon{box-shadow:0 0 0 5px rgba(111,132,247,.09),inset 0 1px rgba(255,255,255,.95),0 8px 20px rgba(72,93,165,.14)}
+@media(max-width:700px){.nav-btn:hover .nav-icon{transform:scale(1.38)}}
+/* Sky glass: nearby controls gently gather around the pointer. */
+body{background-image:radial-gradient(390px circle at var(--pointer-x,42%) var(--pointer-y,18%),rgba(255,255,255,.68),rgba(153,184,255,.16) 34%,transparent 72%),radial-gradient(ellipse at 12% 4%,rgba(170,197,255,.34),transparent 34%),radial-gradient(ellipse at 88% 18%,rgba(207,190,255,.28),transparent 30%),linear-gradient(145deg,#f6f8fd 0%,#edf2fb 55%,#f7f8fd 100%)}
+.topbar{background:rgba(248,250,255,.78);border-bottom:1px solid rgba(255,255,255,.9)}
+.hero-progress,.stat,.panel,.level-card{background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(246,249,255,.73));border-color:rgba(255,255,255,.96);box-shadow:0 12px 34px rgba(55,75,137,.075),inset 0 1px rgba(255,255,255,.98)}
+.level-card.completed{background:linear-gradient(145deg,rgba(255,255,255,.91),rgba(226,250,241,.78))}
+.level-card.locked{background:linear-gradient(145deg,rgba(250,251,254,.91),rgba(239,242,248,.84))}
+.side-card{background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.055));border-color:rgba(255,255,255,.22)}
+.streak,.avatar,.option,.skill-row{background:rgba(255,255,255,.74);border-color:rgba(255,255,255,.92)}
+.float-surface{transform:translate3d(var(--float-x,0px),var(--float-y,0px),0)!important;transition:box-shadow .24s,border-color .24s,background .24s!important;z-index:1}
+.hero-progress,.stat,.panel,.level-card,.side-card,.streak,.avatar,.option,.skill-row{box-shadow:0 var(--float-shadow-y,12px) var(--float-shadow-blur,34px) rgba(55,75,137,var(--float-shadow-opacity,.075)),inset 0 1px rgba(255,255,255,.94)}
+.hero-progress:hover,.stat:hover,.panel:hover,.level-card:hover,.side-card:hover,.streak:hover,.avatar:hover,.option:hover,.skill-row:hover{box-shadow:0 var(--float-shadow-y,12px) var(--float-shadow-blur,34px) rgba(55,75,137,var(--float-shadow-opacity,.075)),inset 0 1px rgba(255,255,255,.98)}
+.hero-progress,.stat,.panel,.level-card,.side-card,.streak,.avatar,.option,.skill-row{border-color:rgba(255,255,255,.96)}
+@media(hover:none),(pointer:coarse){.float-surface{transform:none!important;transition:none!important}}
+.modal-backdrop{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:20px;background:rgba(15,24,45,.42)}.modal-backdrop[hidden]{display:none}.reset-dialog{width:min(100%,420px);padding:25px;border:1px solid rgba(255,255,255,.94);border-radius:22px;background:linear-gradient(145deg,#fff,#f4f7ff);box-shadow:0 28px 90px rgba(15,28,65,.3)}.reset-dialog h2{font-size:21px}.reset-dialog p{font-size:13px;color:#66748b;line-height:1.7}.reset-form{display:grid;gap:12px}.reset-form label{display:grid;gap:6px;color:#586780;font-size:12px;font-weight:700}.reset-form input{width:100%;padding:11px 12px;border:1px solid #dfe5f1;border-radius:10px;background:#fff;color:#17243b;font:inherit;font-size:14px}.reset-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:7px}.reset-error{min-height:18px;color:#b44954;font-size:12px}.ide-frame{overflow:hidden;border:1px solid rgba(116,139,190,.32);border-radius:16px;background:#10182a;box-shadow:0 15px 36px rgba(16,28,53,.19),inset 0 1px rgba(255,255,255,.08);transition:border-color .2s,box-shadow .2s}
+.ide-frame:focus-within{border-color:rgba(125,151,255,.72);box-shadow:0 0 0 3px rgba(100,128,245,.12),0 18px 40px rgba(16,28,53,.23),inset 0 1px rgba(255,255,255,.1)}
+.ide-toolbar{height:43px;padding:0 13px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#1b2740,#172239);border-bottom:1px solid rgba(255,255,255,.08);color:#b9c6dc;font-size:11px}
+.ide-toolbar-left,.ide-toolbar-right{display:flex;align-items:center;gap:10px}
+.ide-file{font-weight:700;color:#e5ebf8;letter-spacing:.15px}
+.ide-standard{padding:3px 7px;border:1px solid rgba(141,164,228,.2);border-radius:6px;color:#96a9d8;background:rgba(113,141,216,.1);font-size:10px}
+.ide-dots{display:flex;gap:5px}.ide-dots i{width:7px;height:7px;border-radius:50%;background:#fa7778}.ide-dots i:nth-child(2){background:#efc35e}.ide-dots i:nth-child(3){background:#61c994}
+.ide-body{height:290px;display:flex;background:#10182a}
+.ide-gutter{flex:0 0 48px;box-sizing:border-box;margin:0;padding:14px 10px 14px 0;overflow:hidden;text-align:right;white-space:pre;color:#64738f;border-right:1px solid rgba(255,255,255,.055);background:rgba(255,255,255,.018);font:13px/1.7 "SFMono-Regular",Consolas,"Liberation Mono",monospace;user-select:none}
+.ide-workspace{position:relative;flex:1;min-width:0;height:100%;overflow:hidden}
+.ide-highlight{position:absolute;inset:0;width:max-content;min-width:100%;min-height:100%;margin:0;padding:14px 16px;overflow:hidden;white-space:pre;color:#dce6fb;pointer-events:none;tab-size:4;font:13px/1.7 "SFMono-Regular",Consolas,"Liberation Mono",monospace}
+.exercise .code-input{position:absolute!important;inset:0;width:100%;height:100%;min-height:0!important;box-sizing:border-box;resize:none!important;overflow:auto;white-space:pre;overflow-wrap:normal;tab-size:4;margin:0;padding:14px 16px!important;border:0!important;border-radius:0!important;outline:0!important;background:transparent!important;color:transparent!important;-webkit-text-fill-color:transparent;caret-color:#f1f5ff;font:13px/1.7 "SFMono-Regular",Consolas,"Liberation Mono",monospace;box-shadow:none!important;z-index:2}
+.exercise .code-input:focus{border:0!important;box-shadow:none!important;background:transparent!important}
+.exercise .code-input::selection{background:rgba(105,140,255,.42);color:transparent;-webkit-text-fill-color:transparent}
+.exercise .code-input::placeholder{color:#75839e;-webkit-text-fill-color:#75839e;opacity:.82}
+.syntax-keyword{color:#c7a6ff}.syntax-type{color:#7dd3fc}.syntax-string{color:#a5e075}.syntax-number{color:#ffc777}.syntax-comment{color:#7f8da8;font-style:italic}.syntax-directive{color:#ffb86c}.syntax-function{color:#82aaff}
+.ide-status{min-height:29px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid rgba(255,255,255,.07);background:#141e32;color:#8493af;font-size:10px}
+.ide-help{font-size:10px;color:#8e9bb0;margin:8px 2px 0}
+.theme-button{width:34px;height:34px;padding:0;justify-content:center}
+.theme-button svg{width:17px;height:17px;display:block}
+body[data-theme="dark"]{--ink:#edf2ff;--muted:#a2aec5;--line:rgba(255,255,255,.12);--wash:#10182a;color:var(--ink);background-image:radial-gradient(390px circle at var(--pointer-x,42%) var(--pointer-y,18%),rgba(122,150,220,.19),rgba(73,96,156,.09) 34%,transparent 72%),radial-gradient(ellipse at 12% 4%,rgba(61,82,139,.22),transparent 34%),radial-gradient(ellipse at 88% 18%,rgba(87,66,135,.2),transparent 30%),linear-gradient(145deg,#111a2d 0%,#151f35 55%,#111a2d 100%)}
+body[data-theme="dark"] .topbar{background:rgba(18,27,47,.94);border-bottom-color:rgba(255,255,255,.1);box-shadow:0 7px 28px rgba(0,0,0,.16)}
+body[data-theme="dark"] .sidebar{background:linear-gradient(160deg,#10192c,#131f38);border-right-color:rgba(255,255,255,.1)}
+body[data-theme="dark"] .hero-progress,body[data-theme="dark"] .stat,body[data-theme="dark"] .panel,body[data-theme="dark"] .level-card{background:linear-gradient(145deg,rgba(34,46,70,.97),rgba(27,38,60,.94));border-color:rgba(211,224,255,.13);box-shadow:0 14px 36px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.07)}
+body[data-theme="dark"] .level-card.completed{background:linear-gradient(145deg,#203b3b,#1b3435);border-color:rgba(111,202,164,.32)}
+body[data-theme="dark"] .level-card.locked{background:linear-gradient(145deg,#20293a,#1b2435);opacity:.72}
+body[data-theme="dark"] .level-card:hover{border-color:rgba(145,164,255,.48);box-shadow:0 20px 42px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.1)}
+body[data-theme="dark"] .level-card p,body[data-theme="dark"] .level-meta,body[data-theme="dark"] .track-note,body[data-theme="dark"] .stat-label,body[data-theme="dark"] .progress-kicker,body[data-theme="dark"] .progress-foot,body[data-theme="dark"] .meta-line,body[data-theme="dark"] .lesson-copy,body[data-theme="dark"] .challenge-copy,body[data-theme="dark"] .takeaway-item,body[data-theme="dark"] .hint,body[data-theme="dark"] .footer-note,body[data-theme="dark"] .blank-state{color:#a6b3cb}
+body[data-theme="dark"] .streak,body[data-theme="dark"] .avatar{background:#202c45;border-color:rgba(255,255,255,.13);color:#dae3f6;box-shadow:inset 0 1px rgba(255,255,255,.07),0 7px 20px rgba(0,0,0,.18)}
+body[data-theme="dark"] .side-card{background:linear-gradient(145deg,#202d48,#192640);border-color:rgba(255,255,255,.12)}
+body[data-theme="dark"] .chip,body[data-theme="dark"] .level-num{background:#2b3859;border-color:rgba(255,255,255,.1);color:#bdcaff;box-shadow:inset 0 1px rgba(255,255,255,.06)}
+body[data-theme="dark"] .progress-ring{background:conic-gradient(#8597ff var(--pct),#313d59 0)}
+body[data-theme="dark"] .progress-ring:before{background:#202c45;box-shadow:inset 0 1px 4px rgba(0,0,0,.3)}
+body[data-theme="dark"] .progress-ring span{color:#a9b7ff}
+body[data-theme="dark"] .progress-bar{background:#303b54;box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+body[data-theme="dark"] .option{background:#202c44;border-color:#394863;color:#c1cce0;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+body[data-theme="dark"] .option:hover{background:#283753;border-color:#8294ed}
+body[data-theme="dark"] .option.selected{background:#2d3961;border-color:#7f91f6;color:#e0e6ff}
+body[data-theme="dark"] .option.correct{background:#1d3a35;border-color:#4a9d7e;color:#b5ecd4}
+body[data-theme="dark"] .option.wrong{background:#422c38;border-color:#b66778;color:#ffd2d7}
+body[data-theme="dark"] .feedback.ok{background:#1c3934;border-color:#3b6c5a;color:#a9e5c7}
+body[data-theme="dark"] .feedback.no{background:#402b34;border-color:#72414e;color:#ffc7ce}
+body[data-theme="dark"] .lock-note{background:#222d43;color:#a6b3cb}
+body[data-theme="dark"] .lesson-badge{background:#2b3759;color:#b9c5ff}
+body[data-theme="dark"] .skill-row{background:rgba(42,55,81,.78);border-color:rgba(255,255,255,.1);color:#d5def0}
+body[data-theme="dark"] .skill-state{color:#8fdbb9}
+body[data-theme="dark"] .btn-ghost{background:rgba(42,55,81,.8);border-color:rgba(255,255,255,.15);color:#c4cee2;box-shadow:inset 0 1px rgba(255,255,255,.06)}
+body[data-theme="dark"] .btn-ghost:hover{background:#354563;border-color:rgba(177,192,255,.34)}
+body[data-theme="dark"] .btn-soft{background:linear-gradient(135deg,#303d60,#293650);color:#c4ceff;box-shadow:inset 0 1px rgba(255,255,255,.08),0 5px 13px rgba(0,0,0,.12)}
+body[data-theme="dark"] .reset-dialog{background:linear-gradient(145deg,#26334e,#1e2a42);border-color:rgba(255,255,255,.14);color:#edf2ff;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+body[data-theme="dark"] .reset-dialog p,body[data-theme="dark"] .reset-form label{color:#b4c0d5}
+body[data-theme="dark"] .reset-form input{background:#172238;border-color:#657594;color:#e8eefb}
+body[data-theme="dark"] .modal-backdrop{background:rgba(4,8,18,.68)}
+body[data-theme="dark"] .toast{background:#202d48;border-color:rgba(255,255,255,.14);color:#f1f4fb}
+body[data-theme="dark"] .top-title{color:#b1bdd2}
+body[data-theme="dark"] .hero-main{box-shadow:0 24px 60px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.25)}
+@media(max-width:700px){body[data-theme="dark"] .sidebar{background:#111b30;border-top-color:rgba(255,255,255,.13)}}
+@media(max-width:700px){.reset-button{width:31px;padding:5px 0;font-size:0;justify-content:center}.reset-button:after{content:"↺";font-size:15px}.theme-button{width:31px;height:31px}}
+body[data-theme="light"] .sidebar{background:linear-gradient(160deg,#f9fbff,#eaf0fb);border-right-color:rgba(112,132,174,.2);box-shadow:8px 0 30px rgba(49,67,112,.07);color:#1b2942}
+body[data-theme="light"] .brand-name{color:#1b2942}
+body[data-theme="light"] .brand-sub{color:#8290a7}
+body[data-theme="light"] .nav-label{color:#98a4b8}
+body[data-theme="light"] .nav-btn{color:#63718a}
+body[data-theme="light"] .nav-btn:hover{background:rgba(91,116,205,.1);color:#354fe0}
+body[data-theme="light"] .nav-btn.active{background:linear-gradient(100deg,rgba(92,117,225,.15),rgba(255,255,255,.9));color:#354fe0;box-shadow:inset 3px 0 #6178ed,0 5px 16px rgba(67,89,160,.08)}
+body[data-theme="light"] .side-card{background:linear-gradient(145deg,#fff,#eef3ff);border-color:#dce5f6;box-shadow:0 9px 24px rgba(45,64,111,.08),inset 0 1px #fff;color:#273652}
+body[data-theme="light"] .side-card p{color:#71809a}
+body[data-theme="light"] .side-mini{color:#8290a7}
+@media(max-width:700px){body[data-theme="light"] .sidebar{background:rgba(246,249,255,.97);border-top-color:rgba(112,132,174,.2);box-shadow:0 -8px 28px rgba(49,67,112,.1)}}
+.exercise-actions .btn{min-height:34px}
+@media(max-width:700px){.ide-body{height:250px}.ide-gutter{flex-basis:40px;padding-right:8px}.ide-highlight{padding-left:12px;padding-right:12px}.exercise .code-input{padding-left:12px!important;padding-right:12px!important}.ide-toolbar{padding:0 10px}}
+.beginner-guide{display:grid;gap:11px;margin:17px 0}
+.guide-heading{display:flex;align-items:center;gap:8px;color:#3d57c9;font-size:12px;font-weight:850}
+.guide-heading:before{content:"✦";font-size:13px}
+.guide-idea,.guide-card,.guide-pitfall{border:1px solid #e4e9f5;border-radius:13px;background:rgba(247,249,255,.78);padding:13px 14px}
+.guide-idea{background:linear-gradient(120deg,#f2f5ff,#f8faff)}
+.guide-idea p{margin:6px 0 0;color:#59677e;font-size:12px;line-height:1.75}
+.guide-columns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.guide-card h3{margin:0 0 8px;color:#394a70;font-size:12px}
+.guide-list{display:grid;gap:7px;margin:0;padding:0;list-style:none;counter-reset:guide-step}
+.guide-list li{display:grid;grid-template-columns:21px minmax(0,1fr);gap:7px;align-items:start;color:#5c6a80;font-size:11px;line-height:1.65}
+.guide-list li:before{counter-increment:guide-step;content:counter(guide-step);width:19px;height:19px;border-radius:7px;background:#e9edff;color:#566de1;display:grid;place-items:center;font-size:10px;font-weight:850}
+.guide-pitfall{display:flex;gap:9px;align-items:flex-start;background:#fffaf0;border-color:#f1e6cd;color:#79633b;font-size:11px;line-height:1.65}
+.guide-pitfall strong{flex:0 0 auto;color:#aa7930}
+body[data-theme="dark"] .guide-idea,body[data-theme="dark"] .guide-card{background:#202c44;border-color:#394863}
+body[data-theme="dark"] .guide-idea p,body[data-theme="dark"] .guide-list li{color:#c1cce0}
+body[data-theme="dark"] .guide-heading{color:#aebaff}
+body[data-theme="dark"] .guide-card h3{color:#e1e8f6}
+body[data-theme="dark"] .guide-list li:before{background:#35436a;color:#c8d0ff}
+body[data-theme="dark"] .guide-pitfall{background:#352f27;border-color:#5a4b32;color:#dfc997}
+body[data-theme="dark"] .guide-pitfall strong{color:#f0c66d}
+@media(max-width:700px){.guide-columns{grid-template-columns:1fr}}
+body[data-theme="dark"] .course-library{background:linear-gradient(145deg,rgba(34,46,70,.97),rgba(27,38,60,.92));border-color:rgba(211,224,255,.13);box-shadow:0 14px 36px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.07)}
+body[data-theme="dark"] .course-library-head p,body[data-theme="dark"] .course-entry-copy small,body[data-theme="dark"] .course-entry-progress{color:#a6b3cb}
+body[data-theme="dark"] .course-library-total{background:rgba(130,148,255,.15);color:#c0caff}
+body[data-theme="dark"] .course-entry{background:linear-gradient(115deg,rgba(45,59,88,.98),rgba(35,48,75,.96));border-color:rgba(145,164,255,.2);color:#edf2ff;box-shadow:0 9px 24px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.08)}
+body[data-theme="dark"] .course-entry:hover{border-color:rgba(145,164,255,.52);box-shadow:0 17px 34px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.1)}
+body[data-theme="dark"] .course-route-heading{background:linear-gradient(130deg,rgba(43,57,89,.95),rgba(30,42,66,.92));border-color:rgba(211,224,255,.12);box-shadow:inset 0 1px rgba(255,255,255,.06)}
+body[data-theme="dark"] .course-route-heading h2{color:#edf2ff}
+@media(max-width:700px){.course-library{padding:15px}.course-library-head{align-items:flex-start}.course-entry{grid-template-columns:42px minmax(0,1fr) 18px;gap:10px;padding:12px 12px 16px}.course-entry-icon{width:40px;height:40px}.course-entry-progress{grid-column:2;grid-row:2;margin-top:-7px}.course-entry-arrow{grid-column:3;grid-row:1 / span 2}.course-route-heading{align-items:flex-start}.course-route-heading>.chip{font-size:9px}}
+/* Shared glass material for interactive controls; motion and answer feedback stay intact. */
+body:not([data-theme="dark"]) .btn,body:not([data-theme="dark"]) .option,body:not([data-theme="dark"]) .course-entry,body:not([data-theme="dark"]) .level-card,body[data-theme="light"] .nav-btn{
+ background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(226,235,255,.72));
+ border:1px solid rgba(255,255,255,.96);
+ color:#4359c9;
+ box-shadow:0 8px 22px rgba(62,82,145,.09),inset 0 1px rgba(255,255,255,.98);
+}
+body:not([data-theme="dark"]) .btn:hover,body:not([data-theme="dark"]) .option:hover,body:not([data-theme="dark"]) .course-entry:hover,body:not([data-theme="dark"]) .level-card:hover,body[data-theme="light"] .nav-btn:hover{
+ background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(231,238,255,.86));
+ border-color:rgba(133,151,235,.48);
+}
+body:not([data-theme="dark"]) .btn-primary,body:not([data-theme="dark"]) .btn-soft,body:not([data-theme="dark"]) .btn-ghost{color:#4359c9}
+body:not([data-theme="dark"]) .hero-main .btn-primary{background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(233,239,255,.88));color:#354fe0}
+body:not([data-theme="dark"]) .nav-btn{border-color:transparent;box-shadow:none}
+body:not([data-theme="dark"]) .nav-btn.active{background:linear-gradient(120deg,rgba(105,129,239,.2),rgba(255,255,255,.9));border-color:rgba(255,255,255,.88);color:#354fe0;box-shadow:inset 3px 0 #6178ed,0 6px 18px rgba(67,89,160,.1)}
+body:not([data-theme="dark"]) .option.selected{background:linear-gradient(135deg,rgba(232,237,255,.96),rgba(218,227,255,.85));border-color:rgba(116,134,246,.68);color:#384fd0}
+body:not([data-theme="dark"]) .option.correct{background:linear-gradient(135deg,rgba(238,251,245,.97),rgba(219,245,233,.88));border-color:rgba(105,190,151,.65);color:#16704f}
+body:not([data-theme="dark"]) .option.wrong{background:linear-gradient(135deg,rgba(255,245,246,.98),rgba(255,228,232,.88));border-color:rgba(220,142,153,.68);color:#b44954}
+body:not([data-theme="dark"]) .level-card.completed{background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(226,250,241,.78));border-color:rgba(113,202,164,.4)}
+body:not([data-theme="dark"]) .level-card.locked{background:linear-gradient(135deg,rgba(250,251,254,.91),rgba(235,240,250,.82));border-color:rgba(211,219,234,.72)}
+body:not([data-theme="dark"]) .nav-btn:focus-visible,body:not([data-theme="dark"]) .btn:focus-visible,body:not([data-theme="dark"]) .option:focus-visible,body:not([data-theme="dark"]) .level-card:focus-visible{outline:3px solid rgba(89,112,235,.38);outline-offset:3px}
+body:not([data-theme="dark"]) .course-entry:focus-visible{outline:3px solid rgba(89,112,235,.42);outline-offset:3px}
+body:not([data-theme="light"]) .nav-btn{border:1px solid transparent;background:rgba(205,220,255,.08);color:#dce6ff;box-shadow:inset 0 1px rgba(255,255,255,.08)}
+body:not([data-theme="light"]) .nav-btn:hover{background:rgba(205,220,255,.16);border-color:rgba(255,255,255,.18)}
+body:not([data-theme="light"]) .nav-btn.active{background:linear-gradient(120deg,rgba(112,139,255,.32),rgba(205,220,255,.1));border-color:rgba(216,227,255,.2);box-shadow:inset 3px 0 #a9bbff,0 7px 20px rgba(4,10,28,.16)}
+body[data-theme="dark"] .btn,body[data-theme="dark"] .option,body[data-theme="dark"] .course-entry,body[data-theme="dark"] .level-card{
+ background:linear-gradient(135deg,rgba(47,63,94,.88),rgba(34,48,76,.82));
+ border-color:rgba(220,230,255,.2);
+ color:#dce6ff;
+ box-shadow:0 8px 22px rgba(0,0,0,.17),inset 0 1px rgba(255,255,255,.1);
+}
+body[data-theme="dark"] .btn:hover,body[data-theme="dark"] .option:hover,body[data-theme="dark"] .course-entry:hover,body[data-theme="dark"] .level-card:hover{background:linear-gradient(135deg,rgba(57,75,111,.94),rgba(39,55,87,.9));border-color:rgba(166,184,255,.44)}
+body[data-theme="dark"] .btn-primary,body[data-theme="dark"] .btn-soft,body[data-theme="dark"] .btn-ghost{color:#dce6ff}
+body[data-theme="dark"] .hero-main .btn-primary{background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(223,232,255,.84));border-color:rgba(255,255,255,.94);color:#354fe0}
+body[data-theme="dark"] .option.selected{background:linear-gradient(135deg,#35446d,#2b3a60);border-color:#8294ed;color:#e0e6ff}
+body[data-theme="dark"] .option.correct{background:linear-gradient(135deg,#24443e,#1d3a35);border-color:#5cad8c;color:#b5ecd4}
+body[data-theme="dark"] .option.wrong{background:linear-gradient(135deg,#503642,#422c38);border-color:#c27685;color:#ffd2d7}
+body[data-theme="dark"] .level-card.completed{background:linear-gradient(135deg,#254541,#1b3435);border-color:rgba(111,202,164,.38)}
+body[data-theme="dark"] .level-card.locked{background:linear-gradient(135deg,#273249,#1b2435)}
+body[data-theme="dark"] .nav-btn:focus-visible,body[data-theme="dark"] .btn:focus-visible,body[data-theme="dark"] .option:focus-visible,body[data-theme="dark"] .course-entry:focus-visible,body[data-theme="dark"] .level-card:focus-visible{outline:3px solid rgba(147,169,255,.48);outline-offset:3px}
+/* Keep the established text colors; make the shared pale glass surface clearly visible. */
+body:not([data-theme="dark"]) .btn,body:not([data-theme="dark"]) .course-entry,body:not([data-theme="dark"]) .level-card,body:not([data-theme="dark"]) .option:not(.selected):not(.correct):not(.wrong){background:linear-gradient(125deg,#f2f6ff 0%,#e6eefb 100%);border-color:rgba(255,255,255,.98);box-shadow:0 8px 22px rgba(62,82,145,.1),inset 0 1px #fff}
+body:not([data-theme="dark"]) .btn:hover,body:not([data-theme="dark"]) .course-entry:hover,body:not([data-theme="dark"]) .level-card:hover{background:linear-gradient(125deg,#f8faff 0%,#edf3ff 100%);border-color:rgba(133,151,235,.56)}
+body:not([data-theme="dark"]) .btn{color:inherit}
+body:not([data-theme="dark"]) .btn-primary{color:#fff}
+body:not([data-theme="dark"]) .btn-soft{color:#5067dc}
+body:not([data-theme="dark"]) .btn-ghost{color:#77849a}
+body:not([data-theme="dark"]) .hero-main .btn-primary{color:#354fe0}
+body:not([data-theme="dark"]) .option:not(.selected):not(.correct):not(.wrong){color:#55647a}
+body:not([data-theme="dark"]) .course-entry,body:not([data-theme="dark"]) .level-card{color:var(--ink)}
+body[data-theme="light"] .nav-btn{color:#63718a}
+body[data-theme="light"] .nav-btn:hover,body[data-theme="light"] .nav-btn.active{color:#354fe0}
+body:not([data-theme="light"]) .nav-btn{color:#aab6cf}
+body:not([data-theme="light"]) .nav-btn:hover,body:not([data-theme="light"]) .nav-btn.active{color:#fff}
+body[data-theme="dark"] .btn,body[data-theme="dark"] .course-entry,body[data-theme="dark"] .level-card{color:var(--ink)}
+body[data-theme="dark"] .btn-primary{color:#fff}
+body[data-theme="dark"] .btn-soft{color:#c4ceff}
+body[data-theme="dark"] .btn-ghost{color:#c4cee2}
+body[data-theme="dark"] .hero-main .btn-primary{color:#354fe0}
+body[data-theme="dark"] .option:not(.selected):not(.correct):not(.wrong){color:#c1cce0}
+body[data-theme="dark"] .nav-btn{color:#aab6cf}
+body[data-theme="dark"] .nav-btn:hover,body[data-theme="dark"] .nav-btn.active{color:#fff}
+/* Unify the learning-map tiles with the same glass fill; status remains in the icon and copy. */
+body:not([data-theme="dark"]) .level-card,body:not([data-theme="dark"]) .level-card.completed,body:not([data-theme="dark"]) .level-card.locked{background:linear-gradient(125deg,#f2f6ff 0%,#e6eefb 100%)}
+body:not([data-theme="dark"]) .level-card:hover,body:not([data-theme="dark"]) .level-card.completed:hover,body:not([data-theme="dark"]) .level-card.locked:hover{background:linear-gradient(125deg,#f8faff 0%,#edf3ff 100%)}
+body[data-theme="dark"] .level-card,body[data-theme="dark"] .level-card.completed,body[data-theme="dark"] .level-card.locked{background:linear-gradient(135deg,rgba(47,63,94,.88),rgba(34,48,76,.82))}
+body[data-theme="dark"] .level-card:hover,body[data-theme="dark"] .level-card.completed:hover,body[data-theme="dark"] .level-card.locked:hover{background:linear-gradient(135deg,rgba(57,75,111,.94),rgba(39,55,87,.9))}
+/* Learning levels use the same horizontal course-entry pattern. */
+.level-grid{grid-template-columns:minmax(0,1fr);gap:10px}
+.level-card{display:grid;grid-template-columns:58px minmax(0,1fr) 22px;grid-template-rows:auto auto auto;align-items:center;column-gap:13px;row-gap:2px;min-height:76px;padding:13px 16px;text-align:left}
+.level-top{display:contents}
+.level-num{grid-column:1;grid-row:1 / 4;display:grid;place-items:center;align-self:center;width:58px;height:46px;box-sizing:border-box;padding:0;border:0;border-radius:14px;background:linear-gradient(145deg,#647df8,#435bdc);color:#fff;font-size:10px;font-weight:850;white-space:nowrap;box-shadow:0 7px 16px rgba(68,91,221,.22),inset 0 1px rgba(255,255,255,.38)}
+.level-card h3{grid-column:2;grid-row:1;align-self:end;margin:0 0 1px;font-size:14px}
+.level-card p{grid-column:2;grid-row:2;min-width:0;overflow:hidden;margin:0;color:#72819a;font-size:11px;line-height:1.5;text-overflow:ellipsis;white-space:nowrap}
+.level-meta{grid-column:2;grid-row:3;align-self:start;margin-top:3px;font-size:10px;color:#8b98ad}
+.level-state{grid-column:3;grid-row:1 / 4;justify-self:center;align-self:center;font-size:16px}
+body[data-theme="dark"] .level-card p{color:#a6b3cb}
+body[data-theme="dark"] .level-meta{color:#9aa9c2}
+body[data-theme="dark"] .level-num{border:0;background:linear-gradient(145deg,#647df8,#435bdc);color:#fff}
+@media(max-width:700px){.level-grid{gap:8px}.level-card{grid-template-columns:50px minmax(0,1fr) 20px;column-gap:10px;min-height:72px;padding:11px 12px}.level-num{width:50px;height:44px;font-size:9px}.level-card h3{font-size:13px}.level-card p{font-size:10px}.level-meta{font-size:9px}}
+/* Apply the glass surface to every actual click target, including future buttons. */
+body:not([data-theme="dark"]) :is(button,[role="button"],[data-action],[data-page],[data-level],[data-option]){background:linear-gradient(135deg,#f2f6ff 0%,#e6eefb 100%);border:1px solid rgba(255,255,255,.98);box-shadow:0 8px 22px rgba(62,82,145,.1),inset 0 1px #fff}
+body:not([data-theme="light"]) .nav-btn{background:linear-gradient(135deg,rgba(120,150,220,.28),rgba(76,105,178,.2));border:1px solid rgba(211,225,255,.2);box-shadow:inset 0 1px rgba(255,255,255,.1)}
+body:not([data-theme="light"]) .nav-btn:hover{background:linear-gradient(135deg,rgba(139,166,232,.38),rgba(89,117,190,.28));border-color:rgba(221,232,255,.3)}
+body:not([data-theme="light"]) .nav-btn.active{background:linear-gradient(135deg,rgba(134,158,255,.42),rgba(90,119,205,.3));border-color:rgba(221,232,255,.34);box-shadow:inset 3px 0 #a9bbff,0 7px 20px rgba(4,10,28,.16)}
+body[data-theme="dark"] :is(button,[role="button"],[data-action],[data-page],[data-level],[data-option]){background:linear-gradient(135deg,rgba(104,133,207,.38),rgba(69,97,164,.27));border:1px solid rgba(205,220,255,.24);box-shadow:0 8px 22px rgba(0,0,0,.17),inset 0 1px rgba(255,255,255,.12)}
+/* Full interface sky-glass palette. Keep text, code syntax, and motion unchanged. */
+body[data-theme="light"]{background-image:radial-gradient(ellipse at 14% 3%,rgba(155,190,255,.38),transparent 36%),radial-gradient(ellipse at 88% 18%,rgba(187,208,255,.34),transparent 33%),radial-gradient(ellipse at 55% 88%,rgba(178,202,255,.22),transparent 38%),linear-gradient(145deg,#e9f1fd 0%,#e1ebfa 52%,#edf3fc 100%);background-attachment:fixed}
+body[data-theme="light"] .sidebar,body[data-theme="light"] .topbar,body[data-theme="light"] .side-card,body[data-theme="light"] .streak,body[data-theme="light"] .avatar,body[data-theme="light"] .hero-progress,body[data-theme="light"] .stat,body[data-theme="light"] .panel,body[data-theme="light"] .level-card,body[data-theme="light"] .course-library,body[data-theme="light"] .course-entry,body[data-theme="light"] .course-route-heading,body[data-theme="light"] .skill-row,body[data-theme="light"] .guide-idea,body[data-theme="light"] .guide-card,body[data-theme="light"] .guide-pitfall,body[data-theme="light"] .reset-dialog,body[data-theme="light"] .lock-note,body[data-theme="light"] .option,body[data-theme="light"] .btn,body[data-theme="light"] .nav-btn,body[data-theme="light"] .reset-form input,body[data-theme="light"] .exercise textarea{background:linear-gradient(135deg,rgba(245,249,255,.94) 0%,rgba(220,233,251,.84) 100%);border-color:rgba(255,255,255,.95);box-shadow:0 12px 30px rgba(63,87,145,.09),inset 0 1px rgba(255,255,255,.98)}
+body[data-theme="light"] .topbar{background:linear-gradient(90deg,rgba(240,246,255,.96),rgba(222,234,251,.9))}
+body[data-theme="light"] .hero-main,body[data-theme="light"] .summary-hero{background:linear-gradient(130deg,rgba(74,98,190,.96),rgba(101,128,211,.92));border-color:rgba(255,255,255,.48);box-shadow:0 22px 52px rgba(60,83,151,.2),inset 0 1px rgba(255,255,255,.35)}
+body[data-theme="light"] .hero-main:before{background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(185,207,255,.08));border-color:rgba(255,255,255,.3)}
+body[data-theme="light"] .btn-primary{background:linear-gradient(135deg,rgba(76,99,199,.96),rgba(96,124,215,.92));border-color:rgba(255,255,255,.56);box-shadow:0 8px 20px rgba(65,87,177,.2),inset 0 1px rgba(255,255,255,.32)}
+body[data-theme="light"] .hero-main .btn-primary{background:linear-gradient(135deg,rgba(246,249,255,.96),rgba(218,231,252,.88));border-color:rgba(255,255,255,.95)}
+body[data-theme="light"] .level-card,body[data-theme="light"] .level-card.completed,body[data-theme="light"] .level-card.locked{background:linear-gradient(135deg,rgba(245,249,255,.94),rgba(220,233,251,.84))}
+body[data-theme="light"] .level-card:hover,body[data-theme="light"] .level-card.completed:hover,body[data-theme="light"] .level-card.locked:hover{background:linear-gradient(135deg,rgba(250,252,255,.98),rgba(228,238,254,.92))}
+body[data-theme="light"] .option.selected,body[data-theme="light"] .option.correct,body[data-theme="light"] .option.wrong,body[data-theme="light"] .feedback.ok,body[data-theme="light"] .feedback.no{background:linear-gradient(135deg,rgba(235,242,255,.96),rgba(215,229,250,.9));border-color:rgba(139,160,224,.58)}
+body[data-theme="light"] .chip,body[data-theme="light"] .course-library-total,body[data-theme="light"] .lesson-badge,body[data-theme="light"] .stat-icon,body[data-theme="light"] .guide-list li:before{background:linear-gradient(135deg,rgba(224,235,255,.94),rgba(204,221,249,.82));border-color:rgba(255,255,255,.88);box-shadow:inset 0 1px rgba(255,255,255,.9),0 5px 14px rgba(72,93,165,.08)}
+body[data-theme="light"] .course-entry-icon,body[data-theme="light"] .course-route-icon,body[data-theme="light"] .level-num{background:linear-gradient(145deg,#647df8,#435bdc);border-color:rgba(255,255,255,.42)}
+body[data-theme="light"] .progress-ring:before{background:linear-gradient(135deg,#f4f8ff,#e0ebfb)}
+body[data-theme="light"] .progress-bar{background:linear-gradient(90deg,rgba(161,185,232,.32),rgba(201,216,244,.58));border:1px solid rgba(255,255,255,.72)}
+body[data-theme="light"] .lock-note{background:linear-gradient(135deg,rgba(231,239,253,.94),rgba(214,228,248,.86))}
+body[data-theme="light"] .toast{background:linear-gradient(135deg,rgba(70,95,176,.96),rgba(91,119,198,.94));border-color:rgba(255,255,255,.42);box-shadow:0 16px 42px rgba(42,65,132,.23),inset 0 1px rgba(255,255,255,.22)}
+body[data-theme="light"] .ide-frame,body[data-theme="light"] .codebox{background:linear-gradient(145deg,#192b4d,#233a67);border-color:rgba(151,177,238,.42);box-shadow:0 15px 36px rgba(35,58,111,.2),inset 0 1px rgba(255,255,255,.12)}
+body[data-theme="light"] .ide-toolbar{background:linear-gradient(135deg,#2d4779,#243b68);border-bottom-color:rgba(221,232,255,.14)}
+body[data-theme="light"] .ide-body{background:linear-gradient(145deg,#172746,#1c3156)}
+body[data-theme="light"] .ide-gutter{background:rgba(115,146,211,.12);border-right-color:rgba(190,211,255,.1)}
+body[data-theme="light"] .ide-status{background:linear-gradient(135deg,#20365f,#1b2e51);border-top-color:rgba(221,232,255,.12)}
+body[data-theme="dark"]{background-image:radial-gradient(ellipse at 14% 3%,rgba(86,119,192,.24),transparent 36%),radial-gradient(ellipse at 88% 18%,rgba(73,103,173,.2),transparent 33%),radial-gradient(ellipse at 55% 88%,rgba(80,115,190,.15),transparent 38%),linear-gradient(145deg,#111a2d 0%,#182746 52%,#111a2d 100%);background-attachment:fixed}
+body[data-theme="dark"] .sidebar,body[data-theme="dark"] .topbar,body[data-theme="dark"] .side-card,body[data-theme="dark"] .streak,body[data-theme="dark"] .avatar,body[data-theme="dark"] .hero-progress,body[data-theme="dark"] .stat,body[data-theme="dark"] .panel,body[data-theme="dark"] .level-card,body[data-theme="dark"] .course-library,body[data-theme="dark"] .course-entry,body[data-theme="dark"] .course-route-heading,body[data-theme="dark"] .skill-row,body[data-theme="dark"] .guide-idea,body[data-theme="dark"] .guide-card,body[data-theme="dark"] .guide-pitfall,body[data-theme="dark"] .reset-dialog,body[data-theme="dark"] .lock-note,body[data-theme="dark"] .option,body[data-theme="dark"] .btn,body[data-theme="dark"] .nav-btn,body[data-theme="dark"] .reset-form input,body[data-theme="dark"] .exercise textarea{background:linear-gradient(135deg,rgba(49,69,108,.94) 0%,rgba(33,51,84,.9) 100%);border-color:rgba(213,228,255,.17);box-shadow:0 12px 30px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.1)}
+body[data-theme="dark"] .hero-main,body[data-theme="dark"] .summary-hero{background:linear-gradient(130deg,rgba(45,68,130,.98),rgba(67,91,163,.95));border-color:rgba(213,228,255,.2);box-shadow:0 22px 52px rgba(0,0,0,.27),inset 0 1px rgba(255,255,255,.18)}
+body[data-theme="dark"] .hero-main:before{background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(118,151,227,.08));border-color:rgba(255,255,255,.18)}
+body[data-theme="dark"] .level-card,body[data-theme="dark"] .level-card.completed,body[data-theme="dark"] .level-card.locked{background:linear-gradient(135deg,rgba(49,69,108,.94),rgba(33,51,84,.9))}
+body[data-theme="dark"] .option.selected,body[data-theme="dark"] .option.correct,body[data-theme="dark"] .option.wrong,body[data-theme="dark"] .feedback.ok,body[data-theme="dark"] .feedback.no{background:linear-gradient(135deg,rgba(49,69,108,.94),rgba(33,51,84,.9));border-color:rgba(166,190,245,.34)}
+body[data-theme="dark"] .chip,body[data-theme="dark"] .course-library-total,body[data-theme="dark"] .lesson-badge,body[data-theme="dark"] .stat-icon,body[data-theme="dark"] .guide-list li:before,body[data-theme="dark"] .progress-ring:before{background:linear-gradient(135deg,rgba(68,91,144,.82),rgba(45,66,110,.78));border-color:rgba(213,228,255,.16);box-shadow:inset 0 1px rgba(255,255,255,.1),0 5px 14px rgba(0,0,0,.12)}
+body[data-theme="dark"] .course-entry-icon,body[data-theme="dark"] .course-route-icon,body[data-theme="dark"] .level-num{background:linear-gradient(145deg,#647df8,#435bdc);border-color:rgba(255,255,255,.22)}
+body[data-theme="dark"] .progress-bar{background:linear-gradient(90deg,rgba(88,113,173,.46),rgba(66,89,143,.5));border:1px solid rgba(213,228,255,.12)}
+body[data-theme="dark"] .lock-note{background:linear-gradient(135deg,rgba(49,69,108,.94),rgba(33,51,84,.9))}
+body[data-theme="dark"] .toast{background:linear-gradient(135deg,rgba(47,70,128,.98),rgba(38,59,112,.96));border-color:rgba(213,228,255,.2)}
+body[data-theme="dark"] .ide-frame,body[data-theme="dark"] .codebox{background:linear-gradient(145deg,#101d35,#192b4b);border-color:rgba(151,177,238,.3)}
+body[data-theme="dark"] .ide-toolbar{background:linear-gradient(135deg,#243b67,#1c3158);border-bottom-color:rgba(221,232,255,.12)}
+body[data-theme="dark"] .ide-body{background:linear-gradient(145deg,#0f1b31,#172846)}
+body[data-theme="dark"] .ide-gutter{background:rgba(115,146,211,.08);border-right-color:rgba(190,211,255,.08)}
+body[data-theme="dark"] .ide-status{background:linear-gradient(135deg,#192d50,#142542);border-top-color:rgba(221,232,255,.1)}
+/* Restore clear hierarchy in the learning map while keeping its glass surfaces. */
+body[data-theme="light"] .course-route{padding:16px;border:1px solid rgba(255,255,255,.96);border-radius:22px;background:linear-gradient(145deg,rgba(219,232,251,.72),rgba(207,224,248,.54));box-shadow:0 15px 36px rgba(59,83,140,.08),inset 0 1px rgba(255,255,255,.96)}
+body[data-theme="light"] .course-route-heading{background:linear-gradient(130deg,rgba(204,222,249,.96),rgba(231,240,254,.9));border-color:rgba(111,140,197,.28);box-shadow:0 7px 20px rgba(66,91,151,.09),inset 0 1px rgba(255,255,255,.98)}
+body[data-theme="light"] .course-route-heading p{color:#506582}
+body[data-theme="light"] .section-head p{color:#536985}
+body[data-theme="light"] .track-head{padding:8px 11px;margin-bottom:10px;border:1px solid rgba(255,255,255,.95);border-radius:12px;background:linear-gradient(130deg,rgba(224,236,253,.96),rgba(207,224,248,.86));box-shadow:0 5px 14px rgba(67,91,147,.07),inset 0 1px #fff}
+body[data-theme="light"] .track-title{color:#233b5b}
+body[data-theme="light"] .track-note{color:#526985;font-weight:650}
+body[data-theme="light"] .level-card,body[data-theme="light"] .level-card.completed,body[data-theme="light"] .level-card.locked{opacity:1;background:linear-gradient(135deg,rgba(249,251,255,.98),rgba(228,238,253,.94));border:1px solid rgba(119,147,194,.38);box-shadow:0 9px 24px rgba(56,81,141,.12),inset 0 1px #fff}
+body[data-theme="light"] .level-card.completed{border-left:3px solid rgba(61,169,128,.78)}
+body[data-theme="light"] .level-card.locked{border-style:dashed;border-color:rgba(136,155,188,.48)}
+body[data-theme="light"] .level-card h3{color:#203653}
+body[data-theme="light"] .level-card p{color:#526985}
+body[data-theme="light"] .level-meta{color:#617794}
+body[data-theme="light"] .level-state{color:#4e68c4}
+body[data-theme="light"] .level-card.completed .level-state{color:#23865f}
+body[data-theme="light"] .level-card.locked .level-state{color:#71819a}
+body[data-theme="light"] .level-card:hover,body[data-theme="light"] .level-card.completed:hover,body[data-theme="light"] .level-card.locked:hover{border-color:rgba(91,119,194,.58);box-shadow:0 17px 32px rgba(55,80,141,.16),inset 0 1px #fff}
+body[data-theme="dark"] .course-route{padding:16px;border:1px solid rgba(209,225,255,.13);border-radius:22px;background:linear-gradient(145deg,rgba(38,57,91,.72),rgba(30,47,78,.58));box-shadow:0 15px 36px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.08)}
+body[data-theme="dark"] .course-route-heading{background:linear-gradient(130deg,rgba(57,81,128,.94),rgba(43,65,108,.9));border-color:rgba(190,211,255,.22);box-shadow:0 7px 20px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.1)}
+body[data-theme="dark"] .course-route-heading p,body[data-theme="dark"] .track-note{color:#c0cee4}
+body[data-theme="dark"] .track-head{padding:8px 11px;margin-bottom:10px;border:1px solid rgba(209,225,255,.13);border-radius:12px;background:linear-gradient(130deg,rgba(55,78,123,.8),rgba(39,61,101,.74));box-shadow:0 5px 14px rgba(0,0,0,.13),inset 0 1px rgba(255,255,255,.08)}
+body[data-theme="dark"] .track-title{color:#edf3ff}
+body[data-theme="dark"] .level-card,body[data-theme="dark"] .level-card.completed,body[data-theme="dark"] .level-card.locked{opacity:1;border-color:rgba(189,210,250,.27);box-shadow:0 10px 26px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.1)}
+body[data-theme="dark"] .level-card.completed{border-left:3px solid rgba(92,190,151,.8)}
+body[data-theme="dark"] .level-card.locked{border-style:dashed}
+body[data-theme="dark"] .level-card p,body[data-theme="dark"] .level-meta{color:#c0cee4}
+body[data-theme="dark"] .level-card.completed .level-state{color:#8de0b9}
+body[data-theme="dark"] .level-card.locked .level-state{color:#c0cee4}
+body[data-theme="dark"] .level-card:hover,body[data-theme="dark"] .level-card.completed:hover,body[data-theme="dark"] .level-card.locked:hover{border-color:rgba(164,190,255,.55);box-shadow:0 17px 32px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.14)}
+/* The only level-card changes: match the horizontal C-course entry card. */
+.level-card{grid-template-columns:48px minmax(0,1fr) minmax(112px,auto) 20px;grid-template-rows:auto auto;column-gap:13px;row-gap:3px;min-height:76px;padding:13px 16px;border-radius:17px}
+.level-num{grid-column:1;grid-row:1 / 3;width:46px;height:46px;border-radius:14px;font-size:14px;font-weight:850}
+.level-card h3{grid-column:2;grid-row:1;align-self:end;margin:0 0 1px}
+.level-card p{grid-column:2;grid-row:2;align-self:start;line-height:1.5}
+.level-meta{grid-column:3;grid-row:1 / 3;align-self:center;max-width:180px;margin:0;text-align:right;white-space:normal;line-height:1.45;color:#75819a;font-size:10px}
+.level-state{grid-column:4;grid-row:1 / 3;justify-self:center;align-self:center}
+body[data-theme="light"] .level-card,body[data-theme="light"] .level-card.completed,body[data-theme="light"] .level-card.locked{background:linear-gradient(115deg,rgba(255,255,255,.9),rgba(236,241,255,.78));border:1px solid rgba(143,160,240,.27);border-radius:17px;opacity:1;box-shadow:0 9px 24px rgba(49,67,131,.07),inset 0 1px #fff}
+body[data-theme="light"] .level-card:hover,body[data-theme="light"] .level-card.completed:hover,body[data-theme="light"] .level-card.locked:hover{background:linear-gradient(115deg,rgba(255,255,255,.96),rgba(229,237,255,.88));border-color:rgba(105,126,239,.55);box-shadow:0 17px 34px rgba(49,67,131,.13),inset 0 1px #fff}
+body[data-theme="light"] .level-card.completed{border-left:3px solid rgba(143,160,240,.42)}
+body[data-theme="light"] .level-card.locked{border-style:solid}
+body[data-theme="dark"] .level-card,body[data-theme="dark"] .level-card.completed,body[data-theme="dark"] .level-card.locked{background:linear-gradient(115deg,rgba(45,59,88,.98),rgba(35,48,75,.96));border:1px solid rgba(145,164,255,.2);border-radius:17px;opacity:1;box-shadow:0 9px 24px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.08)}
+body[data-theme="dark"] .level-card.completed{border-left:3px solid rgba(145,164,255,.32)}
+body[data-theme="dark"] .level-card.locked{border-style:solid}
+body[data-theme="dark"] .level-meta{color:#a6b3cb}
+@media(max-width:700px){.level-card{grid-template-columns:42px minmax(0,1fr) 18px;grid-template-rows:auto auto auto;column-gap:10px;row-gap:2px;min-height:72px;padding:11px 12px}.level-num{grid-column:1;grid-row:1 / 4;width:40px;height:40px;font-size:12px}.level-card h3{grid-column:2;grid-row:1}.level-card p{grid-column:2;grid-row:2}.level-meta{grid-column:2;grid-row:3;max-width:none;margin-top:3px;text-align:left;white-space:normal}.level-state{grid-column:3;grid-row:1 / 4}}
+/* Keep the page canvas coordinated with the glass surfaces. */
+body[data-theme="light"]{background-color:#e9f1fd!important;background-image:radial-gradient(390px circle at var(--pointer-x,42%) var(--pointer-y,18%),rgba(255,255,255,.68),rgba(153,184,255,.16) 34%,transparent 72%),radial-gradient(ellipse at 14% 3%,rgba(155,190,255,.38),transparent 36%),radial-gradient(ellipse at 88% 18%,rgba(187,208,255,.34),transparent 33%),radial-gradient(ellipse at 55% 88%,rgba(178,202,255,.22),transparent 38%),linear-gradient(145deg,#e9f1fd 0%,#e1ebfa 52%,#edf3fc 100%)!important;background-attachment:fixed!important}
+body[data-theme="dark"]{background-color:#111a2d!important;background-image:radial-gradient(390px circle at var(--pointer-x,42%) var(--pointer-y,18%),rgba(122,150,220,.19),rgba(73,96,156,.09) 34%,transparent 72%),radial-gradient(ellipse at 12% 4%,rgba(61,82,139,.22),transparent 34%),radial-gradient(ellipse at 88% 18%,rgba(87,66,135,.2),transparent 30%),linear-gradient(145deg,#111a2d 0%,#151f35 55%,#111a2d 100%)!important;background-attachment:fixed!important}
+
+/* Make every level row read and feel like the sidebar's glass buttons. */
+body[data-theme="light"] .level-card,body[data-theme="light"] .level-card.completed,body[data-theme="light"] .level-card.locked{background:linear-gradient(135deg,rgba(245,249,255,.94),rgba(220,233,251,.84));border:1px solid rgba(255,255,255,.96);border-radius:17px;opacity:1;box-shadow:0 12px 30px rgba(63,87,145,.09),inset 0 1px rgba(255,255,255,.98)}
+body[data-theme="light"] .level-card.completed{border-left:3px solid rgba(61,169,128,.72)}
+body[data-theme="light"] .level-card.locked{border-style:solid}
+body[data-theme="light"] .level-card:hover,body[data-theme="light"] .level-card.completed:hover,body[data-theme="light"] .level-card.locked:hover{background:linear-gradient(135deg,rgba(250,252,255,.99),rgba(210,228,252,.94));border-color:rgba(119,153,232,.72);box-shadow:0 24px 44px rgba(55,80,141,.2),0 0 0 2px rgba(145,174,244,.18),inset 0 1px #fff}
+body[data-theme="dark"] .level-card,body[data-theme="dark"] .level-card.completed,body[data-theme="dark"] .level-card.locked{background:linear-gradient(135deg,rgba(49,69,108,.94),rgba(33,51,84,.9));border:1px solid rgba(213,228,255,.2);border-radius:17px;opacity:1;box-shadow:0 12px 30px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.1)}
+body[data-theme="dark"] .level-card.completed{border-left:3px solid rgba(92,190,151,.78)}
+body[data-theme="dark"] .level-card.locked{border-style:solid}
+body[data-theme="dark"] .level-card:hover,body[data-theme="dark"] .level-card.completed:hover,body[data-theme="dark"] .level-card.locked:hover{background:linear-gradient(135deg,rgba(63,85,128,.98),rgba(42,62,99,.96));border-color:rgba(166,190,255,.58);box-shadow:0 24px 46px rgba(0,0,0,.34),0 0 0 2px rgba(135,161,240,.13),inset 0 1px rgba(255,255,255,.16)}
+.level-card{position:relative;top:0;z-index:1;box-sizing:border-box;width:100%;margin:0;transition:top .28s cubic-bezier(.2,.8,.2,1),width .28s cubic-bezier(.2,.8,.2,1),margin .28s cubic-bezier(.2,.8,.2,1),min-height .28s cubic-bezier(.2,.8,.2,1),padding .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s,background .28s!important}
+.level-card.float-surface{transform:none!important;transition:top .28s cubic-bezier(.2,.8,.2,1),width .28s cubic-bezier(.2,.8,.2,1),margin .28s cubic-bezier(.2,.8,.2,1),min-height .28s cubic-bezier(.2,.8,.2,1),padding .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s,background .28s!important}
+.level-card:hover,.level-card.float-surface:hover,.level-card:active{transform:none!important}
+.level-card:hover:before{opacity:.72;background:linear-gradient(110deg,transparent 18%,rgba(255,255,255,.3) 43%,rgba(163,192,255,.2) 50%,transparent 74%);background-size:240% 100%;animation:level-card-glass-sweep 1.8s ease-in-out infinite alternate}
+.level-card:hover{top:-7px;width:calc(100% + 12px);margin-left:-6px;margin-bottom:-6px;min-height:82px;padding-top:16px;padding-bottom:16px;z-index:5;animation:level-card-glass-pulse 1.8s ease-in-out infinite alternate}
+body[data-theme="dark"] .level-card:hover{animation:level-card-glass-pulse-dark 1.8s ease-in-out infinite alternate}
+.level-num{width:46px;height:46px;justify-self:center;background-size:150% 150%;background-position:0 50%;transition:width .28s cubic-bezier(.2,.8,.2,1),height .28s cubic-bezier(.2,.8,.2,1),background-position .48s ease,filter .28s,box-shadow .28s}
+.level-card:hover .level-num{width:52px;height:52px;transform:none;background-position:100% 50%;filter:drop-shadow(0 5px 8px rgba(72,96,196,.24));box-shadow:0 9px 18px rgba(68,91,221,.24),inset 0 1px rgba(255,255,255,.48)}
+.level-card:hover .level-state{transform:none!important;filter:none!important}
+@keyframes level-card-glass-sweep{from{background-position:120% 0}to{background-position:-20% 0}}
+@keyframes level-card-glass-pulse{from{box-shadow:0 19px 34px rgba(55,80,141,.15),0 0 0 1px rgba(145,174,244,.14),inset 0 1px #fff}to{box-shadow:0 27px 46px rgba(55,80,141,.24),0 0 0 3px rgba(145,174,244,.3),inset 0 1px #fff}}
+@keyframes level-card-glass-pulse-dark{from{box-shadow:0 19px 34px rgba(0,0,0,.25),0 0 0 1px rgba(135,161,240,.12),inset 0 1px rgba(255,255,255,.1)}to{box-shadow:0 27px 46px rgba(0,0,0,.38),0 0 0 3px rgba(135,161,240,.24),inset 0 1px rgba(255,255,255,.16)}}
+@media(max-width:700px) and (hover:hover) and (pointer:fine){.level-card:hover .level-num{width:44px;height:44px}}
+@media(max-width:700px){.level-num{width:40px;height:40px}}
+@media(hover:none),(pointer:coarse){.level-card:hover{top:0;width:100%;margin:0;min-height:76px;padding-top:11px;padding-bottom:11px;animation:none}.level-card:hover:before{animation:none;opacity:0}.level-card:hover .level-num{width:40px;height:40px;filter:none}}
+@media(prefers-reduced-motion:reduce){.level-card:hover{animation:none}.level-card:hover:before{animation:none}.level-num{transition:none}}
+
+/* Startup: show the code mark, spin its edge, then reveal the real interface cards from that point. */
+body.splash-active{overflow:hidden}
+body.splash-active .app{visibility:hidden}
+.splash-screen{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;overflow:hidden;color:#20395f;background:radial-gradient(ellipse at 50% 35%,rgba(255,255,255,.96),rgba(226,238,255,.88) 42%,rgba(197,218,250,.96) 100%);opacity:1;visibility:visible;transition:opacity .48s ease,visibility .48s ease}
+.splash-screen.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+.splash-screen::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(86,125,190,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(86,125,190,.075) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(ellipse at center,black 12%,transparent 78%);opacity:0;animation:splash-grid-in .45s .68s ease-out forwards}
+.splash-screen::after{content:"";position:absolute;left:0;right:0;top:-10%;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(92,145,231,.65),rgba(255,255,255,.9),rgba(92,145,231,.65),transparent);box-shadow:0 0 18px rgba(92,145,231,.42);animation:splash-scan 1.8s .82s ease-out 1 forwards}
+body[data-theme="dark"] .splash-screen{color:#edf4ff;background:radial-gradient(ellipse at 50% 36%,rgba(55,79,125,.88),rgba(24,39,69,.96) 48%,#10182a 100%)}
+body[data-theme="dark"] .splash-screen::before{background-image:linear-gradient(rgba(184,207,255,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(184,207,255,.075) 1px,transparent 1px)}
+.splash-skip{position:absolute;top:24px;right:28px;z-index:2;padding:9px 14px;border:1px solid rgba(255,255,255,.8);border-radius:999px;background:rgba(255,255,255,.4);color:inherit;font-family:inherit;font-size:12px;font-weight:600;line-height:1.2;letter-spacing:.2px;cursor:pointer;opacity:0;visibility:hidden;backdrop-filter:blur(12px);transition:opacity .2s,visibility .2s,background .2s,border-color .2s,box-shadow .2s}
+.splash-screen.can-skip .splash-skip{opacity:1;visibility:visible}
+.splash-skip:hover{background:rgba(255,255,255,.72);border-color:#fff;box-shadow:0 5px 18px rgba(68,101,164,.12)}
+body[data-theme="dark"] .splash-skip{background:rgba(255,255,255,.08);border-color:rgba(220,232,255,.24)}
+.splash-content{position:relative;z-index:1;display:grid;place-items:center}
+.splash-logo-stage{position:relative;width:132px;height:132px;display:grid;place-items:center}
+.splash-orbit{position:absolute;inset:1px;border:2px solid rgba(81,124,196,.2);border-top-color:#fff;border-right-color:rgba(93,139,224,.95);border-bottom-color:rgba(93,139,224,.5);border-radius:50%;opacity:0;box-shadow:0 0 18px rgba(93,139,224,.18);animation:splash-orbit-appear .36s .62s ease-out forwards,splash-orbit-spin 1.15s .62s linear infinite}
+.splash-orbit::after{content:"";position:absolute;top:13px;left:18px;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 14px 3px rgba(78,125,213,.66)}
+.splash-mark{position:relative;width:92px;height:92px;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.92);border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(213,231,255,.57));box-shadow:0 18px 42px rgba(62,98,165,.2),inset 0 1px rgba(255,255,255,.98),inset 0 -8px 18px rgba(113,158,226,.13);backdrop-filter:blur(14px) saturate(145%)}
+.splash-mark::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,transparent 20%,rgba(255,255,255,.66) 45%,rgba(255,255,255,.1) 57%,transparent 72%);transform:translateX(-130%);animation:splash-glass-sweep 1.8s .72s ease-in-out 1 forwards}
+.splash-code{position:relative;z-index:1;font:850 40px/1 "Segoe UI",Inter,Arial,sans-serif;letter-spacing:-3px;background:linear-gradient(180deg,#fff 0%,#eef6ff 43%,#79a5e7 100%);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-stroke:.7px rgba(255,255,255,.82);filter:drop-shadow(0 2px 2px rgba(53,87,143,.22))}
+.app.interface-reveal .drop-in{will-change:translate,opacity;animation:interface-card-drop .74s cubic-bezier(.2,.72,.22,1) var(--drop-delay,0ms) both}
+@keyframes splash-grid-in{to{opacity:.72}}
+@keyframes splash-orbit-appear{to{opacity:1}}
+@keyframes splash-orbit-spin{to{transform:rotate(360deg)}}
+@keyframes splash-glass-sweep{to{transform:translateX(130%)}}
+@keyframes splash-scan{from{transform:translateY(-10vh)}to{transform:translateY(120vh)}}
+@keyframes interface-card-drop{0%{opacity:0;translate:0 -112vh}62%{opacity:1;translate:0 15px}82%{translate:0 -5px}100%{opacity:1;translate:0 0}}
+@media(max-width:600px){.splash-skip{top:16px;right:16px}.splash-logo-stage{width:116px;height:116px}.splash-mark{width:82px;height:82px;border-radius:25px}.splash-code{font-size:36px}}
+@media(prefers-reduced-motion:reduce){.splash-screen::before,.splash-screen::after,.splash-orbit,.splash-mark::before{animation:none}.splash-screen::before{opacity:.55}.splash-orbit{opacity:1}.splash-content{animation:none}.app.interface-reveal .drop-in{animation:none;translate:none;opacity:1;will-change:auto}}
+
+/* Brief celebration after a level is completed. */
+.victory-overlay{position:fixed;inset:0;z-index:10001;display:grid;place-items:center;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse at center,rgba(113,157,239,.16),transparent 52%);opacity:1;transition:opacity .42s ease}
+.victory-overlay.is-leaving{opacity:0}
+.victory-confetti{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden}
+.victory-confetti i{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:2px;background:var(--piece-color);opacity:0;animation:victory-confetti-burst 1.35s cubic-bezier(.15,.68,.2,1) var(--piece-delay) both}
+.victory-confetti i:nth-child(3n){width:5px;height:10px;border-radius:3px}.victory-confetti i:nth-child(4n){border-radius:50%}
+.victory-card{position:relative;width:min(350px,calc(100vw - 36px));padding:27px 25px 22px;border:1px solid rgba(255,255,255,.92);border-radius:25px;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(229,239,255,.92));box-shadow:0 24px 70px rgba(46,72,135,.24),inset 0 1px #fff;text-align:center;pointer-events:auto;animation:victory-card-in .45s ease both}
+body[data-theme="dark"] .victory-card{border-color:rgba(222,234,255,.22);background:linear-gradient(145deg,rgba(39,57,91,.98),rgba(27,42,69,.97));box-shadow:0 24px 70px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.1);color:#eff4ff}
+.victory-medal{width:64px;height:64px;margin:0 auto 14px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.92);border-radius:21px;background:linear-gradient(145deg,#c8f4e4,#78d3b0);color:#176b51;font-size:30px;font-weight:850;box-shadow:0 9px 24px rgba(55,169,129,.22),inset 0 1px #fff;animation:victory-medal-pulse 1.3s ease-out 2}
+.victory-kicker{color:#6681b3;font-size:9px;font-weight:850;letter-spacing:2px}
+.victory-title{margin:7px 0 5px;color:#1e365d;font-size:23px;font-weight:850}
+.victory-copy{margin:0 0 14px;color:#6e809e;font-size:12px}
+.victory-reward{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid rgba(127,158,224,.24);border-radius:999px;background:linear-gradient(135deg,rgba(231,240,255,.96),rgba(207,225,255,.82));color:#4768ba;font-size:12px;font-weight:800}
+body[data-theme="dark"] .victory-kicker{color:#aec4eb}body[data-theme="dark"] .victory-title{color:#f1f5ff}body[data-theme="dark"] .victory-copy{color:#b2c2dd}body[data-theme="dark"] .victory-reward{border-color:rgba(171,196,248,.22);background:linear-gradient(135deg,rgba(69,93,143,.72),rgba(48,71,116,.8));color:#d7e4ff}
+.victory-dismiss{display:block;margin:17px auto 0;padding:7px 12px;border:0;border-radius:9px;background:transparent;color:#687fa7;font-family:inherit;font-size:11px;font-weight:700;line-height:1.4;cursor:pointer;pointer-events:auto}
+.victory-dismiss:hover{background:rgba(108,145,220,.1);color:#365fa7}
+@keyframes victory-card-in{from{opacity:0}to{opacity:1}}
+@keyframes victory-medal-pulse{0%{box-shadow:0 0 0 0 rgba(75,190,147,.3),0 9px 24px rgba(55,169,129,.22),inset 0 1px #fff}100%{box-shadow:0 0 0 14px rgba(75,190,147,0),0 12px 29px rgba(55,169,129,.29),inset 0 1px #fff}}
+@keyframes victory-confetti-burst{0%{opacity:0;transform:translate(0,0) rotate(0) scale(.3)}12%{opacity:1}100%{opacity:0;transform:translate(var(--piece-x),var(--piece-y)) rotate(var(--piece-rotation)) scale(.65)}}
+@media(prefers-reduced-motion:reduce){.victory-confetti i,.victory-medal{animation:none}.victory-card{animation:none}}
+</style>
+</head>
+<body class="splash-active">
+<div class="splash-screen" id="splash-screen" role="status" aria-label="Code Sword 正在启动">
+  <button class="splash-skip" id="splash-skip" type="button">跳过动画 <span aria-hidden="true">↗</span></button>
+  <div class="splash-content">
+    <div class="splash-logo-stage" aria-hidden="true"><div class="splash-orbit"></div><div class="splash-mark"><span class="splash-code">code</span></div></div>
+  </div>
+</div>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="code-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".48" stop-color="#f0f7ff"/><stop offset="1" stop-color="#78a6e8"/></linearGradient><filter id="code-shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="1.2" flood-color="#4169a7" flood-opacity=".35"/></filter></defs><text x="32" y="42" text-anchor="middle" textLength="56" lengthAdjust="spacingAndGlyphs" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="27" font-weight="800" letter-spacing="-1.2" fill="url(#code-glass)" stroke="#fff" stroke-width="1.5" stroke-opacity=".9" paint-order="stroke" filter="url(#code-shadow)">code</text><path d="M7 17c8-6 15-8 24-8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".65"/></svg></div><div><div class="brand-name">Code Sword</div><div class="brand-sub">C LANGUAGE QUEST</div></div></div>
+    <div class="nav-label">学习空间</div>
+    <nav class="nav">
+      <button class="nav-btn active" data-page="map"><span class="nav-icon">⌂</span><span>学习地图</span></button>
+      <button class="nav-btn" data-page="practice"><span class="nav-icon">⌘</span><span>继续挑战</span></button>
+      <button class="nav-btn" data-page="summary"><span class="nav-icon">✦</span><span>我的总结</span></button>
+    </nav>
+    <div class="side-bottom">
+      <div class="side-card"><strong>每天前进一步</strong><p>稳稳通关，比一次学很多更重要。</p><button class="btn btn-soft btn-small" data-action="continue">继续学习&nbsp; →</button></div>
+      <div class="side-mini">学习进度自动保存在此设备</div>
+    </div>
+  </aside>
+  <section class="main">
+    <header class="topbar"><div class="top-title" id="topTitle">CODE SWORD&nbsp; / &nbsp;学习路线</div><div class="top-right"><button class="btn btn-ghost theme-button" id="themeButton" data-action="cycle-theme" aria-label="切换外观" title="切换外观">◐</button><button class="btn btn-ghost btn-small reset-button" data-action="reset-progress" title="输入密码后清除本设备学习进度">重头开始</button><div class="streak">✦ <span id="xpTop">0</span> 学习点</div><div class="avatar"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="m29 8 10 2-15 20-6-6L29 8Z" fill="#ffd36b"/><path d="m18 25 6 6-10 10-5-2 2-5 7-9Z" fill="#fff0bd"/><path d="m17 29 6 6" fill="none" stroke="#ffd36b" stroke-width="3" stroke-linecap="round"/></svg></div></div></header>
+    <main class="content" id="view"></main>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal-backdrop" id="resetModal" hidden><section class="reset-dialog" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><div id="resetModalContent"></div></section></div>
+<script>
+const levels = [
+{id:1,stage:"起步上手",title:"认识 C 程序",minutes:8,gist:"看懂程序入口，输出第一行文字。",lesson:"在常见的托管环境中，程序启动代码会调用 main。标准输入输出来自 stdio.h；语句通常以分号结束，花括号表示代码块。先熟悉“包含头文件、定义 main、执行语句、返回状态”这条主线。嵌入式等 freestanding 环境的启动方式可以不同。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    printf("Hello, C!\\\\n");\\n    return 0;\\n}',takeaways:["main 是程序入口","printf 输出格式化文本","return 0 表示程序正常结束"],quiz:"在常见的托管环境中，C 程序的入口通常是什么？",options:["从文件第一行开始","从 main 函数开始","从最后一个函数开始"],answer:1,explain:"托管环境的启动代码会调用 main；freestanding 实现可以使用不同的启动方式。",mission:"写一个最小程序，在终端输出 Hello, C! 并正常结束。",required:["int main","printf(","return 0"],hint:"先包含 stdio.h，再写 int main(void)，在花括号中调用 printf。"},
+{id:2,stage:"起步上手",title:"变量与基本类型",minutes:10,gist:"让数据有名字，理解整数、浮点数和字符。",lesson:"变量是有类型的存储位置。常用类型包括 char、int、float、double；printf 的格式说明符必须与参数类型匹配。scanf 读取标量通常需要传入地址，例如读取 double 使用 %lf；读取字符串要限制宽度或优先使用 fgets，避免写越界。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    int age = 18;\\n    double score = 95.5;\\n    printf("%d %.1f\\\\n", age, score);\\n    return 0;\\n}',takeaways:["先声明类型再使用变量","%d 常用于 int，%f 常用于浮点输出","变量名表达数据含义"],quiz:"下面哪个格式说明符通常用于输出 int？",options:["%d","%s","%p"],answer:0,explain:"%d 对应十进制 int；%s 用于字符串，%p 用于指针。",mission:"声明 int 类型的变量 count，并使用 printf 和 %d 输出它。",required:["int count","printf(","%d"],hint:"变量声明包含类型和名字，例如 int count = 3;"},
+{id:3,stage:"起步上手",title:"常量、转换与枚举",minutes:10,gist:"表达固定值，安全地转换类型，并为选项命名。",lesson:"const 可限制通过某个名称修改对象；显式类型转换能说明你有意改变数据类型。enum 为一组整数常量提供可读名字。整数除法会丢弃小数部分，计算平均值时要注意转换。",sample:'#include <stdio.h>\\n\\nenum Status { READY, RUNNING, DONE };\\n\\nint main(void) {\\n    const int total = 5;\\n    double average = (double)total / 2;\\n    enum Status state = READY;\\n    printf("%.1f %d\\\\n", average, (int)state);\\n    return 0;\\n}',takeaways:["const 表达只读意图","显式转换写在表达式中","枚举让状态名字清楚易懂"],quiz:"int a = 5, b = 2; a / b 的结果是什么？",options:["2.5","2","编译错误"],answer:1,explain:"两个操作数都是整数，整数除法结果为 2。",mission:"定义一个 enum Level，至少包含 EASY 和 HARD，并将一个 int 显式转换为 double。",required:["enum level","easy","hard","(double)"],hint:"枚举声明以 enum 开头；显式转换写成 (double)value。"},
+{id:4,stage:"起步上手",title:"运算符与表达式",minutes:9,gist:"组合算术、比较、逻辑和位运算。",lesson:"C 运算符包括算术、关系、逻辑、赋值、条件和位运算。优先级不确定时加括号。逻辑 &&、|| 有短路特性；位运算 &, |, ^, ~ 和移位处理整数的二进制位。用位标志时优先使用 unsigned 类型，并谨慎处理有符号数移位。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    unsigned flags = 0;\\n    flags = flags | (1u << 2);\\n    if ((flags & (1u << 2)) != 0) {\\n        puts("enabled");\\n    }\\n    return 0;\\n}',takeaways:["比较表达式产生真假结果","逻辑运算用于组合条件","位掩码适合标志位处理"],quiz:"逻辑与运算符是哪一个？",options:["&","&&","||"],answer:1,explain:"&& 是逻辑与；& 是按位与。",mission:"用左移和按位或设置从 0 编号的第 3 位（bit 2），再用按位与检查该位是否开启。",required:["<<","|","&"],hint:"设置位可以使用 flags |= (1u << n)，检查时使用 flags & (1u << n)。"},
+{id:5,stage:"流程控制",title:"分支判断",minutes:10,gist:"用 if、else 和 switch 让程序作出选择。",lesson:"if/else 适合范围判断和复合条件；switch 适合根据整数或枚举值选择分支。每个 switch 分支通常用 break 结束，default 用于处理其他情况。条件表达式里的比较要使用 ==，不要误写成赋值 =。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    int score = 82;\\n    if (score >= 60) {\\n        puts("pass");\\n    } else {\\n        puts("try again");\\n    }\\n    return 0;\\n}',takeaways:["if 判断条件真假","else 覆盖另一种情况","switch 需要留意 break 和 default"],quiz:"if (x = 3) 中最可能的错误是什么？",options:["应该使用比较运算符 ==","x 不能作为条件","if 后面必须写分号"],answer:0,explain:"单个 = 是赋值；比较相等应使用 ==。",mission:"写一个 if/else：当 temperature 大于等于 30 输出 hot，否则输出 mild。",required:["if","temperature >= 30","else","puts("],hint:"条件写在 if (...) 中，两个分支分别放进花括号。"},
+{id:6,stage:"流程控制",title:"循环与跳转",minutes:10,gist:"重复执行任务，掌握 for、while、do-while。",lesson:"for 常用于次数明确的循环，while 适合条件驱动，do-while 至少执行一次。break 结束当前循环，continue 跳过本轮剩余语句。检查循环初值、条件和更新式，避免死循环与越界。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    int sum = 0;\\n    for (int i = 1; i <= 5; ++i) {\\n        sum += i;\\n    }\\n    printf("%d\\\\n", sum);\\n    return 0;\\n}',takeaways:["循环要有明确的终止条件","for 由初始化、条件、更新组成","break 和 continue 改变循环流程"],quiz:"for 循环第三个表达式通常负责什么？",options:["声明函数","更新循环变量","关闭程序"],answer:1,explain:"第三部分通常在每轮后更新计数器，例如 ++i。",mission:"使用 for 循环累加 1 到 10，并输出 sum。",required:["for","sum","+=","printf("],hint:"声明 sum 并初始化为 0，在循环体中执行 sum += i。"},
+{id:7,stage:"流程控制",title:"函数与参数",minutes:11,gist:"拆分任务，让代码可以重复调用。",lesson:"函数通过返回类型、函数名和参数列表定义。声明（原型）让编译器提前知道接口；调用时传入实参。C 默认按值传递，函数内修改形参不会直接改变调用者的普通变量。",sample:'#include <stdio.h>\\n\\nint max(int a, int b);\\n\\nint max(int a, int b) {\\n    return a > b ? a : b;\\n}\\n\\nint main(void) {\\n    printf("%d\\\\n", max(4, 9));\\n    return 0;\\n}',takeaways:["函数接口写清参数和返回值","原型可以放在定义之前","C 的普通参数按值传递"],quiz:"函数要把整数结果交还给调用者，应该怎么做？",options:["使用 return 返回结果","用 printf 代替返回","把函数名写成 int"],answer:0,explain:"return 表达式将值返回给调用者。",mission:"定义 int max(int a, int b)，比较两个数并返回较大的值；可以使用 if/else 或条件运算符。",required:["int max(int a, int b)","return"],hint:"函数体里判断 a > b，分别返回 a 或 b。"},
+{id:8,stage:"流程控制",title:"作用域、生命周期与递归",minutes:12,gist:"理解变量可见范围，认识递归和静态存储期。",lesson:"局部变量通常只在代码块中可见，自动变量在块退出后结束生命周期。static 局部变量在多次函数调用间保留值。递归函数要有基准情形，并让每次调用逐步接近基准。下面的阶乘示例假设 n 是非负且较小的整数；真实程序还要验证输入并防止乘法溢出。",sample:'#include <stdio.h>\\n\\nint factorial(int n) {\\n    if (n <= 1) return 1;\\n    return n * factorial(n - 1);\\n}\\n\\nint main(void) {\\n    printf("%d\\\\n", factorial(5));\\n    return 0;\\n}',takeaways:["变量作用域决定名字在哪里可用","局部变量一般随代码块结束","递归必须有终止条件"],quiz:"递归函数最重要的安全结构是什么？",options:["永远调用自己","基准情形和逐步收敛","至少两个全局变量"],answer:1,explain:"没有基准情形，递归会持续调用并耗尽栈空间。",mission:"在 n 为非负且较小整数的前提下实现 factorial(n)：n == 0 或 n == 1 时返回 1，否则递归计算 n * factorial(n - 1)。",required:["factorial","if","return 1","factorial(n - 1)"],hint:"先写基准情形，再递归调用一个更小的问题。"},
+{id:9,stage:"复合数据",title:"数组与多维数组",minutes:11,gist:"按顺序保存同类数据，正确处理下标。",lesson:"数组在内存中连续存放同类型元素，下标从 0 开始。访问下标越界属于未定义行为。函数接收数组时会退化为指针，因此通常需要额外传入长度。多维数组可表示表格，但传给函数时要保留后续维度大小。",sample:'#include <stdio.h>\\n\\nint sum(const int values[], int length) {\\n    int total = 0;\\n    for (int i = 0; i < length; ++i) total += values[i];\\n    return total;\\n}',takeaways:["第一个元素下标为 0","数组越界必须避免","函数通常需要同时接收数组长度"],quiz:"长度为 5 的数组，最后一个有效下标是多少？",options:["5","4","1"],answer:1,explain:"下标从 0 开始，因此最后一个是 5 - 1 = 4。",mission:"实现 sum(values, length)，使用 for 循环访问 values[i] 并返回总和。",required:["int values[","int length","for","values[i]","return"],hint:"循环条件使用 i < length，不要写 i <= length。"},
+{id:10,stage:"复合数据",title:"字符与字符串",minutes:11,gist:"区分单个字符和以零结束的字符数组。",lesson:"C 没有内建 string 类型。字符串通常是 char 数组，并以空字符 \\0 结束。处理字符串时使用 <string.h> 的 strlen、strcmp 等函数；memcpy 只复制指定字节，不会自动补空字符，调用前必须确保目标缓冲区足够大。输入不可信数据时优先限制长度。",sample:'#include <stdio.h>\\n#include <string.h>\\n\\nint main(void) {\\n    char word[] = "hello";\\n    printf("%zu\\\\n", strlen(word));\\n    return 0;\\n}',takeaways:["字符串以空字符结尾","strlen 返回长度，不含结尾空字符","比较字符串用 strcmp 而不是 =="],quiz:"C 字符串用哪个字符表示结束？",options:["空格 ' '","空字符 '\\\\0'","换行 '\\\\n'"],answer:1,explain:"每个 C 字符串都以空字符 '\\0' 结束。",mission:"包含 string.h，定义字符串 word，并用 strlen 输出它的长度。",required:["#include <string.h>","char word","strlen(","%zu"],hint:"strlen 的返回类型是 size_t，常用 %zu 输出。"},
+{id:11,stage:"指针与内存",title:"指针与地址",minutes:12,gist:"用指针保存地址，理解取地址和解引用。",lesson:"指针变量保存对象的地址。& 取对象地址，* 在表达式中解引用指针访问目标。指针必须指向有效对象后才能解引用；空指针可表示“不指向对象”。const 与指针搭配时要分清“指向只读数据”与“指针本身不可改”。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    int value = 7;\\n    int *p = &value;\\n    *p = 12;\\n    printf("%d\\\\n", value);\\n    return 0;\\n}',takeaways:["& 获取地址，* 访问指向的对象","初始化指针后再使用","解引用无效指针会导致未定义行为"],quiz:"若 p 是指向 int 的指针，*p 表示什么？",options:["p 的地址","p 指向的 int 对象","一个新变量"],answer:1,explain:"一元 * 对指针解引用，得到被指向的对象。",mission:"声明 int value，再声明 int *p = &value，并通过 *p 修改 value。",required:["int *p","&value","*p =","printf("],hint:"p 保存 value 的地址，解引用写作 *p。"},
+{id:12,stage:"指针与内存",title:"动态内存管理",minutes:13,gist:"使用 malloc、realloc 和 free 管理动态内存。",lesson:"malloc 向运行环境申请指定字节数的动态内存，失败时返回 NULL。申请大小要考虑元素类型：n * sizeof *p；处理外部输入时还要检查乘法是否溢出。每块动态内存最终都要恰好释放一次；释放后不要再访问。realloc 可能移动内存；非零大小申请失败会返回 NULL 且原内存块仍有效，所以先用临时指针接收结果。",sample:'#include <stdlib.h>\\n\\nint main(void) {\\n    size_t n = 4;\\n    int *items = malloc(n * sizeof *items);\\n    if (items == NULL) return 1;\\n    items[0] = 42;\\n    free(items);\\n    return 0;\\n}',takeaways:["检查 malloc 是否返回 NULL","sizeof *ptr 能跟随元素类型变化","free 后不能继续使用那块内存"],quiz:"malloc 申请失败时会返回什么？",options:["0 字节数组","NULL","自动重试"],answer:1,explain:"申请失败时 malloc 返回空指针 NULL。",mission:"用 malloc 按 n * sizeof *items 申请 int 数组，检查 NULL，使用后调用 free。",required:["malloc(","sizeof *","== NULL","free("],hint:"先检查指针是否为 NULL，再使用；所有成功申请的内存都要释放。"},
+{id:13,stage:"指针与内存",title:"结构体、联合体与类型别名",minutes:12,gist:"把相关字段组合为自己的数据类型。",lesson:"struct 将多个成员组合在一起；union 的成员共享同一块存储，适合互斥表示；typedef 为类型提供别名。访问结构体对象用点号，通过指针访问用 ->。注意结构体可能存在对齐填充，不要假设其内存布局。",sample:'#include <stdio.h>\\n\\ntypedef struct {\\n    char name[24];\\n    int score;\\n} Student;\\n\\nint main(void) {\\n    Student s = { .name = "Lin", .score = 95 };\\n    printf("%s %d\\\\n", s.name, s.score);\\n    return 0;\\n}',takeaways:["结构体成员各自有存储","联合体成员共享存储","typedef 提升接口可读性"],quiz:"通过结构体指针 p 访问成员 score，使用什么写法？",options:["p.score","p->score","p::score"],answer:1,explain:"结构体指针通过 -> 访问成员。",mission:"用 typedef struct 定义 Student，包含 name 和 score，并通过 . 访问成员。",required:["typedef struct","char name[","int score","printf(","s.score"],hint:"用 typedef struct { ... } Student; 定义类型。"},
+{id:14,stage:"工程实践",title:"文件输入与输出",minutes:12,gist:"读写文件，并检查每一步是否成功。",lesson:"stdio.h 提供 FILE、fopen、fclose、fgets、fprintf 等文件操作。fopen 失败返回 NULL；读入时限制缓冲区长度，并检查返回值。fgets 可能把换行符也读入缓冲区，输出已读行可用 fputs，避免再额外添加一个换行。文件流使用完毕后应关闭。二进制文件使用 fread/fwrite，并注意数据布局可移植性。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    FILE *file = fopen("notes.txt", "r");\\n    if (file == NULL) return 1;\\n    char line[128];\\n    if (fgets(line, sizeof line, file) != NULL) fputs(line, stdout);\\n    fclose(file);\\n    return 0;\\n}',takeaways:["检查 fopen 的返回值","fgets 限制一次读取的长度","关闭文件流释放资源"],quiz:"fopen 打开文件失败时会返回什么？",options:["NULL","空字符串","EOF 文件对象"],answer:0,explain:"fopen 失败返回 NULL，必须检查后才能继续操作。",mission:"打开文件，检查是否为 NULL，使用 fgets 读取一行，最后 fclose。",required:["fopen(","== NULL","fgets(","fclose("],hint:"按“打开—检查—读写—关闭”的顺序组织代码。"},
+{id:15,stage:"工程实践",title:"预处理、头文件与多文件",minutes:12,gist:"理解 #include、宏和分文件组织。",lesson:"预处理器在编译前处理 #include、#define 和条件编译指令。头文件保护宏防止重复包含。头文件通常放声明，.c 文件放定义；每个源文件单独编译，再由链接器组合。宏是文本替换，带参数的宏要给参数加括号，并避免重复求值带副作用的参数。",sample:'#ifndef UTIL_H\\n#define UTIL_H\\n\\nint add(int a, int b);\\n\\n#endif',takeaways:["头文件保护避免重复展开","声明放 .h，定义放 .c 是常见组织方式","链接阶段会解析跨文件符号"],quiz:"头文件保护宏的主要用途是什么？",options:["防止头文件被重复包含","让 C 自动管理内存","替代所有函数"],answer:0,explain:"#ifndef/#define/#endif 防止同一头文件被重复处理。",mission:"写出头文件保护结构，声明 int add(int a, int b)。",required:["#ifndef","#define","int add(int a, int b)","#endif"],hint:"宏名使用大写且每个头文件唯一，例如 UTIL_H。"},
+{id:16,stage:"工程实践",title:"函数指针与回调",minutes:12,gist:"把函数也作为值传递，构建可复用接口。",lesson:"函数指针保存函数的地址，可以作为参数传递给另一个函数，这就是回调的基础。声明语法中括号很重要：int (*fn)(int) 表示 fn 是指向函数的指针。qsort 等标准库函数通过回调比较元素。",sample:'#include <stdio.h>\\n\\nint apply(int x, int (*fn)(int)) {\\n    return fn(x);\\n}\\n\\nint twice(int n) { return 2 * n; }\\n\\nint main(void) {\\n    printf("%d\\\\n", apply(4, twice));\\n    return 0;\\n}',takeaways:["函数指针类型必须匹配参数和返回值","括号区分函数指针与返回指针的函数","回调让算法和行为解耦"],quiz:"int (*fn)(int) 表示什么？",options:["函数 fn 返回 int 指针","fn 是接受 int 并返回 int 的函数指针","int 类型数组"],answer:1,explain:"括号中的 *fn 表示指针，后面的 (int) 表示函数参数。",mission:"定义 apply，接收 int 和 int (*callback)(int)，并调用 callback。",required:["int (*callback)(int)","callback(","return"],hint:"参数声明写成 int (*callback)(int)，随后用 callback(value) 调用。"},
+{id:17,stage:"工程实践",title:"标准库与常用工具箱",minutes:13,gist:"按需使用字符串、数学、排序、时间和断言工具。",lesson:"C 标准库把常用能力按头文件组织：stdio.h 输入输出，stdlib.h 转换/内存/排序，string.h 字符串与内存，math.h 数学，ctype.h 字符分类，time.h 时间，assert.h 断言。使用每个函数前查看原型、返回值和前置条件。qsort 比较函数必须保持一致的次序；比较整数不要直接返回 x - y，以免差值溢出。",sample:'#include <stdlib.h>\\n\\nint compare_ints(const void *a, const void *b) {\\n    int x = *(const int *)a;\\n    int y = *(const int *)b;\\n    return (x > y) - (x < y);\\n}\\n\\n/* qsort(values, count, sizeof values[0], compare_ints); */',takeaways:["先包含提供函数声明的头文件","阅读返回值和错误约定","qsort 通过比较回调排序"],quiz:"qsort 的比较函数应该返回什么？",options:["永远返回 1","负数、零或正数表达比较关系","直接修改全局数组"],answer:1,explain:"比较函数返回负数、零、正数，分别表示小于、等于、大于。",mission:"包含 stdlib.h，定义比较回调，并用 qsort 对 int 数组排序。",required:["#include <stdlib.h>","qsort(","const void *","return"],hint:"比较器需要把 void 指针转换为对应的元素类型，然后比较值。"},
+{id:18,stage:"工程实践",title:"错误处理、限定符与安全",minutes:13,gist:"写出更可预测、更容易排错的 C 程序。",lesson:"C 不会替你自动检查数组边界或指针有效性。明确检查输入和库函数错误，用返回码传递失败原因；assert 适合检查程序内部不变量，不应用来处理普通用户输入。const、volatile、restrict 表达不同约束；volatile 不提供线程同步或原子性。避免未定义行为并开启编译器警告。",sample:'#include <stddef.h>\\n\\nint first(const int *values, size_t length, int *out) {\\n    if (values == NULL || out == NULL || length == 0) return 0;\\n    *out = values[0];\\n    return 1;\\n}',takeaways:["编译器警告应认真处理","检查边界、返回码和资源状态","未定义行为可能让结果完全不可预测"],quiz:"assert 最适合用来做什么？",options:["验证程序内部不变量","替代输入校验","打印所有运行信息"],answer:0,explain:"assert 主要用于调试期检查内部假设；用户输入应使用正常错误处理。",mission:"实现 first(const int *values, size_t length, int *out)：遇到空指针或 length == 0 返回 0；成功时把首个元素写入 *out 并返回 1。",required:["const int *","size_t length","int *out","values == NULL","length == 0","return 0","*out","return 1"],hint:"用返回值表示成功或失败，用 out 参数返回元素值，避免把错误标记和有效数据混在一起。"},
+{id:19,stage:"C 标准新特性",title:"C99、C11 与现代 C",minutes:14,gist:"了解常见标准版本特性，知道可移植性的边界。",lesson:"C99 引入 // 注释、可变长数组等特性；C11 增加 _Static_assert、_Generic、原子操作等能力，且变长数组属于可选特性，部分实现可以不支持。sizeof 的单位是 C 字节，不保证一个字节恰好 8 位；静态断言适合明确程序需要的平台条件。C17 主要修正和澄清标准；C23（ISO/IEC 9899:2024）继续更新语言与标准库。线程、原子和可选特性要确认目标环境支持。",sample:'#include <limits.h>\\n#include <stdatomic.h>\\n\\n_Static_assert(CHAR_BIT == 8 && sizeof(int) >= 2, "requires 8-bit bytes and int of at least 2 bytes");\\n\\nint main(void) {\\n    _Atomic int counter = 0;\\n    atomic_fetch_add(&counter, 1);\\n    return 0;\\n}',takeaways:["编译时断言可以检查类型和约束","C11 原子操作适用于并发共享状态","写可移植代码要注明标准版本"],quiz:"_Static_assert 通常在什么时候检查条件？",options:["编译时","程序退出时","网络连接后"],answer:0,explain:"静态断言用于编译期检查，条件不成立时编译失败。",mission:"使用 _Static_assert 检查 sizeof(int)，并写一个 C11 原子整数递增示例。",required:["_Static_assert","sizeof(int)","_Atomic int","atomic_fetch_add"],hint:"需要包含 stdatomic.h；目标编译器应启用 C11 或更新标准。"},
+{id:20,stage:"综合毕业关",title:"综合项目：做一个成绩册",minutes:20,gist:"把数组、结构体、函数、循环和输出组合起来。",lesson:"把语法组合成完整程序：设计 Student 结构体，用数组保存学生，并写 average_score 函数统计平均分。函数要处理空数组并用状态码表示成功或失败，计算时使用浮点除法。再由 main 输出结果。完成后，你将得到本设备保存的通关总结。",sample:'#include <stdio.h>\\n#include <stddef.h>\\n\\ntypedef struct { char name[24]; int score; } Student;\\n\\nint average_score(const Student students[], size_t count, double *out) {\\n    if (students == NULL || out == NULL || count == 0) return 0;\\n    double total = 0.0;\\n    for (size_t i = 0; i < count; ++i) total += students[i].score;\\n    *out = total / (double)count;\\n    return 1;\\n}\\n\\nint main(void) {\\n    Student group[] = { { "An", 90 }, { "Bo", 80 } };\\n    size_t count = sizeof group / sizeof group[0];\\n    double average;\\n    if (average_score(group, count, &average)) {\\n        printf("average: %.1f\\\\n", average);\\n    }\\n    return 0;\\n}',takeaways:["用结构体表示一条记录","用数组管理多条记录","用函数拆分统计逻辑并处理空数据"],quiz:"毕业项目里，哪种设计最适合保存学生姓名和分数？",options:["分别使用固定含义的结构体成员","用一个整数代替所有字段","把数据只写在 printf 里"],answer:0,explain:"结构体能把一名学生的相关字段放在同一条记录中。",mission:"定义 Student 结构体与 average_score 函数；函数检查空指针和 count == 0，以状态码表示成败，用 for 累加并以浮点除法求平均；main 建立数组、传入结果变量并输出平均分。",required:["typedef struct","student","score","average_score(","double *out","count == 0","for","*out","(double)","printf(","return 1","return 0"],hint:"先写返回状态码的 average_score；成功时通过 double *out 写回结果，main 检查返回值后再输出。"}
+];
+const groups = ["起步上手","流程控制","复合数据","指针与内存","工程实践","C 标准新特性","综合毕业关"];
+const beginnerGuides = {
+1:{idea:"先把 C 程序看成一条简单流程：准备输入输出工具，进入 main，执行里面的语句，最后返回结束状态。现在不需要理解编译器如何工作。",read:["#include <stdio.h> 让程序能使用 printf。","int main(void) 是常见的程序入口；花括号包住要执行的内容。","printf 输出引号里的文字；\\n 表示换到下一行，return 0 表示正常结束。"],steps:["先写 #include <stdio.h>。","写 int main(void) { ... }，把每条语句放进花括号。","在里面用 printf 输出 Hello, C!，最后写 return 0。"],pitfall:"每条语句末尾别漏分号；字符串要放在双引号里。"},
+2:{idea:"变量就像带标签的小盒子：类型决定盒子适合放什么数据，名字方便你以后找到它。int 常放整数，double 常放小数，char 常放单个字符。",read:["int age = 18; 创建名为 age 的整数变量，并立刻放入 18。","double score = 95.5; 创建可保存小数的变量。","printf 的 %d 对应 int，%.1f 对应浮点输出；后面的变量按顺序填入占位符。"],steps:["先判断数据是什么类型，再声明变量。","给变量赋一个初始值，例如 int count = 3;。","用 printf 输出时，让每个格式说明符和变量类型对应。"],pitfall:"%d、%f、%s 不能随意互换；占位符数量也要和后面的参数数量对上。"},
+3:{idea:"这一关把三件事放在一起：const 表示不打算通过这个名字改值，enum 给状态起可读名字，类型转换明确告诉 C 你要改变数据类型。",read:["const int total = 5; 创建一个只读意图的整数。","enum Status { READY, RUNNING, DONE }; 定义一组有名字的状态值。","(double)total 把 total 转成 double；这样除法可以保留小数。"],steps:["先写出 const 变量或 enum 声明。","找到需要转换的表达式，在要转换的值前写 (double)。","检查除法：两个 int 相除会得到整数结果。"],pitfall:"只在最后把结果放进 double 变量，不能挽回已经发生的整数除法；需要在计算前转换。"},
+4:{idea:"运算符是告诉程序如何计算或比较的符号。先熟悉 +、-、*、/ 和比较；位运算可以稍后慢慢练，本关示例用它表示开关标志。",read:["1u << 2 把无符号数 1 左移两位，生成代表 bit 2 的掩码（位编号从 0 开始）。","flags | mask 把指定标志位打开；& 可以检查某一位是否已打开。","括号把计算顺序写清楚，避免读者猜运算符优先级。"],steps:["先定义 unsigned flags = 0;。","用 1u << 2 生成第 3 个开关的掩码，再用 | 把它打开。","用 & 检查结果，并把整个条件放进 if。"],pitfall:"逻辑与是 &&，按位与是 &；位标志优先用 unsigned，并用括号标明意图。"},
+5:{idea:"分支就是让程序根据条件走不同路线。if 适合判断范围；条件成立走 if 花括号，不成立时可以走 else。",read:["int score = 82; 先准备一个要判断的数据。","if (score >= 60) 检查条件是否成立。","else 是备用路线；每个分支中的语句各自放在花括号里。"],steps:["先给 temperature 一个值。","写 if (temperature >= 30)，在分支中输出 hot。","写 else 分支输出 mild，然后检查两条路线是否都覆盖。"],pitfall:"比较相等写 ==，单个 = 是赋值；比较大小时用 >=、< 等关系符。"},
+6:{idea:"循环让同一段代码重复运行。for 通常把计数器从哪里开始、什么时候停止、每轮怎样变化写在一行里。",read:["int sum = 0; 先准备累加器，避免从未初始化的值开始算。","for (int i = 1; i <= 5; ++i) 依次让 i 取 1 到 5。","sum += i 每轮把当前 i 加到总和里；循环结束后再输出 sum。"],steps:["先把 sum 初始化为 0。","用 for 让 i 从 1 走到 10，循环体内写 sum += i。","把 printf 放在循环结束后，观察最终总和。"],pitfall:"检查起点、停止条件和更新式；少写更新式可能让循环永远不结束。"},
+7:{idea:"函数是给一段任务起名字，之后可以重复调用。参数把资料交给函数，return 把结果交回来；C 的普通参数是值的副本。",read:["int max(int a, int b); 是函数原型，让编译器先知道函数接口。","函数定义中的 a 和 b 接收调用时传来的数。","return 把较大的值交还给调用者；main 再把结果传给 printf。"],steps:["先写函数签名：返回 int，接收两个 int。","用 if/else 或条件表达式比较 a 和 b，并返回其中较大的数。","在 main 中调用 max(4, 9)，把结果输出。"],pitfall:"函数签名中的参数类型要匹配；有返回值的路径都要 return 合适的值。"},
+8:{idea:"作用域决定名字在哪里可用，生命周期决定变量什么时候还存在。递归是函数调用自己；每次递归都必须更接近一个不用再调用的基准情形。",read:["if (n <= 1) return 1; 是阶乘的基准情形。","n * factorial(n - 1) 把较小的问题交给下一次调用。","调用从小问题逐层返回，乘积汇总成最终答案。"],steps:["先写输入范围假设和基准情形。","再写一个让 n 变小的递归调用。","用小数字手动展开几步，确认最终会到达基准情形。"],pitfall:"如果参数没有逐步靠近基准情形，递归会不断加深；真实程序还要处理输入范围和整数溢出。"},
+9:{idea:"数组把多个同类型元素连续放在一个变量名下面。下标从 0 开始，所以长度为 n 的数组最后一个有效下标是 n - 1。",read:["int values[] = { ... }; 用一个数组名保存多个整数。","values[0] 是第一个元素，values[1] 是第二个元素。","循环下标应小于数组长度，再通过 values[i] 读取或更新元素。"],steps:["先声明并初始化一组数组元素。","用 for 从 i = 0 开始遍历，条件写 i < count。","每轮处理 values[i]，例如累加或输出。"],pitfall:"不要访问 values[count]；那已经越过数组末尾。遍历多维数组时，每一层都要检查边界。"},
+10:{idea:"C 字符串本质上是 char 数组，并以特殊的空字符 \\0 结束。它和单个字符不同；单个字符用单引号，字符串用双引号。",read:["char word[] = \"hello\"; 会为字符和结尾的 \\0 留出空间。","strlen(word) 统计结尾空字符之前有多少字符。","strlen 返回 size_t，常用 %zu 输出它。"],steps:["先包含 <string.h>。","声明一个以双引号包起来的 char 数组。","调用 strlen 并用与返回类型匹配的格式说明符输出。"],pitfall:"C 没有内建 string 类型；不能把两个字符串用 == 当作内容比较，通常使用 strcmp。"},
+11:{idea:"指针保存地址。& 取得对象的地址，* 通过地址访问对象。可以把指针想成写着“数据在哪里”的便条，解引用就是沿地址找到数据。",read:["int *p = &value; 让 p 保存 value 的地址。","*p = 12; 通过 p 修改它所指向的 value。","printf 输出 value，可以看到通过指针修改的结果。"],steps:["先创建普通变量并给初值。","声明同类型指针，用 & 把变量地址赋给它。","确认指针有效后再用 *p 读取或写入。"],pitfall:"未初始化指针不能解引用；空指针也不能访问。指针类型要与目标对象相匹配。"},
+12:{idea:"动态内存让程序在运行时申请空间。malloc 可能失败，所以每次都先检查 NULL；申请成功后要在合适时机 free 一次。",read:["n * sizeof *items 计算保存 n 个元素所需的字节数。","malloc 返回的地址先放在 int *items 中，并检查是否为 NULL。","用完后 free(items) 归还这块内存，之后不能再访问它。"],steps:["先决定元素数量 n，再按元素个数和大小申请内存。","立刻检查申请结果是否为 NULL，失败就结束或报告错误。","使用数组元素，最后释放；不要重复释放或释放后继续用。"],pitfall:"sizeof *items 会跟随指针目标类型；realloc 失败时原内存仍有效，应先用临时指针接收结果。"},
+13:{idea:"结构体把不同类型但属于同一件事的数据组合起来，比如学生姓名和分数。typedef 可以给这个结构起一个更方便的类型名。",read:["typedef struct { ... } Student; 定义并命名一种记录类型。","Student s 创建一条学生记录；初始化器按成员名填写内容。","s.score 用点号访问对象成员；若手里是指针则用 ->。"],steps:["先列出一条记录需要哪些字段。","用 typedef struct 定义类型，再创建一个对象。","通过点号读取或修改成员；需要共享同一块空间时再学习 union。"],pitfall:"结构体成员可能有对齐填充，不要假设它们在内存中完全紧密排列；union 的成员会共享存储。"},
+14:{idea:"文件操作按顺序做：尝试打开、检查是否成功、读取或写入、最后关闭。文件可能不存在或没有权限，所以每一步都要检查返回值。",read:["fopen 返回 FILE 指针；失败时返回 NULL。","fgets(line, sizeof line, file) 限制读取长度，避免写出缓冲区。","读写结束后调用 fclose(file)，释放文件资源。"],steps:["用 fopen 选择文件名和模式。","先检查 file 是否为 NULL，再执行读取或写入。","处理返回值并在合适路径调用 fclose。"],pitfall:"不要对 NULL 文件指针调用 fgets；fgets 可能保留换行符，输出时注意不要意外多换一行。"},
+15:{idea:"预处理发生在正式编译之前。#include 引入声明，#define 创建文本宏；头文件通常放接口声明，源文件放函数实现。",read:["#ifndef UTIL_H 检查保护宏是否尚未定义。","#define UTIL_H 标记头文件已处理，防止重复包含。","函数原型只声明接口；实际函数体可以写在对应的 .c 文件中。"],steps:["选择一个唯一的保护宏名。","按 #ifndef、#define、声明、#endif 的顺序搭好头文件。","把实现放到 .c 文件，并在使用处 include 头文件。"],pitfall:"宏是文本替换，不是类型安全的函数；带参数宏要给参数加括号，并小心参数被重复求值。"},
+16:{idea:"函数指针保存函数的地址，因此可以把某个动作交给另一个函数执行。回调函数的参数和返回类型必须与指针声明完全匹配。",read:["int (*fn)(int) 表示 fn 指向一个接收 int、返回 int 的函数。","apply 的 callback 参数接收这种函数地址。","callback(x) 调用传进来的函数，并把结果交回去。"],steps:["先读懂函数指针声明：返回类型、星号括号、参数列表。","定义一个签名匹配的小函数，例如把数乘二。","把函数名传给 apply，再在 apply 内通过指针调用它。"],pitfall:"括号很关键：int *fn(int) 与 int (*fn)(int) 含义不同；回调签名不匹配会出错。"},
+17:{idea:"标准库是 C 自带的工具箱，按头文件分类。不要死记全部函数；遇到任务时先找对应头文件，再查函数参数、返回值和失败时的表现。",read:["stdio.h 常负责输入输出，string.h 常处理字符串，stdlib.h 常提供内存和通用工具。","qsort 把排序工作交给库函数，并要求你提供比较规则。","比较器用负数、零、正数表达大小关系；不要用可能溢出的 x - y。"],steps:["先说明自己要解决什么任务。","查找合适的标准头文件和函数原型。","阅读返回值规则，处理失败情况，再写一个小例子验证理解。"],pitfall:"同名函数不一定属于同一个头文件；按目标 C 标准确认函数是否可用。"},
+18:{idea:"C 把很多安全责任交给程序员。写代码时主动检查指针、数组边界、输入结果和库函数返回值；发生失败时用清楚的状态告诉调用者。",read:["first 先检查 values 和 out 是否为空，以及 length 是否为 0。","只有检查通过后才访问 values[0]，避免无效读取。","成功时写入 *out 并返回 1；失败时返回 0。"],steps:["先列出函数可能失败的条件。","在访问数据之前逐项检查，失败就尽早返回。","成功后写出结果，并用返回值告诉调用者结果是否有效。"],pitfall:"assert 用于检查程序内部假设，不能代替普通输入校验；volatile 也不提供线程同步或原子性。"},
+19:{idea:"C 有不同标准版本，特性是否可用取决于编译器和目标环境。写程序时注明标准，并对可选能力做好平台检查。",read:["_Static_assert 在编译时检查条件，不满足时直接报错。","_Atomic 表示原子对象类型，相关操作来自 stdatomic.h。","这些示例需要支持相应标准的编译器；C11 之后的能力也要核对实现。"],steps:["先确认编译器支持的 C 标准版本。","包含对应头文件，并使用版本支持的语法。","遇到可选特性时查实现文档，不要假设所有平台都一样。"],pitfall:"C11 的变长数组是可选特性；不同编译器支持程度不同，平台相关代码要明确标出条件。"},
+20:{idea:"毕业项目不是一次写完的大块代码。先设计数据，再拆小函数，逐个验证；主函数最后把这些小部件连起来。",read:["Student 结构体先描述一名学生有哪些数据。","average_score 只负责计算平均分，并通过 out 参数交回结果。","main 准备数组、调用函数、检查成功状态后再打印。"],steps:["先定义 Student，再准备两三条测试记录。","写 average_score：先检查参数，再循环累加，最后用浮点数相除。","在 main 中调用它，成功时输出结果；再试空数组等边界情况。"],pitfall:"整数相除会丢掉小数；count 为 0 时不能计算平均值，调用者也要先检查函数返回状态。"}
+};
+const storeKey = "cquest.master.v1";
+const resetPasswordKey = "codesword.reset.password.v1";
+const themeKey = "codesword.theme.v1";
+function loadState(){try{return JSON.parse(localStorage.getItem(storeKey))||{completed:{},xp:0,attempts:0,correct:0,started:Date.now()}}catch(e){return {completed:{},xp:0,attempts:0,correct:0,started:Date.now()}}}
+let data = loadState();
+data.drafts = data.drafts || {};
+data.quizRewards = data.quizRewards || {};
+Object.keys(data.completed).forEach(function(id){data.quizRewards[id]=true});
+let page = "map";
+let activeLevel = null;
+let selectedOption = null;
+let quizPassed = false;
+let codePassed = false;
+let hintVisible = false;
+function save(){localStorage.setItem(storeKey,JSON.stringify(data));}
+let themeMode=localStorage.getItem(themeKey)||"system";
+function applyTheme(mode,persist){
+ if(!["system","light","dark"].includes(mode))mode="system";
+ themeMode=mode;const resolved=mode==="system"?(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):mode;
+ document.body.dataset.theme=resolved;document.body.dataset.themeMode=mode;document.documentElement.style.colorScheme=resolved;
+ const names={system:"跟随系统",light:"浅色模式",dark:"深色模式"};
+ const button=document.getElementById("themeButton"),icon=resolved==="dark"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 15.2A8.7 8.7 0 0 1 8.8 3.2 8.7 8.7 0 1 0 20.8 15.2Z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>';
+ if(button){button.innerHTML=icon;button.title="外观模式："+names[mode]+"（当前"+(resolved==="dark"?"深色":"浅色")+"），点击切换";button.setAttribute("aria-label","外观模式："+names[mode]+"，当前"+(resolved==="dark"?"深色":"浅色")+"，点击切换")}
+ const themeColor=document.querySelector('meta[name="theme-color"]');if(themeColor)themeColor.content=resolved==="dark"?"#111a2d":"#e9f1fd";
+ if(persist)localStorage.setItem(themeKey,mode);
+}
+applyTheme(themeMode,false);
+const systemThemeQuery=window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):null;
+if(systemThemeQuery){const syncSystemTheme=function(){if(themeMode==="system")applyTheme("system",false)};if(systemThemeQuery.addEventListener)systemThemeQuery.addEventListener("change",syncSystemTheme);else if(systemThemeQuery.addListener)systemThemeQuery.addListener(syncSystemTheme)}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function highlightC(source){
+ const pattern=/^[ \t]*#[^\n]*|\/\*[\s\S]*?\*\/|\/\/[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:break|case|continue|default|do|else|for|goto|if|return|switch|while|auto|const|extern|inline|register|restrict|static|typedef|volatile|_Alignas|_Alignof|_Atomic|_Generic|_Noreturn|_Static_assert|_Thread_local)\b|\b(?:char|double|enum|float|int|long|short|signed|struct|union|unsigned|void|_Bool|_Complex|_Imaginary|size_t|FILE)\b|\b(?:0[xX][0-9a-fA-F]+|0[bB][01]+|\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)[uUlLfF]*\b|[A-Za-z_]\w*|[\s\S]/gm;
+ let out="",match;
+ while((match=pattern.exec(source))!==null){
+  const token=match[0];let kind="";
+  if(/^[ \t]*#/.test(token))kind="directive";
+  else if(token.slice(0,2)==="//"||token.slice(0,2)==="/*")kind="comment";
+  else if(token[0]==='"'||token[0]==="'")kind="string";
+  else if(/^(?:break|case|continue|default|do|else|for|goto|if|return|switch|while|auto|const|extern|inline|register|restrict|static|typedef|volatile|_Alignas|_Alignof|_Atomic|_Generic|_Noreturn|_Static_assert|_Thread_local)$/.test(token))kind="keyword";
+  else if(/^(?:char|double|enum|float|int|long|short|signed|struct|union|unsigned|void|_Bool|_Complex|_Imaginary|size_t|FILE)$/.test(token))kind="type";
+  else if(/^(?:0[xX]|0[bB]|\d)/.test(token))kind="number";
+  else if(/^[A-Za-z_]\w*$/.test(token)&&/^\s*\(/.test(source.slice(pattern.lastIndex)))kind="function";
+  out+=kind?'<span class="syntax-'+kind+'">'+esc(token)+'</span>':esc(token);
+ }
+ return out;
+}
+function editorMarkup(value){
+ const lineCount=Math.max(1,value.split("\n").length);
+ const lineNums=Array.from({length:lineCount},function(_,i){return String(i+1)}).join("\n");
+ return '<div class="ide-frame"><div class="ide-toolbar"><div class="ide-toolbar-left"><span class="ide-dots"><i></i><i></i><i></i></span><span class="ide-file">challenge.c</span></div><div class="ide-toolbar-right"><span class="ide-standard">C99+</span><span>本地编辑</span></div></div><div class="ide-body"><pre class="ide-gutter" id="editorLineNumbers" aria-hidden="true">'+lineNums+'</pre><div class="ide-workspace"><pre class="ide-highlight" id="codeHighlight" aria-hidden="true">'+highlightC(value)+'</pre><textarea class="code-input" id="codeAnswer" wrap="off" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="C 语言代码编辑器" placeholder="// 在这里写下你的 C 代码">'+esc(value)+'</textarea></div></div><div class="ide-status"><span id="editorPosition">行 1 · 列 1</span><span>自动保存到此设备</span></div></div><div class="ide-help">Tab 缩进 · Enter 自动缩进 · 括号补全 · Ctrl + / 注释 · Ctrl + Enter 检查</div>';
+}
+function updateEditor(){
+ const input=document.getElementById("codeAnswer");
+ if(!input)return;
+ const highlight=document.getElementById("codeHighlight"),gutter=document.getElementById("editorLineNumbers"),position=document.getElementById("editorPosition"),value=input.value;
+ highlight.innerHTML=highlightC(value);
+ gutter.textContent=Array.from({length:Math.max(1,value.split("\n").length)},function(_,i){return String(i+1)}).join("\n");
+ highlight.style.transform="translate("+(-input.scrollLeft)+"px,"+(-input.scrollTop)+"px)";gutter.style.transform="translateY("+(-input.scrollTop)+"px)";
+ const before=value.slice(0,input.selectionStart),line=before.split("\n").length,column=before.length-before.lastIndexOf("\n");
+ position.textContent="行 "+line+" · 列 "+column;
+}
+function saveEditorValue(input){window.codeDraft=input.value;if(activeLevel){data.drafts[activeLevel.id]=input.value;save()}updateEditor()}
+function replaceEditorRange(input,text,start,end,caret){
+ input.setRangeText(text,start,end,"end");
+ if(caret!==undefined)input.setSelectionRange(caret,caret);
+ input.dispatchEvent(new Event("input",{bubbles:true}));
+}
+let resetMode="verify";
+async function hashResetPassword(password){
+ if(window.crypto&&window.crypto.subtle&&window.TextEncoder){const digest=await window.crypto.subtle.digest("SHA-256",new TextEncoder().encode(password));return "sha256:"+Array.from(new Uint8Array(digest),function(b){return b.toString(16).padStart(2,"0")}).join("")}
+ return "local:"+password;
+}
+function openResetDialog(){
+ const modal=document.getElementById("resetModal"),content=document.getElementById("resetModalContent");
+ resetMode=localStorage.getItem(resetPasswordKey)?"verify":"setup";
+ content.innerHTML=resetMode==="setup"?'<h2 id="resetTitle">设置重置密码</h2><p>首次重头开始前，请先设置一个密码并确认。以后每次清空进度都需要输入它。密码保存在这台设备的浏览器中。</p><form class="reset-form" id="resetForm"><label>设置密码<input id="resetPassword" type="password" minlength="4" autocomplete="new-password" required placeholder="至少 4 个字符"></label><label>再次输入<input id="resetPasswordConfirm" type="password" minlength="4" autocomplete="new-password" required placeholder="确认密码"></label><div class="reset-error" id="resetError" role="status"></div><div class="reset-actions"><button class="btn btn-ghost btn-small" type="button" data-action="reset-cancel">取消</button><button class="btn btn-primary btn-small" type="submit">设置并重头开始</button></div></form>':'<h2 id="resetTitle">输入密码以重头开始</h2><p>这会清除本设备保存的关卡进度、学习点、答题统计和代码草稿。此操作不能撤销。</p><form class="reset-form" id="resetForm"><label>重置密码<input id="resetPassword" type="password" autocomplete="current-password" required placeholder="输入你设置的密码"></label><div class="reset-error" id="resetError" role="status"></div><div class="reset-actions"><button class="btn btn-ghost btn-small" type="button" data-action="reset-cancel">取消</button><button class="btn btn-primary btn-small" type="submit">验证并重头开始</button></div></form>';
+ modal.hidden=false;const field=document.getElementById("resetPassword");if(field)field.focus();
+}
+function closeResetDialog(){document.getElementById("resetModal").hidden=true}
+function resetProgress(){
+ localStorage.removeItem(storeKey);
+ data={completed:{},xp:0,attempts:0,correct:0,started:Date.now(),drafts:{},quizRewards:{}};
+ page="map";activeLevel=null;selectedOption=null;quizPassed=false;codePassed=false;hintVisible=false;window.quizAnswered=false;window.codeFeedback="";window.codeDraft="";
+ save();closeResetDialog();render();toast("已重头开始，学习进度已清空。");
+}
+document.addEventListener("submit",async function(e){
+ if(e.target.id!=="resetForm")return;e.preventDefault();
+ const password=document.getElementById("resetPassword").value,error=document.getElementById("resetError");
+ if(resetMode==="setup"){
+  const confirmPassword=document.getElementById("resetPasswordConfirm").value;
+  if(password.length<4){error.textContent="密码至少需要 4 个字符。";return}
+  if(password!==confirmPassword){error.textContent="两次输入的密码不一致。";return}
+  localStorage.setItem(resetPasswordKey,await hashResetPassword(password));resetProgress();return;
+ }
+ const saved=localStorage.getItem(resetPasswordKey);
+ if(!saved||await hashResetPassword(password)!==saved){error.textContent="密码不正确，进度没有变化。";return}
+ resetProgress();
+});
+document.getElementById("resetModal").addEventListener("click",function(e){if(e.target===e.currentTarget)closeResetDialog()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!document.getElementById("resetModal").hidden)closeResetDialog()});
+function completedCount(){return Object.keys(data.completed).length}
+function unlocked(level){return level.id===1||!!data.completed[level.id-1]}
+function isDone(level){return !!data.completed[level.id]}
+function progressPct(){return Math.round(completedCount()/levels.length*100)}
+function nextLevel(){return levels.find(function(l){return !isDone(l)})||levels[levels.length-1]}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2300)}
+function formatSample(s){return s.replace(/(\\+)n/g,function(match,slashes){return "\\".repeat(Math.floor(slashes.length/2))+(slashes.length%2?"\n":"n")})}
+function renderBeginnerGuide(l){
+ const g=beginnerGuides[l.id];
+ function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
+ return '<div class="beginner-guide"><div class="guide-heading">零基础拆解 · 不用急着背</div><div class="guide-idea"><div class="challenge-label">先抓住这一件事</div><p>'+esc(g.idea)+'</p></div><div class="guide-columns">'+list("示例逐步读",g.read)+list("挑战按这几步写",g.steps)+'</div><div class="guide-pitfall"><strong>新手易错点</strong><span>'+esc(g.pitfall)+'</span></div></div>';
+}
+function switchPage(p){page=p;activeLevel=null;render()}
+function navTitle(){const labels={map:"CODE SWORD  /  学习路线",practice:"CODE SWORD  /  继续挑战",summary:"CODE SWORD  /  我的总结",lesson:"CODE SWORD  /  当前关卡"};document.getElementById("topTitle").textContent=labels[page]||labels.map}
+function render(){navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();return}if(page==="map")renderMap();else if(page==="practice")renderPractice();else renderSummary()}
+function renderMap(){
+ const pct=progressPct(), done=completedCount(), next=nextLevel();
+ let groupsHtml="";
+ groups.forEach(function(g){const ls=levels.filter(function(l){return l.stage===g});const finished=ls.filter(isDone).length;groupsHtml+='<section class="track"><div class="track-head"><span class="track-dot"></span><span class="track-title">'+esc(g)+'</span><span class="track-note">'+finished+'/'+ls.length+' 关完成</span></div><div class="level-grid">';
+ ls.forEach(function(l){const lockedNow=!unlocked(l)&&!isDone(l),number=String(l.id).padStart(2,"0");const state=isDone(l)?"✓":lockedNow?"🔒":"→";groupsHtml+='<article class="level-card '+(isDone(l)?"completed ":"")+(lockedNow?"locked":"")+'" data-level="'+l.id+'"><div class="level-top"><span class="level-num">'+number+'</span><span class="level-state">'+state+'</span></div><h3>'+esc(l.title)+'</h3><p>'+esc(l.gist)+'</p><div class="level-meta">第 '+number+' 关 · 约 '+l.minutes+' 分钟 · '+(isDone(l)?"已通关":lockedNow?"完成前一关后解锁":"可开始")+'</div></article>'});
+ groupsHtml+='</div></section>'});
+ document.getElementById("view").innerHTML='<section class="hero"><div class="hero-main"><div class="eyebrow">CODE SWORD&nbsp; · &nbsp;C LANGUAGE QUEST</div><h1>磨砺语法，<br>挥出你的第一段 C。</h1><p>20 个循序渐进的关卡，从第一行代码一路闯到内存管理与综合项目。课程示例默认使用 C99 或更新标准，第 19 关会回顾版本差异。每通过一关，技能再升一级。</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(done?"继续第 "+(next.id)+" 关":"开始第一关")+' <span>→</span></button><span class="hero-link">学一点，过一关，积累成就感</span></div></div><div class="hero-progress"><div class="progress-top"><div><div class="progress-kicker">总体学习进度</div><div class="progress-number">'+done+' <span style="font-size:14px;color:#8d99ab;font-weight:600">/ '+levels.length+' 关</span></div></div><div class="progress-ring" style="--pct:'+pct+'%"><span>'+pct+'%</span></div></div><div><div class="progress-bar"><i style="width:'+pct+'%"></i></div><div class="progress-foot"><span>已完成 '+done+' 关</span><span>'+Math.max(0,levels.length-done)+' 关待挑战</span></div></div></div></section>'+
+ '<section class="stats"><div class="stat"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">学习点数</div></div></div><div class="stat"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+'</div><div class="stat-label">完成关卡</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+data.correct+'</div><div class="stat-label">正确答题</div></div></div><div class="stat"><div class="stat-icon">⌁</div><div><div class="stat-num">'+(data.attempts?Math.round(data.correct/data.attempts*100):0)+'%</div><div class="stat-label">答题正确率</div></div></div></section>'+
+ '<section class="course-library"><div class="course-library-head"><div><div class="eyebrow">LANGUAGE COURSES</div><h2>学习语言</h2><p>把不同语言放在同一个入口，先从 C 语言开始。</p></div><span class="course-library-total">当前 1 门</span></div><button class="course-entry" type="button" data-action="open-course" aria-label="进入 C 语言学习路线"><span class="course-entry-icon">C</span><span class="course-entry-copy"><strong>C 语言</strong><small>从基础语法到指针、内存与综合项目</small></span><span class="course-entry-progress">已完成 '+done+' / '+levels.length+' 关</span><span class="course-entry-arrow">↗</span><span class="course-entry-bar"><i style="width:'+pct+'%"></i></span></button></section>'+'<div class="section-head"><div><h2>你的通关地图</h2><p>每关先学重点，再答题、写代码；通关后解锁下一站。</p></div><button class="btn btn-ghost btn-small" data-page="summary">查看学习总结&nbsp; →</button></div>'+'<section class="course-route" id="course-c-route"><div class="course-route-heading"><div class="course-route-heading-main"><span class="course-route-icon">C</span><div><h2>C 语言学习路线</h2><p>从基础语法一路闯到综合项目 · '+levels.length+' 个知识关卡</p></div></div><span class="chip">核心课程</span></div>'+groupsHtml+'</section><div class="footer-note">路线覆盖 C 语言核心语法、常用标准库与工程实践。标准库函数很多，本课程按类别练习常用能力。</div>';
+}
+function renderPractice(){
+ const l=nextLevel();
+ if(completedCount()===levels.length){page="summary";renderSummary();navTitle();return}
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">实战训练</div><h1>继续你的下一关</h1><p class="subhead">专注一件小事，写出一段自己的 C 代码。</p></div><span class="chip">当前 '+completedCount()+' / '+levels.length+' 关</span></div><div class="panel"><div class="lesson-title-row"><div class="lesson-badge">'+String(l.id).padStart(2,"0")+'</div><div><h2>'+esc(l.title)+'</h2><div class="meta-line">'+esc(l.stage)+' · 约 '+l.minutes+' 分钟</div></div></div><p class="lesson-copy" style="margin-top:19px">'+esc(l.gist)+'</p><p class="lesson-copy">'+esc(l.lesson)+'</p><button class="btn btn-primary" data-level="'+l.id+'">进入本关 <span>→</span></button></div>';
+}
+function renderLesson(){
+ const l=activeLevel, done=isDone(l);
+ const quizDisabled=selectedOption===null;
+ let opts=l.options.map(function(o,i){let cl="option";if(selectedOption===i){cl+=" selected";if(quizPassed)cl+=" correct";else if(window.quizAnswered)cl+=" wrong"}return '<button class="'+cl+'" data-option="'+i+'">'+String.fromCharCode(65+i)+'. '+esc(o)+'</button>'}).join("");
+ let quizFeedback=window.quizAnswered?'<div class="feedback '+(quizPassed?"ok":"no")+'">'+(quizPassed?"回答正确！":"再想一想。 ")+esc(l.explain)+'</div>':"";
+ let challengeFeedback=window.codeFeedback?'<div class="feedback '+(codePassed?"ok":"no")+'">'+esc(window.codeFeedback)+'</div>':"";
+ let lockMsg=done?'<div class="feedback ok">本关已通关。可以回看内容，也可以继续下一关。</div>':"";
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.stage)+' · 第 '+String(l.id).padStart(2,"0")+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
+ '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 阅读重点后完成挑战</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>example.c</span></div><pre>'+esc(formatSample(l.sample))+'</pre></div>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</div></section>'+
+ '<section class="panel challenge-card"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✦</span>知识快问</div><span class="chip">答对 +10 点</span></div><div class="quiz-question">'+esc(l.quiz)+'</div><div class="option-list">'+opts+'</div>'+quizFeedback+lockMsg+'</section>'+
+ '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">检查器会核对关键语法片段，帮助离线练习；它不等同于完整的 C 编译器。</span></div>':"")+challengeFeedback+lockMsg+'</section></div>'+
+ '<aside class="lesson-main"><section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway"><div class="takeaway-item"><span class="'+(quizPassed||done?"tick":"")+'">'+(quizPassed||done?"✓":"○")+'</span><span>完成知识快问</span></div><div class="takeaway-item"><span class="'+(codePassed||done?"tick":"")+'">'+(codePassed||done?"✓":"○")+'</span><span>通过代码结构检查</span></div><div class="takeaway-item"><span class="'+(done?"tick":"")+'">'+(done?"✓":"○")+'</span><span>获得本关学习点并解锁后续</span></div></div><div class="progress-bar" style="margin-top:18px"><i style="width:'+((Number(quizPassed||done)+Number(codePassed||done))*50)+'%"></i></div><div class="progress-foot"><span>本关完成度</span><span>'+(done?"100":(Number(quizPassed)+Number(codePassed))*50)+'%</span></div></section>'+
+ '<section class="panel"><div class="challenge-head"><div class="challenge-label">核心概念</div><span class="chip">要点速览</span></div>'+l.takeaways.map(function(t){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</section>'+
+ '<section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside></div><div class="footer-note">进度仅保存在当前浏览器设备。代码练习进行关键结构检查，不会将代码上传。</div>';
+}
+function renderSummary(){
+ const done=completedCount(), pct=progressPct(), rate=data.attempts?Math.round(data.correct/data.attempts*100):0, finished=done===levels.length;
+ let skills=groups.filter(function(g){return levels.some(function(l){return l.stage===g})}).map(function(g){const ls=levels.filter(function(l){return l.stage===g}), n=ls.filter(isDone).length;return '<div class="skill-row"><span>'+esc(g)+' <span style="color:#9aa5b5">('+n+'/'+ls.length+')</span></span><span class="skill-state">'+(n===ls.length?"已掌握":n?"学习中":"待开始")+'</span></div>'}).join("");
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习档案</div><h1>我的学习总结</h1><p class="subhead">记录每一步进步，也看看下一步可以做什么。</p></div><button class="btn btn-ghost btn-small" data-page="map">← 返回学习地图</button></div>'+
+ '<div class="summary-grid"><div class="summary-hero"><div class="eyebrow" style="color:#dbe2ff">'+(finished?"C 语言学习旅程":"持续成长中")+'</div><h2>'+(finished?"恭喜你，完成全部关卡！":"你的每一次练习都在累积")+'</h2><p>'+(finished?"你从程序结构出发，练习了类型、流程、函数、数组、字符串、指针、内存管理、文件、标准库和现代 C 特性。现在你已经走完这条核心学习路线，可以继续用真实项目巩固所学。":"完成 "+done+" 个关卡，已经覆盖 "+pct+"% 的学习路线。继续按自己的节奏前进，已学内容会自动保存在这台设备。")+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(finished?"回顾毕业项目":"继续学习")+' →</button></div><div class="summary-emoji">'+(finished?"🎓":"✦")+'</div></div><div class="panel"><div class="challenge-head"><div class="challenge-label">成长数据</div><span class="chip">'+pct+'%</span></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+' / '+levels.length+'</div><div class="stat-label">已通关关卡</div></div></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">累计学习点</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+rate+'%</div><div class="stat-label">知识快问正确率 · '+data.correct+'/'+data.attempts+'</div></div></div></div></div>'+
+ '<div class="summary-grid" style="margin-top:18px"><section class="panel"><div class="challenge-head"><div class="challenge-label">技能地图</div><span class="chip">按模块回顾</span></div><div class="skill-list">'+skills+'</div></section><section class="panel"><div class="challenge-head"><div class="challenge-label">'+(finished?"下一阶段建议":"给未来自己的话")+'</div><span class="chip">'+(finished?"继续实践":"保持节奏")+'</span></div><p class="lesson-copy">'+(finished?"把学到的内容组合成一个小项目：例如通讯录、命令行记账本或简易文本分析器。尝试为函数补充错误处理、拆分头文件，并用编译器警告检查代码。":"学编程不是背完所有语法，而是能用合适的工具把问题拆开。先把当前关卡做完，再回头复习卡住的知识点。")+'</p><div class="takeaway"><div class="takeaway-item"><span class="tick">✓</span><span>代码挑战在本地浏览器完成</span></div><div class="takeaway-item"><span class="tick">✓</span><span>学习进度自动保存</span></div><div class="takeaway-item"><span class="tick">✓</span><span>可以随时回看已完成课程</span></div></div></section></div>'+
+ '<div class="footer-note">本路线聚焦 C 语言核心语法与常用标准库。不同 C 标准和平台扩展可能有差异，进阶项目建议结合目标编译器文档。</div>';
+}
+function openLevel(id){const l=levels.find(function(x){return x.id===id});if(!l)return;if(!unlocked(l)&&!isDone(l)){toast("先完成上一关，就能解锁这里。");return}activeLevel=l;page="lesson";const quizDone=isDone(l)||!!data.quizRewards[l.id];selectedOption=quizDone?l.answer:null;quizPassed=quizDone;codePassed=isDone(l);hintVisible=false;window.quizAnswered=quizDone;window.codeFeedback="";window.codeDraft=data.drafts[l.id]||"";render()}
+function awardForQuiz(){if(quizPassed){toast("这道题的奖励已经领取，不会重复加分。");return}data.attempts++;if(selectedOption===activeLevel.answer){quizPassed=true;const firstCorrect=!data.quizRewards[activeLevel.id];if(firstCorrect){data.quizRewards[activeLevel.id]=true;data.correct++;data.xp+=10;toast("答对了，学习点 +10")}else{toast("答对了，这道题的学习点已领取。")}save();if(codePassed)maybeComplete();}else{save();}window.quizAnswered=true;render()}
+function checkCode(){const ta=document.getElementById("codeAnswer");window.codeDraft=ta.value;const code=ta.value.toLowerCase();const missing=activeLevel.required.filter(function(x){return code.indexOf(x.toLowerCase())===-1});if(missing.length===0){codePassed=true;window.codeFeedback="结构检查通过！代码包含本关要求的关键写法。";if(!isDone(activeLevel)){maybeComplete()}else{render()}}else{codePassed=false;window.codeFeedback="还差一点：请检查代码是否包含这些关键部分："+missing.join("、");render()}}
+function playVictoryAnimation(level){
+ const existing=document.querySelector(".victory-overlay");if(existing)existing.remove();
+ const pieces=[[-145,-112,-35,0,"#6f91ee"],[-116,-150,48,35,"#ffd36b"],[-82,-128,125,70,"#59c99c"],[-42,-166,-20,15,"#a888f3"],[-4,-142,76,85,"#83b9ff"],[38,-161,-58,45,"#ffd36b"],[79,-129,38,110,"#59c99c"],[121,-151,148,25,"#7794f0"],[150,-94,-76,70,"#b58af4"],[-157,34,52,100,"#59c99c"],[-113,87,-42,40,"#ffd36b"],[-73,121,98,130,"#7794f0"],[-28,148,-95,55,"#80b9ff"],[26,132,44,120,"#59c99c"],[72,104,-30,20,"#ffd36b"],[118,70,115,95,"#a888f3"],[157,22,-55,60,"#83b9ff"]];
+ const confetti=pieces.map(function(p){return '<i style="--piece-x:'+p[0]+'px;--piece-y:'+p[1]+'px;--piece-rotation:'+p[2]+'deg;--piece-delay:'+p[3]+'ms;--piece-color:'+p[4]+'"></i>'}).join("");
+ const overlay=document.createElement("div");overlay.className="victory-overlay";
+ overlay.innerHTML='<div class="victory-confetti" aria-hidden="true">'+confetti+'</div><section class="victory-card" role="status" aria-live="polite"><div class="victory-medal" aria-hidden="true">✓</div><div class="victory-kicker">LEVEL CLEARED · '+String(level.id).padStart(2,"0")+'</div><h2 class="victory-title">'+esc(level.title)+'</h2><p class="victory-copy">本关通关成功，继续保持这个节奏。</p><span class="victory-reward">✦ 学习点 +30</span><button type="button" class="victory-dismiss">继续挑战&nbsp; →</button></section>';
+ document.body.appendChild(overlay);
+ let closed=false;let timer=window.setTimeout(close,2200);
+ function close(){if(closed)return;closed=true;window.clearTimeout(timer);overlay.classList.add("is-leaving");window.setTimeout(function(){overlay.remove()},430)}
+ overlay.querySelector(".victory-dismiss").addEventListener("click",close);
+}
+function maybeComplete(){if(quizPassed&&codePassed&&!isDone(activeLevel)){data.completed[activeLevel.id]={at:Date.now()};data.xp+=30;save();playVictoryAnimation(activeLevel);if(completedCount()===levels.length){setTimeout(function(){activeLevel=null;page="summary";render()},950)}else{render()}}}
+function handleClick(e){
+ const pageBtn=e.target.closest("[data-page]");if(pageBtn){switchPage(pageBtn.dataset.page);return}
+ const levelBtn=e.target.closest("[data-level]");if(levelBtn){openLevel(Number(levelBtn.dataset.level));return}
+ const action=e.target.closest("[data-action]");if(!action)return;
+ const a=action.dataset.action;
+ if(a==="cycle-theme"){const next={system:"light",light:"dark",dark:"system"}[themeMode]||"system";applyTheme(next,true);toast(({system:"已改为跟随系统外观",light:"已切换到浅色模式",dark:"已切换到深色模式"})[next]);return}
+ if(a==="open-course"){const route=document.getElementById("course-c-route");if(route)route.scrollIntoView({behavior:"smooth",block:"start"});return}
+ if(a==="continue"){if(activeLevel&&isDone(activeLevel)){const next=levels.find(function(l){return l.id===activeLevel.id+1});if(next){openLevel(next.id);return}page="summary";activeLevel=null;render();return}const n=nextLevel();openLevel(n.id)}
+ if(a==="back"){activeLevel=null;page="map";render()}
+ if(a==="hint"){hintVisible=!hintVisible;render()}
+ if(a==="check-code")checkCode()
+ if(a==="insert-template"){const ta=document.getElementById("codeAnswer");if(!ta)return;if(ta.value.trim()){toast("编辑器已有内容，模板不会覆盖。");ta.focus();return}const template="#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}";ta.value=template;ta.dispatchEvent(new Event("input",{bubbles:true}));ta.focus();const caret=template.indexOf("    \n")+4;ta.setSelectionRange(caret,caret);updateEditor();return}
+ if(a==="reset-progress"){openResetDialog();return}
+ if(a==="reset-cancel"){closeResetDialog();return}
+}
+document.addEventListener("click",function(e){
+ const opt=e.target.closest("[data-option]");if(opt){selectedOption=Number(opt.dataset.option);awardForQuiz();return}
+ handleClick(e)
+});
+document.addEventListener("keydown",function(e){
+ const input=e.target;if(!input||input.id!=="codeAnswer")return;
+ const value=input.value,start=input.selectionStart,end=input.selectionEnd;
+ if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();checkCode();return}
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){e.preventDefault();saveEditorValue(input);toast("代码草稿已保存。");return}
+ if((e.ctrlKey||e.metaKey)&&e.key==="/"){
+  e.preventDefault();const lineStart=value.lastIndexOf("\n",start-1)+1,nextBreak=value.indexOf("\n",Math.max(start,end-1)),lineEnd=nextBreak<0?value.length:nextBreak,block=value.slice(lineStart,lineEnd),lines=block.split("\n"),allCommented=lines.every(function(line){return !line.trim()||/^\s*\/\//.test(line)}),changed=lines.map(function(line){if(!line.trim())return line;if(allCommented)return line.replace(/^(\s*)\/\/ ?/,"$1");return line.replace(/^(\s*)/,"$1// ")}).join("\n");replaceEditorRange(input,changed,lineStart,lineEnd,lineStart+changed.length);input.setSelectionRange(lineStart,lineStart+changed.length);updateEditor();return;
+ }
+ if(e.key==="Tab"){
+  e.preventDefault();
+  if(start===end){
+   if(e.shiftKey){const lineStart=value.lastIndexOf("\n",start-1)+1,leading=(value.slice(lineStart,start).match(/^ */)||[""])[0],remove=Math.min(4,leading.length);if(remove)replaceEditorRange(input,"",lineStart,lineStart+remove,start-remove)}
+   else replaceEditorRange(input,"    ",start,end,start+4);
+   return;
+  }
+  const lineStart=value.lastIndexOf("\n",start-1)+1,nextBreak=value.indexOf("\n",Math.max(start,end-1)),lineEnd=nextBreak<0?value.length:nextBreak,block=value.slice(lineStart,lineEnd),lines=block.split("\n");
+  const changed=lines.map(function(line){if(!e.shiftKey)return "    "+line;return line.replace(/^ {1,4}/,"")}).join("\n");
+  replaceEditorRange(input,changed,lineStart,lineEnd,lineStart+changed.length);input.setSelectionRange(lineStart,lineStart+changed.length);updateEditor();return;
+ }
+ if(e.key==="Enter"){
+  e.preventDefault();const lineStart=value.lastIndexOf("\n",start-1)+1,prefix=value.slice(lineStart,start),base=(prefix.match(/^[ \t]*/)||[""])[0],inner=/\{\s*$/.test(prefix)?base+"    ":base,after=value.slice(end);
+  if(after.startsWith("}")&&/\{\s*$/.test(prefix)){const insert="\n"+inner+"\n"+base;replaceEditorRange(input,insert,start,end,start+1+inner.length)}
+  else replaceEditorRange(input,"\n"+inner,start,end,start+1+inner.length);
+  return;
+ }
+ if(e.key==="}"&&start===end){const lineStart=value.lastIndexOf("\n",start-1)+1,prefix=value.slice(lineStart,start);if(/^[ \t]*$/.test(prefix)){const remove=Math.min(4,(prefix.match(/ *$/)||[""])[0].length);if(remove){e.preventDefault();replaceEditorRange(input,"}",start-remove,end,start-remove+1);return}}}
+ if(e.key==="Backspace"&&start===end&&start>0){const pairs={"(":")","[":"]","{":"}","\"":"\"","'":"'"};if(pairs[value[start-1]]===value[start]){e.preventDefault();replaceEditorRange(input,"",start-1,start+1,start-1);return}}
+ const pairs={"(":")","[":"]","{":"}","\"":"\"","'":"'"}; 
+ if(Object.prototype.hasOwnProperty.call(pairs,e.key)){
+  e.preventDefault();if(start!==end){const selected=value.slice(start,end);replaceEditorRange(input,e.key+selected+pairs[e.key],start,end,start+1);input.setSelectionRange(start+1,start+1+selected.length)}else{replaceEditorRange(input,e.key+pairs[e.key],start,end,start+1)}return;
+ }
+ if([")","]","}"].includes(e.key)&&start===end&&value[start]===e.key){e.preventDefault();input.setSelectionRange(start+1,start+1);updateEditor()}
+});
+document.addEventListener("input",function(e){if(e.target.id==="codeAnswer")saveEditorValue(e.target)});
+document.addEventListener("keyup",function(e){if(e.target.id==="codeAnswer")updateEditor()});
+document.addEventListener("click",function(e){if(e.target.id==="codeAnswer")updateEditor()});
+document.addEventListener("selectionchange",function(){if(document.activeElement&&document.activeElement.id==="codeAnswer")updateEditor()});
+document.addEventListener("scroll",function(e){if(e.target&&e.target.id==="codeAnswer"){const h=document.getElementById("codeHighlight"),g=document.getElementById("editorLineNumbers");if(h)h.style.transform="translate("+(-e.target.scrollLeft)+"px,"+(-e.target.scrollTop)+"px)";if(g)g.style.transform="translateY("+(-e.target.scrollTop)+"px)"}},true);
+document.addEventListener("pointermove",function(e){const card=e.target.closest(".level-card");if(!card)return;const r=card.getBoundingClientRect();card.style.setProperty("--shine-x",((e.clientX-r.left)/r.width*100)+"%");card.style.setProperty("--shine-y",((e.clientY-r.top)/r.height*100)+"%")},{passive:true});
+let pointerX=0,pointerY=0,floatFrame=0;
+const floatSelector=".hero-main,.hero-progress,.stat,.level-card,.course-entry,.panel,.btn,.nav-btn,.streak,.avatar,.side-card,.option,.skill-row,.summary-hero";
+function resetFloat(){document.body.style.setProperty("--pointer-x","42%");document.body.style.setProperty("--pointer-y","18%");document.querySelectorAll(".float-surface").forEach(function(el){el.classList.remove("float-surface");el.style.removeProperty("--float-x");el.style.removeProperty("--float-y");el.style.removeProperty("--float-scale");el.style.removeProperty("--float-shadow-y");el.style.removeProperty("--float-shadow-blur");el.style.removeProperty("--float-shadow-opacity")})}
+document.addEventListener("pointermove",function(e){if(e.pointerType&&e.pointerType!=="mouse")return;pointerX=e.clientX;pointerY=e.clientY;document.body.style.setProperty("--pointer-x",pointerX+"px");document.body.style.setProperty("--pointer-y",pointerY+"px");if(floatFrame)return;floatFrame=requestAnimationFrame(function(){floatFrame=0;const dpr=window.devicePixelRatio||1,snap=function(n){return Math.round(n*dpr)/dpr};document.querySelectorAll(floatSelector).forEach(function(el){const r=el.getBoundingClientRect(),oldX=parseFloat(el.style.getPropertyValue("--float-x"))||0,oldY=parseFloat(el.style.getPropertyValue("--float-y"))||0,cx=r.left+r.width/2-oldX,cy=r.top+r.height/2-oldY,dx=pointerX-cx,dy=pointerY-cy,distance=Math.hypot(dx,dy),proximity=Math.max(0,1-distance/290),weight=proximity*proximity*(3-2*proximity),direction=distance?1/distance:0;el.classList.add("float-surface");el.style.setProperty("--float-x",snap(dx*direction*8*weight).toFixed(2)+"px");el.style.setProperty("--float-y",snap(dy*direction*8*weight-2*weight).toFixed(2)+"px");el.style.setProperty("--float-shadow-y",(12+weight*8).toFixed(1)+"px");el.style.setProperty("--float-shadow-blur",(34+weight*18).toFixed(1)+"px");el.style.setProperty("--float-shadow-opacity",(.075+weight*.09).toFixed(3))})})},{passive:true});
+document.addEventListener("pointerout",function(e){if(!e.relatedTarget)resetFloat()});
+window.addEventListener("blur",resetFloat);
+render();
+(function(){
+ const splash=document.getElementById("splash-screen"),skip=document.getElementById("splash-skip"),app=document.querySelector(".app");if(!splash||!app)return;
+ let launched=false;const reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ const targetSelector=".hero-main,.hero-progress,.stat,.course-library,.section-head,.course-route-heading,.track-head,.level-card,.panel,.summary-hero";
+ function revealInterface(){
+  if(launched)return;launched=true;window.clearTimeout(revealTimer);window.clearTimeout(skipTimer);
+  const targets=Array.from(app.querySelectorAll(targetSelector)).filter(function(el){return !el.parentElement.closest(targetSelector)});
+  targets.forEach(function(el,index){el.classList.add("drop-in");el.style.setProperty("--drop-delay",index*105+"ms")});
+  app.classList.add("interface-reveal");document.body.classList.remove("splash-active");splash.classList.add("is-leaving");window.removeEventListener("keydown",onSplashKey);
+  window.setTimeout(function(){splash.remove()},520);
+  window.setTimeout(function(){app.classList.remove("interface-reveal");targets.forEach(function(el){el.classList.remove("drop-in");el.style.removeProperty("--drop-delay")})},4800);
+ }
+ function onSplashKey(event){if(event.key==="Escape")revealInterface()}
+ const skipTimer=window.setTimeout(function(){splash.classList.add("can-skip")},reduced?0:1100);
+ const revealTimer=window.setTimeout(revealInterface,reduced?120:1400);
+ if(skip)skip.addEventListener("click",revealInterface);window.addEventListener("keydown",onSplashKey);
+})();
+</script>
+</body>
+</html>
+
