@@ -667,49 +667,791 @@ body[data-theme="dark"] .victory-kicker{color:#aec4eb}body[data-theme="dark"] .v
 <div class="modal-backdrop" id="resetModal" hidden><section class="reset-dialog" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><div id="resetModalContent"></div></section></div>
 <script>
 const levels = [
-{id:1,stage:"起步上手",title:"认识 C 程序",minutes:8,gist:"看懂程序入口，输出第一行文字。",lesson:"在常见的托管环境中，程序启动代码会调用 main。标准输入输出来自 stdio.h；语句通常以分号结束，花括号表示代码块。先熟悉“包含头文件、定义 main、执行语句、返回状态”这条主线。嵌入式等 freestanding 环境的启动方式可以不同。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    printf("Hello, C!\\\\n");\\n    return 0;\\n}',takeaways:["main 是程序入口","printf 输出格式化文本","return 0 表示程序正常结束"],quiz:"在常见的托管环境中，C 程序的入口通常是什么？",options:["从文件第一行开始","从 main 函数开始","从最后一个函数开始"],answer:1,explain:"托管环境的启动代码会调用 main；freestanding 实现可以使用不同的启动方式。",mission:"写一个最小程序，在终端输出 Hello, C! 并正常结束。",required:["int main","printf(","return 0"],hint:"先包含 stdio.h，再写 int main(void)，在花括号中调用 printf。"},
-{id:2,stage:"起步上手",title:"变量与基本类型",minutes:10,gist:"让数据有名字，理解整数、浮点数和字符。",lesson:"变量是有类型的存储位置。常用类型包括 char、int、float、double；printf 的格式说明符必须与参数类型匹配。scanf 读取标量通常需要传入地址，例如读取 double 使用 %lf；读取字符串要限制宽度或优先使用 fgets，避免写越界。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    int age = 18;\\n    double score = 95.5;\\n    printf("%d %.1f\\\\n", age, score);\\n    return 0;\\n}',takeaways:["先声明类型再使用变量","%d 常用于 int，%f 常用于浮点输出","变量名表达数据含义"],quiz:"下面哪个格式说明符通常用于输出 int？",options:["%d","%s","%p"],answer:0,explain:"%d 对应十进制 int；%s 用于字符串，%p 用于指针。",mission:"声明 int 类型的变量 count，并使用 printf 和 %d 输出它。",required:["int count","printf(","%d"],hint:"变量声明包含类型和名字，例如 int count = 3;"},
-{id:3,stage:"起步上手",title:"常量、转换与枚举",minutes:10,gist:"表达固定值，安全地转换类型，并为选项命名。",lesson:"const 可限制通过某个名称修改对象；显式类型转换能说明你有意改变数据类型。enum 为一组整数常量提供可读名字。整数除法会丢弃小数部分，计算平均值时要注意转换。",sample:'#include <stdio.h>\\n\\nenum Status { READY, RUNNING, DONE };\\n\\nint main(void) {\\n    const int total = 5;\\n    double average = (double)total / 2;\\n    enum Status state = READY;\\n    printf("%.1f %d\\\\n", average, (int)state);\\n    return 0;\\n}',takeaways:["const 表达只读意图","显式转换写在表达式中","枚举让状态名字清楚易懂"],quiz:"int a = 5, b = 2; a / b 的结果是什么？",options:["2.5","2","编译错误"],answer:1,explain:"两个操作数都是整数，整数除法结果为 2。",mission:"定义一个 enum Level，至少包含 EASY 和 HARD，并将一个 int 显式转换为 double。",required:["enum level","easy","hard","(double)"],hint:"枚举声明以 enum 开头；显式转换写成 (double)value。"},
-{id:4,stage:"起步上手",title:"运算符与表达式",minutes:9,gist:"组合算术、比较、逻辑和位运算。",lesson:"C 运算符包括算术、关系、逻辑、赋值、条件和位运算。优先级不确定时加括号。逻辑 &&、|| 有短路特性；位运算 &, |, ^, ~ 和移位处理整数的二进制位。用位标志时优先使用 unsigned 类型，并谨慎处理有符号数移位。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    unsigned flags = 0;\\n    flags = flags | (1u << 2);\\n    if ((flags & (1u << 2)) != 0) {\\n        puts("enabled");\\n    }\\n    return 0;\\n}',takeaways:["比较表达式产生真假结果","逻辑运算用于组合条件","位掩码适合标志位处理"],quiz:"逻辑与运算符是哪一个？",options:["&","&&","||"],answer:1,explain:"&& 是逻辑与；& 是按位与。",mission:"用左移和按位或设置从 0 编号的第 3 位（bit 2），再用按位与检查该位是否开启。",required:["<<","|","&"],hint:"设置位可以使用 flags |= (1u << n)，检查时使用 flags & (1u << n)。"},
-{id:5,stage:"流程控制",title:"分支判断",minutes:10,gist:"用 if、else 和 switch 让程序作出选择。",lesson:"if/else 适合范围判断和复合条件；switch 适合根据整数或枚举值选择分支。每个 switch 分支通常用 break 结束，default 用于处理其他情况。条件表达式里的比较要使用 ==，不要误写成赋值 =。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    int score = 82;\\n    if (score >= 60) {\\n        puts("pass");\\n    } else {\\n        puts("try again");\\n    }\\n    return 0;\\n}',takeaways:["if 判断条件真假","else 覆盖另一种情况","switch 需要留意 break 和 default"],quiz:"if (x = 3) 中最可能的错误是什么？",options:["应该使用比较运算符 ==","x 不能作为条件","if 后面必须写分号"],answer:0,explain:"单个 = 是赋值；比较相等应使用 ==。",mission:"写一个 if/else：当 temperature 大于等于 30 输出 hot，否则输出 mild。",required:["if","temperature >= 30","else","puts("],hint:"条件写在 if (...) 中，两个分支分别放进花括号。"},
-{id:6,stage:"流程控制",title:"循环与跳转",minutes:10,gist:"重复执行任务，掌握 for、while、do-while。",lesson:"for 常用于次数明确的循环，while 适合条件驱动，do-while 至少执行一次。break 结束当前循环，continue 跳过本轮剩余语句。检查循环初值、条件和更新式，避免死循环与越界。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    int sum = 0;\\n    for (int i = 1; i <= 5; ++i) {\\n        sum += i;\\n    }\\n    printf("%d\\\\n", sum);\\n    return 0;\\n}',takeaways:["循环要有明确的终止条件","for 由初始化、条件、更新组成","break 和 continue 改变循环流程"],quiz:"for 循环第三个表达式通常负责什么？",options:["声明函数","更新循环变量","关闭程序"],answer:1,explain:"第三部分通常在每轮后更新计数器，例如 ++i。",mission:"使用 for 循环累加 1 到 10，并输出 sum。",required:["for","sum","+=","printf("],hint:"声明 sum 并初始化为 0，在循环体中执行 sum += i。"},
-{id:7,stage:"流程控制",title:"函数与参数",minutes:11,gist:"拆分任务，让代码可以重复调用。",lesson:"函数通过返回类型、函数名和参数列表定义。声明（原型）让编译器提前知道接口；调用时传入实参。C 默认按值传递，函数内修改形参不会直接改变调用者的普通变量。",sample:'#include <stdio.h>\\n\\nint max(int a, int b);\\n\\nint max(int a, int b) {\\n    return a > b ? a : b;\\n}\\n\\nint main(void) {\\n    printf("%d\\\\n", max(4, 9));\\n    return 0;\\n}',takeaways:["函数接口写清参数和返回值","原型可以放在定义之前","C 的普通参数按值传递"],quiz:"函数要把整数结果交还给调用者，应该怎么做？",options:["使用 return 返回结果","用 printf 代替返回","把函数名写成 int"],answer:0,explain:"return 表达式将值返回给调用者。",mission:"定义 int max(int a, int b)，比较两个数并返回较大的值；可以使用 if/else 或条件运算符。",required:["int max(int a, int b)","return"],hint:"函数体里判断 a > b，分别返回 a 或 b。"},
-{id:8,stage:"流程控制",title:"作用域、生命周期与递归",minutes:12,gist:"理解变量可见范围，认识递归和静态存储期。",lesson:"局部变量通常只在代码块中可见，自动变量在块退出后结束生命周期。static 局部变量在多次函数调用间保留值。递归函数要有基准情形，并让每次调用逐步接近基准。下面的阶乘示例假设 n 是非负且较小的整数；真实程序还要验证输入并防止乘法溢出。",sample:'#include <stdio.h>\\n\\nint factorial(int n) {\\n    if (n <= 1) return 1;\\n    return n * factorial(n - 1);\\n}\\n\\nint main(void) {\\n    printf("%d\\\\n", factorial(5));\\n    return 0;\\n}',takeaways:["变量作用域决定名字在哪里可用","局部变量一般随代码块结束","递归必须有终止条件"],quiz:"递归函数最重要的安全结构是什么？",options:["永远调用自己","基准情形和逐步收敛","至少两个全局变量"],answer:1,explain:"没有基准情形，递归会持续调用并耗尽栈空间。",mission:"在 n 为非负且较小整数的前提下实现 factorial(n)：n == 0 或 n == 1 时返回 1，否则递归计算 n * factorial(n - 1)。",required:["factorial","if","return 1","factorial(n - 1)"],hint:"先写基准情形，再递归调用一个更小的问题。"},
-{id:9,stage:"复合数据",title:"数组与多维数组",minutes:11,gist:"按顺序保存同类数据，正确处理下标。",lesson:"数组在内存中连续存放同类型元素，下标从 0 开始。访问下标越界属于未定义行为。函数接收数组时会退化为指针，因此通常需要额外传入长度。多维数组可表示表格，但传给函数时要保留后续维度大小。",sample:'#include <stdio.h>\\n\\nint sum(const int values[], int length) {\\n    int total = 0;\\n    for (int i = 0; i < length; ++i) total += values[i];\\n    return total;\\n}',takeaways:["第一个元素下标为 0","数组越界必须避免","函数通常需要同时接收数组长度"],quiz:"长度为 5 的数组，最后一个有效下标是多少？",options:["5","4","1"],answer:1,explain:"下标从 0 开始，因此最后一个是 5 - 1 = 4。",mission:"实现 sum(values, length)，使用 for 循环访问 values[i] 并返回总和。",required:["int values[","int length","for","values[i]","return"],hint:"循环条件使用 i < length，不要写 i <= length。"},
-{id:10,stage:"复合数据",title:"字符与字符串",minutes:11,gist:"区分单个字符和以零结束的字符数组。",lesson:"C 没有内建 string 类型。字符串通常是 char 数组，并以空字符 \\0 结束。处理字符串时使用 <string.h> 的 strlen、strcmp 等函数；memcpy 只复制指定字节，不会自动补空字符，调用前必须确保目标缓冲区足够大。输入不可信数据时优先限制长度。",sample:'#include <stdio.h>\\n#include <string.h>\\n\\nint main(void) {\\n    char word[] = "hello";\\n    printf("%zu\\\\n", strlen(word));\\n    return 0;\\n}',takeaways:["字符串以空字符结尾","strlen 返回长度，不含结尾空字符","比较字符串用 strcmp 而不是 =="],quiz:"C 字符串用哪个字符表示结束？",options:["空格 ' '","空字符 '\\\\0'","换行 '\\\\n'"],answer:1,explain:"每个 C 字符串都以空字符 '\\0' 结束。",mission:"包含 string.h，定义字符串 word，并用 strlen 输出它的长度。",required:["#include <string.h>","char word","strlen(","%zu"],hint:"strlen 的返回类型是 size_t，常用 %zu 输出。"},
-{id:11,stage:"指针与内存",title:"指针与地址",minutes:12,gist:"用指针保存地址，理解取地址和解引用。",lesson:"指针变量保存对象的地址。& 取对象地址，* 在表达式中解引用指针访问目标。指针必须指向有效对象后才能解引用；空指针可表示“不指向对象”。const 与指针搭配时要分清“指向只读数据”与“指针本身不可改”。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    int value = 7;\\n    int *p = &value;\\n    *p = 12;\\n    printf("%d\\\\n", value);\\n    return 0;\\n}',takeaways:["& 获取地址，* 访问指向的对象","初始化指针后再使用","解引用无效指针会导致未定义行为"],quiz:"若 p 是指向 int 的指针，*p 表示什么？",options:["p 的地址","p 指向的 int 对象","一个新变量"],answer:1,explain:"一元 * 对指针解引用，得到被指向的对象。",mission:"声明 int value，再声明 int *p = &value，并通过 *p 修改 value。",required:["int *p","&value","*p =","printf("],hint:"p 保存 value 的地址，解引用写作 *p。"},
-{id:12,stage:"指针与内存",title:"动态内存管理",minutes:13,gist:"使用 malloc、realloc 和 free 管理动态内存。",lesson:"malloc 向运行环境申请指定字节数的动态内存，失败时返回 NULL。申请大小要考虑元素类型：n * sizeof *p；处理外部输入时还要检查乘法是否溢出。每块动态内存最终都要恰好释放一次；释放后不要再访问。realloc 可能移动内存；非零大小申请失败会返回 NULL 且原内存块仍有效，所以先用临时指针接收结果。",sample:'#include <stdlib.h>\\n\\nint main(void) {\\n    size_t n = 4;\\n    int *items = malloc(n * sizeof *items);\\n    if (items == NULL) return 1;\\n    items[0] = 42;\\n    free(items);\\n    return 0;\\n}',takeaways:["检查 malloc 是否返回 NULL","sizeof *ptr 能跟随元素类型变化","free 后不能继续使用那块内存"],quiz:"malloc 申请失败时会返回什么？",options:["0 字节数组","NULL","自动重试"],answer:1,explain:"申请失败时 malloc 返回空指针 NULL。",mission:"用 malloc 按 n * sizeof *items 申请 int 数组，检查 NULL，使用后调用 free。",required:["malloc(","sizeof *","== NULL","free("],hint:"先检查指针是否为 NULL，再使用；所有成功申请的内存都要释放。"},
-{id:13,stage:"指针与内存",title:"结构体、联合体与类型别名",minutes:12,gist:"把相关字段组合为自己的数据类型。",lesson:"struct 将多个成员组合在一起；union 的成员共享同一块存储，适合互斥表示；typedef 为类型提供别名。访问结构体对象用点号，通过指针访问用 ->。注意结构体可能存在对齐填充，不要假设其内存布局。",sample:'#include <stdio.h>\\n\\ntypedef struct {\\n    char name[24];\\n    int score;\\n} Student;\\n\\nint main(void) {\\n    Student s = { .name = "Lin", .score = 95 };\\n    printf("%s %d\\\\n", s.name, s.score);\\n    return 0;\\n}',takeaways:["结构体成员各自有存储","联合体成员共享存储","typedef 提升接口可读性"],quiz:"通过结构体指针 p 访问成员 score，使用什么写法？",options:["p.score","p->score","p::score"],answer:1,explain:"结构体指针通过 -> 访问成员。",mission:"用 typedef struct 定义 Student，包含 name 和 score，并通过 . 访问成员。",required:["typedef struct","char name[","int score","printf(","s.score"],hint:"用 typedef struct { ... } Student; 定义类型。"},
-{id:14,stage:"工程实践",title:"文件输入与输出",minutes:12,gist:"读写文件，并检查每一步是否成功。",lesson:"stdio.h 提供 FILE、fopen、fclose、fgets、fprintf 等文件操作。fopen 失败返回 NULL；读入时限制缓冲区长度，并检查返回值。fgets 可能把换行符也读入缓冲区，输出已读行可用 fputs，避免再额外添加一个换行。文件流使用完毕后应关闭。二进制文件使用 fread/fwrite，并注意数据布局可移植性。",sample:'#include <stdio.h>\\n\\nint main(void) {\\n    FILE *file = fopen("notes.txt", "r");\\n    if (file == NULL) return 1;\\n    char line[128];\\n    if (fgets(line, sizeof line, file) != NULL) fputs(line, stdout);\\n    fclose(file);\\n    return 0;\\n}',takeaways:["检查 fopen 的返回值","fgets 限制一次读取的长度","关闭文件流释放资源"],quiz:"fopen 打开文件失败时会返回什么？",options:["NULL","空字符串","EOF 文件对象"],answer:0,explain:"fopen 失败返回 NULL，必须检查后才能继续操作。",mission:"打开文件，检查是否为 NULL，使用 fgets 读取一行，最后 fclose。",required:["fopen(","== NULL","fgets(","fclose("],hint:"按“打开—检查—读写—关闭”的顺序组织代码。"},
-{id:15,stage:"工程实践",title:"预处理、头文件与多文件",minutes:12,gist:"理解 #include、宏和分文件组织。",lesson:"预处理器在编译前处理 #include、#define 和条件编译指令。头文件保护宏防止重复包含。头文件通常放声明，.c 文件放定义；每个源文件单独编译，再由链接器组合。宏是文本替换，带参数的宏要给参数加括号，并避免重复求值带副作用的参数。",sample:'#ifndef UTIL_H\\n#define UTIL_H\\n\\nint add(int a, int b);\\n\\n#endif',takeaways:["头文件保护避免重复展开","声明放 .h，定义放 .c 是常见组织方式","链接阶段会解析跨文件符号"],quiz:"头文件保护宏的主要用途是什么？",options:["防止头文件被重复包含","让 C 自动管理内存","替代所有函数"],answer:0,explain:"#ifndef/#define/#endif 防止同一头文件被重复处理。",mission:"写出头文件保护结构，声明 int add(int a, int b)。",required:["#ifndef","#define","int add(int a, int b)","#endif"],hint:"宏名使用大写且每个头文件唯一，例如 UTIL_H。"},
-{id:16,stage:"工程实践",title:"函数指针与回调",minutes:12,gist:"把函数也作为值传递，构建可复用接口。",lesson:"函数指针保存函数的地址，可以作为参数传递给另一个函数，这就是回调的基础。声明语法中括号很重要：int (*fn)(int) 表示 fn 是指向函数的指针。qsort 等标准库函数通过回调比较元素。",sample:'#include <stdio.h>\\n\\nint apply(int x, int (*fn)(int)) {\\n    return fn(x);\\n}\\n\\nint twice(int n) { return 2 * n; }\\n\\nint main(void) {\\n    printf("%d\\\\n", apply(4, twice));\\n    return 0;\\n}',takeaways:["函数指针类型必须匹配参数和返回值","括号区分函数指针与返回指针的函数","回调让算法和行为解耦"],quiz:"int (*fn)(int) 表示什么？",options:["函数 fn 返回 int 指针","fn 是接受 int 并返回 int 的函数指针","int 类型数组"],answer:1,explain:"括号中的 *fn 表示指针，后面的 (int) 表示函数参数。",mission:"定义 apply，接收 int 和 int (*callback)(int)，并调用 callback。",required:["int (*callback)(int)","callback(","return"],hint:"参数声明写成 int (*callback)(int)，随后用 callback(value) 调用。"},
-{id:17,stage:"工程实践",title:"标准库与常用工具箱",minutes:13,gist:"按需使用字符串、数学、排序、时间和断言工具。",lesson:"C 标准库把常用能力按头文件组织：stdio.h 输入输出，stdlib.h 转换/内存/排序，string.h 字符串与内存，math.h 数学，ctype.h 字符分类，time.h 时间，assert.h 断言。使用每个函数前查看原型、返回值和前置条件。qsort 比较函数必须保持一致的次序；比较整数不要直接返回 x - y，以免差值溢出。",sample:'#include <stdlib.h>\\n\\nint compare_ints(const void *a, const void *b) {\\n    int x = *(const int *)a;\\n    int y = *(const int *)b;\\n    return (x > y) - (x < y);\\n}\\n\\n/* qsort(values, count, sizeof values[0], compare_ints); */',takeaways:["先包含提供函数声明的头文件","阅读返回值和错误约定","qsort 通过比较回调排序"],quiz:"qsort 的比较函数应该返回什么？",options:["永远返回 1","负数、零或正数表达比较关系","直接修改全局数组"],answer:1,explain:"比较函数返回负数、零、正数，分别表示小于、等于、大于。",mission:"包含 stdlib.h，定义比较回调，并用 qsort 对 int 数组排序。",required:["#include <stdlib.h>","qsort(","const void *","return"],hint:"比较器需要把 void 指针转换为对应的元素类型，然后比较值。"},
-{id:18,stage:"工程实践",title:"错误处理、限定符与安全",minutes:13,gist:"写出更可预测、更容易排错的 C 程序。",lesson:"C 不会替你自动检查数组边界或指针有效性。明确检查输入和库函数错误，用返回码传递失败原因；assert 适合检查程序内部不变量，不应用来处理普通用户输入。const、volatile、restrict 表达不同约束；volatile 不提供线程同步或原子性。避免未定义行为并开启编译器警告。",sample:'#include <stddef.h>\\n\\nint first(const int *values, size_t length, int *out) {\\n    if (values == NULL || out == NULL || length == 0) return 0;\\n    *out = values[0];\\n    return 1;\\n}',takeaways:["编译器警告应认真处理","检查边界、返回码和资源状态","未定义行为可能让结果完全不可预测"],quiz:"assert 最适合用来做什么？",options:["验证程序内部不变量","替代输入校验","打印所有运行信息"],answer:0,explain:"assert 主要用于调试期检查内部假设；用户输入应使用正常错误处理。",mission:"实现 first(const int *values, size_t length, int *out)：遇到空指针或 length == 0 返回 0；成功时把首个元素写入 *out 并返回 1。",required:["const int *","size_t length","int *out","values == NULL","length == 0","return 0","*out","return 1"],hint:"用返回值表示成功或失败，用 out 参数返回元素值，避免把错误标记和有效数据混在一起。"},
-{id:19,stage:"C 标准新特性",title:"C99、C11 与现代 C",minutes:14,gist:"了解常见标准版本特性，知道可移植性的边界。",lesson:"C99 引入 // 注释、可变长数组等特性；C11 增加 _Static_assert、_Generic、原子操作等能力，且变长数组属于可选特性，部分实现可以不支持。sizeof 的单位是 C 字节，不保证一个字节恰好 8 位；静态断言适合明确程序需要的平台条件。C17 主要修正和澄清标准；C23（ISO/IEC 9899:2024）继续更新语言与标准库。线程、原子和可选特性要确认目标环境支持。",sample:'#include <limits.h>\\n#include <stdatomic.h>\\n\\n_Static_assert(CHAR_BIT == 8 && sizeof(int) >= 2, "requires 8-bit bytes and int of at least 2 bytes");\\n\\nint main(void) {\\n    _Atomic int counter = 0;\\n    atomic_fetch_add(&counter, 1);\\n    return 0;\\n}',takeaways:["编译时断言可以检查类型和约束","C11 原子操作适用于并发共享状态","写可移植代码要注明标准版本"],quiz:"_Static_assert 通常在什么时候检查条件？",options:["编译时","程序退出时","网络连接后"],answer:0,explain:"静态断言用于编译期检查，条件不成立时编译失败。",mission:"使用 _Static_assert 检查 sizeof(int)，并写一个 C11 原子整数递增示例。",required:["_Static_assert","sizeof(int)","_Atomic int","atomic_fetch_add"],hint:"需要包含 stdatomic.h；目标编译器应启用 C11 或更新标准。"},
-{id:20,stage:"综合毕业关",title:"综合项目：做一个成绩册",minutes:20,gist:"把数组、结构体、函数、循环和输出组合起来。",lesson:"把语法组合成完整程序：设计 Student 结构体，用数组保存学生，并写 average_score 函数统计平均分。函数要处理空数组并用状态码表示成功或失败，计算时使用浮点除法。再由 main 输出结果。完成后，你将得到本设备保存的通关总结。",sample:'#include <stdio.h>\\n#include <stddef.h>\\n\\ntypedef struct { char name[24]; int score; } Student;\\n\\nint average_score(const Student students[], size_t count, double *out) {\\n    if (students == NULL || out == NULL || count == 0) return 0;\\n    double total = 0.0;\\n    for (size_t i = 0; i < count; ++i) total += students[i].score;\\n    *out = total / (double)count;\\n    return 1;\\n}\\n\\nint main(void) {\\n    Student group[] = { { "An", 90 }, { "Bo", 80 } };\\n    size_t count = sizeof group / sizeof group[0];\\n    double average;\\n    if (average_score(group, count, &average)) {\\n        printf("average: %.1f\\\\n", average);\\n    }\\n    return 0;\\n}',takeaways:["用结构体表示一条记录","用数组管理多条记录","用函数拆分统计逻辑并处理空数据"],quiz:"毕业项目里，哪种设计最适合保存学生姓名和分数？",options:["分别使用固定含义的结构体成员","用一个整数代替所有字段","把数据只写在 printf 里"],answer:0,explain:"结构体能把一名学生的相关字段放在同一条记录中。",mission:"定义 Student 结构体与 average_score 函数；函数检查空指针和 count == 0，以状态码表示成败，用 for 累加并以浮点除法求平均；main 建立数组、传入结果变量并输出平均分。",required:["typedef struct","student","score","average_score(","double *out","count == 0","for","*out","(double)","printf(","return 1","return 0"],hint:"先写返回状态码的 average_score；成功时通过 double *out 写回结果，main 检查返回值后再输出。"}
+  {
+    "id": 1,
+    "stage": "起步上手",
+    "title": "认识 C 程序",
+    "minutes": 8,
+    "gist": "看懂程序入口，输出第一行文字。",
+    "lesson": "把 C 程序想成一份从入口开始执行的食谱：托管环境先准备运行环境，再调用 main；main 里的语句才是这次要做的事。stdio.h 提供 printf，花括号圈出一段代码，分号表示一条语句结束。",
+    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    printf(\"Hello, C!\\\\n\");\\n    return 0;\\n}",
+    "takeaways": [
+      "main 是程序入口",
+      "printf 输出格式化文本",
+      "return 0 表示程序正常结束"
+    ],
+    "quiz": "在常见的桌面或命令行 C 程序中，运行库准备好后会调用哪个函数开始执行你的程序？",
+    "options": [
+      "从文件第一行开始",
+      "从 main 函数开始",
+      "从最后一个函数开始"
+    ],
+    "answer": 1,
+    "explain": "正确答案是 main：它是这类程序约定的入口。文件里的函数定义并不会因为写在前面就自动运行；printf 负责显示文字，return 0 表示 main 正常结束。",
+    "mission": "写出一个完整的最小程序：包含 stdio.h，定义 int main(void)，在 main 的花括号里用 printf 输出 Hello, C!，最后从 main 返回 0。语句要有分号。",
+    "hint": "按顺序写：#include <stdio.h>；int main(void) {；printf(\"Hello, C!\\n\");；return 0;；最后补上 }。"
+  },
+  {
+    "id": 2,
+    "stage": "起步上手",
+    "title": "变量与基本类型",
+    "minutes": 10,
+    "gist": "让数据有名字，理解整数、浮点数和字符。",
+    "lesson": "变量像贴了标签的小盒子：int 盒子放整数，double 盒子放小数，char 盒子放单个字符。声明时写类型和名字，例如 int count = 3;。printf 的格式说明符要和数据类型对上，%d 对应 int；浮点数输出常用 %f。",
+    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    int count = 3;\\n    double score = 95.5;\\n    printf(\"%d %.1f\\\\n\", count, score);\\n    return 0;\\n}",
+    "takeaways": [
+      "先声明类型再使用变量",
+      "%d 常用于 int，%f 常用于浮点输出",
+      "变量名表达数据含义"
+    ],
+    "quiz": "有一个 int 变量 age = 18，要用 printf 按十进制整数输出它，格式字符串里应写什么？",
+    "options": [
+      "%d",
+      "%s",
+      "%p"
+    ],
+    "answer": 0,
+    "explain": "应写 %d，因为 age 的类型是 int。%s 需要字符字符串，%p 用来显示指针地址；格式符与实参类型不匹配会产生错误结果，甚至未定义行为。",
+    "mission": "写一个完整的小程序：声明并初始化 int count，再用 printf 的 %d 格式说明符输出 count。格式字符串后面的实参必须真的是变量 count，不能只把 count 写在注释或字符串里。",
+    "hint": "例如：int count = 3; 然后写 printf(\"%d\\n\", count);。确认 %d 在引号里，count 在逗号后。"
+  },
+  {
+    "id": 3,
+    "stage": "起步上手",
+    "title": "常量、转换与枚举",
+    "minutes": 10,
+    "gist": "表达固定值，安全地转换类型，并为选项命名。",
+    "lesson": "这一关把固定值、命名选项和类型转换连起来。const 像给盒子贴上“程序不要通过这个名字改它”的标签；enum 像给交通灯状态命名；显式转换则告诉 C 把某个值按另一种类型参与计算。比如 5 / 2 是整数除法，先把 5 转为 double 再除，才会得到 2.5。",
+    "sample": "#include <stdio.h>\\n\\nenum Level { EASY, HARD };\\n\\nint main(void) {\\n    const int total = 5;\\n    double average = (double)total / 2;\\n    int value = 5;\\n    double converted = (double)value;\\n    enum Level state = EASY;\\n    printf(\"%.1f %f\\\\n\", average, converted);\\n    return 0;\\n}",
+    "takeaways": [
+      "const 表达只读意图",
+      "显式转换写在表达式中",
+      "枚举让状态名字清楚易懂"
+    ],
+    "quiz": "int a = 5, b = 2; 若写 double result = (double)a / b;，result 是多少？",
+    "options": [
+      "2.5",
+      "2",
+      "编译错误"
+    ],
+    "answer": 0,
+    "explain": "结果是 2.5，因为转换发生在除法之前，表达式变成浮点数除法。若写 a / b，两个操作数都是 int，结果先被算成 2，再存进 double 也只能得到 2.0。",
+    "mission": "写一个完整程序：定义 enum Level，包含 EASY 和 HARD；在 main 声明 int value，转换成 double，并用 printf 的 %f 输出 converted。只把结果变量声明为 double 不算完成转换。",
+    "hint": "先在文件作用域或 main 中定义 enum Level。main 里写 int value = 5; double converted = (double)value; printf(\"%f\", converted);。"
+  },
+  {
+    "id": 4,
+    "stage": "起步上手",
+    "title": "运算符与表达式",
+    "minutes": 9,
+    "gist": "组合算术、比较、逻辑和位运算。",
+    "lesson": "普通算术符号像计算器；比较符号回答“大于吗”，逻辑符号把真假条件组合起来。位运算可以把整数的二进制位当成一排开关：1u << 2 生成从 0 开始编号的第 3 个开关掩码，按位或打开它，按位与检查它。用 unsigned 表示这类位标志，并用括号写清计算顺序。",
+    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    unsigned flags = 0;\\n    flags = flags | (1u << 2);\\n    if ((flags & (1u << 2)) != 0) {\\n        puts(\"enabled\");\\n    }\\n    return 0;\\n}",
+    "takeaways": [
+      "比较表达式产生真假结果",
+      "逻辑运算用于组合条件",
+      "位掩码适合标志位处理"
+    ],
+    "quiz": "要表示“条件 A 和条件 B 必须同时成立”，应使用哪个逻辑运算符？",
+    "options": [
+      "&",
+      "&&",
+      "||"
+    ],
+    "answer": 1,
+    "explain": "是 &&，它把两个真假条件组合成“都为真”。& 是按位与，用来逐位计算整数；|| 表示“至少一个条件为真”。位标志示例里的 & 虽然也叫与，但用途和逻辑 && 不同。",
+    "mission": "写一个完整程序，在 main 中声明 unsigned flags = 0，用左移和按位或设置 bit 2，再在 if 条件中用按位与检查同一位。包含 stdio.h，代码要实际使用 flags。",
+    "hint": "可先写 flags |= (1u << 2);，再写 if ((flags & (1u << 2)) != 0) { ... }。位编号从 0 开始。"
+  },
+  {
+    "id": 5,
+    "stage": "流程控制",
+    "title": "分支判断",
+    "minutes": 10,
+    "gist": "用 if、else 和 switch 让程序作出选择。",
+    "lesson": "if/else 像路口：程序先看条件，条件为真走 if 的路，否则走 else 的路。比如温度大于等于 30 就显示 hot，否则显示 mild。单个等号 = 是把值放进变量，两个等号 == 才是比较相等；写反时程序可能悄悄改掉变量。",
+    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    int temperature = 32;\\n    if (temperature >= 30) {\\n        puts(\"hot\");\\n    } else {\\n        puts(\"mild\");\\n    }\\n    return 0;\\n}",
+    "takeaways": [
+      "if 判断条件真假",
+      "else 覆盖另一种情况",
+      "switch 需要留意 break 和 default"
+    ],
+    "quiz": "代码 if (x = 3) 想表达“x 等于 3 吗”时，最关键的问题是什么？",
+    "options": [
+      "应该使用比较运算符 ==",
+      "x 不能作为条件",
+      "if 后面必须写分号"
+    ],
+    "answer": 0,
+    "explain": "这里的 = 是赋值，会把 3 放进 x；赋值表达式还会产生一个值，因此条件可能被当成真。要比较是否相等应写 x == 3。if 后不需要额外分号，否则空语句会先成为 if 的内容。",
+    "mission": "写一个包含 stdio.h 的完整程序，在 main 初始化 int temperature，并写带花括号的 if/else：temperature >= 30 时调用 puts 输出 hot，否则输出 mild。",
+    "hint": "确认结构是 if (temperature >= 30) { puts(\"hot\"); } else { puts(\"mild\"); }，并包含 stdio.h。"
+  },
+  {
+    "id": 6,
+    "stage": "流程控制",
+    "title": "循环与跳转",
+    "minutes": 10,
+    "gist": "重复执行任务，掌握 for、while、do-while。",
+    "lesson": "循环像按清单重复做事。for 的三部分分别是起点、继续条件、每轮结束后的更新。累加时先把 sum 设成 0，再让 i 逐个取 1 到 10，每轮执行 sum += i。循环结束后输出总和；手算 1+2+…+10 可以检查结果应为 55。",
+    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    int sum = 0;\\n    for (int i = 1; i <= 10; ++i) {\\n        sum += i;\\n    }\\n    printf(\"%d\\\\n\", sum);\\n    return 0;\\n}",
+    "takeaways": [
+      "循环要有明确的终止条件",
+      "for 由初始化、条件、更新组成",
+      "break 和 continue 改变循环流程"
+    ],
+    "quiz": "for (起点; 条件; 更新) 中，第三部分通常在每一轮结束后做什么？",
+    "options": [
+      "声明函数",
+      "更新循环变量",
+      "关闭程序"
+    ],
+    "answer": 1,
+    "explain": "它通常更新循环变量，例如 ++i，让循环逐步接近结束条件。若一直不更新，条件可能永远成立，程序就会卡在循环里。printf 放在循环体外才会只输出最终总和。",
+    "mission": "写一个完整程序，在 main 中把 sum 初始化为 0；用 for 让 i 从 1 数到 10（包含 10），每轮把 i 加进 sum；循环结束后用 printf 输出 sum。循环体使用花括号。",
+    "hint": "常见循环头是 for (int i = 1; i <= 10; ++i)。更新可以写 ++i 或 i++；检查 sum += i 在循环体内。"
+  },
+  {
+    "id": 7,
+    "stage": "流程控制",
+    "title": "函数与参数",
+    "minutes": 11,
+    "gist": "拆分任务，让代码可以重复调用。",
+    "lesson": "函数像一台有接口的小机器：参数是送进去的材料，return 是交出来的结果。int max(int a, int b) 表示收到两个整数并返回一个整数。C 的普通参数是值的副本；函数要把答案交给调用者，应 return，而不是只 printf 给人看。",
+    "sample": "#include <stdio.h>\\n\\nint max(int a, int b);\\n\\nint max(int a, int b) {\\n    return a > b ? a : b;\\n}\\n\\nint main(void) {\\n    printf(\"%d\\\\n\", max(4, 9));\\n    return 0;\\n}",
+    "takeaways": [
+      "函数接口写清参数和返回值",
+      "原型可以放在定义之前",
+      "C 的普通参数按值传递"
+    ],
+    "quiz": "函数计算出一个 int，想让调用它的代码继续使用这个结果，应怎么做？",
+    "options": [
+      "使用 return 返回结果",
+      "用 printf 代替返回",
+      "把函数名写成 int"
+    ],
+    "answer": 0,
+    "explain": "用 return 把整数值交还给调用者。printf 只负责把内容显示到屏幕，并不会把那个值交回调用表达式。函数返回类型和 return 的值应匹配。",
+    "mission": "定义 int max(int a, int b)，用 if/else 比较并返回较大值；再写 main 调用 max(4, 9)，用 printf 显示结果。函数定义要有完整函数体。",
+    "hint": "先写 max 函数，再写 main。分支中分别 return a 和 return b；main 用 printf(\"%d\", max(4, 9)); 验证调用。"
+  },
+  {
+    "id": 8,
+    "stage": "流程控制",
+    "title": "作用域、生命周期与递归",
+    "minutes": 12,
+    "gist": "理解变量可见范围，认识递归和静态存储期。",
+    "lesson": "作用域是变量名字能被看见的区域；普通局部变量通常在离开所在代码块后就不再存在。递归是函数调用自己，像一层层打开套盒：每层都要把问题变小，直到碰到不再继续打开的基准情形。阶乘示例中 factorial(3) = 3 × factorial(2) = 3 × 2 × factorial(1)。",
+    "sample": "#include <stdio.h>\\n\\nint factorial(int n) {\\n    if (n <= 1) return 1;\\n    return n * factorial(n - 1);\\n}\\n\\nint main(void) {\\n    printf(\"%d\\\\n\", factorial(5));\\n    return 0;\\n}",
+    "takeaways": [
+      "变量作用域决定名字在哪里可用",
+      "局部变量一般随代码块结束",
+      "递归必须有终止条件"
+    ],
+    "quiz": "递归函数里，哪一部分负责让调用最终停下来？",
+    "options": [
+      "永远调用自己",
+      "基准情形和逐步收敛",
+      "至少两个全局变量"
+    ],
+    "answer": 1,
+    "explain": "基准情形，例如 n <= 1 时直接 return 1。随后递归调用要把 n 变小；若没有基准情形，函数会一层层调用自己，最终耗尽调用栈。实际程序还需限制输入并防止整数溢出。",
+    "mission": "实现 int factorial(int n)：n <= 1 时返回 1，否则返回 n * factorial(n - 1)。再写 main 调用 factorial(5)，并用 printf 输出结果。输入假设为非负且较小整数。",
+    "hint": "先写带花括号的基准分支，再写递归 return；main 中输出 factorial(5)。检查递归参数是 n - 1。"
+  },
+  {
+    "id": 9,
+    "stage": "复合数据",
+    "title": "数组与多维数组",
+    "minutes": 11,
+    "gist": "按顺序保存同类数据，正确处理下标。",
+    "lesson": "数组像一排编号的储物格，格子里保存相同类型的数据。编号从 0 开始：长度为 5 的数组编号是 0、1、2、3、4。访问第 5 格会越界。函数参数中的数组不会自动带上长度，所以通常要把数组和 length 一起传入，并用 i < length 遍历。",
+    "sample": "#include <stdio.h>\\n\\nint sum(const int values[], int length) {\\n    int total = 0;\\n    for (int i = 0; i < length; ++i) total += values[i];\\n    return total;\\n}\\n\\nint main(void) {\\n    int values[] = { 3, 4, 5 };\\n    int length = sizeof values / sizeof values[0];\\n    printf(\"%d\\\\n\", sum(values, length));\\n    return 0;\\n}",
+    "takeaways": [
+      "第一个元素下标为 0",
+      "数组越界必须避免",
+      "函数通常需要同时接收数组长度"
+    ],
+    "quiz": "int items[5] 有 5 个元素，最后一个合法下标是多少？",
+    "options": [
+      "5",
+      "4",
+      "1"
+    ],
+    "answer": 1,
+    "explain": "是 4，因为下标从 0 开始，合法范围是 0 到 5-1。下标 5 已经在数组末尾之外；函数接收数组时也不能靠数组参数本身推回元素数。",
+    "mission": "定义 int sum(const int values[], int length)，按 i < length 遍历累加并返回 total；在 main 创建并初始化 int values 数组，用 sizeof values / sizeof values[0] 计算 length，调用 sum 并用 printf 输出结果。",
+    "hint": "sum 函数中先令 total = 0，再遍历 values[i]；main 可以用 sizeof values / sizeof values[0] 求数组长度。"
+  },
+  {
+    "id": 10,
+    "stage": "复合数据",
+    "title": "字符与字符串",
+    "minutes": 11,
+    "gist": "区分单个字符和以零结束的字符数组。",
+    "lesson": "C 没有内建的 string 类型。字符串是 char 字符组成的数组，结尾还有一个特殊的空字符作为“到这里结束”的路牌；例如 hello 实际需要 6 个位置，包括结束标记。strlen 计算路牌前的字符数，不包含结束标记。读取未知长度文本时应限制空间，常用 fgets。",
+    "sample": "#include <stdio.h>\\n#include <string.h>\\n\\nint main(void) {\\n    char word[] = \"hello\";\\n    printf(\"%zu\\\\n\", strlen(word));\\n    return 0;\\n}",
+    "takeaways": [
+      "字符串以空字符结尾",
+      "strlen 返回长度，不含结尾空字符",
+      "比较字符串用 strcmp 而不是 =="
+    ],
+    "quiz": "C 字符串依靠哪个字符表示内容结束？",
+    "options": [
+      "空格 ' '",
+      "空字符 '\\\\0'",
+      "换行 '\\\\n'"
+    ],
+    "answer": 1,
+    "explain": "是空字符 \\0，它的数值为 0，不是字符数字 0，也不是空格。字符串字面量会自动带上结束标记；strlen 不把这个标记计入长度。",
+    "mission": "在 main 中包含 string.h，定义 char word[] 字符串；调用 strlen(word)，并用 printf 的 %zu 输出长度。字符串字面量要真实赋给 word。",
+    "hint": "可以写 char word[] = \"hello\";，再写 printf(\"%zu\\\\n\", strlen(word));。使用 %zu 匹配 size_t。"
+  },
+  {
+    "id": 11,
+    "stage": "指针与内存",
+    "title": "指针与地址",
+    "minutes": 12,
+    "gist": "用指针保存地址，理解取地址和解引用。",
+    "lesson": "指针不是数据本身，而是一张写着“数据放在哪里”的地址便条。&value 取得变量 value 的地址；int *p = &value 让 p 保存它；*p 表示沿着这个地址找到原来的整数。因此 *p = 12 会修改 value。只有指向有效对象的指针才能解引用。",
+    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    int value = 7;\\n    int *p = &value;\\n    *p = 12;\\n    printf(\"%d\\\\n\", value);\\n    return 0;\\n}",
+    "takeaways": [
+      "& 获取地址，* 访问指向的对象",
+      "初始化指针后再使用",
+      "解引用无效指针会导致未定义行为"
+    ],
+    "quiz": "p 是指向 int 的指针，表达式 *p 表示什么？",
+    "options": [
+      "p 的地址",
+      "p 指向的 int 对象",
+      "一个新变量"
+    ],
+    "answer": 1,
+    "explain": "表示 p 指向的那个 int 对象本身，可以读取或修改它。p 是地址；&p 是指针变量 p 自己的地址。若 p 未初始化或为 NULL，直接写 *p 会造成未定义行为。",
+    "mission": "在 main 中声明 int value 并初始化；声明 int *p = &value，通过 *p 修改 value，最后用 printf 输出 value。",
+    "hint": "三处要对应同一个名字：int *p = &value;、*p = 新整数;、printf(\"%d\", value);。"
+  },
+  {
+    "id": 12,
+    "stage": "指针与内存",
+    "title": "动态内存管理",
+    "minutes": 13,
+    "gist": "使用 malloc、realloc 和 free 管理动态内存。",
+    "lesson": "malloc 像运行时向仓库申请一块空间，申请多少字节由程序计算。要放 n 个 int，通常写 malloc(n * sizeof *items)，这样元素类型改变时大小也会跟着变。申请可能失败并返回 NULL；成功后要释放一次。free 之后这块地址失效，不能再读写，也不能重复释放。",
+    "sample": "#include <stdio.h>\\n#include <stdlib.h>\\n\\nint main(void) {\\n    size_t n = 4;\\n    int *items = malloc(n * sizeof *items);\\n    if (items == NULL) return 1;\\n    items[0] = 42;\\n    printf(\"%d\\\\n\", items[0]);\\n    free(items);\\n    return 0;\\n}",
+    "takeaways": [
+      "检查 malloc 是否返回 NULL",
+      "sizeof *ptr 能跟随元素类型变化",
+      "free 后不能继续使用那块内存"
+    ],
+    "quiz": "malloc 无法满足申请时会返回什么？",
+    "options": [
+      "0 字节数组",
+      "NULL",
+      "自动重试"
+    ],
+    "answer": 1,
+    "explain": "返回 NULL，表示没有得到可用内存。程序必须先检查结果，再访问 items。申请成功后所有路径都应负责 free；真实程序还要防止外部输入导致 n * sizeof *items 溢出。",
+    "mission": "在 main 中包含 stdlib.h 和 stdio.h，把 n 设为正整数，用 malloc(n * sizeof *items) 申请 int 数组；若 items == NULL 就返回失败。成功后写入、输出 items[0]，最后调用 free(items)。",
+    "hint": "顺序是申请 → 检查 NULL → 使用 → free。不要写 free 后再访问 items；也不要把 malloc 的结果直接丢掉。"
+  },
+  {
+    "id": 13,
+    "stage": "指针与内存",
+    "title": "结构体、联合体与类型别名",
+    "minutes": 12,
+    "gist": "把相关字段组合为自己的数据类型。",
+    "lesson": "结构体像一张学生卡，把姓名、分数等不同类型的字段放进同一条记录。typedef 给结构体起一个短类型名。普通结构体对象用点号访问成员，如 s.score；结构体指针用箭头，如 p->score。union 的成员共用同一块存储，适合互斥表示，不能把它当成同时保存所有成员的 struct。",
+    "sample": "#include <stdio.h>\\n\\ntypedef struct {\\n    char name[24];\\n    int score;\\n} Student;\\n\\nint main(void) {\\n    Student s = { .name = \"Lin\", .score = 95 };\\n    printf(\"%s %d\\\\n\", s.name, s.score);\\n    return 0;\\n}",
+    "takeaways": [
+      "结构体成员各自有存储",
+      "联合体成员共享存储",
+      "typedef 提升接口可读性"
+    ],
+    "quiz": "p 是指向 Student 结构体的指针，要访问成员 score 应写什么？",
+    "options": [
+      "p.score",
+      "p->score",
+      "p::score"
+    ],
+    "answer": 1,
+    "explain": "写 p->score，箭头表示“先沿指针找到结构体，再取它的成员”。如果 s 本身是结构体对象，才写 s.score。p.score 把指针误当成结构体对象。",
+    "mission": "用 typedef struct 定义包含 name 和 score 的 Student；在 main 中创建并初始化 Student s，给成员赋值，通过 s.score 访问分数，并用 printf 输出它。",
+    "hint": "类型形状如 typedef struct { char name[24]; int score; } Student;，对象用 Student s;，成员用 s.score。"
+  },
+  {
+    "id": 14,
+    "stage": "工程实践",
+    "title": "文件输入与输出",
+    "minutes": 12,
+    "gist": "读写文件，并检查每一步是否成功。",
+    "lesson": "文件操作像借用一份档案：先 fopen 打开，确认成功后再读写，最后 fclose 归还。fopen 失败返回 NULL。fgets(line, sizeof line, file) 会把最多能放进缓冲区的字符读入 line，避免无边界地写入数组；它可能把换行符也留下。",
+    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    FILE *file = fopen(\"notes.txt\", \"r\");\\n    if (file == NULL) return 1;\\n    char line[128];\\n    if (fgets(line, sizeof line, file) != NULL) fputs(line, stdout);\\n    fclose(file);\\n    return 0;\\n}",
+    "takeaways": [
+      "检查 fopen 的返回值",
+      "fgets 限制一次读取的长度",
+      "关闭文件流释放资源"
+    ],
+    "quiz": "fopen 找不到文件或没有权限时，通常返回什么？",
+    "options": [
+      "NULL",
+      "空字符串",
+      "EOF 文件对象"
+    ],
+    "answer": 0,
+    "explain": "返回 NULL。不能把 NULL 当成可用文件继续传给 fgets；应先检查，再决定报错或结束。文件用完要 fclose，以释放系统资源。",
+    "mission": "在 main 中包含 stdio.h，使用 fopen 打开文本文件并检查 file 是否为 NULL；声明 line 缓冲区，用 fgets(line, sizeof line, file) 读一行，最后关闭同一个 file。",
+    "hint": "确保顺序是 fopen → if (file == NULL) 处理失败 → fgets → fclose(file)。"
+  },
+  {
+    "id": 15,
+    "stage": "工程实践",
+    "title": "预处理、头文件与多文件",
+    "minutes": 12,
+    "gist": "理解 #include、宏和分文件组织。",
+    "lesson": "预处理器在正式编译前处理以 # 开头的指令。#include 引入头文件里的声明；头文件保护宏则像门口的登记章，避免同一份头文件被重复展开。通常 .h 放函数声明，.c 放函数定义；编译各个源文件后，链接器再把它们组合起来。",
+    "sample": "#ifndef UTIL_H\\n#define UTIL_H\\n\\nint add(int a, int b);\\n\\n#endif",
+    "takeaways": [
+      "头文件保护避免重复展开",
+      "声明放 .h，定义放 .c 是常见组织方式",
+      "链接阶段会解析跨文件符号"
+    ],
+    "quiz": "头文件里的 #ifndef / #define / #endif 保护结构主要解决什么问题？",
+    "options": [
+      "防止头文件被重复包含",
+      "让 C 自动管理内存",
+      "替代所有函数"
+    ],
+    "answer": 0,
+    "explain": "避免同一个头文件在一次编译过程中被重复包含，造成类型或声明重复。它不负责分配内存，也不替代函数定义；声明可以在头文件，函数实现通常放在源文件。",
+    "mission": "写一个完整的头文件保护结构：用同一个唯一宏名配对 #ifndef 和 #define；中间声明 int add(int a, int b);；最后用 #endif 结束。挑战接受一段头文件，不要求写 main。",
+    "hint": "结构顺序是 #ifndef ADD_H、#define ADD_H、函数原型、#endif。检查两处宏名拼写完全相同。"
+  },
+  {
+    "id": 16,
+    "stage": "工程实践",
+    "title": "函数指针与回调",
+    "minutes": 12,
+    "gist": "把函数也作为值传递，构建可复用接口。",
+    "lesson": "函数指针是一张“要执行哪个函数”的便条，可以把行为交给另一个函数，这种被传入的函数常叫回调。int (*callback)(int) 表示 callback 指向一个接收 int、返回 int 的函数。括号不能省：int *callback(int) 的意思完全不同，它声明的是另一个函数。",
+    "sample": "#include <stdio.h>\\n\\nint apply(int x, int (*callback)(int)) {\\n    return callback(x);\\n}\\n\\nint twice(int n) { return 2 * n; }\\n\\nint main(void) {\\n    printf(\"%d\\\\n\", apply(4, twice));\\n    return 0;\\n}",
+    "takeaways": [
+      "函数指针类型必须匹配参数和返回值",
+      "括号区分函数指针与返回指针的函数",
+      "回调让算法和行为解耦"
+    ],
+    "quiz": "int (*fn)(int) 表示哪一种东西？",
+    "options": [
+      "函数 fn 返回 int 指针",
+      "fn 是接受 int 并返回 int 的函数指针",
+      "int 类型数组"
+    ],
+    "answer": 1,
+    "explain": "fn 是函数指针，指向一个接收 int 参数并返回 int 的函数。括号里的 *fn 是指针名，后面的 (int) 是被指函数的参数列表。int *fn(int) 则是“函数 fn 返回 int 指针”。",
+    "mission": "写出 int twice(int n) 回调、int apply(int x, int (*callback)(int)) 函数，并让 apply 返回 callback(x)。再在 main 中把 twice 作为函数实参传给 apply，输出调用结果。",
+    "hint": "先实现 twice，再实现 apply，最后写 apply(4, twice)。调用时传函数名 twice，不写 twice()；apply 内部才调用 callback(x)。"
+  },
+  {
+    "id": 17,
+    "stage": "工程实践",
+    "title": "标准库与常用工具箱",
+    "minutes": 13,
+    "gist": "按需使用字符串、数学、排序、时间和断言工具。",
+    "lesson": "标准库像按类别整理的工具箱：stdio.h 管输入输出，string.h 管字符串，stdlib.h 有内存和通用工具。使用函数前要确认头文件、参数、返回值和失败规则。qsort 只负责排序流程，比较函数负责告诉它两项的顺序；负数表示前者较小，0 表示相等，正数表示前者较大。",
+    "sample": "#include <stdlib.h>\\n\\nint compare_ints(const void *a, const void *b) {\\n    int x = *(const int *)a;\\n    int y = *(const int *)b;\\n    return (x > y) - (x < y);\\n}\\n\\nint main(void) {\\n    int values[] = { 9, 3, 6 };\\n    int count = sizeof values / sizeof values[0];\\n    qsort(values, count, sizeof values[0], compare_ints);\\n    return 0;\\n}",
+    "takeaways": [
+      "先包含提供函数声明的头文件",
+      "阅读返回值和错误约定",
+      "qsort 通过比较回调排序"
+    ],
+    "quiz": "qsort 的比较函数返回负数、零、正数，分别表示什么？",
+    "options": [
+      "永远返回 1",
+      "负数、零或正数表达比较关系",
+      "直接修改全局数组"
+    ],
+    "answer": 1,
+    "explain": "分别表示第一个元素小于、等于、大于第二个元素。比较器不能随便只返回 1，否则排序器无法判断顺序。直接返回 x-y 也可能因整数溢出而错；用比较结果相减或显式分支更安全。",
+    "mission": "包含 stdlib.h，在 main 创建并初始化 int values 数组，用 sizeof values / sizeof values[0] 计算 count；定义 int compare_ints(const void *, const void *)，把参数转换为 int 指针并返回负、零或正；调用 qsort(values, count, sizeof values[0], compare_ints) 排序。",
+    "hint": "比较器先把两个 void 指针转成 const int * 并读取数值，再安全比较。可用 (x > y) - (x < y)，然后把 compare_ints 传给 qsort。"
+  },
+  {
+    "id": 18,
+    "stage": "工程实践",
+    "title": "错误处理、限定符与安全",
+    "minutes": 13,
+    "gist": "写出更可预测、更容易排错的 C 程序。",
+    "lesson": "C 不会自动替你检查数组边界、指针是否有效或函数是否成功。把入口想成一道门：先检查 values、out 和长度，再访问 values[0]。成功时通过 *out 写结果并返回 1；失败时返回 0，让调用者知道结果不能使用。assert 用于程序内部假设，不代替用户输入检查。",
+    "sample": "#include <stddef.h>\\n\\nint first(const int *values, size_t length, int *out) {\\n    if (values == NULL || out == NULL || length == 0) return 0;\\n    *out = values[0];\\n    return 1;\\n}",
+    "takeaways": [
+      "编译器警告应认真处理",
+      "检查边界、返回码和资源状态",
+      "未定义行为可能让结果完全不可预测"
+    ],
+    "quiz": "assert 最适合检查哪一类条件？",
+    "options": [
+      "验证程序内部不变量",
+      "替代输入校验",
+      "打印所有运行信息"
+    ],
+    "answer": 0,
+    "explain": "检查程序内部约定，例如调试时确认某个不变量成立。输入为空、文件打不开等正常运行时可能发生的失败，应使用 if 和明确返回值处理，不能指望 assert 替用户处理。",
+    "mission": "实现 int first(const int *values, size_t length, int *out)：在访问数组前检查 values 和 out 是否为空、length 是否为 0；失败返回 0，成功把 values[0] 写入 *out 并返回 1。",
+    "hint": "用 if 检查失败条件并立即 return 0；只有通过检查后再写 *out = values[0];，最后 return 1;。"
+  },
+  {
+    "id": 19,
+    "stage": "C 标准新特性",
+    "title": "C99、C11 与现代 C",
+    "minutes": 14,
+    "gist": "了解常见标准版本特性，知道可移植性的边界。",
+    "lesson": "C 标准版本像工具和编译器约定的版本号：编译器选项决定它是否接受某些语法。C11 的 _Static_assert 能在编译时检查条件，_Atomic 和 stdatomic.h 提供原子对象操作。原子操作解决特定并发访问问题，不会自动让所有共享数据都安全；不同目标环境还要确认实现支持。",
+    "sample": "#include <limits.h>\\n#include <stdatomic.h>\\n\\n_Static_assert(CHAR_BIT == 8 && sizeof(int) >= 2, \"requires 8-bit bytes and int of at least 2 bytes\");\\n\\nint main(void) {\\n    _Atomic int counter = 0;\\n    atomic_fetch_add(&counter, 1);\\n    return 0;\\n}",
+    "takeaways": [
+      "编译时断言可以检查类型和约束",
+      "C11 原子操作适用于并发共享状态",
+      "写可移植代码要注明标准版本"
+    ],
+    "quiz": "_Static_assert 的条件通常在什么时候检查？",
+    "options": [
+      "编译时",
+      "程序退出时",
+      "网络连接后"
+    ],
+    "answer": 0,
+    "explain": "在编译阶段检查；条件不成立，程序就无法通过编译。它不是运行到某行才执行的普通 if。C11 特性要用支持对应标准的编译器和选项。",
+    "mission": "包含 limits.h 和 stdatomic.h；用 CHAR_BIT 与 sizeof(int) 写 _Static_assert 检查平台条件；在 main 声明并初始化 _Atomic int counter，调用 atomic_fetch_add(&counter, 1)，最后正常返回。",
+    "hint": "_Static_assert(条件, \"说明\"); 放在文件作用域；原子变量形如 _Atomic int counter = 0;。"
+  },
+  {
+    "id": 20,
+    "stage": "综合毕业关",
+    "title": "综合项目：做一个成绩册",
+    "minutes": 20,
+    "gist": "把数组、结构体、函数、循环和输出组合起来。",
+    "lesson": "把毕业项目拆成小步骤：Student 描述一名学生；数组放多名学生；average_score 只负责统计；main 准备数据、调用函数并显示结果。先检查空指针和人数为 0，再累加分数。total / count 若两边都是整数会丢掉小数，所以计算前把 count 转成 double。",
+    "sample": "#include <stdio.h>\\n#include <stddef.h>\\n\\ntypedef struct { char name[24]; int score; } Student;\\n\\nint average_score(const Student students[], size_t count, double *out) {\\n    if (students == NULL || out == NULL || count == 0) return 0;\\n    double total = 0.0;\\n    for (size_t i = 0; i < count; ++i) total += students[i].score;\\n    *out = total / (double)count;\\n    return 1;\\n}\\n\\nint main(void) {\\n    Student group[] = { { \"An\", 90 }, { \"Bo\", 80 } };\\n    size_t count = sizeof group / sizeof group[0];\\n    double average;\\n    if (average_score(group, count, &average)) {\\n        printf(\"average: %.1f\\\\n\", average);\\n    }\\n    return 0;\\n}",
+    "takeaways": [
+      "用结构体表示一条记录",
+      "用数组管理多条记录",
+      "用函数拆分统计逻辑并处理空数据"
+    ],
+    "quiz": "要把一名学生的姓名和分数作为一条记录一起保存，哪种设计最合适？",
+    "options": [
+      "分别使用固定含义的结构体成员",
+      "用一个整数代替所有字段",
+      "把数据只写在 printf 里"
+    ],
+    "answer": 0,
+    "explain": "用 struct 定义 Student，把姓名和分数作为成员；数组再保存多条 Student 记录。一个整数无法清楚表示多个字段，printf 里的文字只是显示内容，并没有保存可继续处理的数据。",
+    "mission": "定义含 name 和 score 的 Student；写 average_score 函数，先检查空指针与 count == 0，再逐项累加，浮点除法写入 *out，成功返回 1、失败返回 0；main 创建并初始化记录数组，用 sizeof 计算 count，检查函数成功后输出平均分。",
+    "hint": "分三块写：Student 类型；average_score 的检查、循环累加、浮点计算；main 的数组、人数、调用与输出。main 必须检查 average_score 的返回值再使用 average。"
+  }
 ];
+const solutions = {
+  1: "#include <stdio.h>\n\nint main(void) {\n    printf(\"Hello, C!\\\\n\");\n    return 0;\n}",
+  2: "#include <stdio.h>\n\nint main(void) {\n    int count = 3;\n    printf(\"%d\\\\n\", count);\n    return 0;\n}",
+  3: "#include <stdio.h>\n\nenum Level { EASY, HARD };\n\nint main(void) {\n    int value = 5;\n    double converted = (double)value;\n    printf(\"%f\", converted);\n    return 0;\n}",
+  4: "#include <stdio.h>\n\nint main(void) {\n    unsigned flags = 0;\n    flags |= (1u << 2);\n    if ((flags & (1u << 2)) != 0) {\n        puts(\"enabled\");\n    }\n    return 0;\n}",
+  5: "#include <stdio.h>\n\nint main(void) {\n    int temperature = 35;\n    if (temperature >= 30) {\n        puts(\"hot\");\n    } else {\n        puts(\"mild\");\n    }\n    return 0;\n}",
+  6: "#include <stdio.h>\n\nint main(void) {\n    int sum = 0;\n    for (int i = 1; i <= 10; ++i) {\n        sum += i;\n    }\n    printf(\"%d\\\\n\", sum);\n    return 0;\n}",
+  7: "#include <stdio.h>\n\nint max(int a, int b) {\n    if (a > b) {\n        return a;\n    } else {\n        return b;\n    }\n}\n\nint main(void) {\n    printf(\"%d\", max(4, 9));\n    return 0;\n}",
+  8: "#include <stdio.h>\n\nint factorial(int n) {\n    if (n <= 1) {\n        return 1;\n    }\n    return n * factorial(n - 1);\n}\n\nint main(void) {\n    printf(\"%d\", factorial(5));\n    return 0;\n}",
+  9: "#include <stdio.h>\n\nint sum(const int values[], int length) {\n    int total = 0;\n    for (int i = 0; i < length; ++i) {\n        total += values[i];\n    }\n    return total;\n}\n\nint main(void) {\n    int values[] = { 1, 2, 3 };\n    int length = sizeof values / sizeof values[0];\n    printf(\"%d\", sum(values, length));\n    return 0;\n}",
+  10: "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char word[] = \"hello\";\n    printf(\"%zu\\\\n\", strlen(word));\n    return 0;\n}",
+  11: "#include <stdio.h>\n\nint main(void) {\n    int value = 7;\n    int *p = &value;\n    *p = 12;\n    printf(\"%d\", value);\n    return 0;\n}",
+  12: "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n = 4;\n    int *items = malloc(n * sizeof *items);\n    if (items == NULL) {\n        return 1;\n    }\n    items[0] = 42;\n    printf(\"%d\", items[0]);\n    free(items);\n    return 0;\n}",
+  13: "#include <stdio.h>\n\ntypedef struct {\n    char name[24];\n    int score;\n} Student;\n\nint main(void) {\n    Student s = { .name = \"Lin\", .score = 95 };\n    printf(\"%d\", s.score);\n    return 0;\n}",
+  14: "#include <stdio.h>\n\nint main(void) {\n    FILE *file = fopen(\"notes.txt\", \"r\");\n    if (file == NULL) {\n        return 1;\n    }\n    char line[128];\n    if (fgets(line, sizeof line, file) != NULL) fputs(line, stdout);\n    fclose(file);\n    return 0;\n}",
+  15: "#ifndef ADD_H\n#define ADD_H\n\nint add(int a, int b);\n\n#endif",
+  16: "#include <stdio.h>\n\nint apply(int x, int (*callback)(int)) {\n    return callback(x);\n}\n\nint twice(int n) {\n    return 2 * n;\n}\n\nint main(void) {\n    printf(\"%d\", apply(4, twice));\n    return 0;\n}",
+  17: "#include <stdlib.h>\n\nint compare_ints(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int values[] = { 3, 1, 2 };\n    int count = sizeof values / sizeof values[0];\n    qsort(values, count, sizeof values[0], compare_ints);\n    return 0;\n}",
+  18: "#include <stddef.h>\n#include <stdio.h>\n\nint first(const int *values, size_t length, int *out) {\n    if (values == NULL || out == NULL || length == 0) return 0;\n    *out = values[0];\n    return 1;\n}\n\nint main(void) {\n    int values[] = { 7, 8, 9 };\n    int out = 0;\n    if (first(values, sizeof values / sizeof values[0], &out)) {\n        printf(\"%d\\\\n\", out);\n    }\n    return 0;\n}",
+  19: "#include <limits.h>\n#include <stdatomic.h>\n\n_Static_assert(CHAR_BIT == 8 && sizeof(int) >= 2, \"requires 8-bit bytes and int of at least 2 bytes\");\n\nint main(void) {\n    _Atomic int counter = 0;\n    atomic_fetch_add(&counter, 1);\n    return 0;\n}",
+  20: "#include <stdio.h>\n#include <stddef.h>\n\ntypedef struct { char name[24]; int score; } Student;\n\nint average_score(const Student students[], size_t count, double *out) {\n    if (students == NULL || out == NULL || count == 0) return 0;\n    double total = 0.0;\n    for (size_t i = 0; i < count; ++i) {\n        total += students[i].score;\n    }\n    *out = total / (double)count;\n    return 1;\n}\n\nint main(void) {\n    Student group[] = { { \"An\", 90 }, { \"Bo\", 80 } };\n    size_t count = sizeof group / sizeof group[0];\n    double average;\n    if (average_score(group, count, &average)) {\n        printf(\"average: %.1f\", average);\n    }\n    return 0;\n}"
+};
 const groups = ["起步上手","流程控制","复合数据","指针与内存","工程实践","C 标准新特性","综合毕业关"];
 const beginnerGuides = {
-1:{idea:"先把 C 程序看成一条简单流程：准备输入输出工具，进入 main，执行里面的语句，最后返回结束状态。现在不需要理解编译器如何工作。",read:["#include <stdio.h> 让程序能使用 printf。","int main(void) 是常见的程序入口；花括号包住要执行的内容。","printf 输出引号里的文字；\\n 表示换到下一行，return 0 表示正常结束。"],steps:["先写 #include <stdio.h>。","写 int main(void) { ... }，把每条语句放进花括号。","在里面用 printf 输出 Hello, C!，最后写 return 0。"],pitfall:"每条语句末尾别漏分号；字符串要放在双引号里。"},
-2:{idea:"变量就像带标签的小盒子：类型决定盒子适合放什么数据，名字方便你以后找到它。int 常放整数，double 常放小数，char 常放单个字符。",read:["int age = 18; 创建名为 age 的整数变量，并立刻放入 18。","double score = 95.5; 创建可保存小数的变量。","printf 的 %d 对应 int，%.1f 对应浮点输出；后面的变量按顺序填入占位符。"],steps:["先判断数据是什么类型，再声明变量。","给变量赋一个初始值，例如 int count = 3;。","用 printf 输出时，让每个格式说明符和变量类型对应。"],pitfall:"%d、%f、%s 不能随意互换；占位符数量也要和后面的参数数量对上。"},
-3:{idea:"这一关把三件事放在一起：const 表示不打算通过这个名字改值，enum 给状态起可读名字，类型转换明确告诉 C 你要改变数据类型。",read:["const int total = 5; 创建一个只读意图的整数。","enum Status { READY, RUNNING, DONE }; 定义一组有名字的状态值。","(double)total 把 total 转成 double；这样除法可以保留小数。"],steps:["先写出 const 变量或 enum 声明。","找到需要转换的表达式，在要转换的值前写 (double)。","检查除法：两个 int 相除会得到整数结果。"],pitfall:"只在最后把结果放进 double 变量，不能挽回已经发生的整数除法；需要在计算前转换。"},
-4:{idea:"运算符是告诉程序如何计算或比较的符号。先熟悉 +、-、*、/ 和比较；位运算可以稍后慢慢练，本关示例用它表示开关标志。",read:["1u << 2 把无符号数 1 左移两位，生成代表 bit 2 的掩码（位编号从 0 开始）。","flags | mask 把指定标志位打开；& 可以检查某一位是否已打开。","括号把计算顺序写清楚，避免读者猜运算符优先级。"],steps:["先定义 unsigned flags = 0;。","用 1u << 2 生成第 3 个开关的掩码，再用 | 把它打开。","用 & 检查结果，并把整个条件放进 if。"],pitfall:"逻辑与是 &&，按位与是 &；位标志优先用 unsigned，并用括号标明意图。"},
-5:{idea:"分支就是让程序根据条件走不同路线。if 适合判断范围；条件成立走 if 花括号，不成立时可以走 else。",read:["int score = 82; 先准备一个要判断的数据。","if (score >= 60) 检查条件是否成立。","else 是备用路线；每个分支中的语句各自放在花括号里。"],steps:["先给 temperature 一个值。","写 if (temperature >= 30)，在分支中输出 hot。","写 else 分支输出 mild，然后检查两条路线是否都覆盖。"],pitfall:"比较相等写 ==，单个 = 是赋值；比较大小时用 >=、< 等关系符。"},
-6:{idea:"循环让同一段代码重复运行。for 通常把计数器从哪里开始、什么时候停止、每轮怎样变化写在一行里。",read:["int sum = 0; 先准备累加器，避免从未初始化的值开始算。","for (int i = 1; i <= 5; ++i) 依次让 i 取 1 到 5。","sum += i 每轮把当前 i 加到总和里；循环结束后再输出 sum。"],steps:["先把 sum 初始化为 0。","用 for 让 i 从 1 走到 10，循环体内写 sum += i。","把 printf 放在循环结束后，观察最终总和。"],pitfall:"检查起点、停止条件和更新式；少写更新式可能让循环永远不结束。"},
-7:{idea:"函数是给一段任务起名字，之后可以重复调用。参数把资料交给函数，return 把结果交回来；C 的普通参数是值的副本。",read:["int max(int a, int b); 是函数原型，让编译器先知道函数接口。","函数定义中的 a 和 b 接收调用时传来的数。","return 把较大的值交还给调用者；main 再把结果传给 printf。"],steps:["先写函数签名：返回 int，接收两个 int。","用 if/else 或条件表达式比较 a 和 b，并返回其中较大的数。","在 main 中调用 max(4, 9)，把结果输出。"],pitfall:"函数签名中的参数类型要匹配；有返回值的路径都要 return 合适的值。"},
-8:{idea:"作用域决定名字在哪里可用，生命周期决定变量什么时候还存在。递归是函数调用自己；每次递归都必须更接近一个不用再调用的基准情形。",read:["if (n <= 1) return 1; 是阶乘的基准情形。","n * factorial(n - 1) 把较小的问题交给下一次调用。","调用从小问题逐层返回，乘积汇总成最终答案。"],steps:["先写输入范围假设和基准情形。","再写一个让 n 变小的递归调用。","用小数字手动展开几步，确认最终会到达基准情形。"],pitfall:"如果参数没有逐步靠近基准情形，递归会不断加深；真实程序还要处理输入范围和整数溢出。"},
-9:{idea:"数组把多个同类型元素连续放在一个变量名下面。下标从 0 开始，所以长度为 n 的数组最后一个有效下标是 n - 1。",read:["int values[] = { ... }; 用一个数组名保存多个整数。","values[0] 是第一个元素，values[1] 是第二个元素。","循环下标应小于数组长度，再通过 values[i] 读取或更新元素。"],steps:["先声明并初始化一组数组元素。","用 for 从 i = 0 开始遍历，条件写 i < count。","每轮处理 values[i]，例如累加或输出。"],pitfall:"不要访问 values[count]；那已经越过数组末尾。遍历多维数组时，每一层都要检查边界。"},
-10:{idea:"C 字符串本质上是 char 数组，并以特殊的空字符 \\0 结束。它和单个字符不同；单个字符用单引号，字符串用双引号。",read:["char word[] = \"hello\"; 会为字符和结尾的 \\0 留出空间。","strlen(word) 统计结尾空字符之前有多少字符。","strlen 返回 size_t，常用 %zu 输出它。"],steps:["先包含 <string.h>。","声明一个以双引号包起来的 char 数组。","调用 strlen 并用与返回类型匹配的格式说明符输出。"],pitfall:"C 没有内建 string 类型；不能把两个字符串用 == 当作内容比较，通常使用 strcmp。"},
-11:{idea:"指针保存地址。& 取得对象的地址，* 通过地址访问对象。可以把指针想成写着“数据在哪里”的便条，解引用就是沿地址找到数据。",read:["int *p = &value; 让 p 保存 value 的地址。","*p = 12; 通过 p 修改它所指向的 value。","printf 输出 value，可以看到通过指针修改的结果。"],steps:["先创建普通变量并给初值。","声明同类型指针，用 & 把变量地址赋给它。","确认指针有效后再用 *p 读取或写入。"],pitfall:"未初始化指针不能解引用；空指针也不能访问。指针类型要与目标对象相匹配。"},
-12:{idea:"动态内存让程序在运行时申请空间。malloc 可能失败，所以每次都先检查 NULL；申请成功后要在合适时机 free 一次。",read:["n * sizeof *items 计算保存 n 个元素所需的字节数。","malloc 返回的地址先放在 int *items 中，并检查是否为 NULL。","用完后 free(items) 归还这块内存，之后不能再访问它。"],steps:["先决定元素数量 n，再按元素个数和大小申请内存。","立刻检查申请结果是否为 NULL，失败就结束或报告错误。","使用数组元素，最后释放；不要重复释放或释放后继续用。"],pitfall:"sizeof *items 会跟随指针目标类型；realloc 失败时原内存仍有效，应先用临时指针接收结果。"},
-13:{idea:"结构体把不同类型但属于同一件事的数据组合起来，比如学生姓名和分数。typedef 可以给这个结构起一个更方便的类型名。",read:["typedef struct { ... } Student; 定义并命名一种记录类型。","Student s 创建一条学生记录；初始化器按成员名填写内容。","s.score 用点号访问对象成员；若手里是指针则用 ->。"],steps:["先列出一条记录需要哪些字段。","用 typedef struct 定义类型，再创建一个对象。","通过点号读取或修改成员；需要共享同一块空间时再学习 union。"],pitfall:"结构体成员可能有对齐填充，不要假设它们在内存中完全紧密排列；union 的成员会共享存储。"},
-14:{idea:"文件操作按顺序做：尝试打开、检查是否成功、读取或写入、最后关闭。文件可能不存在或没有权限，所以每一步都要检查返回值。",read:["fopen 返回 FILE 指针；失败时返回 NULL。","fgets(line, sizeof line, file) 限制读取长度，避免写出缓冲区。","读写结束后调用 fclose(file)，释放文件资源。"],steps:["用 fopen 选择文件名和模式。","先检查 file 是否为 NULL，再执行读取或写入。","处理返回值并在合适路径调用 fclose。"],pitfall:"不要对 NULL 文件指针调用 fgets；fgets 可能保留换行符，输出时注意不要意外多换一行。"},
-15:{idea:"预处理发生在正式编译之前。#include 引入声明，#define 创建文本宏；头文件通常放接口声明，源文件放函数实现。",read:["#ifndef UTIL_H 检查保护宏是否尚未定义。","#define UTIL_H 标记头文件已处理，防止重复包含。","函数原型只声明接口；实际函数体可以写在对应的 .c 文件中。"],steps:["选择一个唯一的保护宏名。","按 #ifndef、#define、声明、#endif 的顺序搭好头文件。","把实现放到 .c 文件，并在使用处 include 头文件。"],pitfall:"宏是文本替换，不是类型安全的函数；带参数宏要给参数加括号，并小心参数被重复求值。"},
-16:{idea:"函数指针保存函数的地址，因此可以把某个动作交给另一个函数执行。回调函数的参数和返回类型必须与指针声明完全匹配。",read:["int (*fn)(int) 表示 fn 指向一个接收 int、返回 int 的函数。","apply 的 callback 参数接收这种函数地址。","callback(x) 调用传进来的函数，并把结果交回去。"],steps:["先读懂函数指针声明：返回类型、星号括号、参数列表。","定义一个签名匹配的小函数，例如把数乘二。","把函数名传给 apply，再在 apply 内通过指针调用它。"],pitfall:"括号很关键：int *fn(int) 与 int (*fn)(int) 含义不同；回调签名不匹配会出错。"},
-17:{idea:"标准库是 C 自带的工具箱，按头文件分类。不要死记全部函数；遇到任务时先找对应头文件，再查函数参数、返回值和失败时的表现。",read:["stdio.h 常负责输入输出，string.h 常处理字符串，stdlib.h 常提供内存和通用工具。","qsort 把排序工作交给库函数，并要求你提供比较规则。","比较器用负数、零、正数表达大小关系；不要用可能溢出的 x - y。"],steps:["先说明自己要解决什么任务。","查找合适的标准头文件和函数原型。","阅读返回值规则，处理失败情况，再写一个小例子验证理解。"],pitfall:"同名函数不一定属于同一个头文件；按目标 C 标准确认函数是否可用。"},
-18:{idea:"C 把很多安全责任交给程序员。写代码时主动检查指针、数组边界、输入结果和库函数返回值；发生失败时用清楚的状态告诉调用者。",read:["first 先检查 values 和 out 是否为空，以及 length 是否为 0。","只有检查通过后才访问 values[0]，避免无效读取。","成功时写入 *out 并返回 1；失败时返回 0。"],steps:["先列出函数可能失败的条件。","在访问数据之前逐项检查，失败就尽早返回。","成功后写出结果，并用返回值告诉调用者结果是否有效。"],pitfall:"assert 用于检查程序内部假设，不能代替普通输入校验；volatile 也不提供线程同步或原子性。"},
-19:{idea:"C 有不同标准版本，特性是否可用取决于编译器和目标环境。写程序时注明标准，并对可选能力做好平台检查。",read:["_Static_assert 在编译时检查条件，不满足时直接报错。","_Atomic 表示原子对象类型，相关操作来自 stdatomic.h。","这些示例需要支持相应标准的编译器；C11 之后的能力也要核对实现。"],steps:["先确认编译器支持的 C 标准版本。","包含对应头文件，并使用版本支持的语法。","遇到可选特性时查实现文档，不要假设所有平台都一样。"],pitfall:"C11 的变长数组是可选特性；不同编译器支持程度不同，平台相关代码要明确标出条件。"},
-20:{idea:"毕业项目不是一次写完的大块代码。先设计数据，再拆小函数，逐个验证；主函数最后把这些小部件连起来。",read:["Student 结构体先描述一名学生有哪些数据。","average_score 只负责计算平均分，并通过 out 参数交回结果。","main 准备数组、调用函数、检查成功状态后再打印。"],steps:["先定义 Student，再准备两三条测试记录。","写 average_score：先检查参数，再循环累加，最后用浮点数相除。","在 main 中调用它，成功时输出结果；再试空数组等边界情况。"],pitfall:"整数相除会丢掉小数；count 为 0 时不能计算平均值，调用者也要先检查函数返回状态。"}
+  "1": {
+    "idea": "把程序想成食谱：#include 准备工具，main 是从哪道步骤开始，花括号把主流程圈起来。",
+    "read": [
+      "#include <stdio.h> 像把显示文字的工具箱借进来。",
+      "int main(void) 是托管程序的常见入口；(void) 表示不接收参数。",
+      "printf 把双引号内文字显示出来；\\\\n 换到下一行；return 0 表示正常结束。"
+    ],
+    "steps": [
+      "在最上方包含 stdio.h。",
+      "定义 int main(void)，用 { 和 } 包住代码。",
+      "先写 printf(\"Hello, C!\\\\n\");，再写 return 0;。"
+    ],
+    "pitfall": "每条语句末尾都要有分号；花括号需要左右成对。"
+  },
+  "2": {
+    "idea": "把变量想成带标签的小盒子：先选盒子类型，再取名字放入数据。",
+    "read": [
+      "int count = 3; 表示盒子叫 count，类型是整数，初值是 3。",
+      "double score = 95.5; 适合保存有小数的值。",
+      "printf(\"%d\", count) 中 %d 是为整数预留的位置，count 会填进这个位置。"
+    ],
+    "steps": [
+      "先声明 int count，并给它一个整数初值。",
+      "在 printf 的字符串里写 %d。",
+      "在逗号后传入 count，确认格式和实参一一对应。"
+    ],
+    "pitfall": "格式字符串和参数列表要配对；别把变量名写进引号里，那样只会显示文字。"
+  },
+  "3": {
+    "idea": "const 是“这段代码不要改它”的标签；enum 给一组选项取名字；类型转换则是把数据交给另一种计算方式。",
+    "read": [
+      "int a = 5, b = 2; a / b 会先做整数除法，结果是 2。",
+      "(double)a / b 先把 a 变成浮点数，结果保留小数，等于 2.5。",
+      "enum Level { EASY, HARD }; 让程序用名字表达选择，而不是记住数字。"
+    ],
+    "steps": [
+      "先声明 enum Level，并把 EASY、HARD 写在花括号内。",
+      "声明一个 int value 并赋值。",
+      "写 (double)value，再让转换后的值参与计算。"
+    ],
+    "pitfall": "若先算 a / b，再把结果存入 double，小数部分已经丢了；转换要发生在除法之前。"
+  },
+  "4": {
+    "idea": "可以把每一位想成一个开关。掩码定位其中一位，按位或负责打开，按位与负责检查。",
+    "read": [
+      "1u 是无符号的 1；左移两位后成为 bit 2 的开关位置。",
+      "flags |= mask 会把那个开关打开，同时保留其他开关。",
+      "flags & mask 会得到该开关当前状态，再与 0 比较就能判断开关是否开启。"
+    ],
+    "steps": [
+      "声明 unsigned flags = 0;。",
+      "执行 flags |= (1u << 2); 打开第 3 个开关。",
+      "用 if ((flags & (1u << 2)) != 0) 检查它。"
+    ],
+    "pitfall": "&& 是逻辑与，& 是位与；第 3 位的编号是 2，因为编号从 0 开始。"
+  },
+  "5": {
+    "idea": "if/else 是一个分岔路口：条件成立走上面那条，不成立走另一条。",
+    "read": [
+      "temperature >= 30 是一个问题，答案只有真或假。",
+      "真时执行 if 花括号里的 puts(\"hot\");。",
+      "假时执行 else 花括号里的 puts(\"mild\");。"
+    ],
+    "steps": [
+      "声明 int temperature，并给一个测试值。",
+      "写 if (temperature >= 30)，在里面输出 hot。",
+      "写 else 分支输出 mild，并确认两个结果没有放反。"
+    ],
+    "pitfall": "赋值用一个等号，比较相等用两个等号；比较温度用 >=。"
+  },
+  "6": {
+    "idea": "循环像数数和记账：i 是计数器，sum 是累计金额。每一轮把当前数字加进总和。",
+    "read": [
+      "sum 从 0 开始，表示目前还没有加过数字。",
+      "i 从 1 开始，条件 i <= 10 让 10 也参与。",
+      "++i 让计数器增加 1；跑完一轮后继续检查条件。"
+    ],
+    "steps": [
+      "写 int sum = 0;。",
+      "用 for (int i = 1; i <= 10; ++i) 循环。",
+      "循环体内写 sum += i;，循环结束后再输出 sum。"
+    ],
+    "pitfall": "起点、条件、更新都要检查；若 i 不变，循环可能永远停不下来。"
+  },
+  "7": {
+    "idea": "函数像果汁机：参数是放进去的水果，函数体做工作，return 把果汁交给调用者。",
+    "read": [
+      "int max(int a, int b) 描述两个整数输入和一个整数结果。",
+      "if (a > b) 根据比较结果选择一个分支。",
+      "return a; 或 return b; 把结果送回去，不是显示文字。"
+    ],
+    "steps": [
+      "先写 int max(int a, int b) 和花括号。",
+      "用 if/else 比较两个参数。",
+      "两个分支分别 return 较大的参数，然后在需要处调用 max。"
+    ],
+    "pitfall": "有返回类型的函数必须在每条可能路径上返回合适类型的值。"
+  },
+  "8": {
+    "idea": "递归像俄罗斯套娃：每次打开一层，里面必须更小，直到遇到最里面不用再拆的那一层。",
+    "read": [
+      "factorial(1) 直接返回 1，是停止拆套娃的基准。",
+      "factorial(3) 会算 3 * factorial(2)。",
+      "factorial(2) 再算 2 * factorial(1)，最后逐层返回 1、2、6。"
+    ],
+    "steps": [
+      "定义 int factorial(int n)。",
+      "先写 n <= 1 的分支并返回 1。",
+      "否则返回 n * factorial(n - 1)，手动跟踪 n=3。"
+    ],
+    "pitfall": "必须有基准情形，而且参数每次都要更接近它；输入范围过大时还会发生整数溢出。"
+  },
+  "9": {
+    "idea": "数组像一排贴了编号的抽屉，所有抽屉放同种类型。编号从 0 起步。",
+    "read": [
+      "values[0] 是第一项，values[1] 是第二项。",
+      "length 表示抽屉数量，不是最后一个编号。",
+      "条件 i < length 保证最后访问 values[length - 1]，不会多走一步。"
+    ],
+    "steps": [
+      "在函数参数里同时接收 values 和 length。",
+      "初始化 total = 0;，用 i 从 0 走到小于 length。",
+      "每轮累加 values[i]，循环结束后 return total。"
+    ],
+    "pitfall": "不要写 i <= length；那会额外访问越界位置。空数组时循环不会运行，结果保持为 0。"
+  },
+  "10": {
+    "idea": "字符串像一串字母卡片，最后放一张“结束”标记 \\0。strlen 数卡片时不把结束标记算进去。",
+    "read": [
+      "char word[] = \"hello\"; 会自动预留字母和结尾标记的位置。",
+      "strlen(word) 返回 5，类型是 size_t。",
+      "%zu 是 printf 用来显示 size_t 的格式说明符。"
+    ],
+    "steps": [
+      "包含 string.h 和 stdio.h。",
+      "声明 char word[] 并赋一个双引号字符串。",
+      "调用 strlen(word)，用 %zu 输出它的返回值。"
+    ],
+    "pitfall": "单字符用单引号，字符串用双引号；字符串内容比较要用 strcmp，不要用 ==。"
+  },
+  "11": {
+    "idea": "把变量放在桌上，把地址写在便条上：指针保存便条，解引用就是照地址找到变量。",
+    "read": [
+      "value 是实际整数，&value 是它所在位置。",
+      "p 保存这个位置，所以 p 指向 value。",
+      "*p = 12; 沿便条找到原盒子并把值改成 12。"
+    ],
+    "steps": [
+      "先声明 int value = 7;。",
+      "声明 int *p = &value;。",
+      "通过 *p 写入新值，再输出 value 验证它真的改变。"
+    ],
+    "pitfall": "地址必须有效；未初始化指针和 NULL 都不能直接解引用。"
+  },
+  "12": {
+    "idea": "malloc 像在程序运行时临时借一排储物格。借不到会得到 NULL；用完要归还。",
+    "read": [
+      "n * sizeof *items 计算 n 个 int 所需的空间大小。",
+      "items = malloc(...) 后先检查 items == NULL。",
+      "成功时可用 items[i]；最后 free(items)，归还空间。"
+    ],
+    "steps": [
+      "选择数组长度 n，并计算申请大小。",
+      "调用 malloc，把结果保存到 int *items，马上检查失败。",
+      "使用成功申请的空间，最后只 free 一次。"
+    ],
+    "pitfall": "释放后不能再读取；外部输入控制 n 时要防止大小乘法溢出。"
+  },
+  "13": {
+    "idea": "struct 像一张资料卡，能把姓名和分数这类相关信息放在一起。",
+    "read": [
+      "typedef struct { ... } Student; 定义一个可复用的卡片格式。",
+      "Student s; 创建一张卡片，s.name 和 s.score 是两个字段。",
+      "对象用点号；若 p 指向这张卡片，就用 p->score。"
+    ],
+    "steps": [
+      "列出字段类型和名字：姓名数组、整数分数。",
+      "用 typedef struct 定义 Student。",
+      "创建 s，访问 s.score，并把分数打印出来。"
+    ],
+    "pitfall": "struct 成员会各自保存数据，union 成员则重叠共享空间；不要混为一谈。"
+  },
+  "14": {
+    "idea": "文件操作像去档案室借文件：先申请打开，确认拿到后读写，用完再归还。",
+    "read": [
+      "fopen 返回文件句柄；文件不存在时会返回 NULL。",
+      "fgets 把一行读进有限长度的 line 数组。",
+      "fclose 关闭文件，告诉系统资源已经用完。"
+    ],
+    "steps": [
+      "先 fopen 文件。",
+      "用 if 检查是否为 NULL；成功后声明 line 并调用 fgets。",
+      "完成读取后对同一个 file 调用 fclose。"
+    ],
+    "pitfall": "NULL 不是打开的文件；fgets 可能带回换行符，读取到文件末尾时也要看返回值。"
+  },
+  "15": {
+    "idea": "头文件保护像一张“本次已经处理过”的登记卡，避免同一份声明被重复展开。",
+    "read": [
+      "#ifndef ADD_H：若 ADD_H 尚未定义，才处理下面内容。",
+      "#define ADD_H：登记此头文件已经进入。",
+      "函数原型 int add(int a, int b); 只描述接口，不包含函数体。"
+    ],
+    "steps": [
+      "选一个不与其他头文件冲突的宏名。",
+      "按 #ifndef、#define、声明、#endif 的顺序写。",
+      "确认开头和结束时使用的是同一个宏名。"
+    ],
+    "pitfall": "宏是预处理阶段的文本替换；保护宏只防重复包含，不会自动提供函数实现。"
+  },
+  "16": {
+    "idea": "回调像把“请用这个规则做事”的卡片交给函数。apply 不需要知道每种计算方式，只按约定调用 callback。",
+    "read": [
+      "int (*callback)(int) 中 callback 是指针，指向接收 int 并返回 int 的函数。",
+      "twice 符合这个签名，所以可以把函数名 twice 传给 apply。",
+      "apply 内的 callback(x) 执行这张卡片指向的函数。"
+    ],
+    "steps": [
+      "先写 int twice(int n)，返回 n 的两倍。",
+      "写 apply，参数包含 int x 和函数指针 callback。",
+      "在 main 里调用 apply(4, twice)，显示 8。"
+    ],
+    "pitfall": "传函数时写 twice，不加括号；twice(4) 是立即调用。签名的参数和返回类型必须匹配。"
+  },
+  "17": {
+    "idea": "标准库是已经写好的工具箱，qsort 是排序工具，但“什么叫在前”要由比较器告诉它。",
+    "read": [
+      "比较器拿到两个 void 指针，需要先按 int 指针解释，再读取整数。",
+      "负数表示左边较小，0 表示相等，正数表示左边较大。",
+      "(x > y) - (x < y) 会产生 -1、0 或 1，而且避免 x-y 的溢出风险。"
+    ],
+    "steps": [
+      "包含 stdlib.h 并声明 int values 数组。",
+      "定义参数为 const void * 的比较函数，读出两个 int 并返回大小关系。",
+      "调用 qsort，传数组、数量、每项大小和比较函数名。"
+    ],
+    "pitfall": "比较函数不能永远返回同一个数；qsort 的数组元素大小也要写正确。"
+  },
+  "18": {
+    "idea": "写安全代码像过安检：先确认人和票都有效，再读取数据。出错时尽早退出，成功时清楚报告。",
+    "read": [
+      "values == NULL 检查输入数组地址；out == NULL 检查结果写入位置。",
+      "length == 0 表示没有可读取的第一个元素。",
+      "检查都通过后才能读取 values[0] 并写入 *out。"
+    ],
+    "steps": [
+      "把所有失败条件放在访问数组之前检查。",
+      "失败时 return 0。",
+      "成功时写 *out = values[0];，最后 return 1。"
+    ],
+    "pitfall": "assert 不是给普通错误使用的；调用者需要根据返回码判断 out 里是否有有效结果。"
+  },
+  "19": {
+    "idea": "编译器标准选项像工具版本，决定能否使用某些语言功能。新语法不是所有旧编译器都认识。",
+    "read": [
+      "_Static_assert 在编译期间检查条件，像开工前先核对尺寸。",
+      "_Atomic int 声明原子整数，atomic_fetch_add 完成一次原子加法。",
+      "原子类型适用于特定并发共享数据；它不是所有线程问题的自动解决方案。"
+    ],
+    "steps": [
+      "包含 limits.h 与 stdatomic.h。",
+      "在文件作用域写 _Static_assert 条件和失败说明。",
+      "声明原子计数器，再调用 atomic_fetch_add(&counter, 1)。"
+    ],
+    "pitfall": "确认编译器启用了 C11 或更新标准，并检查目标平台是否支持相关原子类型。"
+  },
+  "20": {
+    "idea": "把一个复杂任务拆成三个小零件：数据格式 Student、统计函数 average_score、负责串起来的 main。",
+    "read": [
+      "Student 把姓名和分数放成一条记录，数组放多条记录。",
+      "average_score 检查输入、循环累加，再通过 out 参数交回平均值。",
+      "main 只在函数返回成功时打印 average，失败时不能使用未写好的结果。"
+    ],
+    "steps": [
+      "定义 Student 和两条以上记录。",
+      "实现 average_score：检查指针和人数，循环累加，先把 count 转 double 再相除。",
+      "在 main 计算数组人数、调用统计函数，判断返回值后输出平均分。"
+    ],
+    "pitfall": "count 为 0 时不能求平均；整数除法会截掉小数；检查成功状态后才可以读取输出变量。"
+  }
 };
 const storeKey = "cquest.master.v1";
 const resetPasswordKey = "codesword.reset.password.v1";
@@ -725,6 +1467,8 @@ let selectedOption = null;
 let quizPassed = false;
 let codePassed = false;
 let hintVisible = false;
+let solutionVisible = false;
+let answerUnlocked = false;
 function save(){localStorage.setItem(storeKey,JSON.stringify(data));}
 let themeMode=localStorage.getItem(themeKey)||"system";
 function applyTheme(mode,persist){
@@ -778,22 +1522,32 @@ function replaceEditorRange(input,text,start,end,caret){
  if(caret!==undefined)input.setSelectionRange(caret,caret);
  input.dispatchEvent(new Event("input",{bubbles:true}));
 }
+let modalPurpose="reset";
 let resetMode="verify";
 async function hashResetPassword(password){
  if(window.crypto&&window.crypto.subtle&&window.TextEncoder){const digest=await window.crypto.subtle.digest("SHA-256",new TextEncoder().encode(password));return "sha256:"+Array.from(new Uint8Array(digest),function(b){return b.toString(16).padStart(2,"0")}).join("")}
  return "local:"+password;
 }
 function openResetDialog(){
+ modalPurpose="reset";
  const modal=document.getElementById("resetModal"),content=document.getElementById("resetModalContent");
  resetMode=localStorage.getItem(resetPasswordKey)?"verify":"setup";
  content.innerHTML=resetMode==="setup"?'<h2 id="resetTitle">设置重置密码</h2><p>首次重头开始前，请先设置一个密码并确认。以后每次清空进度都需要输入它。密码保存在这台设备的浏览器中。</p><form class="reset-form" id="resetForm"><label>设置密码<input id="resetPassword" type="password" minlength="4" autocomplete="new-password" required placeholder="至少 4 个字符"></label><label>再次输入<input id="resetPasswordConfirm" type="password" minlength="4" autocomplete="new-password" required placeholder="确认密码"></label><div class="reset-error" id="resetError" role="status"></div><div class="reset-actions"><button class="btn btn-ghost btn-small" type="button" data-action="reset-cancel">取消</button><button class="btn btn-primary btn-small" type="submit">设置并重头开始</button></div></form>':'<h2 id="resetTitle">输入密码以重头开始</h2><p>这会清除本设备保存的关卡进度、学习点、答题统计和代码草稿。此操作不能撤销。</p><form class="reset-form" id="resetForm"><label>重置密码<input id="resetPassword" type="password" autocomplete="current-password" required placeholder="输入你设置的密码"></label><div class="reset-error" id="resetError" role="status"></div><div class="reset-actions"><button class="btn btn-ghost btn-small" type="button" data-action="reset-cancel">取消</button><button class="btn btn-primary btn-small" type="submit">验证并重头开始</button></div></form>';
  modal.hidden=false;const field=document.getElementById("resetPassword");if(field)field.focus();
 }
+function openAnswerDialog(){
+ const modal=document.getElementById("resetModal"),content=document.getElementById("resetModalContent");
+ modalPurpose="answer";
+ resetMode=localStorage.getItem(resetPasswordKey)?"verify":"setup";
+ content.innerHTML=resetMode==="setup"?'<h2 id="resetTitle">设置密码</h2><p>查看标准答案需要密码，它与“重头开始”共用同一个密码。首次使用请先设置并确认，密码保存在这台设备的浏览器中。</p><form class="reset-form" id="resetForm"><label>设置密码<input id="resetPassword" type="password" minlength="4" autocomplete="new-password" required placeholder="至少 4 个字符"></label><label>再次输入<input id="resetPasswordConfirm" type="password" minlength="4" autocomplete="new-password" required placeholder="确认密码"></label><div class="reset-error" id="resetError" role="status"></div><div class="reset-actions"><button class="btn btn-ghost btn-small" type="button" data-action="reset-cancel">取消</button><button class="btn btn-primary btn-small" type="submit">设置并查看答案</button></div></form>':'<h2 id="resetTitle">输入密码查看标准答案</h2><p>标准答案与“重头开始”共用同一个密码。输入正确后即可查看本关答案。</p><form class="reset-form" id="resetForm"><label>密码<input id="resetPassword" type="password" autocomplete="current-password" required placeholder="输入你设置的密码"></label><div class="reset-error" id="resetError" role="status"></div><div class="reset-actions"><button class="btn btn-ghost btn-small" type="button" data-action="reset-cancel">取消</button><button class="btn btn-primary btn-small" type="submit">验证并查看答案</button></div></form>';
+ modal.hidden=false;const field=document.getElementById("resetPassword");if(field)field.focus();
+}
+function answerVerified(){closeResetDialog();answerUnlocked=true;solutionVisible=true;render();toast("密码正确，已显示本关标准答案。");}
 function closeResetDialog(){document.getElementById("resetModal").hidden=true}
 function resetProgress(){
  localStorage.removeItem(storeKey);
  data={completed:{},xp:0,attempts:0,correct:0,started:Date.now(),drafts:{},quizRewards:{}};
- page="map";activeLevel=null;selectedOption=null;quizPassed=false;codePassed=false;hintVisible=false;window.quizAnswered=false;window.codeFeedback="";window.codeDraft="";
+ page="map";activeLevel=null;selectedOption=null;quizPassed=false;codePassed=false;hintVisible=false;solutionVisible=false;window.quizAnswered=false;window.codeFeedback="";window.codeDraft="";
  save();closeResetDialog();render();toast("已重头开始，学习进度已清空。");
 }
 document.addEventListener("submit",async function(e){
@@ -803,10 +1557,13 @@ document.addEventListener("submit",async function(e){
   const confirmPassword=document.getElementById("resetPasswordConfirm").value;
   if(password.length<4){error.textContent="密码至少需要 4 个字符。";return}
   if(password!==confirmPassword){error.textContent="两次输入的密码不一致。";return}
-  localStorage.setItem(resetPasswordKey,await hashResetPassword(password));resetProgress();return;
+  localStorage.setItem(resetPasswordKey,await hashResetPassword(password));
+  if(modalPurpose==="answer"){answerVerified();return}
+  resetProgress();return;
  }
  const saved=localStorage.getItem(resetPasswordKey);
- if(!saved||await hashResetPassword(password)!==saved){error.textContent="密码不正确，进度没有变化。";return}
+ if(!saved||await hashResetPassword(password)!==saved){error.textContent="密码不正确。"+(modalPurpose==="answer"?"答案没有显示。":"进度没有变化。");return}
+ if(modalPurpose==="answer"){answerVerified();return}
  resetProgress();
 });
 document.getElementById("resetModal").addEventListener("click",function(e){if(e.target===e.currentTarget)closeResetDialog()});
@@ -817,6 +1574,7 @@ function isDone(level){return !!data.completed[level.id]}
 function progressPct(){return Math.round(completedCount()/levels.length*100)}
 function nextLevel(){return levels.find(function(l){return !isDone(l)})||levels[levels.length-1]}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2300)}
+function copyText(text){const done=function(){toast("标准答案已复制到剪贴板。")};const fb=function(){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta);done()};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fb)}else{fb()}}
 function formatSample(s){return s.replace(/(\\+)n/g,function(match,slashes){return "\\".repeat(Math.floor(slashes.length/2))+(slashes.length%2?"\n":"n")})}
 function renderBeginnerGuide(l){
  const g=beginnerGuides[l.id];
@@ -851,10 +1609,10 @@ function renderLesson(){
  document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.stage)+' · 第 '+String(l.id).padStart(2,"0")+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
  '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 阅读重点后完成挑战</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>example.c</span></div><pre>'+esc(formatSample(l.sample))+'</pre></div>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</div></section>'+
  '<section class="panel challenge-card"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✦</span>知识快问</div><span class="chip">答对 +10 点</span></div><div class="quiz-question">'+esc(l.quiz)+'</div><div class="option-list">'+opts+'</div>'+quizFeedback+lockMsg+'</section>'+
- '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">检查器会核对关键语法片段，帮助离线练习；它不等同于完整的 C 编译器。</span></div>':"")+challengeFeedback+lockMsg+'</section></div>'+
+ '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地会按真实 C 语法检查分号、括号与语句结构，再核对变量使用关系和本关操作；注释或字符串里的关键词不算通过。检查器仍不等同于完整编译器，正式使用前请用编译器(如 Dev-C++)实际编译运行。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(formatSample(solutions[l.id]||""))+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并检查通过，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section></div>'+
  '<aside class="lesson-main"><section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway"><div class="takeaway-item"><span class="'+(quizPassed||done?"tick":"")+'">'+(quizPassed||done?"✓":"○")+'</span><span>完成知识快问</span></div><div class="takeaway-item"><span class="'+(codePassed||done?"tick":"")+'">'+(codePassed||done?"✓":"○")+'</span><span>通过代码结构检查</span></div><div class="takeaway-item"><span class="'+(done?"tick":"")+'">'+(done?"✓":"○")+'</span><span>获得本关学习点并解锁后续</span></div></div><div class="progress-bar" style="margin-top:18px"><i style="width:'+((Number(quizPassed||done)+Number(codePassed||done))*50)+'%"></i></div><div class="progress-foot"><span>本关完成度</span><span>'+(done?"100":(Number(quizPassed)+Number(codePassed))*50)+'%</span></div></section>'+
  '<section class="panel"><div class="challenge-head"><div class="challenge-label">核心概念</div><span class="chip">要点速览</span></div>'+l.takeaways.map(function(t){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</section>'+
- '<section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside></div><div class="footer-note">进度仅保存在当前浏览器设备。代码练习进行关键结构检查，不会将代码上传。</div>';
+ '<section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside></div><div class="footer-note">进度仅保存在当前浏览器设备。代码挑战只在本地浏览器做结构检查，不会上传代码；正式使用前请用 C 编译器编译运行。</div>';
 }
 function renderSummary(){
  const done=completedCount(), pct=progressPct(), rate=data.attempts?Math.round(data.correct/data.attempts*100):0, finished=done===levels.length;
@@ -864,9 +1622,111 @@ function renderSummary(){
  '<div class="summary-grid" style="margin-top:18px"><section class="panel"><div class="challenge-head"><div class="challenge-label">技能地图</div><span class="chip">按模块回顾</span></div><div class="skill-list">'+skills+'</div></section><section class="panel"><div class="challenge-head"><div class="challenge-label">'+(finished?"下一阶段建议":"给未来自己的话")+'</div><span class="chip">'+(finished?"继续实践":"保持节奏")+'</span></div><p class="lesson-copy">'+(finished?"把学到的内容组合成一个小项目：例如通讯录、命令行记账本或简易文本分析器。尝试为函数补充错误处理、拆分头文件，并用编译器警告检查代码。":"学编程不是背完所有语法，而是能用合适的工具把问题拆开。先把当前关卡做完，再回头复习卡住的知识点。")+'</p><div class="takeaway"><div class="takeaway-item"><span class="tick">✓</span><span>代码挑战在本地浏览器完成</span></div><div class="takeaway-item"><span class="tick">✓</span><span>学习进度自动保存</span></div><div class="takeaway-item"><span class="tick">✓</span><span>可以随时回看已完成课程</span></div></div></section></div>'+
  '<div class="footer-note">本路线聚焦 C 语言核心语法与常用标准库。不同 C 标准和平台扩展可能有差异，进阶项目建议结合目标编译器文档。</div>';
 }
-function openLevel(id){const l=levels.find(function(x){return x.id===id});if(!l)return;if(!unlocked(l)&&!isDone(l)){toast("先完成上一关，就能解锁这里。");return}activeLevel=l;page="lesson";const quizDone=isDone(l)||!!data.quizRewards[l.id];selectedOption=quizDone?l.answer:null;quizPassed=quizDone;codePassed=isDone(l);hintVisible=false;window.quizAnswered=quizDone;window.codeFeedback="";window.codeDraft=data.drafts[l.id]||"";render()}
+function openLevel(id){const l=levels.find(function(x){return x.id===id});if(!l)return;if(!unlocked(l)&&!isDone(l)){toast("先完成上一关，就能解锁这里。");return}activeLevel=l;page="lesson";const quizDone=isDone(l)||!!data.quizRewards[l.id];selectedOption=quizDone?l.answer:null;quizPassed=quizDone;codePassed=isDone(l);hintVisible=false;solutionVisible=false;window.quizAnswered=quizDone;window.codeFeedback="";window.codeDraft=data.drafts[l.id]||"";render()}
 function awardForQuiz(){if(quizPassed){toast("这道题的奖励已经领取，不会重复加分。");return}data.attempts++;if(selectedOption===activeLevel.answer){quizPassed=true;const firstCorrect=!data.quizRewards[activeLevel.id];if(firstCorrect){data.quizRewards[activeLevel.id]=true;data.correct++;data.xp+=10;toast("答对了，学习点 +10")}else{toast("答对了，这道题的学习点已领取。")}save();if(codePassed)maybeComplete();}else{save();}window.quizAnswered=true;render()}
-function checkCode(){const ta=document.getElementById("codeAnswer");window.codeDraft=ta.value;const code=ta.value.toLowerCase();const missing=activeLevel.required.filter(function(x){return code.indexOf(x.toLowerCase())===-1});if(missing.length===0){codePassed=true;window.codeFeedback="结构检查通过！代码包含本关要求的关键写法。";if(!isDone(activeLevel)){maybeComplete()}else{render()}}else{codePassed=false;window.codeFeedback="还差一点：请检查代码是否包含这些关键部分："+missing.join("、");render()}}
+function tokenizeChallengeC(source){
+ const tokens=[],ops=['<<=','>>=','...','->','++','--','&&','||','==','!=','<=','>=','+=','-=','*=','/=','%=','&=','|=','^=','<<','>>'];let i=0;
+ while(i<source.length){const c=source[i];if(/\s/.test(c)){i++;continue}
+  if(c==='/'&&source[i+1]==='/'){i+=2;while(i<source.length&&source[i]!=='\n')i++;continue}
+  if(c==='/'&&source[i+1]==='*'){const e=source.indexOf('*/',i+2);if(e<0)return{error:'注释没有用 */ 结束。',tokens:[]};i=e+2;continue}
+  if(c==='"'||c==="'"){const q=c,s=i++;let done=false;while(i<source.length){if(source[i]==='\\'){i+=2;continue}if(source[i]===q){i++;done=true;break}if(source[i]==='\n'||source[i]==='\r')return{error:'字符串或字符常量中有未结束的换行。',tokens:[]};i++}if(!done)return{error:'字符串或字符常量缺少结束引号。',tokens:[]};tokens.push({type:q==='"'?'string':'char',v:source.slice(s+1,i-1),at:s});continue}
+  const id=source.slice(i).match(/^[A-Za-z_][A-Za-z0-9_]*/);if(id){tokens.push({type:'id',v:id[0],at:i});i+=id[0].length;continue}
+  const num=source.slice(i).match(/^(?:0[xX][0-9a-fA-F]+|(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)(?:[uU]|[lL]{1,2}|[uU][lL]{1,2}|[lL]{1,2}[uU]|[fF])?/);if(num){tokens.push({type:'num',v:num[0].toLowerCase(),at:i});i+=num[0].length;continue}
+  const op=ops.find(x=>source.slice(i,i+x.length)===x);if(op){tokens.push({type:'p',v:op,at:i});i+=op.length;continue}
+  if('{}()[];,:.?~!%^&*+-=/<>|#'.includes(c)){tokens.push({type:'p',v:c,at:i});i++;continue}
+  return{error:'发现无法识别的字符：'+c,tokens:[]}
+ }
+ return{error:null,tokens}
+}
+function cMask(source){let out='',i=0;while(i<source.length){const c=source[i],n=source[i+1];if(c==='/'&&n==='/'){while(i<source.length&&source[i]!=='\n'&&source[i]!=='\r'){out+=' ';i++}continue}if(c==='/'&&n==='*'){out+='  ';i+=2;while(i<source.length&&!(source[i]==='*'&&source[i+1]==='/')){out+=source[i]==='\n'||source[i]==='\r'?source[i]:' ';i++}if(i<source.length){out+='  ';i+=2}continue}if(c==='"'||c==="'"){const q=c;out+=' ';i++;while(i<source.length){if(source[i]==='\\'){out+=' ';i++;if(i<source.length){out+=source[i]==='\n'||source[i]==='\r'?source[i]:' ';i++}continue}if(source[i]===q){out+=' ';i++;break}out+=source[i]==='\n'||source[i]==='\r'?source[i]:' ';i++}continue}out+=c;i++}return out}
+function vals(ts){return ts.map(t=>t.v)}
+function seq(ts,pat){const a=vals(ts);for(let i=0;i<=a.length-pat.length;i++){let ok=true;for(let j=0;j<pat.length;j++)if(a[i+j]!==pat[j]){ok=false;break}if(ok)return true}return false}
+function indexSeq(ts,pat){const a=vals(ts);for(let i=0;i<=a.length-pat.length;i++){let ok=true;for(let j=0;j<pat.length;j++)if(a[i+j]!==pat[j]){ok=false;break}if(ok)return i}return-1}
+function closeGroup(ts,s){const open=ts[s]&&ts[s].v,match={'(':')','{':'}','[':']'},end=match[open];if(!end)return-1;let d=0;for(let i=s;i<ts.length;i++){if(ts[i].v===open)d++;else if(ts[i].v===end&&--d===0)return i}return-1}
+function splitTop(ts,sep){const r=[];let s=0,d=0;for(let i=0;i<ts.length;i++){const v=ts[i].v;if(v==='('||v==='['||v==='{')d++;else if(v===')'||v===']'||v==='}')d--;else if(v===sep&&d===0){r.push(ts.slice(s,i));s=i+1}}r.push(ts.slice(s));return r}
+function calls(ts,name){const r=[];for(let i=0;i<ts.length-1;i++)if(ts[i].v===name&&ts[i+1].v==='('){const e=closeGroup(ts,i+1);if(e>0)r.push({args:splitTop(ts.slice(i+2,e),','),at:i,end:e})}return r}
+function func(ts,name,ret){for(let i=0;i<ts.length-2;i++){if(ts[i].v!==ret||ts[i+1].v!==name||ts[i+2].v!=='(')continue;const p=closeGroup(ts,i+2);if(p<0||!ts[p+1]||ts[p+1].v!=='{')continue;const e=closeGroup(ts,p+1);if(e>=0)return{params:splitTop(ts.slice(i+3,p),','),body:ts.slice(p+2,e),at:i,bodyAt:p+1,end:e+1}}return null}
+function takeStatement(ts,s){if(!ts[s])return-1;if(ts[s].v==='{'){const e=closeGroup(ts,s);return e<0?-1:e+1}let d=0;for(let i=s;i<ts.length;i++){const v=ts[i].v;if(v==='('||v==='['||v==='{')d++;else if(v===')'||v===']'||v==='}'){d--;if(d<0)return-1}else if(v===';'&&d===0)return i+1}return-1}
+function ifs(ts){const r=[];for(let i=0;i<ts.length-2;i++){if(ts[i].v!=='if'||ts[i+1].v!=='(')continue;const p=closeGroup(ts,i+1);if(p<0||!ts[p+1])continue;let end,thenSlice,other=null;if(ts[p+1].v==='{'){const e=closeGroup(ts,p+1);if(e<0)continue;end=e+1;thenSlice=ts.slice(p+2,e)}else{end=takeStatement(ts,p+1);if(end<0)continue;thenSlice=ts.slice(p+1,end)}if(ts[end]&&ts[end].v==='else'){if(ts[end+1]&&ts[end+1].v==='{'){const x=closeGroup(ts,end+1);if(x>0){other=ts.slice(end+2,x);end=x+1}}else{const x=takeStatement(ts,end+1);if(x>0){other=ts.slice(end+1,x);end=x}}}r.push({cond:ts.slice(i+2,p),then:thenSlice,elseBody:other,at:i,end})}return r}
+function fors(ts){const r=[];for(let i=0;i<ts.length-2;i++){if(ts[i].v!=='for'||ts[i+1].v!=='(')continue;const p=closeGroup(ts,i+1);if(p<0||!ts[p+1])continue;let end,body;if(ts[p+1].v==='{'){const e=closeGroup(ts,p+1);if(e<0)continue;end=e+1;body=ts.slice(p+2,e)}else{end=takeStatement(ts,p+1);if(end<0)continue;body=ts.slice(p+1,end)}r.push({parts:splitTop(ts.slice(i+2,p),';'),body,at:i,end})}return r}
+function ret(ts,v){return seq(ts,['return',v,';'])}
+function fmt(ts,format,pred){return calls(ts,'printf').some(c=>c.args[0]&&c.args[0][0]&&c.args[0][0].type==='string'&&c.args[0][0].v.includes(format)&&pred(c.args.slice(1)))}
+function positiveIntVariable(ts,name){for(let i=0;i<ts.length-3;i++)if((ts[i].v==='int'||ts[i].v==='size_t'||ts[i].v==='unsigned')&&ts[i+1].v===name&&ts[i+2].v==='='&&ts[i+3].type==='num'){const n=Number(ts[i+3].v.replace(/[uUlL]/g,''));if(Number.isFinite(n)&&n>0)return true}return false}
+/* ---------- 轻量 C 语法解析器：分号、括号、控制流、声明、函数定义都要符合真实 C 语法 ---------- */
+const CS_TYPES=["void","char","short","int","long","float","double","signed","unsigned","_Bool","_Complex","_Imaginary","struct","enum","union","typedef","extern","static","auto","register","const","volatile","restrict","inline","_Atomic","_Static_assert","_Alignas","size_t","FILE"];
+const CS_BIN={"=":2,"+=":2,"-=":2,"*=":2,"/=":2,"%=":2,"<<=":2,">>=":2,"&=":2,"|=":2,"^=":2,"||":4,"&&":5,"|":6,"^":7,"&":8,"==":9,"!=":9,"<":10,">":10,"<=":10,">=":10,"<<":11,">>":11,"+":12,"-":12,"*":13,"/":13,"%":13};
+function closeGroupRange(ts,s,end){const open=ts[s]?ts[s].v:null,close={'(':')','[':']','{':'}'}[open];if(!close)return-1;let d=0;for(let i=s;i<end;i++){const v=ts[i].v;if(v===open)d++;else if(v===close){d--;if(d===0)return i}}return-1}
+function csLine(source,at){let n=1;for(let k=0;k<at;k++)if(source[k]==="\n")n++;return n}
+function csErr(source,at,msg){return msg+"（第 "+csLine(source,at)+" 行）"}
+function collectTypeNames(ts){const names=new Set();for(let i=0;i<ts.length-1;i++){if(ts[i].v==="typedef"){let d=0;for(let j=i+1;j<ts.length;j++){const v=ts[j].v;if(v==="("||v==="["||v==="{")d++;else if(v===")"||v==="]"||v==="}")d--;else if(v===";"&&d===0){if(ts[j-1]&&ts[j-1].type==="id")names.add(ts[j-1].v);break}}}if(ts[i].v==="struct"||ts[i].v==="enum"||ts[i].v==="union"){const n=ts[i+1];if(n&&n.type==="id"&&CS_TYPES.indexOf(n.v)<0)names.add(n.v)}}return names}
+function csTypeStart(v,names){return !!v&&(CS_TYPES.indexOf(v)>=0||names.has(v))}
+function csPrimary(ts,i,end,names){if(i>=end)return{ok:false,error:"表达式意外结束"};const t=ts[i];if(t.type==="id"||t.type==="num"||t.type==="string"||t.type==="char")return{ok:true,next:i+1};if(t.v==="("){const r=csExpr(ts,i+1,end,names,true);if(!r.ok)return r;if(r.next>=end||ts[r.next].v!==")")return{ok:false,error:"括号没有闭合"};return{ok:true,next:r.next+1}}return{ok:false,error:"无法识别的表达式: "+t.v}}
+function csPostfix(ts,i,end,names){let r=csPrimary(ts,i,end,names);if(!r.ok)return r;for(;;){if(r.next>=end)return r;const t=ts[r.next];if(t.v==="("){const e=closeGroupRange(ts,r.next,end);if(e<0)return{ok:false,error:"函数调用的括号没有闭合"};const args=splitTop(ts.slice(r.next+1,e),",");for(let k=0;k<args.length;k++){const a=args[k];if(!a.length)continue;const rr=csExpr(a,0,a.length,names,false);if(!rr.ok||rr.next!==a.length)return{ok:false,error:"函数调用参数有误: "+rr.error}}r={ok:true,next:e+1}}else if(t.v==="["){const e=closeGroupRange(ts,r.next,end);if(e<0)return{ok:false,error:"下标没有闭合"};const inner=ts.slice(r.next+1,e);if(inner.length){const rr=csExpr(inner,0,inner.length,names,false);if(!rr.ok||rr.next!==inner.length)return{ok:false,error:"下标表达式有误: "+rr.error}}r={ok:true,next:e+1}}else if(t.v==="."||t.v==="->"){if(r.next+1>=end||ts[r.next+1].type!=="id")return{ok:false,error:t.v+" 后需要成员名"};r={ok:true,next:r.next+2}}else if(t.v==="++"||t.v==="--"){r={ok:true,next:r.next+1}}else return r}}
+function csUnary(ts,i,end,names){if(i>=end)return{ok:false,error:"表达式意外结束"};const t=ts[i];if(t.v==="++"||t.v==="--"||t.v==="+"||t.v==="-"||t.v==="!"||t.v==="~"||t.v==="*"||t.v==="&")return csUnary(ts,i+1,end,names);if(t.v==="sizeof"){const n=ts[i+1];if(n&&n.v==="("&&csTypeStart(ts[i+2]?ts[i+2].v:"",names)){const e=closeGroupRange(ts,i+1,end);if(e<0)return{ok:false,error:"sizeof 的括号没有闭合"};return{ok:true,next:e+1}}return csUnary(ts,i+1,end,names)}if(t.v==="("&&csTypeStart(ts[i+1]?ts[i+1].v:"",names)){let k=i+1,state=0;while(k<end){const v=ts[k].v;if(state===1&&v==="{")break;if(state===1&&ts[k].type==="id"){state=2;k++;continue}if(csTypeStart(v,names)){state=(v==="struct"||v==="enum"||v==="union")?1:0;k++;continue}break}while(k<end&&ts[k].v==="*")k++;if(k>i+1&&k<end&&ts[k].v===")")return csUnary(ts,k+1,end,names)}return csPostfix(ts,i,end,names)}
+function csBin(ts,i,end,names,minPrec){let r=csUnary(ts,i,end,names);if(!r.ok)return r;for(;;){if(r.next>=end)return r;const t=ts[r.next];const prec=CS_BIN[t.v];if(prec===undefined||prec<minPrec)return r;const rr=csBin(ts,r.next+1,end,names,prec===2?prec:prec+1);if(!rr.ok)return rr;r={ok:true,next:rr.next}}}
+function csCond(ts,i,end,names){let r=csBin(ts,i,end,names,0);if(!r.ok)return r;if(r.next<end&&ts[r.next].v==="?"){const a=csExpr(ts,r.next+1,end,names,false);if(!a.ok)return a;if(a.next>=end||ts[a.next].v!==":")return{ok:false,error:"三目运算符 ? 缺少 :"};const b=csCond(ts,a.next+1,end,names);if(!b.ok)return b;return{ok:true,next:b.next}}return r}
+function csExpr(ts,i,end,names,allowComma){let r=csCond(ts,i,end,names);if(!r.ok)return r;if(allowComma){while(r.next<end&&ts[r.next].v===","){const rr=csCond(ts,r.next+1,end,names);if(!rr.ok)return rr;r={ok:true,next:rr.next}}}return r}
+function csDeclarator(ts,i,end,names,source){let j=i,name=null;if(ts[j]&&ts[j].v==="("){let k=j+1;while(k<end&&ts[k].v==="*")k++;if(k<end&&ts[k].type==="id"){name=ts[k].v;const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"声明中的括号没有闭合")};j=c+1}else return{ok:false,error:csErr(source,ts[j].at,"声明格式无法识别")}}else{while(j<end&&ts[j].v==="*")j++;if(j<end&&ts[j].type==="id"){name=ts[j].v;j++}else return{ok:false,error:csErr(source,ts[i].at,"声明缺少名字")}}
+for(;;){if(j>=end)break;if(ts[j].v==="["){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"数组下标没有闭合")};j=c+1;continue}if(ts[j].v==="("){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"参数列表没有闭合")};j=c+1;continue}break}
+if(ts[j]&&ts[j].v==="="){if(ts[j+1]&&ts[j+1].v==="{"){const c=closeGroupRange(ts,j+1,end);if(c<0)return{ok:false,error:csErr(source,ts[j+1].at,"初始化列表没有闭合")};j=c+1}else{const r=csExpr(ts,j+1,end,names,false);if(!r.ok)return{ok:false,error:csErr(source,ts[j+1]?ts[j+1].at:ts[j].at,r.error)};j=r.next}}return{ok:true,next:j,name}}
+function csDeclarationCore(ts,i,end,names,source){let j=i,sawBody=false,state=0;while(j<end){const v=ts[j].v;if(state===1&&v==="{"){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"类型定义的花括号没有闭合")};j=c+1;sawBody=true;state=0;continue}if(state===1&&ts[j].type==="id"){j++;state=2;continue}if(state===2&&v==="{"){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"类型定义的花括号没有闭合")};j=c+1;sawBody=true;state=0;continue}if(csTypeStart(v,names)){state=(v==="struct"||v==="enum"||v==="union")?1:0;j++;continue}break}
+if(j===i&&!sawBody)return{ok:false,error:csErr(source,ts[i].at,"无法识别的声明")};
+if(ts[i].v==="_Static_assert"){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"_Static_assert 括号没有闭合")};if(c+1>=end||ts[c+1].v!==";")return{ok:false,error:csErr(source,ts[j].at,"_Static_assert 后缺少分号")};return{ok:true,next:c+1,name:null}}
+if(sawBody&&ts[j]&&ts[j].v===";")return{ok:true,next:j,name:null};
+let declCount=0,firstName=null;
+for(;;){const r=csDeclarator(ts,j,end,names,source);if(!r.ok)return r;if(firstName===null)firstName=r.name;j=r.next;declCount++;if(j>=end)return{ok:true,next:j,name:firstName};if(ts[j].v===","){j++;continue}if(ts[j].v===";")break;break}
+return{ok:true,next:j,name:firstName}}
+function csDeclaration(ts,i,end,names,source){const r=csDeclarationCore(ts,i,end,names,source);if(!r.ok)return r;if(r.next<end&&ts[r.next].v===";")return{ok:true,next:r.next+1};return{ok:false,error:csErr(source,r.next<end?ts[r.next].at:ts[i].at,"声明语句后缺少分号 ;")}}
+function csStatement(ts,i,end,names,source){if(i>=end)return{ok:true,next:i};const t=ts[i],v=t.v;
+if(v==="#"){let le=source.indexOf("\n",t.at);if(le<0)le=source.length;let j=i+1;while(j<end&&ts[j].at<le)j++;return{ok:true,next:j}}
+if(v===";")return{ok:true,next:i+1};
+if(v==="{"){const e=closeGroupRange(ts,i,end);if(e<0)return{ok:false,error:csErr(source,t.at,"花括号没有闭合")};const c=csCompound(ts,i+1,e,names,source);if(!c.ok)return c;return{ok:true,next:e+1}}
+if(v==="if"||v==="while"){if(!ts[i+1]||ts[i+1].v!=="(")return{ok:false,error:csErr(source,t.at,v+" 后需要条件括号")};const p=closeGroupRange(ts,i+1,end);if(p<0)return{ok:false,error:csErr(source,t.at,v+" 的条件括号没有闭合")};if(p>i+2){const r=csExpr(ts,i+2,p,names,false);if(!r.ok)return{ok:false,error:csErr(source,t.at,v+" 条件表达式有误: "+r.error)};if(r.next!==p)return{ok:false,error:csErr(source,ts[r.next]?ts[r.next].at:t.at,v+" 条件表达式后缺少 )")}}const s=csStatement(ts,p+1,end,names,source);if(!s.ok)return s;let next=s.next;if(v==="if"&&next<end&&ts[next].v==="else"){const s2=csStatement(ts,next+1,end,names,source);if(!s2.ok)return s2;next=s2.next}return{ok:true,next}}
+if(v==="for"){if(!ts[i+1]||ts[i+1].v!=="(")return{ok:false,error:csErr(source,t.at,"for 后需要括号")};const p=closeGroupRange(ts,i+1,end);if(p<0)return{ok:false,error:csErr(source,t.at,"for 的括号没有闭合")};let parts;if(p===i+2){parts=[[],[],[]]}else{parts=splitTop(ts.slice(i+2,p),";");if(parts.length!==3)return{ok:false,error:csErr(source,t.at,"for 需要两个分号分隔三个部分")}}for(let k=0;k<3;k++){const seg=parts[k];if(!seg.length)continue;if(k===0&&csTypeStart(seg[0].v,names)){const r=csDeclarationCore(seg,0,seg.length,names,source);if(!r.ok)return{ok:false,error:csErr(source,seg[0].at,"for 第一部分声明有误: "+r.error)};if(r.next!==seg.length)return{ok:false,error:csErr(source,seg[0].at,"for 第一部分声明后缺少分号")}}else{const r=csExpr(seg,0,seg.length,names,true);if(!r.ok)return{ok:false,error:csErr(source,seg[0].at,"for 表达式有误: "+r.error)};if(r.next!==seg.length)return{ok:false,error:csErr(source,seg[0].at,"for 表达式缺少分号")}}}const s=csStatement(ts,p+1,end,names,source);if(!s.ok)return s;return{ok:true,next:s.next}}
+if(v==="do"){const s=csStatement(ts,i+1,end,names,source);if(!s.ok)return s;if(s.next>=end||ts[s.next].v!=="while")return{ok:false,error:csErr(source,t.at,"do 后缺少 while")};if(!ts[s.next+1]||ts[s.next+1].v!=="(")return{ok:false,error:csErr(source,t.at,"do-while 缺少条件括号")};const p=closeGroupRange(ts,s.next+1,end);if(p<0)return{ok:false,error:csErr(source,t.at,"do-while 条件括号没有闭合")};if(p+1>=end||ts[p+1].v!==";")return{ok:false,error:csErr(source,p+1<end?ts[p+1].at:t.at,"do-while 后缺少分号")};return{ok:true,next:p+2}}
+if(v==="switch"){if(!ts[i+1]||ts[i+1].v!=="(")return{ok:false,error:csErr(source,t.at,"switch 后需要括号")};const p=closeGroupRange(ts,i+1,end);if(p<0)return{ok:false,error:csErr(source,t.at,"switch 括号没有闭合")};const s=csStatement(ts,p+1,end,names,source);if(!s.ok)return s;return{ok:true,next:s.next}}
+if(v==="return"){if(ts[i+1]&&ts[i+1].v!==";"){const r=csExpr(ts,i+1,end,names,false);if(!r.ok)return{ok:false,error:csErr(source,t.at,"return 表达式有误: "+r.error)};if(r.next>=end||ts[r.next].v!==";")return{ok:false,error:csErr(source,ts[r.next]?ts[r.next].at:t.at,"return 后缺少分号 ;")};return{ok:true,next:r.next+1}}if(!ts[i+1]||ts[i+1].v!==";")return{ok:false,error:csErr(source,t.at,"return 后缺少分号 ;")};return{ok:true,next:i+2}}
+if(v==="break"||v==="continue"){if(!ts[i+1]||ts[i+1].v!==";")return{ok:false,error:csErr(source,t.at,v+" 后缺少分号 ;")};return{ok:true,next:i+2}}
+if(v==="goto"){if(!ts[i+1]||ts[i+1].type!=="id"||!ts[i+2]||ts[i+2].v!==";")return{ok:false,error:csErr(source,t.at,"goto 后需要 标签名;")};return{ok:true,next:i+3}}
+if(v==="case"){const r=csExpr(ts,i+1,end,names,false);if(!r.ok)return{ok:false,error:csErr(source,t.at,"case 表达式有误: "+r.error)};if(r.next>=end||ts[r.next].v!==":")return{ok:false,error:csErr(source,t.at,"case 后需要冒号")};return{ok:true,next:r.next+1}}
+if(v==="default"){if(!ts[i+1]||ts[i+1].v!==":")return{ok:false,error:csErr(source,t.at,"default 后需要冒号")};return{ok:true,next:i+2}}
+if(t.type==="id"&&ts[i+1]&&ts[i+1].v===":")return{ok:true,next:i+2};
+if(csTypeStart(v,names)&&(v==="struct"||v==="enum"||v==="union"||v==="typedef"||v==="_Static_assert"||(ts[i+1]&&(ts[i+1].type==="id"||ts[i+1].v==="*"||ts[i+1].v==="(")))){const r=csDeclaration(ts,i,end,names,source);if(!r.ok)return r;return{ok:true,next:r.next}}
+const r=csExpr(ts,i,end,names,true);if(!r.ok)return{ok:false,error:csErr(source,t.at,r.error)};if(r.next>=end)return{ok:false,error:csErr(source,t.at,"语句缺少分号 ;")};if(ts[r.next].v!==";")return{ok:false,error:csErr(source,ts[r.next].at,"语句缺少分号 ;（在 '"+ts[r.next].v+"' 前）")};return{ok:true,next:r.next+1}}
+function csCompound(ts,start,endExclusive,names,source){let i=start;while(i<endExclusive){const r=csStatement(ts,i,endExclusive,names,source);if(!r.ok)return r;i=r.next}return{ok:true,next:endExclusive}}
+function csTopItem(ts,i,end,names,source,fns){const t=ts[i];if(t.v==="#"){let le=source.indexOf("\n",t.at);if(le<0)le=source.length;let j=i+1;while(j<end&&ts[j].at<le)j++;return{ok:true,next:j}}if(!csTypeStart(t.v,names)&&t.type!=="id")return{ok:false,error:csErr(source,t.at,"无法识别的顶层内容: "+t.v)};const core=csDeclarationCore(ts,i,end,names,source);if(!core.ok)return core;const j=core.next;if(j>=end)return{ok:false,error:csErr(source,t.at,"顶层声明缺少分号 ;")};if(ts[j].v===";")return{ok:true,next:j+1};if(ts[j].v==="{"){const name=core.name;if(name){if(fns.has(name))return{ok:false,error:csErr(source,t.at,"函数 "+name+" 被重复定义")};fns.add(name)}const e=closeGroupRange(ts,j,end);if(e<0)return{ok:false,error:csErr(source,ts[j].at,"函数体的花括号没有闭合")};const c=csCompound(ts,j+1,e,names,source);if(!c.ok)return c;return{ok:true,next:e+1}}return{ok:false,error:csErr(source,ts[j].at,"顶层声明后缺少分号 ;")}}
+function parseProgram(ts,source){const names=collectTypeNames(ts);const fns=new Set();const end=ts.length;let i=0;while(i<end){const r=csTopItem(ts,i,end,names,source,fns);if(!r.ok)return r;i=r.next}return{ok:true}}
+function challengeResult(ts,source,id){
+ const all=vals(ts),has=p=>seq(ts,p),main=func(ts,'main','int'),headers={'stdio.h':'stdio\\.h','string.h':'string\\.h','stdlib.h':'stdlib\\.h','stddef.h':'stddef\\.h','limits.h':'limits\\.h','stdatomic.h':'stdatomic\\.h'};
+ const include=n=>new RegExp('^\\s*#\\s*include\\s*<\\s*'+headers[n]+'\\s*>\\s*$','m').test(cMask(source));
+ const no=m=>({ok:false,message:'检查未通过：'+m}),yes=m=>({ok:true,message:'本地结构检查通过：'+m});
+ switch(id){
+ case 1:if(!include('stdio.h')||!main||!has(['int','main','(','void',')'])||!calls(main.body,'printf').some(c=>c.args[0]&&c.args[0][0]&&c.args[0][0].v.includes('Hello, C!'))||!ret(main.body,'0'))return no('需要 stdio.h、完整 main(void)、实际输出 Hello, C! 的 printf，以及 return 0;');return yes('main 入口、输出调用和正常返回都齐全。');
+ case 2:if(!include('stdio.h')||!main||!seq(main.body,['int','count','='])||!fmt(main.body,'%d',a=>a.length>0&&a[0].some(t=>t.v==='count')))return no('请在 main 中声明 int count，并让 printf 用 %d 输出该变量；注释或字符串中的写法不算。');return yes('int 变量 count 与 %d 输出实参相匹配。');
+ case 3:{const i=all.findIndex((v,j)=>v==='enum'&&all[j+1]==='Level'&&all[j+2]==='{'),e=i>=0?closeGroup(ts,i+2):-1,members=e>i?vals(ts.slice(i+3,e)):[],b=main?main.body:[];if(!include('stdio.h')||!main||!members.includes('EASY')||!members.includes('HARD')||!seq(b,['int','value','='])||!seq(b,['(','double',')','value'])||!seq(b,['double','converted','=','(','double',')','value'])||!fmt(b,'%f',a=>a.some(x=>x.some(t=>t.v==='converted'))))return no('请定义含 EASY、HARD 的 enum Level；在 main 声明 int value，转换成 double 并用 %f 输出 converted。');return yes('枚举、显式转换和结果输出都已匹配。')}
+ case 4:{const b=main?main.body:[],decl=seq(b,['unsigned','flags','=','0'])||seq(b,['unsigned','int','flags','=','0']),set=seq(b,['flags','|=','(','1u','<<','2',')'])||seq(b,['flags','=','flags','|','(','1u','<<','2',')']),check=ifs(b).some(x=>seq(x.cond,['flags','&','(','1u','<<','2',')']));if(!include('stdio.h')||!main||!decl||!set||!check)return no('请在 main 用 unsigned flags 设置 bit 2，并在 if 条件里用按位与检查同一位；包含 stdio.h。');return yes('无符号标志的置位和同位检查都已找到。')}
+ case 5:{const b=main?main.body:[],branch=ifs(b).some(x=>seq(x.cond,['temperature','>=','30'])&&x.elseBody&&calls(x.then,'puts').some(c=>c.args[0]&&c.args[0][0]&&c.args[0][0].v==='hot')&&calls(x.elseBody,'puts').some(c=>c.args[0]&&c.args[0][0]&&c.args[0][0].v==='mild'));if(!include('stdio.h')||!main||!seq(b,['int','temperature','='])||!branch)return no('请在 main 声明 int temperature，用 >= 30 的 if/else 分支分别调用 puts 输出 hot 和 mild。');return yes('温度比较和两条对应输出分支都已匹配。')}
+ case 6:{const b=main?main.body:[],loop=fors(b).find(f=>{const a=f.parts[0]||[],c=f.parts[1]||[],u=f.parts[2]||[];return(seq(a,['i','=','1'])||seq(a,['int','i','=','1']))&&(seq(c,['i','<=','10'])||seq(c,['i','<','11']))&&(seq(u,['++','i'])||seq(u,['i','++']))&&seq(f.body,['sum','+=','i',';'])}),output=loop&&calls(b,'printf').some(c=>c.at>=loop.end&&c.args[0]&&c.args[0][0]&&c.args[0][0].v.includes('%d')&&c.args.slice(1).some(a=>a.some(t=>t.v==='sum')));if(!include('stdio.h')||!main||!seq(b,['int','sum','=','0'])||!loop||!output)return no('请在 main 从 1 到 10 循环累加到 sum，并在循环结束后用 %d 输出总和。');return yes('循环起点、终止条件、更新、累加和循环后输出都已匹配。')}
+ case 7:{const f=func(ts,'max','int'),branches=f&&ifs(f.body).some(x=>(seq(x.cond,['a','>','b'])||seq(x.cond,['a','>=','b']))&&x.elseBody&&ret(x.then,'a')&&ret(x.elseBody,'b')),tern=f&&(seq(f.body,['return','a','>','b','?','a',':','b',';'])||seq(f.body,['return','(','a','>','b',')','?','a',':','b',';'])),used=main&&calls(main.body,'max').some(c=>c.args.length===2);if(!include('stdio.h')||!f||!has(['int','max','(','int','a',',','int','b',')'])||(!branches&&!tern)||!main||!used||!fmt(main.body,'%d',a=>a.some(x=>calls(x,'max').length>0)))return no('请定义 int max(int a, int b)，比较并返回较大值，再在 main 调用 max 并输出结果。');return yes('max 函数、比较、返回和 main 中的实际调用都已匹配。')}
+ case 8:{const f=func(ts,'factorial','int'),base=f&&ifs(f.body).some(x=>(seq(x.cond,['n','<=','1'])||seq(x.cond,['n','==','0'])||seq(x.cond,['n','==','1']))&&ret(x.then,'1')),rec=f&&seq(f.body,['return','n','*','factorial','(','n','-','1',')',';']),used=main&&calls(main.body,'factorial').length>0;if(!include('stdio.h')||!f||!has(['int','factorial','(','int','n',')'])||!base||!rec||!used||!fmt(main.body,'%d',a=>a.some(x=>calls(x,'factorial').length>0)))return no('请定义 factorial，写基准分支和 n * factorial(n - 1)，并在 main 调用、输出结果。');return yes('递归基准、递减参数、乘积和 main 中的调用都已匹配。')}
+ case 9:{const f=func(ts,'sum','int'),loop=f&&fors(f.body).some(x=>{const a=x.parts[0]||[],c=x.parts[1]||[],u=x.parts[2]||[];return(seq(a,['i','=','0'])||seq(a,['int','i','=','0']))&&seq(c,['i','<','length'])&&(seq(u,['++','i'])||seq(u,['i','++']))&&seq(x.body,['total','+=','values','[','i',']',';'])}),call=main&&calls(main.body,'sum').some(c=>c.args.length===2&&c.args[0].some(t=>t.v==='values')&&c.args[1].some(t=>t.v==='length')),out=main&&fmt(main.body,'%d',a=>a.some(x=>calls(x,'sum').length>0));if(!include('stdio.h')||!f||!has(['int','sum','(','const','int','values','[',']',',','int','length',')'])||!seq(f.body,['int','total','=','0'])||!loop||!main||!seq(main.body,['int','values','[',']','=','{'])||!(seq(main.body,['int','length','=','sizeof','values','/','sizeof','values','[','0',']'])||seq(main.body,['int','length','=','sizeof','(','values',')','/','sizeof','(','values','[','0',']',')']))||!call||!out)return no('定义 sum 按 length 遍历 values 累加并返回；main 准备数组、调用 sum，再输出结果。');return yes('数组长度、下标循环、累加、返回和 main 调用都已匹配。')}
+ case 10:{const b=main?main.body:[],p=indexSeq(b,['char','word','[',']','=']),decl=p>=0&&b[p+5]&&b[p+5].type==='string',length=calls(b,'strlen').some(c=>c.args[0]&&c.args[0].length===1&&c.args[0][0].v==='word'),out=fmt(b,'%zu',a=>a.some(x=>seq(x,['strlen','(','word',')'])));if(!include('string.h')||!include('stdio.h')||!main||!decl||!length||!out)return no('在 main 中定义 char word[] 字符串，调用 strlen(word)，再用 %zu 输出长度；包含 string.h 和 stdio.h。');return yes('字符串变量、strlen 实参和匹配的输出格式都已找到。')}
+ case 11:{const b=main?main.body:[],ptr=seq(b,['int','*','p','=','&','value']),write=seq(b,['*','p','=']),out=fmt(b,'%d',a=>a.some(x=>x.some(t=>t.v==='value')));if(!include('stdio.h')||!main||!seq(b,['int','value'])||!ptr||!write||!out)return no('在 main 声明 int value 和 int *p = &value，通过 *p 修改目标，再输出 value。');return yes('指针地址、解引用写入和结果输出都已匹配。')}
+ case 12:{const b=main?main.body:[],alloc=calls(b,'malloc').find(c=>c.args[0]&&seq(c.args[0],['n','*','sizeof','*','items'])),guard=ifs(b).find(x=>seq(x.cond,['items','==','NULL'])&&ret(x.then,'1')),use=indexSeq(b,['items','[','0',']','=']),release=calls(b,'free').find(c=>c.args[0]&&c.args[0].length===1&&c.args[0][0].v==='items'),output=fmt(b,'%d',a=>a.some(x=>seq(x,['items','[','0',']'])));if(!include('stdlib.h')||!include('stdio.h')||!main||!positiveIntVariable(b,'n')||!seq(b,['int','*','items','=','malloc'])||!alloc||!guard||use<0||!output||!release||alloc.at>=guard.at||guard.end>use||use>=release.at)return no('计算 n * sizeof *items 并申请，检查 NULL，写入和输出 items[0]，最后 free(items)。');return yes('动态申请、失败检查、有效使用、输出和释放顺序都已匹配。')}
+ case 13:{const b=main?main.body:[],i=all.findIndex((v,j)=>v==='typedef'&&all[j+1]==='struct');let good=false;if(i>=0){let brace=i+2;if(all[brace]!=='{')brace++;const e=all[brace]==='{'?closeGroup(ts,brace):-1;if(e>brace)good=seq(ts.slice(brace+1,e),['char','name','['])&&seq(ts.slice(brace+1,e),['int','score'])&&all[e+1]==='Student'&&all[e+2]===';'}const out=fmt(b,'%d',a=>a.some(x=>seq(x,['s','.','score'])));if(!include('stdio.h')||!main||!good||!(seq(b,['Student','s','=','{'])||seq(b,['s','.','score','=']))||!seq(b,['s','.','score'])||!out)return no('定义含 name 和 score 的 Student，在 main 创建 s，通过 s.score 访问并用 printf 输出。');return yes('结构体字段、对象、成员访问和输出都已匹配。')}
+ case 14:{const b=main?main.body:[],open=calls(b,'fopen').find(c=>c.args.length>=2),guard=ifs(b).find(x=>seq(x.cond,['file','==','NULL'])&&ret(x.then,'1')),read=calls(b,'fgets').find(c=>c.args.length===3&&seq(c.args[0],['line'])&&seq(c.args[1],['sizeof','line'])&&seq(c.args[2],['file'])),close=calls(b,'fclose').find(c=>c.args[0]&&c.args[0].length===1&&c.args[0][0].v==='file');if(!include('stdio.h')||!main||!seq(b,['FILE','*','file','=','fopen'])||!open||!guard||!seq(b,['char','line','['])||!read||!close||open.at>=guard.at||guard.end>read.at||read.at>=close.at)return no('在 main 打开文件并处理 NULL；成功后用 fgets(line, sizeof line, file) 读取，最后关闭同一个 file。');return yes('文件打开、失败分支、限长读取和关闭顺序都已匹配。')}
+ case 15:{const guard=new RegExp('^\\s*#\\s*ifndef\\s+([A-Za-z_]\\w*)\\s*$[\\s\\S]*?^\\s*#\\s*define\\s+\\1\\b\\s*$[\\s\\S]*?^\\s*int\\s+add\\s*\\(\\s*int\\s+a\\s*,\\s*int\\s+b\\s*\\)\\s*;\\s*$[\\s\\S]*?^\\s*#\\s*endif\\b\\s*$','m').test(cMask(source));if(!guard)return no('请把 #ifndef、#define、int add(int a, int b); 和 #endif 各写在自己的行上，宏名前后一致。');return yes('头文件保护顺序和函数原型都已匹配。')}
+ case 16:{const apply=func(ts,'apply','int'),twice=func(ts,'twice','int'),sig=has(['int','apply','(','int','x',',','int','(','*','callback',')','(','int',')',')']),use=apply&&seq(apply.body,['return','callback','(','x',')',';']),impl=twice&&(seq(twice.body,['return','2','*','n',';'])||seq(twice.body,['return','n','*','2',';'])),pass=main&&calls(main.body,'apply').some(c=>c.args.length===2&&seq(c.args[0],['4'])&&seq(c.args[1],['twice'])),out=main&&fmt(main.body,'%d',a=>a.some(x=>seq(x,['apply','(','4',',','twice',')'])));if(!include('stdio.h')||!apply||!twice||!sig||!use||!impl||!pass||!out)return no('实现 twice 和函数指针 apply；main 需把 twice 传给 apply 并输出结果。');return yes('回调定义、函数指针调用、传递和输出都已匹配。')}
+ case 17:{const b=main?main.body:[],cmp=func(ts,'compare_ints','int'),casts=cmp&&seq(cmp.body,['*','(','const','int','*',')','a'])&&seq(cmp.body,['*','(','const','int','*',')','b']),safe=cmp&&seq(cmp.body,['return','(','x','>','y',')','-','(','x','<','y',')',';']),ifsCmp=cmp?ifs(cmp.body):[],branches=ifsCmp.some(x=>seq(x.cond,['x','<','y'])&&seq(x.then,['return','-','1',';']))&&ifsCmp.some(x=>seq(x.cond,['x','>','y'])&&ret(x.then,'1'))&&ret(cmp?cmp.body:[],'0'),sort=calls(b,'qsort').some(c=>c.args.length===4&&seq(c.args[0],['values'])&&seq(c.args[2],['sizeof','values','[','0',']'])&&seq(c.args[3],['compare_ints']));if(!include('stdlib.h')||!main||!seq(b,['int','values','[',']','=','{'])||!(seq(b,['size_t','count','=','sizeof','values','/','sizeof','values','[','0',']'])||seq(b,['int','count','=','sizeof','values','/','sizeof','values','[','0',']']))||!cmp||!has(['int','compare_ints','(','const','void','*','a',',','const','void','*','b',')'])||!casts||(!safe&&!branches)||!sort)return no('准备 int values 数组和数量，实现比较两个 int 的 compare_ints，再将数组、元素大小和回调传给 qsort。');return yes('比较器读取并比较两个 int，qsort 收到数组信息和回调。')}
+ case 18:{const f=func(ts,'first','int'),checks=f?ifs(f.body):[],failed=pat=>checks.some(x=>seq(x.cond,pat)&&ret(x.then,'0')),write=f&&seq(f.body,['*','out','=','values','[','0',']',';']);if(!include('stddef.h')||!f||!has(['int','first','(','const','int','*','values',',','size_t','length',',','int','*','out',')'])||!failed(['values','==','NULL'])||!failed(['out','==','NULL'])||!failed(['length','==','0'])||!write||!ret(f.body,'1'))return no('先检查 first 的 values、out 和 length == 0；失败返回 0，成功写入首项并返回 1。');return yes('参数检查、数组访问前置条件、成功写回和状态码都已匹配。')}
+ case 19:{const sa=calls(ts,'_Static_assert').some(c=>c.args.length>=2&&seq(c.args[0],['CHAR_BIT','==','8'])&&seq(c.args[0],['sizeof','(','int',')'])),b=main?main.body:[],atomic=calls(b,'atomic_fetch_add').some(c=>c.args.length===2&&seq(c.args[0],['&','counter'])&&seq(c.args[1],['1']));if(!include('limits.h')||!include('stdatomic.h')||!sa||!main||!seq(b,['_Atomic','int','counter','=','0'])||!atomic||!ret(b,'0'))return no('用 CHAR_BIT 和 sizeof(int) 写 _Static_assert；在 main 初始化 _Atomic int，原子递增后正常返回。');return yes('编译期检查、原子变量、原子递增和 main 返回都已匹配。')}
+ case 20:{const i=all.findIndex((v,j)=>v==='typedef'&&all[j+1]==='struct');let student=false;if(i>=0){let brace=i+2;if(all[brace]!=='{')brace++;const e=all[brace]==='{'?closeGroup(ts,brace):-1;if(e>brace)student=seq(ts.slice(brace+1,e),['char','name','['])&&seq(ts.slice(brace+1,e),['int','score'])&&all[e+1]==='Student'}const avg=func(ts,'average_score','int'),bad=avg?ifs(avg.body):[],fails=pat=>bad.some(x=>seq(x.cond,pat)&&ret(x.then,'0')),loop=avg&&fors(avg.body).some(x=>{const a=x.parts[0]||[],c=x.parts[1]||[],u=x.parts[2]||[];return(seq(a,['i','=','0'])||seq(a,['int','i','=','0'])||seq(a,['size_t','i','=','0']))&&seq(c,['i','<','count'])&&(seq(u,['++','i'])||seq(u,['i','++']))&&seq(x.body,['total','+=','students','[','i',']','.','score',';'])}),write=avg&&seq(avg.body,['*','out','=','total','/','(','double',')','count',';']),b=main?main.body:[],build=main&&seq(b,['Student','group','[',']','=','{'])&&seq(b,['double','average'])&&(seq(b,['size_t','count','=','sizeof','group','/','sizeof','group','[','0',']'])||seq(b,['int','count','=','sizeof','group','/','sizeof','group','[','0',']']))&&calls(b,'average_score').some(c=>c.args.length===3&&seq(c.args[0],['group'])&&seq(c.args[1],['count'])&&seq(c.args[2],['&','average'])),checked=main&&ifs(b).some(x=>seq(x.cond,['average_score'])&&calls(x.then,'printf').length>0),printed=main&&fmt(b,'%.1f',a=>a.some(x=>x.some(t=>t.v==='average')));if(!include('stdio.h')||!include('stddef.h')||!student||!avg||!has(['int','average_score','(','const','Student','students','[',']',',','size_t','count',',','double','*','out',')'])||!fails(['students','==','NULL'])||!fails(['out','==','NULL'])||!fails(['count','==','0'])||!loop||!write||!ret(avg.body,'1')||!build||!checked||!printed)return no('完成 Student、带参数检查的 average_score、逐项累加和浮点平均；main 检查函数结果后输出平均分。');return yes('数据结构、边界检查、逐项统计、浮点计算和成功后输出都已匹配。')}
+ default:return no('找不到本关的代码检查规则，请刷新页面后重试。')
+ }
+}
+function validateChallenge(level,source){if(!source.trim())return{ok:false,message:'请先按本关要求写代码，再检查。'};const p=tokenizeChallengeC(source);if(p.error)return{ok:false,message:'代码还不能检查：'+p.error};const ts=p.tokens,stack=[],pairs={'(':')','{':'}','[':']'};for(const t of ts){const v=t.v;if(pairs[v])stack.push({v,at:t.at});else if(v===')'||v==='}'||v===']'){const prev=stack.pop();if(!prev||pairs[prev.v]!==v)return{ok:false,message:'检查未通过：括号或花括号没有按顺序配对。'}}}if(stack.length)return{ok:false,message:'检查未通过：还有未闭合的括号或花括号。'};const st=parseProgram(ts,source);if(!st.ok)return{ok:false,message:'结构检查未通过：'+st.error+'。请用语法完整、可以编译的 C 代码完成本关。'};return challengeResult(ts,source,level.id)}
+function checkCode(){const ta=document.getElementById("codeAnswer");window.codeDraft=ta.value;const result=validateChallenge(activeLevel,ta.value);codePassed=result.ok;window.codeFeedback=result.message;if(codePassed){if(!isDone(activeLevel)){maybeComplete()}else{render()}}else{render()}}
+
 function playVictoryAnimation(level){
  const existing=document.querySelector(".victory-overlay");if(existing)existing.remove();
  const pieces=[[-145,-112,-35,0,"#6f91ee"],[-116,-150,48,35,"#ffd36b"],[-82,-128,125,70,"#59c99c"],[-42,-166,-20,15,"#a888f3"],[-4,-142,76,85,"#83b9ff"],[38,-161,-58,45,"#ffd36b"],[79,-129,38,110,"#59c99c"],[121,-151,148,25,"#7794f0"],[150,-94,-76,70,"#b58af4"],[-157,34,52,100,"#59c99c"],[-113,87,-42,40,"#ffd36b"],[-73,121,98,130,"#7794f0"],[-28,148,-95,55,"#80b9ff"],[26,132,44,120,"#59c99c"],[72,104,-30,20,"#ffd36b"],[118,70,115,95,"#a888f3"],[157,22,-55,60,"#83b9ff"]];
@@ -889,6 +1749,8 @@ function handleClick(e){
  if(a==="continue"){if(activeLevel&&isDone(activeLevel)){const next=levels.find(function(l){return l.id===activeLevel.id+1});if(next){openLevel(next.id);return}page="summary";activeLevel=null;render();return}const n=nextLevel();openLevel(n.id)}
  if(a==="back"){activeLevel=null;page="map";render()}
  if(a==="hint"){hintVisible=!hintVisible;render()}
+ if(a==="toggle-solution"){if(!activeLevel)return;if(!isDone(activeLevel)&&!answerUnlocked){openAnswerDialog();return}solutionVisible=!solutionVisible;render();return}
+ if(a==="copy-solution"){if(!activeLevel)return;if(!isDone(activeLevel)&&!answerUnlocked){openAnswerDialog();return}copyText(formatSample(solutions[activeLevel.id]||""));return}
  if(a==="check-code")checkCode()
  if(a==="insert-template"){const ta=document.getElementById("codeAnswer");if(!ta)return;if(ta.value.trim()){toast("编辑器已有内容，模板不会覆盖。");ta.focus();return}const template="#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}";ta.value=template;ta.dispatchEvent(new Event("input",{bubbles:true}));ta.focus();const caret=template.indexOf("    \n")+4;ta.setSelectionRange(caret,caret);updateEditor();return}
  if(a==="reset-progress"){openResetDialog();return}
@@ -964,4 +1826,3 @@ render();
 </script>
 </body>
 </html>
-
