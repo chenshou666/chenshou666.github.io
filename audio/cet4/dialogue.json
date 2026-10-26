@@ -1,0 +1,13 @@
+[
+  {
+    "file": "201-1.mp3",
+    "note": "四级短对话：女声(en-US-AriaNeural) / 男声(en-US-GuyNeural) 交替，轮次之间 0.35 秒静音，ffmpeg 重编码拼接",
+    "parts": [
+      { "voice": "en-US-AriaNeural", "text": "Excuse me, is this seat taken?" },
+      { "voice": "en-US-GuyNeural", "text": "No, go ahead. Are you here for Professor Lee's lecture too?" },
+      { "voice": "en-US-AriaNeural", "text": "Yes. The poster says nine o'clock, but the notice on the door says half past nine." },
+      { "voice": "en-US-GuyNeural", "text": "Right — they changed the room, so the lecture was pushed back by thirty minutes." },
+      { "voice": "en-US-AriaNeural", "text": "Good thing I checked. Otherwise I would have waited outside for half an hour." }
+    ]
+  }
+]

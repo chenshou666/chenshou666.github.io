@@ -1,0 +1,129 @@
+[
+  {
+    "file": "202-1.mp3",
+    "note": "短对话：数字与时间（价格）——女声 Aria / 男声 Guy 交替，轮次间 0.35 秒静音",
+    "parts": [
+      { "voice": "en-US-AriaNeural", "text": "Hi, I'd like two tickets for Saturday evening, please." },
+      { "voice": "en-US-GuyNeural", "text": "Sure. They're twelve dollars each, but students pay half price." },
+      { "voice": "en-US-AriaNeural", "text": "Perfect — I have my student card. And I'll take a large popcorn, too." },
+      { "voice": "en-US-GuyNeural", "text": "That's four dollars, but today it's on the house, so you only pay for the tickets." },
+      { "voice": "en-US-AriaNeural", "text": "Then here's twenty dollars." },
+      { "voice": "en-US-GuyNeural", "text": "Thank you. And here's your change: eight dollars." }
+    ]
+  },
+  {
+    "file": "202-2.mp3",
+    "note": "短对话：数字与时间（时刻）",
+    "parts": [
+      { "voice": "en-US-AriaNeural", "text": "Excuse me, what time is the next train to the airport?" },
+      { "voice": "en-US-GuyNeural", "text": "The nine fifteen has just left. The next one is at nine forty." },
+      { "voice": "en-US-AriaNeural", "text": "How long does it take?" },
+      { "voice": "en-US-GuyNeural", "text": "The nine forty is a slow train — it takes about fifty minutes. The ten five express takes half an hour." },
+      { "voice": "en-US-AriaNeural", "text": "My flight is at eleven, so the express would get me there at ten thirty-five. I'll take that one." },
+      { "voice": "en-US-GuyNeural", "text": "Good choice. Platform six." }
+    ]
+  },
+  {
+    "file": "203-1.mp3",
+    "note": "短对话：地点与场景词（校园）",
+    "parts": [
+      { "voice": "en-US-AriaNeural", "text": "Hi Tom, have you finished the reading for tomorrow's seminar?" },
+      { "voice": "en-US-GuyNeural", "text": "Not yet. I was going to work in my dorm, but my roommate had friends over, so I moved to the reading room on the second floor." },
+      { "voice": "en-US-AriaNeural", "text": "Isn't that closed on Wednesday afternoons?" },
+      { "voice": "en-US-GuyNeural", "text": "It is, so I ended up in the café next to the department office. It's not ideal, but at least it's quiet in the morning." },
+      { "voice": "en-US-AriaNeural", "text": "Well, at least you found somewhere in the end." }
+    ]
+  },
+  {
+    "file": "203-2.mp3",
+    "note": "短对话：地点与场景词（机场 / 药房）",
+    "parts": [
+      { "voice": "en-US-AriaNeural", "text": "Good morning. I'd like to check in for the flight to Seattle." },
+      { "voice": "en-US-GuyNeural", "text": "Certainly. May I see your passport and your booking number, please? Thank you. Your flight has been delayed by an hour, so boarding will start at four fifteen at gate twelve." },
+      { "voice": "en-US-AriaNeural", "text": "An hour — that gives me time for a coffee. Is there a pharmacy near the gate? I need some medicine for my cold." },
+      { "voice": "en-US-GuyNeural", "text": "Yes, there's one right beside the newsagent's, on the same level as the gate." },
+      { "voice": "en-US-AriaNeural", "text": "Good. I'll go there first, then." }
+    ]
+  },
+  {
+    "file": "204-1.mp3",
+    "note": "短对话：建议（Why not / You'd better / How about）",
+    "parts": [
+      { "voice": "en-US-AriaNeural", "text": "I can't get my laptop to connect to the library Wi-Fi." },
+      { "voice": "en-US-GuyNeural", "text": "Why not ask the staff at the front desk? They usually have a sheet with the new password." },
+      { "voice": "en-US-AriaNeural", "text": "I tried that. They said the whole system is down until Monday." },
+      { "voice": "en-US-GuyNeural", "text": "Then you'd better use the computers in the reading room. Or how about borrowing my hotspot for tonight?" },
+      { "voice": "en-US-AriaNeural", "text": "That would save me. Thanks a lot." }
+    ]
+  },
+  {
+    "file": "204-2.mp3",
+    "note": "短对话：请求（Would you mind / Could you）",
+    "parts": [
+      { "voice": "en-US-GuyNeural", "text": "Professor Hart, would you mind if I handed in my essay on Friday instead of tomorrow?" },
+      { "voice": "en-US-AriaNeural", "text": "I'm afraid that's too late — the marks have to reach the department on Thursday. But you can email it to me by Wednesday evening." },
+      { "voice": "en-US-GuyNeural", "text": "That works, thank you. Could you also recommend another book? The one on the reading list is out on loan." },
+      { "voice": "en-US-AriaNeural", "text": "Of course. Come to my office at two tomorrow and I'll lend you my copy." }
+    ]
+  },
+  {
+    "file": "205-1.mp3",
+    "note": "长对话（一）：校园场景 —— 学生与课程办公室老师，选课与图书馆记录",
+    "parts": [
+      { "voice": "en-US-AriaNeural", "text": "Excuse me, is this the right office for course changes? I'm a first-year student and I'd like to drop my statistics course." },
+      { "voice": "en-US-GuyNeural", "text": "You've come to the right place. Can I ask why?" },
+      { "voice": "en-US-AriaNeural", "text": "It's timetabled at eight on Monday morning, and my dorm is a twenty-minute walk from the science building. I keep missing the first ten minutes." },
+      { "voice": "en-US-GuyNeural", "text": "I see. Well, the rule is that you can change courses during the first two weeks of term only." },
+      { "voice": "en-US-AriaNeural", "text": "It's the second week now, so I'm just in time." },
+      { "voice": "en-US-GuyNeural", "text": "Right. There's another statistics class on Thursday afternoon. Shall I move you there instead of dropping the course?" },
+      { "voice": "en-US-AriaNeural", "text": "That would be much better. Do I need to fill in a form?" },
+      { "voice": "en-US-GuyNeural", "text": "Yes, one form — and you'll need your tutor's signature as well. Her office is on the second floor of this building, room two fourteen." },
+      { "voice": "en-US-AriaNeural", "text": "OK. And if I move to the Thursday class, will I need a different textbook?" },
+      { "voice": "en-US-GuyNeural", "text": "No, it's the same textbook. But you also have to clear your library record, because the library won't let you register for a new class if you have overdue books." },
+      { "voice": "en-US-AriaNeural", "text": "They're not overdue — I renewed them online last night." },
+      { "voice": "en-US-GuyNeural", "text": "Good. Then bring the form and your student card to this office before Friday." }
+    ]
+  },
+  {
+    "file": "206-1.mp3",
+    "note": "长对话（二）：职场与面试 —— 面试官与应聘实习生",
+    "parts": [
+      { "voice": "en-US-GuyNeural", "text": "Good morning, Ms. Chen. Thanks for coming in. I see you're in your second year of business studies." },
+      { "voice": "en-US-AriaNeural", "text": "That's right. I'm looking for a summer internship in marketing." },
+      { "voice": "en-US-GuyNeural", "text": "Have you done any work of this kind before?" },
+      { "voice": "en-US-AriaNeural", "text": "Yes — last summer I helped a small bakery with its social media. I planned the posts and answered customers' messages, and their sales went up by about a third in two months." },
+      { "voice": "en-US-GuyNeural", "text": "That's useful experience. Can I ask why you applied to us rather than to a bigger company?" },
+      { "voice": "en-US-AriaNeural", "text": "Two reasons. Your team is small, so I'd get to work on real campaigns, and I read that you let interns work from home two days a week, which fits my class timetable." },
+      { "voice": "en-US-GuyNeural", "text": "That's true. The internship runs for ten weeks, starting on the first of July. It's paid — twelve dollars an hour — and you'd sit with the social media team." },
+      { "voice": "en-US-AriaNeural", "text": "And when will I hear whether I've got the place?" },
+      { "voice": "en-US-GuyNeural", "text": "We'll email everyone by the end of next week. One more thing: are you free to start on the first of July?" },
+      { "voice": "en-US-AriaNeural", "text": "My last exam is on the twenty-eighth of June, so yes, that's fine." }
+    ]
+  },
+  {
+    "file": "207-1.mp3",
+    "note": "长对话（三）：态度与观点 —— 两名学生对旧食堂改造计划的态度",
+    "parts": [
+      { "voice": "en-US-GuyNeural", "text": "Did you see the email about the old canteen?" },
+      { "voice": "en-US-AriaNeural", "text": "You mean the plan to turn it into a twenty-four-hour study room? I'm not sure that's a good idea." },
+      { "voice": "en-US-GuyNeural", "text": "Really? I think it's great. The library closes at ten, and in December I never get a seat." },
+      { "voice": "en-US-AriaNeural", "text": "I agree that we need more study space. My worry is the noise. If it's open all night, people will talk and eat there, and the building is right under the dormitories." },
+      { "voice": "en-US-GuyNeural", "text": "That's a fair point. But they could put the quiet zone on the ground floor." },
+      { "voice": "en-US-AriaNeural", "text": "Maybe. Still, I'd rather they opened a small café until midnight — most of us just want somewhere to sit with a coffee." },
+      { "voice": "en-US-GuyNeural", "text": "So you're not against the plan completely?" },
+      { "voice": "en-US-AriaNeural", "text": "Not completely. I just don't think twenty-four hours is necessary. Ten until midnight would be enough." }
+    ]
+  },
+  {
+    "file": "212-1.mp3",
+    "note": "短对话：同义替换与干扰项套路（购票）",
+    "parts": [
+      { "voice": "en-US-AriaNeural", "text": "Did you manage to get a ticket for Friday's concert?" },
+      { "voice": "en-US-GuyNeural", "text": "No such luck. They sold out in twenty minutes. Still, I'm not too upset — I have a lot of reading to do anyway." },
+      { "voice": "en-US-AriaNeural", "text": "Well, they've added a second show on Sunday afternoon. The seats aren't as good, but they're half the price." },
+      { "voice": "en-US-GuyNeural", "text": "Half price? Then I'll take two. My sister has been asking me to go with her for weeks." },
+      { "voice": "en-US-AriaNeural", "text": "You'd better hurry, though. The box office closes at six, and it's already quarter past five." },
+      { "voice": "en-US-GuyNeural", "text": "Right. I'll book online on my way home." }
+    ]
+  }
+]

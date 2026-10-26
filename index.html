@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#111a31">
-<title>Code Sword — C Language Quest</title>
+<title>HT Lab</title>
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <style>
 :root{--ink:#17243b;--muted:#77849a;--line:#e8edf4;--paper:#fff;--wash:#f5f7fb;--blue:#4e6cf5;--blue-dark:#354fe0;--mint:#dff8ef;--green:#168761;--amber:#f2a93b;--rose:#faedf0;--shadow:0 12px 38px rgba(35,54,91,.07);--radius:20px}
@@ -36,7 +36,7 @@ button{cursor:pointer}
 .top-right{display:flex;align-items:center;gap:13px}.reset-button{white-space:nowrap;padding:7px 10px;font-size:11px}
 .streak{border:1px solid var(--line);padding:7px 11px;border-radius:999px;background:#fff;font-size:12px;color:#6f7c90}
 .avatar{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:#111a31;color:#f2bf58;box-shadow:0 5px 14px #17243b24}
-.avatar svg{width:23px;height:23px;display:block}
+.avatar svg{width:100%;height:100%;display:block}
 .content{max-width:1180px;margin:auto;padding:35px clamp(20px,4vw,54px) 65px}
 .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#7888d8;font-weight:800}
 h1,h2,h3,p{margin-top:0}
@@ -129,7 +129,7 @@ h3{font-size:16px;margin-bottom:6px}
 .lesson-badge{width:45px;height:45px;border-radius:14px;background:#edf0ff;display:grid;place-items:center;color:#5369e6;font-size:18px;font-weight:800}
 .lesson-title-row h2{margin:0 0 3px}
 .meta-line{font-size:11px;color:#909cad}
-.lesson-copy{color:#526177;font-size:14px;line-height:1.85}
+.lesson-copy{color:#526177;font-size:14px;line-height:1.85;white-space:pre-line}
 .lesson-copy p:last-child{margin-bottom:0}
 .codebox{border-radius:13px;background:#172238;color:#e7edf9;overflow:hidden}
 .codebar{height:34px;border-bottom:1px solid #ffffff16;display:flex;align-items:center;justify-content:space-between;padding:0 13px;color:#aeb9cb;font-size:10px}
@@ -176,7 +176,7 @@ pre{margin:0;padding:16px;overflow:auto;color:#dce6fb;font:12px/1.75 "SFMono-Reg
 @media(max-width:980px){.app{grid-template-columns:215px minmax(0,1fr)}.hero{grid-template-columns:1fr}.hero-progress{min-height:170px}.level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.reset-button{padding:5px 7px;font-size:9px}.top-right{gap:6px}.app{display:block}.sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;height:67px;padding:7px 9px;border-right:0;border-top:1px solid var(--line);display:block}.brand,.nav-label,.side-bottom{display:none}.nav{height:100%;display:flex;justify-content:space-around;gap:3px}.nav-btn{flex:1;justify-content:center;flex-direction:column;gap:1px;padding:4px 2px;font-size:9px}.nav-icon{font-size:16px}.topbar{height:60px;padding:0 12px}.top-title{max-width:72px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.streak{font-size:0;padding:7px 9px}.streak span{font-size:12px}.content{padding:24px 16px 92px}.hero-main{padding:25px 22px;min-height:270px}.hero-progress{padding:20px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:12px}.level-grid{grid-template-columns:1fr}.lesson-layout,.summary-grid{grid-template-columns:1fr}.page-header{align-items:flex-start;flex-direction:column}.panel{padding:18px}.hero-main h1{font-size:29px}.top-title{font-size:12px}}
 
-/* Code Sword · frosted glass polish */
+/* HT Lab · frosted glass polish */
 :root{--ink:#18243d;--muted:#73819b;--line:rgba(255,255,255,.72);--paper:rgba(255,255,255,.68);--wash:#edf2fb;--blue:#526df5;--blue-dark:#3d57df;--shadow:0 18px 48px rgba(41,62,112,.11),0 2px 8px rgba(41,62,112,.04);--radius:22px}
 html{scroll-behavior:smooth}
 body{background:radial-gradient(ellipse at 12% 4%,rgba(170,197,255,.34),transparent 34%),radial-gradient(ellipse at 88% 18%,rgba(207,190,255,.28),transparent 30%),linear-gradient(145deg,#f6f8fd 0%,#edf2fb 55%,#f7f8fd 100%);background-attachment:fixed}
@@ -604,7 +604,7 @@ body[data-theme="dark"] .splash-skip{background:rgba(255,255,255,.08);border-col
 .splash-orbit::after{content:"";position:absolute;top:13px;left:18px;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 14px 3px rgba(78,125,213,.66)}
 .splash-mark{position:relative;width:92px;height:92px;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.92);border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(213,231,255,.57));box-shadow:0 18px 42px rgba(62,98,165,.2),inset 0 1px rgba(255,255,255,.98),inset 0 -8px 18px rgba(113,158,226,.13);backdrop-filter:blur(14px) saturate(145%)}
 .splash-mark::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,transparent 20%,rgba(255,255,255,.66) 45%,rgba(255,255,255,.1) 57%,transparent 72%);transform:translateX(-130%);animation:splash-glass-sweep 1.8s .72s ease-in-out 1 forwards}
-.splash-code{position:relative;z-index:1;font:850 40px/1 "Segoe UI",Inter,Arial,sans-serif;letter-spacing:-3px;background:linear-gradient(180deg,#fff 0%,#eef6ff 43%,#79a5e7 100%);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-stroke:.7px rgba(255,255,255,.82);filter:drop-shadow(0 2px 2px rgba(53,87,143,.22))}
+.splash-code{position:relative;z-index:1;font:850 40px/1 "Segoe UI",Inter,Arial,sans-serif;letter-spacing:-1.5px;background:linear-gradient(180deg,#111a31 0%,#22325c 45%,#2f4bd8 100%);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-stroke:.7px rgba(255,255,255,.82);filter:drop-shadow(0 2px 2px rgba(53,87,143,.22))}
 .app.interface-reveal .drop-in{will-change:translate,opacity;animation:interface-card-drop .74s cubic-bezier(.2,.72,.22,1) var(--drop-delay,0ms) both}
 @keyframes splash-grid-in{to{opacity:.72}}
 @keyframes splash-orbit-appear{to{opacity:1}}
@@ -635,833 +635,146 @@ body[data-theme="dark"] .victory-kicker{color:#aec4eb}body[data-theme="dark"] .v
 @keyframes victory-medal-pulse{0%{box-shadow:0 0 0 0 rgba(75,190,147,.3),0 9px 24px rgba(55,169,129,.22),inset 0 1px #fff}100%{box-shadow:0 0 0 14px rgba(75,190,147,0),0 12px 29px rgba(55,169,129,.29),inset 0 1px #fff}}
 @keyframes victory-confetti-burst{0%{opacity:0;transform:translate(0,0) rotate(0) scale(.3)}12%{opacity:1}100%{opacity:0;transform:translate(var(--piece-x),var(--piece-y)) rotate(var(--piece-rotation)) scale(.65)}}
 @media(prefers-reduced-motion:reduce){.victory-confetti i,.victory-medal{animation:none}.victory-card{animation:none}}
+/* ==== 英语四级课程：课程卡与任务组件 ==== */
+.course-entry.is-active{border-color:rgba(105,126,239,.7);box-shadow:0 0 0 2px rgba(105,126,239,.25),0 17px 34px rgba(49,67,131,.13)}
+.course-chooser{margin:0 0 22px;padding:22px;background:linear-gradient(140deg,rgba(255,255,255,.86),rgba(233,240,255,.6))}
+body[data-theme="dark"] .course-chooser{background:linear-gradient(140deg,rgba(38,52,80,.95),rgba(28,40,64,.92))}
+.course-tag.current{background:rgba(90,116,235,.16);color:#5067dc}
+.course-tag{display:inline-block;margin-left:6px;font-size:9px;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(148,163,184,.22);color:#7b89a4;vertical-align:middle}
+.audio-row{border:1px solid rgba(143,160,240,.27);border-radius:14px;padding:11px 13px;margin:11px 0;background:rgba(255,255,255,.62);box-shadow:inset 0 1px rgba(255,255,255,.7)}
+body[data-theme="dark"] .audio-row{background:rgba(45,59,88,.62);border-color:rgba(145,164,255,.2);box-shadow:inset 0 1px rgba(255,255,255,.06)}
+.audio-head{display:flex;align-items:center;gap:8px;margin-bottom:9px;flex-wrap:wrap}
+.audio-label{font-weight:800;font-size:13px}
+.audio-hint{font-size:11px;color:var(--muted)}
+.chip-mini{font-size:9px;padding:2px 7px}
+.audio-row audio{width:100%;height:36px}
+.transcript{margin-top:9px;padding:11px 13px;border-radius:11px;background:rgba(120,140,220,.1);font-size:12.5px;line-height:1.75;white-space:pre-wrap}
+.passage{margin:8px 0 4px;padding:15px 17px;border-radius:14px;background:rgba(120,140,220,.08);font-size:13.5px;line-height:1.9;white-space:pre-wrap}
+body[data-theme="dark"] .passage{background:rgba(70,90,140,.22)}
+.quiz-item{border-top:1px dashed rgba(140,155,200,.35);padding-top:14px;margin-top:14px}
+.quiz-item:first-child{border-top:0;padding-top:0;margin-top:0}
+.task-input{width:100%;min-height:190px;margin-top:11px;padding:13px 14px;border-radius:14px;border:1px solid rgba(143,160,240,.35);background:rgba(255,255,255,.86);color:inherit;font:14px/1.75 inherit;resize:vertical}
+body[data-theme="dark"] .task-input{background:rgba(38,50,76,.85);border-color:rgba(145,164,255,.22)}
+.task-input:focus{outline:3px solid rgba(89,112,235,.28);outline-offset:2px}
+.wordcount{margin-top:8px;font-size:12px;color:var(--muted)}
+.point-list{display:grid;gap:6px;margin-top:11px}
+.point-item{display:flex;gap:8px;align-items:flex-start;font-size:12.5px}
+.point-ok{color:#12a06a;font-weight:900}
+.point-no{color:#d16666;font-weight:900}
+.recorder-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.recorder-row audio{flex:1 1 240px;height:36px}
+.rec-dot{width:10px;height:10px;border-radius:50%;background:#e35d5d;animation:recPulse 1s infinite}
+@keyframes recPulse{50%{opacity:.2}}
+.self-check{width:100%;text-align:left;border:1px solid rgba(143,160,240,.28);border-radius:12px;background:rgba(255,255,255,.55);padding:10px 12px;margin:6px 0;cursor:pointer;font:inherit;color:inherit}
+.self-check.on{border-color:rgba(35,160,110,.6);background:rgba(35,160,110,.1)}
+body[data-theme="dark"] .self-check{background:rgba(45,59,88,.6);border-color:rgba(145,164,255,.2)}
+.option[disabled]{cursor:default;opacity:.92}
+/* ==== 学习课程：课程卡片 ==== */
+.course-cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));margin:0 0 18px}
+.course-card{display:grid;grid-template-columns:56px minmax(0,1fr) auto;align-items:center;gap:14px;padding:20px;border-radius:20px;border:1px solid rgba(143,160,240,.3);background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(233,240,255,.8));box-shadow:0 14px 34px rgba(49,67,131,.1),inset 0 1px #fff;cursor:pointer;text-align:left;font:inherit;color:inherit;transition:transform .22s,box-shadow .22s,border-color .22s}
+.course-card:hover{transform:translateY(-3px);border-color:rgba(105,126,239,.6);box-shadow:0 20px 40px rgba(49,67,131,.16)}
+.course-card.is-soon{opacity:.62;cursor:not-allowed}
+.course-card-icon{display:grid;place-items:center;width:56px;height:56px;border-radius:18px;background:linear-gradient(145deg,#647df8,#435bdc);color:#fff;font-size:26px;font-weight:900;box-shadow:0 8px 18px rgba(68,91,221,.28),inset 0 1px rgba(255,255,255,.4)}
+.course-card-body{display:grid;gap:5px;min-width:0}
+.course-card-body strong{font-size:17px}
+.course-card-body small{font-size:12px;color:var(--muted);line-height:1.6}
+.course-card-meta{font-size:11px;color:#7b89a4;font-weight:700}
+.course-card-bar{display:block;height:4px;border-radius:999px;background:rgba(100,119,223,.14);overflow:hidden;margin-top:4px}
+.course-card-bar i{display:block;height:100%;background:linear-gradient(90deg,#57c5a0,#7284f5);border-radius:999px}
+.course-card-go{color:#566fe5;font-weight:800;font-size:13px;white-space:nowrap}
+body[data-theme="dark"] .course-card{background:linear-gradient(135deg,rgba(45,59,88,.96),rgba(33,48,76,.92));border-color:rgba(145,164,255,.2);box-shadow:0 14px 34px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.07)}
+body[data-theme="dark"] .course-card-body small{color:#a6b3cb}
+body[data-theme="dark"] .course-card-meta{color:#93a2bd}
 </style>
 </head>
 <body class="splash-active">
-<div class="splash-screen" id="splash-screen" role="status" aria-label="Code Sword 正在启动">
+<div class="splash-screen" id="splash-screen" role="status" aria-label="HT Lab 正在启动">
   <button class="splash-skip" id="splash-skip" type="button">跳过动画 <span aria-hidden="true">↗</span></button>
   <div class="splash-content">
-    <div class="splash-logo-stage" aria-hidden="true"><div class="splash-orbit"></div><div class="splash-mark"><span class="splash-code">code</span></div></div>
+    <div class="splash-logo-stage" aria-hidden="true"><div class="splash-orbit"></div><div class="splash-mark"><span class="splash-code">HT</span></div></div>
   </div>
 </div>
 <div class="app">
   <aside class="sidebar">
-    <div class="brand"><div class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="code-glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".48" stop-color="#f0f7ff"/><stop offset="1" stop-color="#78a6e8"/></linearGradient><filter id="code-shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="1.2" flood-color="#4169a7" flood-opacity=".35"/></filter></defs><text x="32" y="42" text-anchor="middle" textLength="56" lengthAdjust="spacingAndGlyphs" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="27" font-weight="800" letter-spacing="-1.2" fill="url(#code-glass)" stroke="#fff" stroke-width="1.5" stroke-opacity=".9" paint-order="stroke" filter="url(#code-shadow)">code</text><path d="M7 17c8-6 15-8 24-8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".65"/></svg></div><div><div class="brand-name">Code Sword</div><div class="brand-sub">C LANGUAGE QUEST</div></div></div>
+    <div class="brand"><div class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="ht-ink" gradientUnits="userSpaceOnUse" x1="30.3129" y1="21.5" x2="30.3129" y2="42.5"><stop offset="0" stop-color="#111a31"/><stop offset="1" stop-color="#2f4bd8"/></linearGradient><filter id="ht-shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="1.2" flood-color="#4169a7" flood-opacity=".35"/></filter></defs><text x="30.3129" y="42.5" text-anchor="middle" textLength="42" lengthAdjust="spacingAndGlyphs" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="800" letter-spacing="-1.6" fill="url(#ht-ink)" stroke="#fff" stroke-width="1.2" stroke-opacity=".85" paint-order="stroke" filter="url(#ht-shadow)">HT</text><path d="M7 17c8-6 15-8 24-8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".65"/></svg></div><div><div class="brand-name">HT Lab</div></div></div>
     <div class="nav-label">学习空间</div>
     <nav class="nav">
-      <button class="nav-btn active" data-page="map"><span class="nav-icon">⌂</span><span>学习地图</span></button>
+      <button class="nav-btn active" data-page="courses"><span class="nav-icon">⌂</span><span>学习课程</span></button>
       <button class="nav-btn" data-page="practice"><span class="nav-icon">⌘</span><span>继续挑战</span></button>
       <button class="nav-btn" data-page="summary"><span class="nav-icon">✦</span><span>我的总结</span></button>
+      <button class="nav-btn" data-page="about"><span class="nav-icon">ⓘ</span><span>关于与免责</span></button>
     </nav>
     <div class="side-bottom">
       <div class="side-card"><strong>每天前进一步</strong><p>稳稳通关，比一次学很多更重要。</p><button class="btn btn-soft btn-small" data-action="continue">继续学习&nbsp; →</button></div>
-      <div class="side-mini">学习进度自动保存在此设备</div>
+      <div class="side-mini">学习进度只保存在此设备<br><button type="button" data-page="about" style="border:0;background:none;color:#8fa0c4;font-size:11px;text-decoration:underline;padding:0;margin-top:4px;cursor:pointer;font-family:inherit">免责声明 · 内容说明</button></div>
     </div>
   </aside>
   <section class="main">
-    <header class="topbar"><div class="top-title" id="topTitle">CODE SWORD&nbsp; / &nbsp;学习路线</div><div class="top-right"><button class="btn btn-ghost theme-button" id="themeButton" data-action="cycle-theme" aria-label="切换外观" title="切换外观">◐</button><button class="btn btn-ghost btn-small reset-button" data-action="reset-progress" title="输入密码后清除本设备学习进度">重头开始</button><div class="streak">✦ <span id="xpTop">0</span> 学习点</div><div class="avatar"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="m29 8 10 2-15 20-6-6L29 8Z" fill="#ffd36b"/><path d="m18 25 6 6-10 10-5-2 2-5 7-9Z" fill="#fff0bd"/><path d="m17 29 6 6" fill="none" stroke="#ffd36b" stroke-width="3" stroke-linecap="round"/></svg></div></div></header>
+    <header class="topbar"><div class="top-title" id="topTitle">HT LAB&nbsp; / &nbsp;学习路线</div><div class="top-right"><button class="btn btn-ghost theme-button" id="themeButton" data-action="cycle-theme" aria-label="切换外观" title="切换外观">◐</button><button class="btn btn-ghost btn-small reset-button" data-action="reset-progress" title="输入密码后清除本设备学习进度">重头开始</button><div class="streak">✦ <span id="xpTop">0</span> 学习点</div><div class="avatar"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="avatar-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".52" stop-color="#dbe8ff"/><stop offset="1" stop-color="#a9c7ff"/></linearGradient><linearGradient id="avatar-ink" gradientUnits="userSpaceOnUse" x1="30.3129" y1="21.5" x2="30.3129" y2="42.5"><stop offset="0" stop-color="#111a31"/><stop offset="1" stop-color="#2f4bd8"/></linearGradient></defs><rect width="64" height="64" rx="19" fill="url(#avatar-bg)"/><rect x="0.6" y="0.6" width="62.8" height="62.8" rx="18.4" fill="none" stroke="#ffffff" stroke-opacity=".75" stroke-width="1.2"/><text x="30.3129" y="42.5" text-anchor="middle" textLength="42" lengthAdjust="spacingAndGlyphs" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="800" letter-spacing="-1.6" fill="url(#avatar-ink)">HT</text></svg></div></div></header>
     <main class="content" id="view"></main>
   </section>
 </div>
 <div class="toast" id="toast"></div>
 <div class="modal-backdrop" id="resetModal" hidden><section class="reset-dialog" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><div id="resetModalContent"></div></section></div>
+<script src="./c/c0-getting-started.js"></script>
+<script src="./c/c1-control-flow.js"></script>
+<script src="./c/c2-functions.js"></script>
+<script src="./c/c3-arrays-strings.js"></script>
+<script src="./c/c4-pointers-memory.js"></script>
+<script src="./c/c5-types-ds.js"></script>
+<script src="./c/c6-file-io.js"></script>
+<script src="./c/c7-engineering.js"></script>
+<script src="./c/c8-algorithms.js"></script>
+<script src="./c/c9-systems.js"></script>
+<script src="./c/c10-projects.js"></script>
+<script src="./cet4/m0-foundation.js"></script>
+<script src="./cet4/m1-listening.js"></script>
+<script src="./cet4/m3-reading.js"></script>
+<script src="./cet4/m4-writing.js"></script>
+<script src="./cet4/m5-translation.js"></script>
+<script src="./cet4/m2-speaking.js"></script>
+<script src="./cet4/m6-mock.js"></script>
 <script>
-const levels = [
-  {
-    "id": 1,
-    "stage": "起步上手",
-    "title": "认识 C 程序",
-    "minutes": 8,
-    "gist": "看懂程序入口，输出第一行文字。",
-    "lesson": "把 C 程序想成一份从入口开始执行的食谱：托管环境先准备运行环境，再调用 main；main 里的语句才是这次要做的事。stdio.h 提供 printf，花括号圈出一段代码，分号表示一条语句结束。",
-    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    printf(\"Hello, C!\\\\n\");\\n    return 0;\\n}",
-    "takeaways": [
-      "main 是程序入口",
-      "printf 输出格式化文本",
-      "return 0 表示程序正常结束"
-    ],
-    "quiz": "在常见的桌面或命令行 C 程序中，运行库准备好后会调用哪个函数开始执行你的程序？",
-    "options": [
-      "从文件第一行开始",
-      "从 main 函数开始",
-      "从最后一个函数开始"
-    ],
-    "answer": 1,
-    "explain": "正确答案是 main：它是这类程序约定的入口。文件里的函数定义并不会因为写在前面就自动运行；printf 负责显示文字，return 0 表示 main 正常结束。",
-    "mission": "写出一个完整的最小程序：包含 stdio.h，定义 int main(void)，在 main 的花括号里用 printf 输出 Hello, C!，最后从 main 返回 0。语句要有分号。",
-    "hint": "按顺序写：#include <stdio.h>；int main(void) {；printf(\"Hello, C!\\n\");；return 0;；最后补上 }。"
-  },
-  {
-    "id": 2,
-    "stage": "起步上手",
-    "title": "变量与基本类型",
-    "minutes": 10,
-    "gist": "让数据有名字，理解整数、浮点数和字符。",
-    "lesson": "变量像贴了标签的小盒子：int 盒子放整数，double 盒子放小数，char 盒子放单个字符。声明时写类型和名字，例如 int count = 3;。printf 的格式说明符要和数据类型对上，%d 对应 int；浮点数输出常用 %f。",
-    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    int count = 3;\\n    double score = 95.5;\\n    printf(\"%d %.1f\\\\n\", count, score);\\n    return 0;\\n}",
-    "takeaways": [
-      "先声明类型再使用变量",
-      "%d 常用于 int，%f 常用于浮点输出",
-      "变量名表达数据含义"
-    ],
-    "quiz": "有一个 int 变量 age = 18，要用 printf 按十进制整数输出它，格式字符串里应写什么？",
-    "options": [
-      "%d",
-      "%s",
-      "%p"
-    ],
-    "answer": 0,
-    "explain": "应写 %d，因为 age 的类型是 int。%s 需要字符字符串，%p 用来显示指针地址；格式符与实参类型不匹配会产生错误结果，甚至未定义行为。",
-    "mission": "写一个完整的小程序：声明并初始化 int count，再用 printf 的 %d 格式说明符输出 count。格式字符串后面的实参必须真的是变量 count，不能只把 count 写在注释或字符串里。",
-    "hint": "例如：int count = 3; 然后写 printf(\"%d\\n\", count);。确认 %d 在引号里，count 在逗号后。"
-  },
-  {
-    "id": 3,
-    "stage": "起步上手",
-    "title": "常量、转换与枚举",
-    "minutes": 10,
-    "gist": "表达固定值，安全地转换类型，并为选项命名。",
-    "lesson": "这一关把固定值、命名选项和类型转换连起来。const 像给盒子贴上“程序不要通过这个名字改它”的标签；enum 像给交通灯状态命名；显式转换则告诉 C 把某个值按另一种类型参与计算。比如 5 / 2 是整数除法，先把 5 转为 double 再除，才会得到 2.5。",
-    "sample": "#include <stdio.h>\\n\\nenum Level { EASY, HARD };\\n\\nint main(void) {\\n    const int total = 5;\\n    double average = (double)total / 2;\\n    int value = 5;\\n    double converted = (double)value;\\n    enum Level state = EASY;\\n    printf(\"%.1f %f\\\\n\", average, converted);\\n    return 0;\\n}",
-    "takeaways": [
-      "const 表达只读意图",
-      "显式转换写在表达式中",
-      "枚举让状态名字清楚易懂"
-    ],
-    "quiz": "int a = 5, b = 2; 若写 double result = (double)a / b;，result 是多少？",
-    "options": [
-      "2.5",
-      "2",
-      "编译错误"
-    ],
-    "answer": 0,
-    "explain": "结果是 2.5，因为转换发生在除法之前，表达式变成浮点数除法。若写 a / b，两个操作数都是 int，结果先被算成 2，再存进 double 也只能得到 2.0。",
-    "mission": "写一个完整程序：定义 enum Level，包含 EASY 和 HARD；在 main 声明 int value，转换成 double，并用 printf 的 %f 输出 converted。只把结果变量声明为 double 不算完成转换。",
-    "hint": "先在文件作用域或 main 中定义 enum Level。main 里写 int value = 5; double converted = (double)value; printf(\"%f\", converted);。"
-  },
-  {
-    "id": 4,
-    "stage": "起步上手",
-    "title": "运算符与表达式",
-    "minutes": 9,
-    "gist": "组合算术、比较、逻辑和位运算。",
-    "lesson": "普通算术符号像计算器；比较符号回答“大于吗”，逻辑符号把真假条件组合起来。位运算可以把整数的二进制位当成一排开关：1u << 2 生成从 0 开始编号的第 3 个开关掩码，按位或打开它，按位与检查它。用 unsigned 表示这类位标志，并用括号写清计算顺序。",
-    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    unsigned flags = 0;\\n    flags = flags | (1u << 2);\\n    if ((flags & (1u << 2)) != 0) {\\n        puts(\"enabled\");\\n    }\\n    return 0;\\n}",
-    "takeaways": [
-      "比较表达式产生真假结果",
-      "逻辑运算用于组合条件",
-      "位掩码适合标志位处理"
-    ],
-    "quiz": "要表示“条件 A 和条件 B 必须同时成立”，应使用哪个逻辑运算符？",
-    "options": [
-      "&",
-      "&&",
-      "||"
-    ],
-    "answer": 1,
-    "explain": "是 &&，它把两个真假条件组合成“都为真”。& 是按位与，用来逐位计算整数；|| 表示“至少一个条件为真”。位标志示例里的 & 虽然也叫与，但用途和逻辑 && 不同。",
-    "mission": "写一个完整程序，在 main 中声明 unsigned flags = 0，用左移和按位或设置 bit 2，再在 if 条件中用按位与检查同一位。包含 stdio.h，代码要实际使用 flags。",
-    "hint": "可先写 flags |= (1u << 2);，再写 if ((flags & (1u << 2)) != 0) { ... }。位编号从 0 开始。"
-  },
-  {
-    "id": 5,
-    "stage": "流程控制",
-    "title": "分支判断",
-    "minutes": 10,
-    "gist": "用 if、else 和 switch 让程序作出选择。",
-    "lesson": "if/else 像路口：程序先看条件，条件为真走 if 的路，否则走 else 的路。比如温度大于等于 30 就显示 hot，否则显示 mild。单个等号 = 是把值放进变量，两个等号 == 才是比较相等；写反时程序可能悄悄改掉变量。",
-    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    int temperature = 32;\\n    if (temperature >= 30) {\\n        puts(\"hot\");\\n    } else {\\n        puts(\"mild\");\\n    }\\n    return 0;\\n}",
-    "takeaways": [
-      "if 判断条件真假",
-      "else 覆盖另一种情况",
-      "switch 需要留意 break 和 default"
-    ],
-    "quiz": "代码 if (x = 3) 想表达“x 等于 3 吗”时，最关键的问题是什么？",
-    "options": [
-      "应该使用比较运算符 ==",
-      "x 不能作为条件",
-      "if 后面必须写分号"
-    ],
-    "answer": 0,
-    "explain": "这里的 = 是赋值，会把 3 放进 x；赋值表达式还会产生一个值，因此条件可能被当成真。要比较是否相等应写 x == 3。if 后不需要额外分号，否则空语句会先成为 if 的内容。",
-    "mission": "写一个包含 stdio.h 的完整程序，在 main 初始化 int temperature，并写带花括号的 if/else：temperature >= 30 时调用 puts 输出 hot，否则输出 mild。",
-    "hint": "确认结构是 if (temperature >= 30) { puts(\"hot\"); } else { puts(\"mild\"); }，并包含 stdio.h。"
-  },
-  {
-    "id": 6,
-    "stage": "流程控制",
-    "title": "循环与跳转",
-    "minutes": 10,
-    "gist": "重复执行任务，掌握 for、while、do-while。",
-    "lesson": "循环像按清单重复做事。for 的三部分分别是起点、继续条件、每轮结束后的更新。累加时先把 sum 设成 0，再让 i 逐个取 1 到 10，每轮执行 sum += i。循环结束后输出总和；手算 1+2+…+10 可以检查结果应为 55。",
-    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    int sum = 0;\\n    for (int i = 1; i <= 10; ++i) {\\n        sum += i;\\n    }\\n    printf(\"%d\\\\n\", sum);\\n    return 0;\\n}",
-    "takeaways": [
-      "循环要有明确的终止条件",
-      "for 由初始化、条件、更新组成",
-      "break 和 continue 改变循环流程"
-    ],
-    "quiz": "for (起点; 条件; 更新) 中，第三部分通常在每一轮结束后做什么？",
-    "options": [
-      "声明函数",
-      "更新循环变量",
-      "关闭程序"
-    ],
-    "answer": 1,
-    "explain": "它通常更新循环变量，例如 ++i，让循环逐步接近结束条件。若一直不更新，条件可能永远成立，程序就会卡在循环里。printf 放在循环体外才会只输出最终总和。",
-    "mission": "写一个完整程序，在 main 中把 sum 初始化为 0；用 for 让 i 从 1 数到 10（包含 10），每轮把 i 加进 sum；循环结束后用 printf 输出 sum。循环体使用花括号。",
-    "hint": "常见循环头是 for (int i = 1; i <= 10; ++i)。更新可以写 ++i 或 i++；检查 sum += i 在循环体内。"
-  },
-  {
-    "id": 7,
-    "stage": "流程控制",
-    "title": "函数与参数",
-    "minutes": 11,
-    "gist": "拆分任务，让代码可以重复调用。",
-    "lesson": "函数像一台有接口的小机器：参数是送进去的材料，return 是交出来的结果。int max(int a, int b) 表示收到两个整数并返回一个整数。C 的普通参数是值的副本；函数要把答案交给调用者，应 return，而不是只 printf 给人看。",
-    "sample": "#include <stdio.h>\\n\\nint max(int a, int b);\\n\\nint max(int a, int b) {\\n    return a > b ? a : b;\\n}\\n\\nint main(void) {\\n    printf(\"%d\\\\n\", max(4, 9));\\n    return 0;\\n}",
-    "takeaways": [
-      "函数接口写清参数和返回值",
-      "原型可以放在定义之前",
-      "C 的普通参数按值传递"
-    ],
-    "quiz": "函数计算出一个 int，想让调用它的代码继续使用这个结果，应怎么做？",
-    "options": [
-      "使用 return 返回结果",
-      "用 printf 代替返回",
-      "把函数名写成 int"
-    ],
-    "answer": 0,
-    "explain": "用 return 把整数值交还给调用者。printf 只负责把内容显示到屏幕，并不会把那个值交回调用表达式。函数返回类型和 return 的值应匹配。",
-    "mission": "定义 int max(int a, int b)，用 if/else 比较并返回较大值；再写 main 调用 max(4, 9)，用 printf 显示结果。函数定义要有完整函数体。",
-    "hint": "先写 max 函数，再写 main。分支中分别 return a 和 return b；main 用 printf(\"%d\", max(4, 9)); 验证调用。"
-  },
-  {
-    "id": 8,
-    "stage": "流程控制",
-    "title": "作用域、生命周期与递归",
-    "minutes": 12,
-    "gist": "理解变量可见范围，认识递归和静态存储期。",
-    "lesson": "作用域是变量名字能被看见的区域；普通局部变量通常在离开所在代码块后就不再存在。递归是函数调用自己，像一层层打开套盒：每层都要把问题变小，直到碰到不再继续打开的基准情形。阶乘示例中 factorial(3) = 3 × factorial(2) = 3 × 2 × factorial(1)。",
-    "sample": "#include <stdio.h>\\n\\nint factorial(int n) {\\n    if (n <= 1) return 1;\\n    return n * factorial(n - 1);\\n}\\n\\nint main(void) {\\n    printf(\"%d\\\\n\", factorial(5));\\n    return 0;\\n}",
-    "takeaways": [
-      "变量作用域决定名字在哪里可用",
-      "局部变量一般随代码块结束",
-      "递归必须有终止条件"
-    ],
-    "quiz": "递归函数里，哪一部分负责让调用最终停下来？",
-    "options": [
-      "永远调用自己",
-      "基准情形和逐步收敛",
-      "至少两个全局变量"
-    ],
-    "answer": 1,
-    "explain": "基准情形，例如 n <= 1 时直接 return 1。随后递归调用要把 n 变小；若没有基准情形，函数会一层层调用自己，最终耗尽调用栈。实际程序还需限制输入并防止整数溢出。",
-    "mission": "实现 int factorial(int n)：n <= 1 时返回 1，否则返回 n * factorial(n - 1)。再写 main 调用 factorial(5)，并用 printf 输出结果。输入假设为非负且较小整数。",
-    "hint": "先写带花括号的基准分支，再写递归 return；main 中输出 factorial(5)。检查递归参数是 n - 1。"
-  },
-  {
-    "id": 9,
-    "stage": "复合数据",
-    "title": "数组与多维数组",
-    "minutes": 11,
-    "gist": "按顺序保存同类数据，正确处理下标。",
-    "lesson": "数组像一排编号的储物格，格子里保存相同类型的数据。编号从 0 开始：长度为 5 的数组编号是 0、1、2、3、4。访问第 5 格会越界。函数参数中的数组不会自动带上长度，所以通常要把数组和 length 一起传入，并用 i < length 遍历。",
-    "sample": "#include <stdio.h>\\n\\nint sum(const int values[], int length) {\\n    int total = 0;\\n    for (int i = 0; i < length; ++i) total += values[i];\\n    return total;\\n}\\n\\nint main(void) {\\n    int values[] = { 3, 4, 5 };\\n    int length = sizeof values / sizeof values[0];\\n    printf(\"%d\\\\n\", sum(values, length));\\n    return 0;\\n}",
-    "takeaways": [
-      "第一个元素下标为 0",
-      "数组越界必须避免",
-      "函数通常需要同时接收数组长度"
-    ],
-    "quiz": "int items[5] 有 5 个元素，最后一个合法下标是多少？",
-    "options": [
-      "5",
-      "4",
-      "1"
-    ],
-    "answer": 1,
-    "explain": "是 4，因为下标从 0 开始，合法范围是 0 到 5-1。下标 5 已经在数组末尾之外；函数接收数组时也不能靠数组参数本身推回元素数。",
-    "mission": "定义 int sum(const int values[], int length)，按 i < length 遍历累加并返回 total；在 main 创建并初始化 int values 数组，用 sizeof values / sizeof values[0] 计算 length，调用 sum 并用 printf 输出结果。",
-    "hint": "sum 函数中先令 total = 0，再遍历 values[i]；main 可以用 sizeof values / sizeof values[0] 求数组长度。"
-  },
-  {
-    "id": 10,
-    "stage": "复合数据",
-    "title": "字符与字符串",
-    "minutes": 11,
-    "gist": "区分单个字符和以零结束的字符数组。",
-    "lesson": "C 没有内建的 string 类型。字符串是 char 字符组成的数组，结尾还有一个特殊的空字符作为“到这里结束”的路牌；例如 hello 实际需要 6 个位置，包括结束标记。strlen 计算路牌前的字符数，不包含结束标记。读取未知长度文本时应限制空间，常用 fgets。",
-    "sample": "#include <stdio.h>\\n#include <string.h>\\n\\nint main(void) {\\n    char word[] = \"hello\";\\n    printf(\"%zu\\\\n\", strlen(word));\\n    return 0;\\n}",
-    "takeaways": [
-      "字符串以空字符结尾",
-      "strlen 返回长度，不含结尾空字符",
-      "比较字符串用 strcmp 而不是 =="
-    ],
-    "quiz": "C 字符串依靠哪个字符表示内容结束？",
-    "options": [
-      "空格 ' '",
-      "空字符 '\\\\0'",
-      "换行 '\\\\n'"
-    ],
-    "answer": 1,
-    "explain": "是空字符 \\0，它的数值为 0，不是字符数字 0，也不是空格。字符串字面量会自动带上结束标记；strlen 不把这个标记计入长度。",
-    "mission": "在 main 中包含 string.h，定义 char word[] 字符串；调用 strlen(word)，并用 printf 的 %zu 输出长度。字符串字面量要真实赋给 word。",
-    "hint": "可以写 char word[] = \"hello\";，再写 printf(\"%zu\\\\n\", strlen(word));。使用 %zu 匹配 size_t。"
-  },
-  {
-    "id": 11,
-    "stage": "指针与内存",
-    "title": "指针与地址",
-    "minutes": 12,
-    "gist": "用指针保存地址，理解取地址和解引用。",
-    "lesson": "指针不是数据本身，而是一张写着“数据放在哪里”的地址便条。&value 取得变量 value 的地址；int *p = &value 让 p 保存它；*p 表示沿着这个地址找到原来的整数。因此 *p = 12 会修改 value。只有指向有效对象的指针才能解引用。",
-    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    int value = 7;\\n    int *p = &value;\\n    *p = 12;\\n    printf(\"%d\\\\n\", value);\\n    return 0;\\n}",
-    "takeaways": [
-      "& 获取地址，* 访问指向的对象",
-      "初始化指针后再使用",
-      "解引用无效指针会导致未定义行为"
-    ],
-    "quiz": "p 是指向 int 的指针，表达式 *p 表示什么？",
-    "options": [
-      "p 的地址",
-      "p 指向的 int 对象",
-      "一个新变量"
-    ],
-    "answer": 1,
-    "explain": "表示 p 指向的那个 int 对象本身，可以读取或修改它。p 是地址；&p 是指针变量 p 自己的地址。若 p 未初始化或为 NULL，直接写 *p 会造成未定义行为。",
-    "mission": "在 main 中声明 int value 并初始化；声明 int *p = &value，通过 *p 修改 value，最后用 printf 输出 value。",
-    "hint": "三处要对应同一个名字：int *p = &value;、*p = 新整数;、printf(\"%d\", value);。"
-  },
-  {
-    "id": 12,
-    "stage": "指针与内存",
-    "title": "动态内存管理",
-    "minutes": 13,
-    "gist": "使用 malloc、realloc 和 free 管理动态内存。",
-    "lesson": "malloc 像运行时向仓库申请一块空间，申请多少字节由程序计算。要放 n 个 int，通常写 malloc(n * sizeof *items)，这样元素类型改变时大小也会跟着变。申请可能失败并返回 NULL；成功后要释放一次。free 之后这块地址失效，不能再读写，也不能重复释放。",
-    "sample": "#include <stdio.h>\\n#include <stdlib.h>\\n\\nint main(void) {\\n    size_t n = 4;\\n    int *items = malloc(n * sizeof *items);\\n    if (items == NULL) return 1;\\n    items[0] = 42;\\n    printf(\"%d\\\\n\", items[0]);\\n    free(items);\\n    return 0;\\n}",
-    "takeaways": [
-      "检查 malloc 是否返回 NULL",
-      "sizeof *ptr 能跟随元素类型变化",
-      "free 后不能继续使用那块内存"
-    ],
-    "quiz": "malloc 无法满足申请时会返回什么？",
-    "options": [
-      "0 字节数组",
-      "NULL",
-      "自动重试"
-    ],
-    "answer": 1,
-    "explain": "返回 NULL，表示没有得到可用内存。程序必须先检查结果，再访问 items。申请成功后所有路径都应负责 free；真实程序还要防止外部输入导致 n * sizeof *items 溢出。",
-    "mission": "在 main 中包含 stdlib.h 和 stdio.h，把 n 设为正整数，用 malloc(n * sizeof *items) 申请 int 数组；若 items == NULL 就返回失败。成功后写入、输出 items[0]，最后调用 free(items)。",
-    "hint": "顺序是申请 → 检查 NULL → 使用 → free。不要写 free 后再访问 items；也不要把 malloc 的结果直接丢掉。"
-  },
-  {
-    "id": 13,
-    "stage": "指针与内存",
-    "title": "结构体、联合体与类型别名",
-    "minutes": 12,
-    "gist": "把相关字段组合为自己的数据类型。",
-    "lesson": "结构体像一张学生卡，把姓名、分数等不同类型的字段放进同一条记录。typedef 给结构体起一个短类型名。普通结构体对象用点号访问成员，如 s.score；结构体指针用箭头，如 p->score。union 的成员共用同一块存储，适合互斥表示，不能把它当成同时保存所有成员的 struct。",
-    "sample": "#include <stdio.h>\\n\\ntypedef struct {\\n    char name[24];\\n    int score;\\n} Student;\\n\\nint main(void) {\\n    Student s = { .name = \"Lin\", .score = 95 };\\n    printf(\"%s %d\\\\n\", s.name, s.score);\\n    return 0;\\n}",
-    "takeaways": [
-      "结构体成员各自有存储",
-      "联合体成员共享存储",
-      "typedef 提升接口可读性"
-    ],
-    "quiz": "p 是指向 Student 结构体的指针，要访问成员 score 应写什么？",
-    "options": [
-      "p.score",
-      "p->score",
-      "p::score"
-    ],
-    "answer": 1,
-    "explain": "写 p->score，箭头表示“先沿指针找到结构体，再取它的成员”。如果 s 本身是结构体对象，才写 s.score。p.score 把指针误当成结构体对象。",
-    "mission": "用 typedef struct 定义包含 name 和 score 的 Student；在 main 中创建并初始化 Student s，给成员赋值，通过 s.score 访问分数，并用 printf 输出它。",
-    "hint": "类型形状如 typedef struct { char name[24]; int score; } Student;，对象用 Student s;，成员用 s.score。"
-  },
-  {
-    "id": 14,
-    "stage": "工程实践",
-    "title": "文件输入与输出",
-    "minutes": 12,
-    "gist": "读写文件，并检查每一步是否成功。",
-    "lesson": "文件操作像借用一份档案：先 fopen 打开，确认成功后再读写，最后 fclose 归还。fopen 失败返回 NULL。fgets(line, sizeof line, file) 会把最多能放进缓冲区的字符读入 line，避免无边界地写入数组；它可能把换行符也留下。",
-    "sample": "#include <stdio.h>\\n\\nint main(void) {\\n    FILE *file = fopen(\"notes.txt\", \"r\");\\n    if (file == NULL) return 1;\\n    char line[128];\\n    if (fgets(line, sizeof line, file) != NULL) fputs(line, stdout);\\n    fclose(file);\\n    return 0;\\n}",
-    "takeaways": [
-      "检查 fopen 的返回值",
-      "fgets 限制一次读取的长度",
-      "关闭文件流释放资源"
-    ],
-    "quiz": "fopen 找不到文件或没有权限时，通常返回什么？",
-    "options": [
-      "NULL",
-      "空字符串",
-      "EOF 文件对象"
-    ],
-    "answer": 0,
-    "explain": "返回 NULL。不能把 NULL 当成可用文件继续传给 fgets；应先检查，再决定报错或结束。文件用完要 fclose，以释放系统资源。",
-    "mission": "在 main 中包含 stdio.h，使用 fopen 打开文本文件并检查 file 是否为 NULL；声明 line 缓冲区，用 fgets(line, sizeof line, file) 读一行，最后关闭同一个 file。",
-    "hint": "确保顺序是 fopen → if (file == NULL) 处理失败 → fgets → fclose(file)。"
-  },
-  {
-    "id": 15,
-    "stage": "工程实践",
-    "title": "预处理、头文件与多文件",
-    "minutes": 12,
-    "gist": "理解 #include、宏和分文件组织。",
-    "lesson": "预处理器在正式编译前处理以 # 开头的指令。#include 引入头文件里的声明；头文件保护宏则像门口的登记章，避免同一份头文件被重复展开。通常 .h 放函数声明，.c 放函数定义；编译各个源文件后，链接器再把它们组合起来。",
-    "sample": "#ifndef UTIL_H\\n#define UTIL_H\\n\\nint add(int a, int b);\\n\\n#endif",
-    "takeaways": [
-      "头文件保护避免重复展开",
-      "声明放 .h，定义放 .c 是常见组织方式",
-      "链接阶段会解析跨文件符号"
-    ],
-    "quiz": "头文件里的 #ifndef / #define / #endif 保护结构主要解决什么问题？",
-    "options": [
-      "防止头文件被重复包含",
-      "让 C 自动管理内存",
-      "替代所有函数"
-    ],
-    "answer": 0,
-    "explain": "避免同一个头文件在一次编译过程中被重复包含，造成类型或声明重复。它不负责分配内存，也不替代函数定义；声明可以在头文件，函数实现通常放在源文件。",
-    "mission": "写一个完整的头文件保护结构：用同一个唯一宏名配对 #ifndef 和 #define；中间声明 int add(int a, int b);；最后用 #endif 结束。挑战接受一段头文件，不要求写 main。",
-    "hint": "结构顺序是 #ifndef ADD_H、#define ADD_H、函数原型、#endif。检查两处宏名拼写完全相同。"
-  },
-  {
-    "id": 16,
-    "stage": "工程实践",
-    "title": "函数指针与回调",
-    "minutes": 12,
-    "gist": "把函数也作为值传递，构建可复用接口。",
-    "lesson": "函数指针是一张“要执行哪个函数”的便条，可以把行为交给另一个函数，这种被传入的函数常叫回调。int (*callback)(int) 表示 callback 指向一个接收 int、返回 int 的函数。括号不能省：int *callback(int) 的意思完全不同，它声明的是另一个函数。",
-    "sample": "#include <stdio.h>\\n\\nint apply(int x, int (*callback)(int)) {\\n    return callback(x);\\n}\\n\\nint twice(int n) { return 2 * n; }\\n\\nint main(void) {\\n    printf(\"%d\\\\n\", apply(4, twice));\\n    return 0;\\n}",
-    "takeaways": [
-      "函数指针类型必须匹配参数和返回值",
-      "括号区分函数指针与返回指针的函数",
-      "回调让算法和行为解耦"
-    ],
-    "quiz": "int (*fn)(int) 表示哪一种东西？",
-    "options": [
-      "函数 fn 返回 int 指针",
-      "fn 是接受 int 并返回 int 的函数指针",
-      "int 类型数组"
-    ],
-    "answer": 1,
-    "explain": "fn 是函数指针，指向一个接收 int 参数并返回 int 的函数。括号里的 *fn 是指针名，后面的 (int) 是被指函数的参数列表。int *fn(int) 则是“函数 fn 返回 int 指针”。",
-    "mission": "写出 int twice(int n) 回调、int apply(int x, int (*callback)(int)) 函数，并让 apply 返回 callback(x)。再在 main 中把 twice 作为函数实参传给 apply，输出调用结果。",
-    "hint": "先实现 twice，再实现 apply，最后写 apply(4, twice)。调用时传函数名 twice，不写 twice()；apply 内部才调用 callback(x)。"
-  },
-  {
-    "id": 17,
-    "stage": "工程实践",
-    "title": "标准库与常用工具箱",
-    "minutes": 13,
-    "gist": "按需使用字符串、数学、排序、时间和断言工具。",
-    "lesson": "标准库像按类别整理的工具箱：stdio.h 管输入输出，string.h 管字符串，stdlib.h 有内存和通用工具。使用函数前要确认头文件、参数、返回值和失败规则。qsort 只负责排序流程，比较函数负责告诉它两项的顺序；负数表示前者较小，0 表示相等，正数表示前者较大。",
-    "sample": "#include <stdlib.h>\\n\\nint compare_ints(const void *a, const void *b) {\\n    int x = *(const int *)a;\\n    int y = *(const int *)b;\\n    return (x > y) - (x < y);\\n}\\n\\nint main(void) {\\n    int values[] = { 9, 3, 6 };\\n    int count = sizeof values / sizeof values[0];\\n    qsort(values, count, sizeof values[0], compare_ints);\\n    return 0;\\n}",
-    "takeaways": [
-      "先包含提供函数声明的头文件",
-      "阅读返回值和错误约定",
-      "qsort 通过比较回调排序"
-    ],
-    "quiz": "qsort 的比较函数返回负数、零、正数，分别表示什么？",
-    "options": [
-      "永远返回 1",
-      "负数、零或正数表达比较关系",
-      "直接修改全局数组"
-    ],
-    "answer": 1,
-    "explain": "分别表示第一个元素小于、等于、大于第二个元素。比较器不能随便只返回 1，否则排序器无法判断顺序。直接返回 x-y 也可能因整数溢出而错；用比较结果相减或显式分支更安全。",
-    "mission": "包含 stdlib.h，在 main 创建并初始化 int values 数组，用 sizeof values / sizeof values[0] 计算 count；定义 int compare_ints(const void *, const void *)，把参数转换为 int 指针并返回负、零或正；调用 qsort(values, count, sizeof values[0], compare_ints) 排序。",
-    "hint": "比较器先把两个 void 指针转成 const int * 并读取数值，再安全比较。可用 (x > y) - (x < y)，然后把 compare_ints 传给 qsort。"
-  },
-  {
-    "id": 18,
-    "stage": "工程实践",
-    "title": "错误处理、限定符与安全",
-    "minutes": 13,
-    "gist": "写出更可预测、更容易排错的 C 程序。",
-    "lesson": "C 不会自动替你检查数组边界、指针是否有效或函数是否成功。把入口想成一道门：先检查 values、out 和长度，再访问 values[0]。成功时通过 *out 写结果并返回 1；失败时返回 0，让调用者知道结果不能使用。assert 用于程序内部假设，不代替用户输入检查。",
-    "sample": "#include <stddef.h>\\n\\nint first(const int *values, size_t length, int *out) {\\n    if (values == NULL || out == NULL || length == 0) return 0;\\n    *out = values[0];\\n    return 1;\\n}",
-    "takeaways": [
-      "编译器警告应认真处理",
-      "检查边界、返回码和资源状态",
-      "未定义行为可能让结果完全不可预测"
-    ],
-    "quiz": "assert 最适合检查哪一类条件？",
-    "options": [
-      "验证程序内部不变量",
-      "替代输入校验",
-      "打印所有运行信息"
-    ],
-    "answer": 0,
-    "explain": "检查程序内部约定，例如调试时确认某个不变量成立。输入为空、文件打不开等正常运行时可能发生的失败，应使用 if 和明确返回值处理，不能指望 assert 替用户处理。",
-    "mission": "实现 int first(const int *values, size_t length, int *out)：在访问数组前检查 values 和 out 是否为空、length 是否为 0；失败返回 0，成功把 values[0] 写入 *out 并返回 1。",
-    "hint": "用 if 检查失败条件并立即 return 0；只有通过检查后再写 *out = values[0];，最后 return 1;。"
-  },
-  {
-    "id": 19,
-    "stage": "C 标准新特性",
-    "title": "C99、C11 与现代 C",
-    "minutes": 14,
-    "gist": "了解常见标准版本特性，知道可移植性的边界。",
-    "lesson": "C 标准版本像工具和编译器约定的版本号：编译器选项决定它是否接受某些语法。C11 的 _Static_assert 能在编译时检查条件，_Atomic 和 stdatomic.h 提供原子对象操作。原子操作解决特定并发访问问题，不会自动让所有共享数据都安全；不同目标环境还要确认实现支持。",
-    "sample": "#include <limits.h>\\n#include <stdatomic.h>\\n\\n_Static_assert(CHAR_BIT == 8 && sizeof(int) >= 2, \"requires 8-bit bytes and int of at least 2 bytes\");\\n\\nint main(void) {\\n    _Atomic int counter = 0;\\n    atomic_fetch_add(&counter, 1);\\n    return 0;\\n}",
-    "takeaways": [
-      "编译时断言可以检查类型和约束",
-      "C11 原子操作适用于并发共享状态",
-      "写可移植代码要注明标准版本"
-    ],
-    "quiz": "_Static_assert 的条件通常在什么时候检查？",
-    "options": [
-      "编译时",
-      "程序退出时",
-      "网络连接后"
-    ],
-    "answer": 0,
-    "explain": "在编译阶段检查；条件不成立，程序就无法通过编译。它不是运行到某行才执行的普通 if。C11 特性要用支持对应标准的编译器和选项。",
-    "mission": "包含 limits.h 和 stdatomic.h；用 CHAR_BIT 与 sizeof(int) 写 _Static_assert 检查平台条件；在 main 声明并初始化 _Atomic int counter，调用 atomic_fetch_add(&counter, 1)，最后正常返回。",
-    "hint": "_Static_assert(条件, \"说明\"); 放在文件作用域；原子变量形如 _Atomic int counter = 0;。"
-  },
-  {
-    "id": 20,
-    "stage": "综合毕业关",
-    "title": "综合项目：做一个成绩册",
-    "minutes": 20,
-    "gist": "把数组、结构体、函数、循环和输出组合起来。",
-    "lesson": "把毕业项目拆成小步骤：Student 描述一名学生；数组放多名学生；average_score 只负责统计；main 准备数据、调用函数并显示结果。先检查空指针和人数为 0，再累加分数。total / count 若两边都是整数会丢掉小数，所以计算前把 count 转成 double。",
-    "sample": "#include <stdio.h>\\n#include <stddef.h>\\n\\ntypedef struct { char name[24]; int score; } Student;\\n\\nint average_score(const Student students[], size_t count, double *out) {\\n    if (students == NULL || out == NULL || count == 0) return 0;\\n    double total = 0.0;\\n    for (size_t i = 0; i < count; ++i) total += students[i].score;\\n    *out = total / (double)count;\\n    return 1;\\n}\\n\\nint main(void) {\\n    Student group[] = { { \"An\", 90 }, { \"Bo\", 80 } };\\n    size_t count = sizeof group / sizeof group[0];\\n    double average;\\n    if (average_score(group, count, &average)) {\\n        printf(\"average: %.1f\\\\n\", average);\\n    }\\n    return 0;\\n}",
-    "takeaways": [
-      "用结构体表示一条记录",
-      "用数组管理多条记录",
-      "用函数拆分统计逻辑并处理空数据"
-    ],
-    "quiz": "要把一名学生的姓名和分数作为一条记录一起保存，哪种设计最合适？",
-    "options": [
-      "分别使用固定含义的结构体成员",
-      "用一个整数代替所有字段",
-      "把数据只写在 printf 里"
-    ],
-    "answer": 0,
-    "explain": "用 struct 定义 Student，把姓名和分数作为成员；数组再保存多条 Student 记录。一个整数无法清楚表示多个字段，printf 里的文字只是显示内容，并没有保存可继续处理的数据。",
-    "mission": "定义含 name 和 score 的 Student；写 average_score 函数，先检查空指针与 count == 0，再逐项累加，浮点除法写入 *out，成功返回 1、失败返回 0；main 创建并初始化记录数组，用 sizeof 计算 count，检查函数成功后输出平均分。",
-    "hint": "分三块写：Student 类型；average_score 的检查、循环累加、浮点计算；main 的数组、人数、调用与输出。main 必须检查 average_score 的返回值再使用 average。"
-  }
+const cModules=Array.isArray(window.C_MODULES)?window.C_MODULES:[];
+const cLevels=[];
+cModules.forEach(function(m){(m.levels||[]).forEach(function(l){l.course="c";l.module=m.name;l.stage=m.name;cLevels.push(l)})});
+const cGroups=cModules.map(function(m){return m.name});;
+cLevels.forEach(function(l){l.course="c";l.type="code"});
+/* ===== 课程注册表：C 语言 + 英语四级（进度各自独立存储） ===== */
+const COURSES=[
+ {id:"c",name:"C 语言",glyph:"C",sub:"86 关吃透 C：语法 → 指针与内存 → 数据结构 → 工程实践 → 综合项目",store:"cquest.master.v1",chip:"核心课程",
+  heroTitle:"动手实践，<br>写出你自己的程序。",
+  heroCopy:"86 关，把 C 语言从第一行代码讲到能独立写项目：起步上路 8 关 + 流程控制 8 + 函数与程序结构 8 + 数组与字符串 8 + 指针与内存 10 + 自定义类型与数据结构 8 + 文件与输入输出 6 + 预处理器与工程实践 8 + 数据结构与算法 10 + 系统与底层 6 + 综合项目 6。每一关先讲透原理，再给可编译运行的示例，最后自己动手写：先过结构检查，再在本机编译运行、把真实输出粘回来做逐行比对（涉及 sizeof、地址等平台相关数值的关卡以结构检查为主）。",
+  routeNote:"起步 → 流程控制 → 函数 → 数组与字符串 → 指针与内存 → 自定义类型 → 文件 → 工程实践 → 算法 → 系统底层 → 综合项目",
+  mapNote:"每关：读讲解 → 看示例（可直接编译运行）→ 躲开常见陷阱 → 答知识快问 → 写代码并通过结构检查与运行结果比对。",
+  footNote:"示例与标准答案均在 TDM-GCC 4.9（Dev-C++ 自带）下用 -std=c11 -Wall 编译验证；代码挑战在本机浏览器做结构检查，正式提交前请用编译器实际运行确认。｜内容仅供学习参考，详见「关于与免责」。"},
+ {id:"cet4",name:"英语四级",glyph:"英",sub:"听说读写 62 关 · 通关即具备上考场能力",store:"cquest.cet4.v1",chip:"四级全程",
+  heroTitle:"听懂、说出口，<br>再把它写下来。",
+  heroCopy:"从基础起步，62 关把听力、阅读、写作、翻译、口语一关一关练过去：地基 8 关 + 听力 12 + 阅读 14 + 写作 8 + 翻译 8 + 口语 10 + 全真模考 2。通关即具备上考场的能力，也能直接用在日常、校园、职场与出国场景。",
+  routeNote:"地基 → 听力 → 阅读 → 写作 → 翻译 → 口语 → 全真模考",
+  mapNote:"每关先学要点，再做听力/阅读题或写作/口语任务；通关后解锁下一站。",
+  footNote:"题目为按四级大纲自编的仿真题；音频由语音合成生成，最终请以真题材料为准。｜通过课程不等于通过考试，详见「关于与免责」。"}
 ];
-const solutions = {
-  1: "#include <stdio.h>\n\nint main(void) {\n    printf(\"Hello, C!\\\\n\");\n    return 0;\n}",
-  2: "#include <stdio.h>\n\nint main(void) {\n    int count = 3;\n    printf(\"%d\\\\n\", count);\n    return 0;\n}",
-  3: "#include <stdio.h>\n\nenum Level { EASY, HARD };\n\nint main(void) {\n    int value = 5;\n    double converted = (double)value;\n    printf(\"%f\", converted);\n    return 0;\n}",
-  4: "#include <stdio.h>\n\nint main(void) {\n    unsigned flags = 0;\n    flags |= (1u << 2);\n    if ((flags & (1u << 2)) != 0) {\n        puts(\"enabled\");\n    }\n    return 0;\n}",
-  5: "#include <stdio.h>\n\nint main(void) {\n    int temperature = 35;\n    if (temperature >= 30) {\n        puts(\"hot\");\n    } else {\n        puts(\"mild\");\n    }\n    return 0;\n}",
-  6: "#include <stdio.h>\n\nint main(void) {\n    int sum = 0;\n    for (int i = 1; i <= 10; ++i) {\n        sum += i;\n    }\n    printf(\"%d\\\\n\", sum);\n    return 0;\n}",
-  7: "#include <stdio.h>\n\nint max(int a, int b) {\n    if (a > b) {\n        return a;\n    } else {\n        return b;\n    }\n}\n\nint main(void) {\n    printf(\"%d\", max(4, 9));\n    return 0;\n}",
-  8: "#include <stdio.h>\n\nint factorial(int n) {\n    if (n <= 1) {\n        return 1;\n    }\n    return n * factorial(n - 1);\n}\n\nint main(void) {\n    printf(\"%d\", factorial(5));\n    return 0;\n}",
-  9: "#include <stdio.h>\n\nint sum(const int values[], int length) {\n    int total = 0;\n    for (int i = 0; i < length; ++i) {\n        total += values[i];\n    }\n    return total;\n}\n\nint main(void) {\n    int values[] = { 1, 2, 3 };\n    int length = sizeof values / sizeof values[0];\n    printf(\"%d\", sum(values, length));\n    return 0;\n}",
-  10: "#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char word[] = \"hello\";\n    printf(\"%zu\\\\n\", strlen(word));\n    return 0;\n}",
-  11: "#include <stdio.h>\n\nint main(void) {\n    int value = 7;\n    int *p = &value;\n    *p = 12;\n    printf(\"%d\", value);\n    return 0;\n}",
-  12: "#include <stdio.h>\n#include <stdlib.h>\n\nint main(void) {\n    int n = 4;\n    int *items = malloc(n * sizeof *items);\n    if (items == NULL) {\n        return 1;\n    }\n    items[0] = 42;\n    printf(\"%d\", items[0]);\n    free(items);\n    return 0;\n}",
-  13: "#include <stdio.h>\n\ntypedef struct {\n    char name[24];\n    int score;\n} Student;\n\nint main(void) {\n    Student s = { .name = \"Lin\", .score = 95 };\n    printf(\"%d\", s.score);\n    return 0;\n}",
-  14: "#include <stdio.h>\n\nint main(void) {\n    FILE *file = fopen(\"notes.txt\", \"r\");\n    if (file == NULL) {\n        return 1;\n    }\n    char line[128];\n    if (fgets(line, sizeof line, file) != NULL) fputs(line, stdout);\n    fclose(file);\n    return 0;\n}",
-  15: "#ifndef ADD_H\n#define ADD_H\n\nint add(int a, int b);\n\n#endif",
-  16: "#include <stdio.h>\n\nint apply(int x, int (*callback)(int)) {\n    return callback(x);\n}\n\nint twice(int n) {\n    return 2 * n;\n}\n\nint main(void) {\n    printf(\"%d\", apply(4, twice));\n    return 0;\n}",
-  17: "#include <stdlib.h>\n\nint compare_ints(const void *a, const void *b) {\n    int x = *(const int *)a;\n    int y = *(const int *)b;\n    return (x > y) - (x < y);\n}\n\nint main(void) {\n    int values[] = { 3, 1, 2 };\n    int count = sizeof values / sizeof values[0];\n    qsort(values, count, sizeof values[0], compare_ints);\n    return 0;\n}",
-  18: "#include <stddef.h>\n#include <stdio.h>\n\nint first(const int *values, size_t length, int *out) {\n    if (values == NULL || out == NULL || length == 0) return 0;\n    *out = values[0];\n    return 1;\n}\n\nint main(void) {\n    int values[] = { 7, 8, 9 };\n    int out = 0;\n    if (first(values, sizeof values / sizeof values[0], &out)) {\n        printf(\"%d\\\\n\", out);\n    }\n    return 0;\n}",
-  19: "#include <limits.h>\n#include <stdatomic.h>\n\n_Static_assert(CHAR_BIT == 8 && sizeof(int) >= 2, \"requires 8-bit bytes and int of at least 2 bytes\");\n\nint main(void) {\n    _Atomic int counter = 0;\n    atomic_fetch_add(&counter, 1);\n    return 0;\n}",
-  20: "#include <stdio.h>\n#include <stddef.h>\n\ntypedef struct { char name[24]; int score; } Student;\n\nint average_score(const Student students[], size_t count, double *out) {\n    if (students == NULL || out == NULL || count == 0) return 0;\n    double total = 0.0;\n    for (size_t i = 0; i < count; ++i) {\n        total += students[i].score;\n    }\n    *out = total / (double)count;\n    return 1;\n}\n\nint main(void) {\n    Student group[] = { { \"An\", 90 }, { \"Bo\", 80 } };\n    size_t count = sizeof group / sizeof group[0];\n    double average;\n    if (average_score(group, count, &average)) {\n        printf(\"average: %.1f\", average);\n    }\n    return 0;\n}"
-};
-const groups = ["起步上手","流程控制","复合数据","指针与内存","工程实践","C 标准新特性","综合毕业关"];
-const beginnerGuides = {
-  "1": {
-    "idea": "把程序想成食谱：#include 准备工具，main 是从哪道步骤开始，花括号把主流程圈起来。",
-    "read": [
-      "#include <stdio.h> 像把显示文字的工具箱借进来。",
-      "int main(void) 是托管程序的常见入口；(void) 表示不接收参数。",
-      "printf 把双引号内文字显示出来；\\\\n 换到下一行；return 0 表示正常结束。"
-    ],
-    "steps": [
-      "在最上方包含 stdio.h。",
-      "定义 int main(void)，用 { 和 } 包住代码。",
-      "先写 printf(\"Hello, C!\\\\n\");，再写 return 0;。"
-    ],
-    "pitfall": "每条语句末尾都要有分号；花括号需要左右成对。"
-  },
-  "2": {
-    "idea": "把变量想成带标签的小盒子：先选盒子类型，再取名字放入数据。",
-    "read": [
-      "int count = 3; 表示盒子叫 count，类型是整数，初值是 3。",
-      "double score = 95.5; 适合保存有小数的值。",
-      "printf(\"%d\", count) 中 %d 是为整数预留的位置，count 会填进这个位置。"
-    ],
-    "steps": [
-      "先声明 int count，并给它一个整数初值。",
-      "在 printf 的字符串里写 %d。",
-      "在逗号后传入 count，确认格式和实参一一对应。"
-    ],
-    "pitfall": "格式字符串和参数列表要配对；别把变量名写进引号里，那样只会显示文字。"
-  },
-  "3": {
-    "idea": "const 是“这段代码不要改它”的标签；enum 给一组选项取名字；类型转换则是把数据交给另一种计算方式。",
-    "read": [
-      "int a = 5, b = 2; a / b 会先做整数除法，结果是 2。",
-      "(double)a / b 先把 a 变成浮点数，结果保留小数，等于 2.5。",
-      "enum Level { EASY, HARD }; 让程序用名字表达选择，而不是记住数字。"
-    ],
-    "steps": [
-      "先声明 enum Level，并把 EASY、HARD 写在花括号内。",
-      "声明一个 int value 并赋值。",
-      "写 (double)value，再让转换后的值参与计算。"
-    ],
-    "pitfall": "若先算 a / b，再把结果存入 double，小数部分已经丢了；转换要发生在除法之前。"
-  },
-  "4": {
-    "idea": "可以把每一位想成一个开关。掩码定位其中一位，按位或负责打开，按位与负责检查。",
-    "read": [
-      "1u 是无符号的 1；左移两位后成为 bit 2 的开关位置。",
-      "flags |= mask 会把那个开关打开，同时保留其他开关。",
-      "flags & mask 会得到该开关当前状态，再与 0 比较就能判断开关是否开启。"
-    ],
-    "steps": [
-      "声明 unsigned flags = 0;。",
-      "执行 flags |= (1u << 2); 打开第 3 个开关。",
-      "用 if ((flags & (1u << 2)) != 0) 检查它。"
-    ],
-    "pitfall": "&& 是逻辑与，& 是位与；第 3 位的编号是 2，因为编号从 0 开始。"
-  },
-  "5": {
-    "idea": "if/else 是一个分岔路口：条件成立走上面那条，不成立走另一条。",
-    "read": [
-      "temperature >= 30 是一个问题，答案只有真或假。",
-      "真时执行 if 花括号里的 puts(\"hot\");。",
-      "假时执行 else 花括号里的 puts(\"mild\");。"
-    ],
-    "steps": [
-      "声明 int temperature，并给一个测试值。",
-      "写 if (temperature >= 30)，在里面输出 hot。",
-      "写 else 分支输出 mild，并确认两个结果没有放反。"
-    ],
-    "pitfall": "赋值用一个等号，比较相等用两个等号；比较温度用 >=。"
-  },
-  "6": {
-    "idea": "循环像数数和记账：i 是计数器，sum 是累计金额。每一轮把当前数字加进总和。",
-    "read": [
-      "sum 从 0 开始，表示目前还没有加过数字。",
-      "i 从 1 开始，条件 i <= 10 让 10 也参与。",
-      "++i 让计数器增加 1；跑完一轮后继续检查条件。"
-    ],
-    "steps": [
-      "写 int sum = 0;。",
-      "用 for (int i = 1; i <= 10; ++i) 循环。",
-      "循环体内写 sum += i;，循环结束后再输出 sum。"
-    ],
-    "pitfall": "起点、条件、更新都要检查；若 i 不变，循环可能永远停不下来。"
-  },
-  "7": {
-    "idea": "函数像果汁机：参数是放进去的水果，函数体做工作，return 把果汁交给调用者。",
-    "read": [
-      "int max(int a, int b) 描述两个整数输入和一个整数结果。",
-      "if (a > b) 根据比较结果选择一个分支。",
-      "return a; 或 return b; 把结果送回去，不是显示文字。"
-    ],
-    "steps": [
-      "先写 int max(int a, int b) 和花括号。",
-      "用 if/else 比较两个参数。",
-      "两个分支分别 return 较大的参数，然后在需要处调用 max。"
-    ],
-    "pitfall": "有返回类型的函数必须在每条可能路径上返回合适类型的值。"
-  },
-  "8": {
-    "idea": "递归像俄罗斯套娃：每次打开一层，里面必须更小，直到遇到最里面不用再拆的那一层。",
-    "read": [
-      "factorial(1) 直接返回 1，是停止拆套娃的基准。",
-      "factorial(3) 会算 3 * factorial(2)。",
-      "factorial(2) 再算 2 * factorial(1)，最后逐层返回 1、2、6。"
-    ],
-    "steps": [
-      "定义 int factorial(int n)。",
-      "先写 n <= 1 的分支并返回 1。",
-      "否则返回 n * factorial(n - 1)，手动跟踪 n=3。"
-    ],
-    "pitfall": "必须有基准情形，而且参数每次都要更接近它；输入范围过大时还会发生整数溢出。"
-  },
-  "9": {
-    "idea": "数组像一排贴了编号的抽屉，所有抽屉放同种类型。编号从 0 起步。",
-    "read": [
-      "values[0] 是第一项，values[1] 是第二项。",
-      "length 表示抽屉数量，不是最后一个编号。",
-      "条件 i < length 保证最后访问 values[length - 1]，不会多走一步。"
-    ],
-    "steps": [
-      "在函数参数里同时接收 values 和 length。",
-      "初始化 total = 0;，用 i 从 0 走到小于 length。",
-      "每轮累加 values[i]，循环结束后 return total。"
-    ],
-    "pitfall": "不要写 i <= length；那会额外访问越界位置。空数组时循环不会运行，结果保持为 0。"
-  },
-  "10": {
-    "idea": "字符串像一串字母卡片，最后放一张“结束”标记 \\0。strlen 数卡片时不把结束标记算进去。",
-    "read": [
-      "char word[] = \"hello\"; 会自动预留字母和结尾标记的位置。",
-      "strlen(word) 返回 5，类型是 size_t。",
-      "%zu 是 printf 用来显示 size_t 的格式说明符。"
-    ],
-    "steps": [
-      "包含 string.h 和 stdio.h。",
-      "声明 char word[] 并赋一个双引号字符串。",
-      "调用 strlen(word)，用 %zu 输出它的返回值。"
-    ],
-    "pitfall": "单字符用单引号，字符串用双引号；字符串内容比较要用 strcmp，不要用 ==。"
-  },
-  "11": {
-    "idea": "把变量放在桌上，把地址写在便条上：指针保存便条，解引用就是照地址找到变量。",
-    "read": [
-      "value 是实际整数，&value 是它所在位置。",
-      "p 保存这个位置，所以 p 指向 value。",
-      "*p = 12; 沿便条找到原盒子并把值改成 12。"
-    ],
-    "steps": [
-      "先声明 int value = 7;。",
-      "声明 int *p = &value;。",
-      "通过 *p 写入新值，再输出 value 验证它真的改变。"
-    ],
-    "pitfall": "地址必须有效；未初始化指针和 NULL 都不能直接解引用。"
-  },
-  "12": {
-    "idea": "malloc 像在程序运行时临时借一排储物格。借不到会得到 NULL；用完要归还。",
-    "read": [
-      "n * sizeof *items 计算 n 个 int 所需的空间大小。",
-      "items = malloc(...) 后先检查 items == NULL。",
-      "成功时可用 items[i]；最后 free(items)，归还空间。"
-    ],
-    "steps": [
-      "选择数组长度 n，并计算申请大小。",
-      "调用 malloc，把结果保存到 int *items，马上检查失败。",
-      "使用成功申请的空间，最后只 free 一次。"
-    ],
-    "pitfall": "释放后不能再读取；外部输入控制 n 时要防止大小乘法溢出。"
-  },
-  "13": {
-    "idea": "struct 像一张资料卡，能把姓名和分数这类相关信息放在一起。",
-    "read": [
-      "typedef struct { ... } Student; 定义一个可复用的卡片格式。",
-      "Student s; 创建一张卡片，s.name 和 s.score 是两个字段。",
-      "对象用点号；若 p 指向这张卡片，就用 p->score。"
-    ],
-    "steps": [
-      "列出字段类型和名字：姓名数组、整数分数。",
-      "用 typedef struct 定义 Student。",
-      "创建 s，访问 s.score，并把分数打印出来。"
-    ],
-    "pitfall": "struct 成员会各自保存数据，union 成员则重叠共享空间；不要混为一谈。"
-  },
-  "14": {
-    "idea": "文件操作像去档案室借文件：先申请打开，确认拿到后读写，用完再归还。",
-    "read": [
-      "fopen 返回文件句柄；文件不存在时会返回 NULL。",
-      "fgets 把一行读进有限长度的 line 数组。",
-      "fclose 关闭文件，告诉系统资源已经用完。"
-    ],
-    "steps": [
-      "先 fopen 文件。",
-      "用 if 检查是否为 NULL；成功后声明 line 并调用 fgets。",
-      "完成读取后对同一个 file 调用 fclose。"
-    ],
-    "pitfall": "NULL 不是打开的文件；fgets 可能带回换行符，读取到文件末尾时也要看返回值。"
-  },
-  "15": {
-    "idea": "头文件保护像一张“本次已经处理过”的登记卡，避免同一份声明被重复展开。",
-    "read": [
-      "#ifndef ADD_H：若 ADD_H 尚未定义，才处理下面内容。",
-      "#define ADD_H：登记此头文件已经进入。",
-      "函数原型 int add(int a, int b); 只描述接口，不包含函数体。"
-    ],
-    "steps": [
-      "选一个不与其他头文件冲突的宏名。",
-      "按 #ifndef、#define、声明、#endif 的顺序写。",
-      "确认开头和结束时使用的是同一个宏名。"
-    ],
-    "pitfall": "宏是预处理阶段的文本替换；保护宏只防重复包含，不会自动提供函数实现。"
-  },
-  "16": {
-    "idea": "回调像把“请用这个规则做事”的卡片交给函数。apply 不需要知道每种计算方式，只按约定调用 callback。",
-    "read": [
-      "int (*callback)(int) 中 callback 是指针，指向接收 int 并返回 int 的函数。",
-      "twice 符合这个签名，所以可以把函数名 twice 传给 apply。",
-      "apply 内的 callback(x) 执行这张卡片指向的函数。"
-    ],
-    "steps": [
-      "先写 int twice(int n)，返回 n 的两倍。",
-      "写 apply，参数包含 int x 和函数指针 callback。",
-      "在 main 里调用 apply(4, twice)，显示 8。"
-    ],
-    "pitfall": "传函数时写 twice，不加括号；twice(4) 是立即调用。签名的参数和返回类型必须匹配。"
-  },
-  "17": {
-    "idea": "标准库是已经写好的工具箱，qsort 是排序工具，但“什么叫在前”要由比较器告诉它。",
-    "read": [
-      "比较器拿到两个 void 指针，需要先按 int 指针解释，再读取整数。",
-      "负数表示左边较小，0 表示相等，正数表示左边较大。",
-      "(x > y) - (x < y) 会产生 -1、0 或 1，而且避免 x-y 的溢出风险。"
-    ],
-    "steps": [
-      "包含 stdlib.h 并声明 int values 数组。",
-      "定义参数为 const void * 的比较函数，读出两个 int 并返回大小关系。",
-      "调用 qsort，传数组、数量、每项大小和比较函数名。"
-    ],
-    "pitfall": "比较函数不能永远返回同一个数；qsort 的数组元素大小也要写正确。"
-  },
-  "18": {
-    "idea": "写安全代码像过安检：先确认人和票都有效，再读取数据。出错时尽早退出，成功时清楚报告。",
-    "read": [
-      "values == NULL 检查输入数组地址；out == NULL 检查结果写入位置。",
-      "length == 0 表示没有可读取的第一个元素。",
-      "检查都通过后才能读取 values[0] 并写入 *out。"
-    ],
-    "steps": [
-      "把所有失败条件放在访问数组之前检查。",
-      "失败时 return 0。",
-      "成功时写 *out = values[0];，最后 return 1。"
-    ],
-    "pitfall": "assert 不是给普通错误使用的；调用者需要根据返回码判断 out 里是否有有效结果。"
-  },
-  "19": {
-    "idea": "编译器标准选项像工具版本，决定能否使用某些语言功能。新语法不是所有旧编译器都认识。",
-    "read": [
-      "_Static_assert 在编译期间检查条件，像开工前先核对尺寸。",
-      "_Atomic int 声明原子整数，atomic_fetch_add 完成一次原子加法。",
-      "原子类型适用于特定并发共享数据；它不是所有线程问题的自动解决方案。"
-    ],
-    "steps": [
-      "包含 limits.h 与 stdatomic.h。",
-      "在文件作用域写 _Static_assert 条件和失败说明。",
-      "声明原子计数器，再调用 atomic_fetch_add(&counter, 1)。"
-    ],
-    "pitfall": "确认编译器启用了 C11 或更新标准，并检查目标平台是否支持相关原子类型。"
-  },
-  "20": {
-    "idea": "把一个复杂任务拆成三个小零件：数据格式 Student、统计函数 average_score、负责串起来的 main。",
-    "read": [
-      "Student 把姓名和分数放成一条记录，数组放多条记录。",
-      "average_score 检查输入、循环累加，再通过 out 参数交回平均值。",
-      "main 只在函数返回成功时打印 average，失败时不能使用未写好的结果。"
-    ],
-    "steps": [
-      "定义 Student 和两条以上记录。",
-      "实现 average_score：检查指针和人数，循环累加，先把 count 转 double 再相除。",
-      "在 main 计算数组人数、调用统计函数，判断返回值后输出平均分。"
-    ],
-    "pitfall": "count 为 0 时不能求平均；整数除法会截掉小数；检查成功状态后才可以读取输出变量。"
-  }
-};
-const storeKey = "cquest.master.v1";
-const resetPasswordKey = "codesword.reset.password.v1";
-const themeKey = "codesword.theme.v1";
-function loadState(){try{return JSON.parse(localStorage.getItem(storeKey))||{completed:{},xp:0,attempts:0,correct:0,started:Date.now()}}catch(e){return {completed:{},xp:0,attempts:0,correct:0,started:Date.now()}}}
-let data = loadState();
-data.drafts = data.drafts || {};
-data.quizRewards = data.quizRewards || {};
-Object.keys(data.completed).forEach(function(id){data.quizRewards[id]=true});
-let page = "map";
+const courseKey="cquest.course.v1";
+const resetPasswordKey="codesword.reset.password.v1";
+const themeKey="codesword.theme.v1";
+const cet4Modules=Array.isArray(window.CET4_MODULES)?window.CET4_MODULES:[];
+const cet4Levels=[];
+cet4Modules.forEach(function(m){(m.levels||[]).forEach(function(l){l.course="cet4";l.module=m.name;l.stage=m.name;cet4Levels.push(l)})});
+const cet4Groups=cet4Modules.map(function(m){return m.name});
+const courseLevels={c:cLevels,cet4:cet4Levels};
+const courseGroups={c:cGroups,cet4:cet4Groups};
+function hasCourse(id){return !!(courseLevels[id]&&courseLevels[id].length)}
+let activeCourse=localStorage.getItem(courseKey)||"c";
+if(!hasCourse(activeCourse))activeCourse="c";
+let levels=courseLevels[activeCourse],groups=courseGroups[activeCourse];
+function courseById(id){return COURSES.filter(function(c){return c.id===id})[0]}
+function currentCourse(){return courseById(activeCourse)||COURSES[0]}
+function loadStateFor(key){try{return JSON.parse(localStorage.getItem(key))||{completed:{},xp:0,attempts:0,correct:0,started:Date.now()}}catch(e){return {completed:{},xp:0,attempts:0,correct:0,started:Date.now()}}}
+const stores={};
+COURSES.forEach(function(c){const s=loadStateFor(c.store);s.drafts=s.drafts||{};s.quizRewards=s.quizRewards||{};Object.keys(s.completed).forEach(function(id){s.quizRewards[id]=true});stores[c.id]=s});
+let data=stores[activeCourse];
+let page = "courses";
 let activeLevel = null;
 let selectedOption = null;
 let quizPassed = false;
@@ -1469,7 +782,19 @@ let codePassed = false;
 let hintVisible = false;
 let solutionVisible = false;
 let answerUnlocked = false;
-function save(){localStorage.setItem(storeKey,JSON.stringify(data));}
+function save(){localStorage.setItem(currentCourse().store,JSON.stringify(data));}
+function setCourse(id){
+ const c=courseById(id);if(!c)return;
+ if(!hasCourse(id)){toast(c.name+" 的内容还在制作中。");return}
+ if(id===activeCourse){page="map";activeLevel=null;render();window.scrollTo({top:0,behavior:"smooth"});return}
+ activeCourse=id;localStorage.setItem(courseKey,id);
+ levels=courseLevels[id];groups=courseGroups[id];data=stores[id];
+ activeLevel=null;page="map";selectedOption=null;quizPassed=false;codePassed=false;
+ hintVisible=false;solutionVisible=false;window.quizAnswered=false;window.codeFeedback="";window.codeDraft="";
+ window.taskState=null;
+ if(typeof stopRecorder==="function")stopRecorder();
+ render();window.scrollTo({top:0,behavior:"smooth"});toast("已切换到「"+c.name+"」");
+}
 let themeMode=localStorage.getItem(themeKey)||"system";
 function applyTheme(mode,persist){
  if(!["system","light","dark"].includes(mode))mode="system";
@@ -1504,7 +829,7 @@ function highlightC(source){
 function editorMarkup(value){
  const lineCount=Math.max(1,value.split("\n").length);
  const lineNums=Array.from({length:lineCount},function(_,i){return String(i+1)}).join("\n");
- return '<div class="ide-frame"><div class="ide-toolbar"><div class="ide-toolbar-left"><span class="ide-dots"><i></i><i></i><i></i></span><span class="ide-file">challenge.c</span></div><div class="ide-toolbar-right"><span class="ide-standard">C99+</span><span>本地编辑</span></div></div><div class="ide-body"><pre class="ide-gutter" id="editorLineNumbers" aria-hidden="true">'+lineNums+'</pre><div class="ide-workspace"><pre class="ide-highlight" id="codeHighlight" aria-hidden="true">'+highlightC(value)+'</pre><textarea class="code-input" id="codeAnswer" wrap="off" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="C 语言代码编辑器" placeholder="// 在这里写下你的 C 代码">'+esc(value)+'</textarea></div></div><div class="ide-status"><span id="editorPosition">行 1 · 列 1</span><span>自动保存到此设备</span></div></div><div class="ide-help">Tab 缩进 · Enter 自动缩进 · 括号补全 · Ctrl + / 注释 · Ctrl + Enter 检查</div>';
+ return '<div class="ide-frame"><div class="ide-toolbar"><div class="ide-toolbar-left"><span class="ide-dots"><i></i><i></i><i></i></span><span class="ide-file">challenge.c</span></div><div class="ide-toolbar-right"><span class="ide-standard">C99+</span><span>本地编辑</span></div></div><div class="ide-body"><pre class="ide-gutter" id="editorLineNumbers" aria-hidden="true">'+lineNums+'</pre><div class="ide-workspace"><pre class="ide-highlight" id="codeHighlight" aria-hidden="true">'+highlightC(value)+'</pre><textarea class="code-input" id="codeAnswer" wrap="off" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="代码编辑器" placeholder="// 在这里写下你的代码">'+esc(value)+'</textarea></div></div><div class="ide-status"><span id="editorPosition">行 1 · 列 1</span><span>自动保存到此设备</span></div></div><div class="ide-help">Tab 缩进 · Enter 自动缩进 · 括号补全 · Ctrl + / 注释 · Ctrl + Enter 检查</div>';
 }
 function updateEditor(){
  const input=document.getElementById("codeAnswer");
@@ -1545,10 +870,11 @@ function openAnswerDialog(){
 function answerVerified(){closeResetDialog();answerUnlocked=true;solutionVisible=true;render();toast("密码正确，已显示本关标准答案。");}
 function closeResetDialog(){document.getElementById("resetModal").hidden=true}
 function resetProgress(){
- localStorage.removeItem(storeKey);
  data={completed:{},xp:0,attempts:0,correct:0,started:Date.now(),drafts:{},quizRewards:{}};
- page="map";activeLevel=null;selectedOption=null;quizPassed=false;codePassed=false;hintVisible=false;solutionVisible=false;window.quizAnswered=false;window.codeFeedback="";window.codeDraft="";
- save();closeResetDialog();render();toast("已重头开始，学习进度已清空。");
+ stores[activeCourse]=data;
+ page="map";activeLevel=null;selectedOption=null;quizPassed=false;codePassed=false;hintVisible=false;solutionVisible=false;window.quizAnswered=false;window.codeFeedback="";window.codeDraft="";window.taskState=null;
+ if(typeof stopRecorder==="function")stopRecorder();
+ save();closeResetDialog();render();toast("已清空「"+currentCourse().name+"」的学习进度。");
 }
 document.addEventListener("submit",async function(e){
  if(e.target.id!=="resetForm")return;e.preventDefault();
@@ -1569,64 +895,298 @@ document.addEventListener("submit",async function(e){
 document.getElementById("resetModal").addEventListener("click",function(e){if(e.target===e.currentTarget)closeResetDialog()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!document.getElementById("resetModal").hidden)closeResetDialog()});
 function completedCount(){return Object.keys(data.completed).length}
-function unlocked(level){return level.id===1||!!data.completed[level.id-1]}
+function unlocked(level){const i=levels.indexOf(level);return i<=0||!!data.completed[levels[i-1].id]}
 function isDone(level){return !!data.completed[level.id]}
 function progressPct(){return Math.round(completedCount()/levels.length*100)}
 function nextLevel(){return levels.find(function(l){return !isDone(l)})||levels[levels.length-1]}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2300)}
 function copyText(text){const done=function(){toast("标准答案已复制到剪贴板。")};const fb=function(){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta);done()};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fb)}else{fb()}}
-function formatSample(s){return s.replace(/(\\+)n/g,function(match,slashes){return "\\".repeat(Math.floor(slashes.length/2))+(slashes.length%2?"\n":"n")})}
+function formatSample(s){return s}
+/* 注：内容统一用真实换行（JS 的 \n 转义），不再需要旧的字面量 \\n 还原逻辑 */
 function renderBeginnerGuide(l){
- const g=beginnerGuides[l.id];
+ const g=l.beginner;if(!g)return "";
  function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
  return '<div class="beginner-guide"><div class="guide-heading">零基础拆解 · 不用急着背</div><div class="guide-idea"><div class="challenge-label">先抓住这一件事</div><p>'+esc(g.idea)+'</p></div><div class="guide-columns">'+list("示例逐步读",g.read)+list("挑战按这几步写",g.steps)+'</div><div class="guide-pitfall"><strong>新手易错点</strong><span>'+esc(g.pitfall)+'</span></div></div>';
 }
 function switchPage(p){page=p;activeLevel=null;render()}
-function navTitle(){const labels={map:"CODE SWORD  /  学习路线",practice:"CODE SWORD  /  继续挑战",summary:"CODE SWORD  /  我的总结",lesson:"CODE SWORD  /  当前关卡"};document.getElementById("topTitle").textContent=labels[page]||labels.map}
-function render(){navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();return}if(page==="map")renderMap();else if(page==="practice")renderPractice();else renderSummary()}
+function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于与免责"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
+function render(){navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else renderSummary()}
+function renderCourses(){
+ const cards=COURSES.map(function(c){
+  const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
+  const groups2=courseGroups[c.id]||[];
+  return '<button class="course-card'+(ready?"":" is-soon")+'" type="button" data-action="switch-course" data-course="'+c.id+'"><span class="course-card-icon">'+c.glyph+'</span><span class="course-card-body"><strong>'+esc(c.name)+'</strong><small>'+esc(c.sub)+'</small><span class="course-card-meta">'+(ready?(groups2.length+" 个模块 · "+ls.length+" 关 · 已完成 "+dn+" 关（"+pc+"%）"):"即将上线")+'</span><span class="course-card-bar"><i style="width:'+pc+'%"></i></span></span><span class="course-card-go">进入 →</span></button>';
+ }).join("");
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">HT LAB</div><h1>学习课程</h1><p class="subhead">选一门课开始闯关。每门课的进度、学习点与总结各自独立保存，互不影响。</p></div></div><div class="course-cards">'+cards+'</div><div class="footer-note">所有学习数据只保存在这台设备的浏览器里，不上传、不跨设备同步。</div>';
+}
 function renderMap(){
  const pct=progressPct(), done=completedCount(), next=nextLevel();
  let groupsHtml="";
  groups.forEach(function(g){const ls=levels.filter(function(l){return l.stage===g});const finished=ls.filter(isDone).length;groupsHtml+='<section class="track"><div class="track-head"><span class="track-dot"></span><span class="track-title">'+esc(g)+'</span><span class="track-note">'+finished+'/'+ls.length+' 关完成</span></div><div class="level-grid">';
- ls.forEach(function(l){const lockedNow=!unlocked(l)&&!isDone(l),number=String(l.id).padStart(2,"0");const state=isDone(l)?"✓":lockedNow?"🔒":"→";groupsHtml+='<article class="level-card '+(isDone(l)?"completed ":"")+(lockedNow?"locked":"")+'" data-level="'+l.id+'"><div class="level-top"><span class="level-num">'+number+'</span><span class="level-state">'+state+'</span></div><h3>'+esc(l.title)+'</h3><p>'+esc(l.gist)+'</p><div class="level-meta">第 '+number+' 关 · 约 '+l.minutes+' 分钟 · '+(isDone(l)?"已通关":lockedNow?"完成前一关后解锁":"可开始")+'</div></article>'});
+ ls.forEach(function(l){const lockedNow=!unlocked(l)&&!isDone(l),number=String(levels.indexOf(l)+1).padStart(2,"0");const state=isDone(l)?"✓":lockedNow?"🔒":"→";groupsHtml+='<article class="level-card '+(isDone(l)?"completed ":"")+(lockedNow?"locked":"")+'" data-level="'+l.id+'"><div class="level-top"><span class="level-num">'+number+'</span><span class="level-state">'+state+'</span></div><h3>'+esc(l.title)+'</h3><p>'+esc(l.gist)+'</p><div class="level-meta">第 '+number+' 关 · 约 '+l.minutes+' 分钟 · '+(isDone(l)?"已通关":lockedNow?"完成前一关后解锁":"可开始")+'</div></article>'});
  groupsHtml+='</div></section>'});
- document.getElementById("view").innerHTML='<section class="hero"><div class="hero-main"><div class="eyebrow">CODE SWORD&nbsp; · &nbsp;C LANGUAGE QUEST</div><h1>磨砺语法，<br>挥出你的第一段 C。</h1><p>20 个循序渐进的关卡，从第一行代码一路闯到内存管理与综合项目。课程示例默认使用 C99 或更新标准，第 19 关会回顾版本差异。每通过一关，技能再升一级。</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(done?"继续第 "+(next.id)+" 关":"开始第一关")+' <span>→</span></button><span class="hero-link">学一点，过一关，积累成就感</span></div></div><div class="hero-progress"><div class="progress-top"><div><div class="progress-kicker">总体学习进度</div><div class="progress-number">'+done+' <span style="font-size:14px;color:#8d99ab;font-weight:600">/ '+levels.length+' 关</span></div></div><div class="progress-ring" style="--pct:'+pct+'%"><span>'+pct+'%</span></div></div><div><div class="progress-bar"><i style="width:'+pct+'%"></i></div><div class="progress-foot"><span>已完成 '+done+' 关</span><span>'+Math.max(0,levels.length-done)+' 关待挑战</span></div></div></div></section>'+
+ const cc=currentCourse();
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(cc.name)+'</div><h1>'+esc(cc.name)+'学习路线</h1><p class="subhead">'+esc(cc.sub)+'</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回课程选择</button></div>'+'<section class="hero"><div class="hero-main"><div class="eyebrow">HT LAB&nbsp; · &nbsp;'+esc(cc.name)+'</div><h1>'+cc.heroTitle+'</h1><p>'+esc(cc.heroCopy)+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(done?"继续第 "+(next.id)+" 关":"开始第一关")+' <span>→</span></button><span class="hero-link">学一点，过一关，积累成就感</span></div></div><div class="hero-progress"><div class="progress-top"><div><div class="progress-kicker">'+esc(cc.name)+'进度</div><div class="progress-number">'+done+' <span style="font-size:14px;color:#8d99ab;font-weight:600">/ '+levels.length+' 关</span></div></div><div class="progress-ring" style="--pct:'+pct+'%"><span>'+pct+'%</span></div></div><div><div class="progress-bar"><i style="width:'+pct+'%"></i></div><div class="progress-foot"><span>已完成 '+done+' 关</span><span>'+Math.max(0,levels.length-done)+' 关待挑战</span></div></div></div></section>'+
  '<section class="stats"><div class="stat"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">学习点数</div></div></div><div class="stat"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+'</div><div class="stat-label">完成关卡</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+data.correct+'</div><div class="stat-label">正确答题</div></div></div><div class="stat"><div class="stat-icon">⌁</div><div><div class="stat-num">'+(data.attempts?Math.round(data.correct/data.attempts*100):0)+'%</div><div class="stat-label">答题正确率</div></div></div></section>'+
- '<section class="course-library"><div class="course-library-head"><div><div class="eyebrow">LANGUAGE COURSES</div><h2>学习语言</h2><p>把不同语言放在同一个入口，先从 C 语言开始。</p></div><span class="course-library-total">当前 1 门</span></div><button class="course-entry" type="button" data-action="open-course" aria-label="进入 C 语言学习路线"><span class="course-entry-icon">C</span><span class="course-entry-copy"><strong>C 语言</strong><small>从基础语法到指针、内存与综合项目</small></span><span class="course-entry-progress">已完成 '+done+' / '+levels.length+' 关</span><span class="course-entry-arrow">↗</span><span class="course-entry-bar"><i style="width:'+pct+'%"></i></span></button></section>'+'<div class="section-head"><div><h2>你的通关地图</h2><p>每关先学重点，再答题、写代码；通关后解锁下一站。</p></div><button class="btn btn-ghost btn-small" data-page="summary">查看学习总结&nbsp; →</button></div>'+'<section class="course-route" id="course-c-route"><div class="course-route-heading"><div class="course-route-heading-main"><span class="course-route-icon">C</span><div><h2>C 语言学习路线</h2><p>从基础语法一路闯到综合项目 · '+levels.length+' 个知识关卡</p></div></div><span class="chip">核心课程</span></div>'+groupsHtml+'</section><div class="footer-note">路线覆盖 C 语言核心语法、常用标准库与工程实践。标准库函数很多，本课程按类别练习常用能力。</div>';
+ '<div class="section-head"><div><h2>'+esc(cc.name)+' · 通关地图</h2><p>'+esc(cc.mapNote)+'</p></div><button class="btn btn-ghost btn-small" data-page="summary">查看学习总结&nbsp; →</button></div>'+'<section class="course-route" id="course-route"><div class="course-route-heading"><div class="course-route-heading-main"><span class="course-route-icon">'+cc.glyph+'</span><div><h2>'+esc(cc.name)+'学习路线</h2><p>'+esc(cc.routeNote)+' · '+levels.length+' 个知识关卡</p></div></div><span class="chip">'+esc(cc.chip)+'</span></div>'+groupsHtml+'</section><div class="footer-note">'+esc(cc.footNote)+'</div>';
+}
+function renderAbout(){
+ const items=[
+  ["用途","本网站是个人自学与教学演示项目。站内的讲解、题目、示例代码与音频都是自编的学习材料，不是官方教材，也不是历年真题。你可以自由用来学习。"],
+  ["考试相关","英语四级部分的题目与音频是按大纲自编的仿真材料，题型与难度不等同于真实考试；通过本站关卡不代表能通过相应考试，也不构成任何考试、升学或就业承诺。"],
+  ["代码与运行","C 课程的示例与标准答案在 TDM-GCC 4.9.2（Dev-C++ 自带）下以 -std=c11 -Wall -Wextra 验证过。站内的代码检查是轻量结构检查，不等同于编译器，最终请以你本机编译器的结果为准；涉及 sizeof、地址等平台相关数值的关卡，换平台结果可能不同。"],
+  ["数据与隐私","本站不收集、不上传任何数据，也不联网同步。学习进度、代码草稿与录音只保存在本机浏览器（localStorage / 内存）。清除浏览器数据、更换浏览器或设备会导致进度丢失，本站不为此承担责任。"],
+  ["内容准确性","内容经过脚本校验、真编译真运行与多轮独立复核，但仍可能存在错误、过时或表述不严谨之处；发现后欢迎反馈修正。"],
+  ["责任","本站按「现状」提供，不提供任何明示或暗示的担保（包括但不限于适销性与特定用途适用性）。因使用或无法使用本站内容而造成的任何直接或间接损失，作者不承担责任。"],
+  ["开源与致谢","欢迎分享与二次分发，转载或修改后请保留本免责声明。名称、图标与第三方内容的权利归其各自所有者。"]
+ ];
+ const body=items.map(function(x){return '<section class="panel" style="margin-bottom:14px"><div class="challenge-head"><div class="challenge-label">'+esc(x[0])+'</div></div><p class="lesson-copy">'+esc(x[1])+'</p></section>'}).join("");
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">HT LAB</div><h1>关于与免责声明</h1><p class="subhead">使用本站前，请先了解下面的说明。</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回学习课程</button></div>'+body+'<div class="footer-note">最后更新：2026-10-26 · 本页内容如与你的使用场景有冲突，以你所在地区法律为准。</div>';
 }
 function renderPractice(){
  const l=nextLevel();
  if(completedCount()===levels.length){page="summary";renderSummary();navTitle();return}
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">实战训练</div><h1>继续你的下一关</h1><p class="subhead">专注一件小事，写出一段自己的 C 代码。</p></div><span class="chip">当前 '+completedCount()+' / '+levels.length+' 关</span></div><div class="panel"><div class="lesson-title-row"><div class="lesson-badge">'+String(l.id).padStart(2,"0")+'</div><div><h2>'+esc(l.title)+'</h2><div class="meta-line">'+esc(l.stage)+' · 约 '+l.minutes+' 分钟</div></div></div><p class="lesson-copy" style="margin-top:19px">'+esc(l.gist)+'</p><p class="lesson-copy">'+esc(l.lesson)+'</p><button class="btn btn-primary" data-level="'+l.id+'">进入本关 <span>→</span></button></div>';
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">实战训练</div><h1>继续你的下一关</h1><p class="subhead">'+esc(activeCourse==="c"?"专注一件小事，写出一段自己的 C 代码。":"专注一个场景，练一段听说读写。")+'</p></div><span class="chip">当前 '+completedCount()+' / '+levels.length+' 关</span></div><div class="panel"><div class="lesson-title-row"><div class="lesson-badge">'+String(l.id).padStart(2,"0")+'</div><div><h2>'+esc(l.title)+'</h2><div class="meta-line">'+esc(l.stage)+' · 约 '+l.minutes+' 分钟</div></div></div><p class="lesson-copy" style="margin-top:19px">'+esc(l.gist)+'</p><p class="lesson-copy">'+esc(l.lesson)+'</p><button class="btn btn-primary" data-level="'+l.id+'">进入本关 <span>→</span></button></div>';
 }
 function renderLesson(){
- const l=activeLevel, done=isDone(l);
- const quizDisabled=selectedOption===null;
- let opts=l.options.map(function(o,i){let cl="option";if(selectedOption===i){cl+=" selected";if(quizPassed)cl+=" correct";else if(window.quizAnswered)cl+=" wrong"}return '<button class="'+cl+'" data-option="'+i+'">'+String.fromCharCode(65+i)+'. '+esc(o)+'</button>'}).join("");
- let quizFeedback=window.quizAnswered?'<div class="feedback '+(quizPassed?"ok":"no")+'">'+(quizPassed?"回答正确！":"再想一想。 ")+esc(l.explain)+'</div>':"";
- let challengeFeedback=window.codeFeedback?'<div class="feedback '+(codePassed?"ok":"no")+'">'+esc(window.codeFeedback)+'</div>':"";
- let lockMsg=done?'<div class="feedback ok">本关已通关。可以回看内容，也可以继续下一关。</div>':"";
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.stage)+' · 第 '+String(l.id).padStart(2,"0")+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
- '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 阅读重点后完成挑战</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>example.c</span></div><pre>'+esc(formatSample(l.sample))+'</pre></div>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</div></section>'+
- '<section class="panel challenge-card"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✦</span>知识快问</div><span class="chip">答对 +10 点</span></div><div class="quiz-question">'+esc(l.quiz)+'</div><div class="option-list">'+opts+'</div>'+quizFeedback+lockMsg+'</section>'+
- '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地会按真实 C 语法检查分号、括号与语句结构，再核对变量使用关系和本关操作；注释或字符串里的关键词不算通过。检查器仍不等同于完整编译器，正式使用前请用编译器(如 Dev-C++)实际编译运行。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(formatSample(solutions[l.id]||""))+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并检查通过，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section></div>'+
- '<aside class="lesson-main"><section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway"><div class="takeaway-item"><span class="'+(quizPassed||done?"tick":"")+'">'+(quizPassed||done?"✓":"○")+'</span><span>完成知识快问</span></div><div class="takeaway-item"><span class="'+(codePassed||done?"tick":"")+'">'+(codePassed||done?"✓":"○")+'</span><span>通过代码结构检查</span></div><div class="takeaway-item"><span class="'+(done?"tick":"")+'">'+(done?"✓":"○")+'</span><span>获得本关学习点并解锁后续</span></div></div><div class="progress-bar" style="margin-top:18px"><i style="width:'+((Number(quizPassed||done)+Number(codePassed||done))*50)+'%"></i></div><div class="progress-foot"><span>本关完成度</span><span>'+(done?"100":(Number(quizPassed)+Number(codePassed))*50)+'%</span></div></section>'+
- '<section class="panel"><div class="challenge-head"><div class="challenge-label">核心概念</div><span class="chip">要点速览</span></div>'+l.takeaways.map(function(t){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</section>'+
- '<section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside></div><div class="footer-note">进度仅保存在当前浏览器设备。代码挑战只在本地浏览器做结构检查，不会上传代码；正式使用前请用 C 编译器编译运行。</div>';
+ const l=activeLevel,done=isDone(l);
+ if(l.type&&l.type!=="code"){renderEnglishLesson(l);return}
+ renderCodeLesson(l,done);
+}
+function renderCodeLesson(l,done){
+ const qs=l.questions||[];
+ const st=qs.length?ensureTaskState(l):null;
+ const quizOk=cQuizOk(l),outOk=cOutputOk(l);
+ const code=l.example&&l.example.code?l.example.code:(l.sample||"");
+ const out=l.example&&l.example.output?l.example.output:"";
+ const exExplain=l.example&&l.example.explain?l.example.explain:"";
+ const need=qs.length?Math.ceil((l.passRatio||0.8)*qs.length):0;
+ let quizHtml="";
+ if(qs.length){
+  quizHtml='<section class="panel challenge-card"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✦</span>知识快问</div><span class="chip">答对 '+need+' / '+qs.length+' 题</span></div>'+(l.quizCopy?'<p class="challenge-copy">'+esc(l.quizCopy)+'</p>':"")+qs.map(function(q,i){return questionBlock(q,i,l,st)}).join("")+(st.score?'<div class="feedback '+(quizOk?"ok":"no")+'">本次答对 '+st.score.right+' / '+st.score.total+'（需答对 '+need+' 题）</div>':"")+(st.score&&!quizOk?'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="retry-task">重做本关题目</button></div>':"")+'</section>';
+ }else if(l.quiz){
+  const opts=(l.options||[]).map(function(o,i){let cl="option";if(selectedOption===i){cl+=" selected";if(quizPassed)cl+=" correct";else if(window.quizAnswered)cl+=" wrong"}return '<button class="'+cl+'" data-option="'+i+'">'+String.fromCharCode(65+i)+'. '+esc(o)+'</button>'}).join("");
+  quizHtml='<section class="panel challenge-card"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✦</span>知识快问</div><span class="chip">答对 +10 点</span></div><div class="quiz-question">'+esc(l.quiz)+'</div><div class="option-list">'+opts+'</div>'+(window.quizAnswered?'<div class="feedback '+(quizPassed?"ok":"no")+'">'+(quizPassed?"回答正确！":"再想一想。 ")+esc(l.explain||"")+'</div>':"")+'</section>';
+ }
+ const exampleHtml=code?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▤</span>示例代码</div><span class="chip">建议自己敲一遍</span></div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>example.c</span></div><pre>'+highlightC(code)+'</pre></div>'+(out?'<div class="challenge-label" style="margin:14px 0 6px">这段代码的运行结果</div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>运行输出</span></div><pre>'+esc(out)+'</pre></div>':"")+(exExplain?'<p class="lesson-copy" style="margin-top:13px">'+esc(exExplain)+'</p>':"")+'</section>':"";
+ const pitHtml=(l.pitfalls&&l.pitfalls.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#e2725b">⚠</span>常见陷阱</div><span class="chip">先躲开这些</span></div>'+l.pitfalls.map(function(p){return '<div class="takeaway-item" style="margin:9px 0"><span style="color:#e2725b;font-weight:800">!</span><span>'+esc(p)+'</span></div>'}).join("")+'</section>':"";
+ const masteryHtml=(l.mastery&&l.mastery.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label">掌握标准</div><span class="chip">学完你应该能做到</span></div>'+l.mastery.map(function(m){return '<div class="takeaway-item" style="margin:9px 0"><span class="tick">✓</span><span>'+esc(m)+'</span></div>'}).join("")+'</section>':"";
+ const runHtml=l.expectedOutput?'<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▶</span>运行结果比对</div><span class="chip">'+(outOk?"已一致":"待比对")+'</span></div><p class="challenge-copy">把上面这段程序（或你自己写的版本）在本机编译运行——Dev-C++ 按 F11 编译运行，命令行用 gcc 文件名.c -o 程序名 再运行——然后把程序输出的内容<strong>原样</strong>粘贴到下面。逐行对比一致才算通过，行尾空格可以忽略。</p><div class="challenge-label" style="margin:10px 0 6px">预期输出</div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>expected output</span></div><pre>'+esc(l.expectedOutput)+'</pre></div><textarea class="task-input" id="runOutput" spellcheck="false" style="min-height:110px" placeholder="在这里粘贴你运行时看到的输出…">'+esc((data.runOutputs&&data.runOutputs[l.id])||"")+'</textarea><div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="check-output">比对运行结果</button></div>'+((data.runOutputs&&data.runOutputs[l.id])?'<div class="feedback '+(outOk?"ok":"no")+'">'+(outOk?"✓ ":"✗ ")+esc(compareOutput(l.expectedOutput,data.runOutputs[l.id]).message)+'</div>':"")+'</section>':"";
+ const gate=(ok,label)=>'<div class="takeaway-item"><span class="'+(ok?"tick":"")+'">'+(ok?"✓":"○")+'</span><span>'+label+'</span></div>';
+ const sidebar='<aside class="lesson-main"><section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway">'+gate(done||quizOk,qs.length?("知识快问答对 "+need+" 题以上"):"答对知识快问")+gate(done||codePassed,"代码通过结构检查")+(l.expectedOutput?gate(done||outOk,"运行结果与预期一致"):"")+gate(done,"获得学习点并解锁下一关")+'</div><div class="progress-bar" style="margin-top:18px"><i style="width:'+((Number(done||quizOk)+Number(done||codePassed)+Number(!l.expectedOutput||done||outOk))/(l.expectedOutput?3:2)*100)+'%"></i></div></section>'+masteryHtml+'<section class="panel"><div class="challenge-head"><div class="challenge-label">核心要点</div><span class="chip">速览</span></div>'+l.takeaways.map(function(t){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</section><section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside>';
+ const challengeFeedback=window.codeFeedback?'<div class="feedback '+(codePassed?"ok":"no")+'">'+esc(window.codeFeedback)+'</div>':"";
+ const lockMsg=done?'<div class="feedback ok">本关已通关。可以回看内容，也可以继续下一关。</div>':"";
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.stage||l.module||"")+' · 第 '+String(l.id).padStart(2,"0")+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
+ '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 读透原理再动手写</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</div></section>'+
+ exampleHtml+pitHtml+quizHtml+
+ '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||l.starter||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地检查会按真实 C 语法核对括号、分号、语句结构，再核对本关要求的写法；注释和字符串里的关键词不算通过。它不等同于编译器，写完请务必在本机编译运行一次。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(l.solution||"")+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并通过检查，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section>'+runHtml+'</div>'+sidebar+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
+ startTaskTimer(l);
+}
+/* ==================== 英语四级任务引擎（听力/阅读/写作/翻译/口语） ==================== */
+let recUrl=null,recorder=null,recChunks=[],taskTimer=null;
+function stopTaskTimer(){if(taskTimer){clearInterval(taskTimer);taskTimer=null}}
+function startTaskTimer(l){
+ if(!l||!l.timeLimit)return;
+ if(window.taskTimerLevel!==l.id){window.taskDeadline=Date.now()+l.timeLimit*60000;window.taskTimerLevel=l.id}
+ if(taskTimer)return;
+ taskTimer=setInterval(function(){
+  const el=document.getElementById("taskTimer");
+  if(!el){stopTaskTimer();return}
+  const left=Math.max(0,window.taskDeadline-Date.now());
+  const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);
+  el.textContent=(left>0?"剩余 ":"时间到 ")+m+":"+String(s).padStart(2,"0");
+  if(left<=0){stopTaskTimer();if(window.taskState)window.taskState.timeUp=true;if(activeLevel&&activeLevel.type==="mock"&&window.taskState&&!window.taskState.submitted){submitMock(true);return}render()}
+ },1000);
+}
+function ensureTaskState(l){
+ if(!window.taskState||window.taskState.levelId!==l.id){
+  window.taskState={levelId:l.id,answers:(l.questions||[]).map(function(){return null}),score:null,passed:false,recordUrl:null,recordSkipped:false,checks:{},checkResult:null,submitted:false};
+ }
+ return window.taskState;
+}
+function completeTask(l){
+ if(isDone(l))return false;
+ data.completed[l.id]={at:Date.now()};data.xp+=30;save();
+ playVictoryAnimation(l);
+ if(completedCount()===levels.length){setTimeout(function(){activeLevel=null;page="summary";render()},950)}else{render()}
+ return true;
+}
+function audioRow(a,idx,lid){
+ const id="tr-"+lid+"-"+idx;
+ return '<div class="audio-row"><div class="audio-head"><span class="audio-label">'+esc(a.label||"音频")+'</span>'+(a.voice?'<span class="chip chip-mini">'+esc(a.voice)+'</span>':"")+'<span class="audio-hint">'+esc(a.hint||"可反复重听")+'</span>'+(a.transcript?'<button class="btn btn-ghost btn-small" type="button" data-action="toggle-transcript" data-target="'+id+'">显示原文</button>':"")+'</div><audio controls preload="metadata" src="./audio/cet4/'+esc(a.file)+'"></audio>'+(a.transcript?'<div class="transcript" id="'+id+'" hidden>'+esc(a.transcript)+'</div>':"")+'</div>';
+}
+function questionBlock(q,qi,l,st){
+ const picked=st.answers[qi],answered=picked!==null&&picked!==undefined;
+ const exam=l.type==="mock"&&!st.submitted;
+ const opts=q.options.map(function(o,i){
+  let cl="option";
+  if(answered){
+   if(exam){if(picked===i)cl+=" selected"}
+   else{if(i===q.answer)cl+=" correct";else if(picked===i)cl+=" wrong"}
+  }
+  return '<button type="button" class="'+cl+'" data-q="'+qi+'" data-pick="'+i+'"'+((answered&&!exam)?" disabled":"")+'>'+String.fromCharCode(65+i)+'. '+esc(o)+'</button>';
+ }).join("");
+ const fb=(answered&&!exam)?'<div class="feedback '+(picked===q.answer?"ok":"no")+'">'+(picked===q.answer?"✓ 答对了":"✗ 正确答案是 "+String.fromCharCode(65+q.answer))+(q.explain?'　'+esc(q.explain):"")+'</div>':"";
+ return '<div class="quiz-item"><div class="quiz-question">第 '+(qi+1)+' 题　'+esc(q.q)+'</div><div class="option-list">'+opts+'</div>'+fb+'</div>';
+}
+function submitMock(auto){
+ const l=activeLevel;if(!l||!l.questions)return;
+ const st=ensureTaskState(l);
+ const answered=st.answers.filter(function(a){return a!==null&&a!==undefined}).length;
+ if(!auto&&answered<l.questions.length&&!window.confirm("还有 "+(l.questions.length-answered)+" 题未作答，确定交卷？"))return;
+ const right=st.answers.filter(function(a,i){return a===l.questions[i].answer}).length;
+ st.score={right:right,total:l.questions.length};st.submitted=true;
+ data.attempts+=l.questions.length;data.correct+=right;save();
+ stopTaskTimer();
+ if(right/l.questions.length>=(l.passRatio||0.8)){st.passed=true;completeTask(l);return}
+ render();
+}
+function pickAnswer(qi,pi){
+ const l=activeLevel;if(!l||!l.questions)return;
+ const st=ensureTaskState(l);
+ const exam=l.type==="mock"&&!st.submitted;
+ if(exam){
+  if(st.answers[qi]===pi)return;
+  st.answers[qi]=pi;render();return;
+ }
+ if(st.answers[qi]!==null&&st.answers[qi]!==undefined)return;
+ st.answers[qi]=pi;
+ data.attempts++;if(pi===l.questions[qi].answer)data.correct++;save();
+ const answered=st.answers.filter(function(a){return a!==null&&a!==undefined}).length;
+ const needsTask=(l.type==="write"||l.type==="translate"||l.type==="speak");
+ if(answered===l.questions.length&&!needsTask){
+  const right=st.answers.filter(function(a,i){return a===l.questions[i].answer}).length;
+  st.score={right:right,total:l.questions.length};
+  if(right/l.questions.length>=(l.passRatio||0.8)){st.passed=true;completeTask(l);return}
+ }
+ render();
+}
+function toggleSelfCheck(key){
+ const l=activeLevel;if(!l)return;
+ const st=ensureTaskState(l);st.checks[key]=!st.checks[key];
+ const list=l.checklist||[];
+ const allChecked=list.length&&list.every(function(_,i){return st.checks["c"+i]});
+ const qs=l.questions||[];
+ const qsDone=!qs.length||questionsRatioOk(l,st);
+ const rec=(st.recordUrl||st.recordSkipped);
+ if(allChecked&&rec&&qsDone){st.passed=true;completeTask(l);return}
+ if(allChecked&&rec&&!qsDone){render();toast("跟读与自评完成了，客观题还没达标，先把上面的题目做对。");return}
+ render();
+}
+function keyHit(low,k){
+ const kk=String(k).toLowerCase();
+ if(/^[a-z][a-z'’-]*$/.test(kk)){
+  return new RegExp("\\b"+kk.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b").test(low);
+ }
+ return low.indexOf(kk)>=0;
+}
+function gradeText(l,text){
+ const t=(text||"").trim();
+ const words=t?(t.match(/[A-Za-z][A-Za-z'’-]*/g)||[]).length:0;
+ const low=t.toLowerCase();
+ const pts=(l.points||[]).map(function(g){
+  const keys=Array.isArray(g)?g:[g];
+  return {label:keys[0],hit:keys.some(function(k){return keyHit(low,k)})};
+ });
+ const min=l.minWords||0;
+ return {words:words,pts:pts,min:min,ok:words>=min&&pts.every(function(p){return p.hit})};
+}
+function questionsRatioOk(l,st){
+ const qs=l.questions||[];if(!qs.length)return true;
+ const done=st.answers.filter(function(a){return a!==null&&a!==undefined}).length;
+ if(done<qs.length)return false;
+ const right=st.answers.filter(function(a,i){return a===l.questions[i].answer}).length;
+ st.score={right:right,total:qs.length};
+ return right/qs.length>=(l.passRatio||0.8);
+}
+function retryTask(){
+ const l=activeLevel;if(!l)return;
+ const st=ensureTaskState(l);
+ st.answers=(l.questions||[]).map(function(){return null});
+ st.score=null;st.checkResult=null;st.submitted=false;st.checks={};st.timeUp=false;
+ window.taskDeadline=null;window.taskTimerLevel=null;stopTaskTimer();
+ render();toast("已重置本关作答，可以重新做一遍。");
+}
+function checkWrittenTask(){
+ const l=activeLevel;if(!l)return;
+ const ta=document.getElementById("taskAnswer");if(!ta)return;
+ data.drafts[l.id]=ta.value;save();
+ const st=ensureTaskState(l);st.checkResult=gradeText(l,ta.value);
+ if(st.checkResult.ok&&questionsRatioOk(l,st)){st.passed=true;completeTask(l);return}
+ render();
+ if(st.checkResult.ok)toast("实操部分通过了，但客观题还没达标，先把上面的题目做对。");
+ else toast("还差一点，按下方提示补齐要点再来。");
+}
+function startRecorder(){
+ const l=activeLevel;if(!l)return;
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast("当前浏览器不支持录音，可直接跟读自评。");return}
+ navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+  recChunks=[];recorder=new MediaRecorder(stream);
+  recorder.ondataavailable=function(e){if(e.data&&e.data.size)recChunks.push(e.data)};
+  recorder.onstop=function(){
+   stream.getTracks().forEach(function(t){t.stop()});
+   if(recUrl)URL.revokeObjectURL(recUrl);
+   recUrl=URL.createObjectURL(new Blob(recChunks,{type:(recorder&&recorder.mimeType)||"audio/webm"}));
+   const st=ensureTaskState(activeLevel);st.recordUrl=recUrl;
+   window.recording=false;render();
+  };
+  recorder.start();window.recording=true;render();toast("正在录音，跟读完成后点「停止录音」。");
+ }).catch(function(err){window.recording=false;render();toast("麦克风不可用："+((err&&err.name)||"未知错误"))});
+}
+function stopRecorder(){
+ if(recorder&&recorder.state!=="inactive"){try{recorder.stop()}catch(e){}}
+ recorder=null;window.recording=false;
+}
+function renderEnglishLesson(l){
+ const done=isDone(l),st=ensureTaskState(l),t=l.type;
+ let material="";
+ if(l.audio&&l.audio.length){
+  material+='<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">♪</span>听力材料</div><span class="chip">可重听</span></div>'+l.audio.map(function(a,i){return audioRow(a,i,l.id)}).join("")+(l.audioTip?'<div class="hint">'+esc(l.audioTip)+'</div>':"")+'</section>';
+ }
+ if(l.passage){
+  material+='<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▤</span>'+esc(l.passageLabel||"阅读材料")+'</div><span class="chip">'+esc(l.passageTag||"精读")+'</span></div><div class="passage">'+esc(l.passage)+'</div></section>';
+ }
+ let task="";
+ if(l.questions&&l.questions.length){
+  const need=Math.ceil((l.passRatio||0.8)*l.questions.length);
+  const scoreLine=st.score?'<div class="feedback '+(st.passed?"ok":"no")+'">本次答对 '+st.score.right+' / '+st.score.total+'　（需答对 '+need+' 题）</div>':"";
+  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✦</span>'+esc(l.taskTitle||"理解题")+'</div><span class="chip">答对 '+need+' / '+l.questions.length+' 题通关</span>'+(l.timeLimit?'<span class="chip" id="taskTimer">剩余 '+l.timeLimit+':00</span>':"")+'</div>'+(l.taskCopy?'<p class="challenge-copy">'+esc(l.taskCopy)+'</p>':"")+l.questions.map(function(q,i){return questionBlock(q,i,l,st)}).join("")+(l.type==="mock"&&!st.submitted?'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="submit-mock">交卷并判分</button><span class="audio-hint">交卷前可以随时改答案</span></div>':"")+scoreLine+(st.score&&!st.passed&&!done?'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="retry-task">重做本关题目</button><span class="audio-hint">答错的题不能改，重做一遍可以重新拿分</span></div>':"")+(done?'<div class="feedback ok">本关已通关，可以回看或继续下一关。</div>':"")+'</section>';
+ }
+ if(t==="write"||t==="translate"){
+  const res=st.checkResult;
+  const pts=res?'<div class="point-list">'+res.pts.map(function(p){return '<div class="point-item"><span class="'+(p.hit?"point-ok":"point-no")+'">'+(p.hit?"✓":"✗")+'</span><span>要点：'+esc(p.label)+'</span></div>'}).join("")+'</div>':"";
+  const wc='<div class="wordcount">当前 <b id="liveWords">'+((data.drafts[l.id]||"").match(/[A-Za-z][A-Za-z'’-]*/g)||[]).length+'</b> 词'+(l.minWords?'，要求 ≥ '+l.minWords+' 词':"")+'</div>';
+  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✎</span>'+esc(l.taskTitle||(t==="write"?"写作任务":"翻译任务"))+'</div><span class="chip">完成 +30 点</span>'+(l.timeLimit?'<span class="chip" id="taskTimer">剩余 '+l.timeLimit+':00</span>':"")+'</div><p class="challenge-copy">'+esc(l.prompt)+'</p>'+(l.source?'<div class="passage">'+esc(l.source)+'</div>':"")+'<textarea class="task-input" id="taskAnswer" spellcheck="false" placeholder="'+esc(l.placeholder||"在这里作答…")+'">'+esc(data.drafts[l.id]||"")+'</textarea>'+wc+'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="check-task">检查并提交</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起参考范文":((done||answerUnlocked)?"查看参考范文":"🔒 查看参考范文"))+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="next-level">下一关 →</button>':"")+'</div>'+pts+(res&&!res.ok?'<div class="feedback no">还没通过：把上面标 ✗ 的要点补进去，再检查一次。</div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>参考范文 / 参考译文</span></div><pre>'+esc(l.sample||"")+'</pre><div class="hint">参考范文只用于对照结构与表达，考试时请用自己的话写。</div></div>':"")+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
+ }
+ if(t==="speak"){
+  const list=l.checklist||[];
+  const checks=list.map(function(c,i){const k="c"+i;return '<button type="button" class="takeaway-item self-check'+(st.checks[k]?" on":"")+'" data-action="self-check" data-key="'+k+'"><span class="'+(st.checks[k]?"tick":"")+'">'+(st.checks[k]?"✓":"○")+'</span><span>'+esc(c)+'</span></button>'}).join("");
+  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">◍</span>跟读与口语任务</div><span class="chip">录音 + 自评</span></div><p class="challenge-copy">'+esc(l.prompt||l.taskCopy||"")+'</p>'+(l.model?'<div class="audio-row"><div class="audio-head"><span class="audio-label">示范朗读</span>'+(l.model.voice?'<span class="chip chip-mini">'+esc(l.model.voice)+'</span>':"")+'<button class="btn btn-ghost btn-small" type="button" data-action="toggle-transcript" data-target="tr-'+l.id+'-m">显示原文</button></div><audio controls preload="metadata" src="./audio/cet4/'+esc(l.model.file)+'"></audio><div class="transcript" id="tr-'+l.id+'-m" hidden>'+esc(l.model.text||"")+'</div></div>':"")+'<div class="recorder-row">'+(window.recording?'<span class="rec-dot"></span><span class="audio-hint">正在录音…</span><button class="btn btn-soft btn-small" data-action="rec-stop">停止录音</button>':'<button class="btn btn-primary btn-small" data-action="rec-start">'+(st.recordUrl?"重新录音":"开始录音跟读")+'</button>')+(st.recordUrl?'<audio controls preload="metadata" src="'+st.recordUrl+'"></audio>':"")+'</div><div class="hint">录音只保存在这台设备的浏览器内存里，刷新页面即消失，不会上传；没有麦克风或浏览器不支持录音时，可点下方按钮用「跟读自评」代替，同样计入通关。</div><div class="exercise-actions" style="margin:10px 0 0"><button class="btn btn-ghost btn-small" data-action="skip-rec">'+(st.recordSkipped?"已选择用跟读自评代替":"没有麦克风？用跟读自评代替")+'</button></div><div class="challenge-label" style="margin:14px 0 6px">自评清单（全部打勾且录过音才算通关）</div><div class="takeaway">'+checks+'</div>'+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
+ }
+ const condition='<section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway">'+
+  ((l.questions&&l.questions.length)?'<div class="takeaway-item"><span class="'+(st.passed||done?"tick":"")+'">'+(st.passed||done?"✓":"○")+'</span><span>客观题答对率 ≥ '+Math.round((l.passRatio||0.8)*100)+'%</span></div>':"")+
+  ((t==="write"||t==="translate")?'<div class="takeaway-item"><span class="'+(st.passed||done?"tick":"")+'">'+(st.passed||done?"✓":"○")+'</span><span>要点齐全且字数达标</span></div>':"")+
+  ((t==="speak")?'<div class="takeaway-item"><span class="'+((st.recordUrl||st.recordSkipped)?"tick":"")+'">'+((st.recordUrl||st.recordSkipped)?"✓":"○")+'</span><span>完成跟读录音（没有麦克风时可选择「用跟读自评代替」）</span></div><div class="takeaway-item"><span class="'+(st.passed||done?"tick":"")+'">'+(st.passed||done?"✓":"○")+'</span><span>自评清单全部确认</span></div>':"")+
+  '<div class="takeaway-item"><span class="'+(done?"tick":"")+'">'+(done?"✓":"○")+'</span><span>获得本关学习点并解锁后续</span></div></div></section>';
+ const side='<aside class="lesson-main">'+condition+'<section class="panel"><div class="challenge-head"><div class="challenge-label">核心要点</div><span class="chip">速览</span></div>'+l.takeaways.map(function(x){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(x)+'</span></div>'}).join("")+'</section><section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside>';
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.module||l.stage)+' · 第 '+(levels.indexOf(l)+1)+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
+ '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关要点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 看完要点后完成任务</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p>'+(l.usage?'<div class="hint" style="margin-bottom:12px"><b>能用在哪儿：</b>'+esc(l.usage)+'</div>':"")+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(x){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(x)+'</span></div>'}).join("")+'</div></section>'+material+task+'</div>'+side+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
+ startTaskTimer(l);
 }
 function renderSummary(){
  const done=completedCount(), pct=progressPct(), rate=data.attempts?Math.round(data.correct/data.attempts*100):0, finished=done===levels.length;
  let skills=groups.filter(function(g){return levels.some(function(l){return l.stage===g})}).map(function(g){const ls=levels.filter(function(l){return l.stage===g}), n=ls.filter(isDone).length;return '<div class="skill-row"><span>'+esc(g)+' <span style="color:#9aa5b5">('+n+'/'+ls.length+')</span></span><span class="skill-state">'+(n===ls.length?"已掌握":n?"学习中":"待开始")+'</span></div>'}).join("");
  document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习档案</div><h1>我的学习总结</h1><p class="subhead">记录每一步进步，也看看下一步可以做什么。</p></div><button class="btn btn-ghost btn-small" data-page="map">← 返回学习地图</button></div>'+
- '<div class="summary-grid"><div class="summary-hero"><div class="eyebrow" style="color:#dbe2ff">'+(finished?"C 语言学习旅程":"持续成长中")+'</div><h2>'+(finished?"恭喜你，完成全部关卡！":"你的每一次练习都在累积")+'</h2><p>'+(finished?"你从程序结构出发，练习了类型、流程、函数、数组、字符串、指针、内存管理、文件、标准库和现代 C 特性。现在你已经走完这条核心学习路线，可以继续用真实项目巩固所学。":"完成 "+done+" 个关卡，已经覆盖 "+pct+"% 的学习路线。继续按自己的节奏前进，已学内容会自动保存在这台设备。")+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(finished?"回顾毕业项目":"继续学习")+' →</button></div><div class="summary-emoji">'+(finished?"🎓":"✦")+'</div></div><div class="panel"><div class="challenge-head"><div class="challenge-label">成长数据</div><span class="chip">'+pct+'%</span></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+' / '+levels.length+'</div><div class="stat-label">已通关关卡</div></div></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">累计学习点</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+rate+'%</div><div class="stat-label">知识快问正确率 · '+data.correct+'/'+data.attempts+'</div></div></div></div></div>'+
- '<div class="summary-grid" style="margin-top:18px"><section class="panel"><div class="challenge-head"><div class="challenge-label">技能地图</div><span class="chip">按模块回顾</span></div><div class="skill-list">'+skills+'</div></section><section class="panel"><div class="challenge-head"><div class="challenge-label">'+(finished?"下一阶段建议":"给未来自己的话")+'</div><span class="chip">'+(finished?"继续实践":"保持节奏")+'</span></div><p class="lesson-copy">'+(finished?"把学到的内容组合成一个小项目：例如通讯录、命令行记账本或简易文本分析器。尝试为函数补充错误处理、拆分头文件，并用编译器警告检查代码。":"学编程不是背完所有语法，而是能用合适的工具把问题拆开。先把当前关卡做完，再回头复习卡住的知识点。")+'</p><div class="takeaway"><div class="takeaway-item"><span class="tick">✓</span><span>代码挑战在本地浏览器完成</span></div><div class="takeaway-item"><span class="tick">✓</span><span>学习进度自动保存</span></div><div class="takeaway-item"><span class="tick">✓</span><span>可以随时回看已完成课程</span></div></div></section></div>'+
- '<div class="footer-note">本路线聚焦 C 语言核心语法与常用标准库。不同 C 标准和平台扩展可能有差异，进阶项目建议结合目标编译器文档。</div>';
+ '<div class="summary-grid"><div class="summary-hero"><div class="eyebrow" style="color:#dbe2ff">'+(finished?"学习旅程":"持续成长中")+'</div><h2>'+(finished?"恭喜你，完成全部关卡！":"你的每一次练习都在累积")+'</h2><p>'+(finished?(activeCourse==="c"?"你从程序结构出发，练习了类型、流程、函数、数组、字符串、指针、内存管理、文件、工程实践、数据结构与算法，并完成了综合项目。现在你可以用真实项目继续巩固。":"你走完了地基、听力、阅读、写作、翻译、口语与全真模考，掌握了应试与实用两套能力。接下来保持每周一套模考的节奏，把错题按题型归类复盘。")+"" :"完成 "+done+" 个关卡，已经覆盖 "+pct+"% 的学习路线。继续按自己的节奏前进，已学内容会自动保存在这台设备。")+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(finished?"回顾毕业项目":"继续学习")+' →</button></div><div class="summary-emoji">'+(finished?"🎓":"✦")+'</div></div><div class="panel"><div class="challenge-head"><div class="challenge-label">成长数据</div><span class="chip">'+pct+'%</span></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+' / '+levels.length+'</div><div class="stat-label">已通关关卡</div></div></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">累计学习点</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+rate+'%</div><div class="stat-label">知识快问正确率 · '+data.correct+'/'+data.attempts+'</div></div></div></div></div>'+
+ '<div class="summary-grid" style="margin-top:18px"><section class="panel"><div class="challenge-head"><div class="challenge-label">技能地图</div><span class="chip">按模块回顾</span></div><div class="skill-list">'+skills+'</div></section><section class="panel"><div class="challenge-head"><div class="challenge-label">'+(finished?"下一阶段建议":"给未来自己的话")+'</div><span class="chip">'+(finished?"继续实践":"保持节奏")+'</span></div><p class="lesson-copy">'+(finished?(activeCourse==="c"?"把学到的内容组合成一个小项目：例如通讯录、命令行记账本或简易文本分析器。为函数补充错误处理、拆分头文件，并用 -Wall -Wextra 检查代码。":"找一段英文材料先裸听、再读原文、复述一遍、写下三句话总结；每周一套模考，把错题按题型归类。"):(activeCourse==="c"?"学编程不是背完所有语法，而是能用合适的工具把问题拆开。先把当前关卡做完，再回头复习卡住的知识点。":"语言能力靠积累：每天 20 分钟精听加跟读，比周末突击三小时更有效。先把当前关卡做完，再回头复习卡住的题型。"))+'</p><div class="takeaway"><div class="takeaway-item"><span class="tick">✓</span><span>'+(activeCourse==="c"?"代码在本机浏览器做结构检查，并可在本机编译运行比对输出":"听力与口语音频来自本地文件，可反复重听")+'</span></div><div class="takeaway-item"><span class="tick">✓</span><span>学习进度自动保存</span></div><div class="takeaway-item"><span class="tick">✓</span><span>可以随时回看已完成课程</span></div></div></section></div>'+
+ '<div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
 }
-function openLevel(id){const l=levels.find(function(x){return x.id===id});if(!l)return;if(!unlocked(l)&&!isDone(l)){toast("先完成上一关，就能解锁这里。");return}activeLevel=l;page="lesson";const quizDone=isDone(l)||!!data.quizRewards[l.id];selectedOption=quizDone?l.answer:null;quizPassed=quizDone;codePassed=isDone(l);hintVisible=false;solutionVisible=false;window.quizAnswered=quizDone;window.codeFeedback="";window.codeDraft=data.drafts[l.id]||"";render()}
+function openLevel(id){const l=levels.find(function(x){return x.id===id});if(!l)return;if(!unlocked(l)&&!isDone(l)){toast("先完成上一关，就能解锁这里。");return}activeLevel=l;page="lesson";const quizDone=isDone(l)||!!data.quizRewards[l.id];selectedOption=quizDone?l.answer:null;quizPassed=quizDone;codePassed=isDone(l);hintVisible=false;solutionVisible=false;window.quizAnswered=quizDone;window.codeFeedback="";window.codeDraft=data.drafts[l.id]||"";window.taskState=(window.taskState&&window.taskState.levelId===l.id)?window.taskState:null;render()}
 function awardForQuiz(){if(quizPassed){toast("这道题的奖励已经领取，不会重复加分。");return}data.attempts++;if(selectedOption===activeLevel.answer){quizPassed=true;const firstCorrect=!data.quizRewards[activeLevel.id];if(firstCorrect){data.quizRewards[activeLevel.id]=true;data.correct++;data.xp+=10;toast("答对了，学习点 +10")}else{toast("答对了，这道题的学习点已领取。")}save();if(codePassed)maybeComplete();}else{save();}window.quizAnswered=true;render()}
 function tokenizeChallengeC(source){
  const tokens=[],ops=['<<=','>>=','...','->','++','--','&&','||','==','!=','<=','>=','+=','-=','*=','/=','%=','&=','|=','^=','<<','>>'];let i=0;
  while(i<source.length){const c=source[i];if(/\s/.test(c)){i++;continue}
+  if(c==='\\'&&(source[i+1]==='\n'||source[i+1]==='\r')){i+=2;if(source[i]==='\n')i++;continue}
   if(c==='/'&&source[i+1]==='/'){i+=2;while(i<source.length&&source[i]!=='\n')i++;continue}
   if(c==='/'&&source[i+1]==='*'){const e=source.indexOf('*/',i+2);if(e<0)return{error:'注释没有用 */ 结束。',tokens:[]};i=e+2;continue}
   if(c==='"'||c==="'"){const q=c,s=i++;let done=false;while(i<source.length){if(source[i]==='\\'){i+=2;continue}if(source[i]===q){i++;done=true;break}if(source[i]==='\n'||source[i]==='\r')return{error:'字符串或字符常量中有未结束的换行。',tokens:[]};i++}if(!done)return{error:'字符串或字符常量缺少结束引号。',tokens:[]};tokens.push({type:q==='"'?'string':'char',v:source.slice(s+1,i-1),at:s});continue}
@@ -1642,7 +1202,7 @@ function cMask(source){let out='',i=0;while(i<source.length){const c=source[i],n
 function vals(ts){return ts.map(t=>t.v)}
 function seq(ts,pat){const a=vals(ts);for(let i=0;i<=a.length-pat.length;i++){let ok=true;for(let j=0;j<pat.length;j++)if(a[i+j]!==pat[j]){ok=false;break}if(ok)return true}return false}
 function indexSeq(ts,pat){const a=vals(ts);for(let i=0;i<=a.length-pat.length;i++){let ok=true;for(let j=0;j<pat.length;j++)if(a[i+j]!==pat[j]){ok=false;break}if(ok)return i}return-1}
-function closeGroup(ts,s){const open=ts[s]&&ts[s].v,match={'(':')','{':'}','[':']'},end=match[open];if(!end)return-1;let d=0;for(let i=s;i<ts.length;i++){if(ts[i].v===open)d++;else if(ts[i].v===end&&--d===0)return i}return-1}
+function closeGroup(ts,s){const open=ts[s]&&ts[s].v,match={'(':')','{':'}','[':']'},end=match[open];if(!end)return-1;let d=0;for(let i=s;i<ts.length;i++){if(ts[i].type==="string"||ts[i].type==="char")continue;if(ts[i].v===open)d++;else if(ts[i].v===end&&--d===0)return i}return-1}
 function splitTop(ts,sep){const r=[];let s=0,d=0;for(let i=0;i<ts.length;i++){const v=ts[i].v;if(v==='('||v==='['||v==='{')d++;else if(v===')'||v===']'||v==='}')d--;else if(v===sep&&d===0){r.push(ts.slice(s,i));s=i+1}}r.push(ts.slice(s));return r}
 function calls(ts,name){const r=[];for(let i=0;i<ts.length-1;i++)if(ts[i].v===name&&ts[i+1].v==='('){const e=closeGroup(ts,i+1);if(e>0)r.push({args:splitTop(ts.slice(i+2,e),','),at:i,end:e})}return r}
 function func(ts,name,ret){for(let i=0;i<ts.length-2;i++){if(ts[i].v!==ret||ts[i+1].v!==name||ts[i+2].v!=='(')continue;const p=closeGroup(ts,i+2);if(p<0||!ts[p+1]||ts[p+1].v!=='{')continue;const e=closeGroup(ts,p+1);if(e>=0)return{params:splitTop(ts.slice(i+3,p),','),body:ts.slice(p+2,e),at:i,bodyAt:p+1,end:e+1}}return null}
@@ -1655,21 +1215,26 @@ function positiveIntVariable(ts,name){for(let i=0;i<ts.length-3;i++)if((ts[i].v=
 /* ---------- 轻量 C 语法解析器：分号、括号、控制流、声明、函数定义都要符合真实 C 语法 ---------- */
 const CS_TYPES=["void","char","short","int","long","float","double","signed","unsigned","_Bool","_Complex","_Imaginary","struct","enum","union","typedef","extern","static","auto","register","const","volatile","restrict","inline","_Atomic","_Static_assert","_Alignas","size_t","FILE"];
 const CS_BIN={"=":2,"+=":2,"-=":2,"*=":2,"/=":2,"%=":2,"<<=":2,">>=":2,"&=":2,"|=":2,"^=":2,"||":4,"&&":5,"|":6,"^":7,"&":8,"==":9,"!=":9,"<":10,">":10,"<=":10,">=":10,"<<":11,">>":11,"+":12,"-":12,"*":13,"/":13,"%":13};
-function closeGroupRange(ts,s,end){const open=ts[s]?ts[s].v:null,close={'(':')','[':']','{':'}'}[open];if(!close)return-1;let d=0;for(let i=s;i<end;i++){const v=ts[i].v;if(v===open)d++;else if(v===close){d--;if(d===0)return i}}return-1}
+function closeGroupRange(ts,s,end){const open=ts[s]?ts[s].v:null,close={'(':')','[':']','{':'}'}[open];if(!close)return-1;let d=0;for(let i=s;i<end;i++){if(ts[i].type==="string"||ts[i].type==="char")continue;const v=ts[i].v;if(v===open)d++;else if(v===close){d--;if(d===0)return i}}return-1}
 function csLine(source,at){let n=1;for(let k=0;k<at;k++)if(source[k]==="\n")n++;return n}
 function csErr(source,at,msg){return msg+"（第 "+csLine(source,at)+" 行）"}
 function collectTypeNames(ts){const names=new Set();for(let i=0;i<ts.length-1;i++){if(ts[i].v==="typedef"){let d=0;for(let j=i+1;j<ts.length;j++){const v=ts[j].v;if(v==="("||v==="["||v==="{")d++;else if(v===")"||v==="]"||v==="}")d--;else if(v===";"&&d===0){if(ts[j-1]&&ts[j-1].type==="id")names.add(ts[j-1].v);break}}}if(ts[i].v==="struct"||ts[i].v==="enum"||ts[i].v==="union"){const n=ts[i+1];if(n&&n.type==="id"&&CS_TYPES.indexOf(n.v)<0)names.add(n.v)}}return names}
 function csTypeStart(v,names){return !!v&&(CS_TYPES.indexOf(v)>=0||names.has(v))}
-function csPrimary(ts,i,end,names){if(i>=end)return{ok:false,error:"表达式意外结束"};const t=ts[i];if(t.type==="id"||t.type==="num"||t.type==="string"||t.type==="char")return{ok:true,next:i+1};if(t.v==="("){const r=csExpr(ts,i+1,end,names,true);if(!r.ok)return r;if(r.next>=end||ts[r.next].v!==")")return{ok:false,error:"括号没有闭合"};return{ok:true,next:r.next+1}}return{ok:false,error:"无法识别的表达式: "+t.v}}
-function csPostfix(ts,i,end,names){let r=csPrimary(ts,i,end,names);if(!r.ok)return r;for(;;){if(r.next>=end)return r;const t=ts[r.next];if(t.v==="("){const e=closeGroupRange(ts,r.next,end);if(e<0)return{ok:false,error:"函数调用的括号没有闭合"};const args=splitTop(ts.slice(r.next+1,e),",");for(let k=0;k<args.length;k++){const a=args[k];if(!a.length)continue;const rr=csExpr(a,0,a.length,names,false);if(!rr.ok||rr.next!==a.length)return{ok:false,error:"函数调用参数有误: "+rr.error}}r={ok:true,next:e+1}}else if(t.v==="["){const e=closeGroupRange(ts,r.next,end);if(e<0)return{ok:false,error:"下标没有闭合"};const inner=ts.slice(r.next+1,e);if(inner.length){const rr=csExpr(inner,0,inner.length,names,false);if(!rr.ok||rr.next!==inner.length)return{ok:false,error:"下标表达式有误: "+rr.error}}r={ok:true,next:e+1}}else if(t.v==="."||t.v==="->"){if(r.next+1>=end||ts[r.next+1].type!=="id")return{ok:false,error:t.v+" 后需要成员名"};r={ok:true,next:r.next+2}}else if(t.v==="++"||t.v==="--"){r={ok:true,next:r.next+1}}else return r}}
-function csUnary(ts,i,end,names){if(i>=end)return{ok:false,error:"表达式意外结束"};const t=ts[i];if(t.v==="++"||t.v==="--"||t.v==="+"||t.v==="-"||t.v==="!"||t.v==="~"||t.v==="*"||t.v==="&")return csUnary(ts,i+1,end,names);if(t.v==="sizeof"){const n=ts[i+1];if(n&&n.v==="("&&csTypeStart(ts[i+2]?ts[i+2].v:"",names)){const e=closeGroupRange(ts,i+1,end);if(e<0)return{ok:false,error:"sizeof 的括号没有闭合"};return{ok:true,next:e+1}}return csUnary(ts,i+1,end,names)}if(t.v==="("&&csTypeStart(ts[i+1]?ts[i+1].v:"",names)){let k=i+1,state=0;while(k<end){const v=ts[k].v;if(state===1&&v==="{")break;if(state===1&&ts[k].type==="id"){state=2;k++;continue}if(csTypeStart(v,names)){state=(v==="struct"||v==="enum"||v==="union")?1:0;k++;continue}break}while(k<end&&ts[k].v==="*")k++;if(k>i+1&&k<end&&ts[k].v===")")return csUnary(ts,k+1,end,names)}return csPostfix(ts,i,end,names)}
-function csBin(ts,i,end,names,minPrec){let r=csUnary(ts,i,end,names);if(!r.ok)return r;for(;;){if(r.next>=end)return r;const t=ts[r.next];const prec=CS_BIN[t.v];if(prec===undefined||prec<minPrec)return r;const rr=csBin(ts,r.next+1,end,names,prec===2?prec:prec+1);if(!rr.ok)return rr;r={ok:true,next:rr.next}}}
-function csCond(ts,i,end,names){let r=csBin(ts,i,end,names,0);if(!r.ok)return r;if(r.next<end&&ts[r.next].v==="?"){const a=csExpr(ts,r.next+1,end,names,false);if(!a.ok)return a;if(a.next>=end||ts[a.next].v!==":")return{ok:false,error:"三目运算符 ? 缺少 :"};const b=csCond(ts,a.next+1,end,names);if(!b.ok)return b;return{ok:true,next:b.next}}return r}
+function csPrimary(ts,i,end,names){if(i>=end)return{ok:false,error:"表达式意外结束"};const t=ts[i];
+ if(t.type==="id"&&(t.v==="struct"||t.v==="enum"||t.v==="union")&&ts[i+1]&&ts[i+1].type==="id")return{ok:true,next:i+2};
+ if(t.type==="id"&&!CS_TYPES.includes(t.v)&&names.has(t.v)&&ts[i+1]&&(ts[i+1].v===","||ts[i+1].v===")"))return{ok:true,next:i+1};
+ if(t.type==="id"||t.type==="num"||t.type==="string"||t.type==="char")return{ok:true,next:i+1};if(t.type==="p"&&t.v==="("){const r=csExpr(ts,i+1,end,names,true);if(!r.ok)return r;if(r.next>=end||ts[r.next].v!==")")return{ok:false,error:"括号没有闭合"};return{ok:true,next:r.next+1}}
+ if(csTypeStart(t.v,names)&&t.type==="id"){let k=i+1;if(t.v==="struct"||t.v==="enum"||t.v==="union"){if(ts[k]&&ts[k].type==="id")k++}else{while(k<end&&(ts[k].v==="*"||ts[k].v==="const"||ts[k].v==="volatile"))k++}return{ok:true,next:k}}
+ return{ok:false,error:"无法识别的表达式: "+t.v}}
+function csPostfix(ts,i,end,names){let r=csPrimary(ts,i,end,names);if(!r.ok)return r;for(;;){if(r.next>=end)return r;const t=ts[r.next];if(t.type==="p"&&t.v==="("){const e=closeGroupRange(ts,r.next,end);if(e<0)return{ok:false,error:"函数调用的括号没有闭合"};const args=splitTop(ts.slice(r.next+1,e),",");for(let k=0;k<args.length;k++){const a=args[k];if(!a.length)continue;const rr=csExpr(a,0,a.length,names,false);if(!rr.ok||rr.next!==a.length)return{ok:false,error:"函数调用参数有误: "+rr.error}}r={ok:true,next:e+1}}else if(t.type==="p"&&t.v==="["){const e=closeGroupRange(ts,r.next,end);if(e<0)return{ok:false,error:"下标没有闭合"};const inner=ts.slice(r.next+1,e);if(inner.length){const rr=csExpr(inner,0,inner.length,names,false);if(!rr.ok||rr.next!==inner.length)return{ok:false,error:"下标表达式有误: "+rr.error}}r={ok:true,next:e+1}}else if(t.type==="p"&&(t.v==="."||t.v==="->")){if(r.next+1>=end||ts[r.next+1].type!=="id")return{ok:false,error:t.v+" 后需要成员名"};r={ok:true,next:r.next+2}}else if(t.v==="++"||t.v==="--"){r={ok:true,next:r.next+1}}else return r}}
+function csUnary(ts,i,end,names){if(i>=end)return{ok:false,error:"表达式意外结束"};const t=ts[i];if(t.type==="p"&&(t.v==="++"||t.v==="--"||t.v==="+"||t.v==="-"||t.v==="!"||t.v==="~"||t.v==="*"||t.v==="&"))return csUnary(ts,i+1,end,names);if(t.v==="sizeof"){const n=ts[i+1];if(n&&n.v==="("&&csTypeStart(ts[i+2]?ts[i+2].v:"",names)){const e=closeGroupRange(ts,i+1,end);if(e<0)return{ok:false,error:"sizeof 的括号没有闭合"};return{ok:true,next:e+1}}return csUnary(ts,i+1,end,names)}if(t.v==="("&&csTypeStart(ts[i+1]?ts[i+1].v:"",names)){let k=i+1,state=0;while(k<end){const v=ts[k].v;if(state===1&&v==="{")break;if(state===1&&ts[k].type==="id"){state=2;k++;continue}if(csTypeStart(v,names)){state=(v==="struct"||v==="enum"||v==="union")?1:0;k++;continue}break}while(k<end&&ts[k].v==="*")k++;if(k>i+1&&k<end&&ts[k].v===")")return csUnary(ts,k+1,end,names)}return csPostfix(ts,i,end,names)}
+function csBin(ts,i,end,names,minPrec){let r=csUnary(ts,i,end,names);if(!r.ok)return r;for(;;){if(r.next>=end)return r;const t=ts[r.next];const prec=t.type==="p"?CS_BIN[t.v]:undefined;if(prec===undefined||prec<minPrec)return r;const rr=csBin(ts,r.next+1,end,names,prec===2?prec:prec+1);if(!rr.ok)return rr;r={ok:true,next:rr.next}}}
+function csCond(ts,i,end,names){let r=csBin(ts,i,end,names,0);if(!r.ok)return r;if(r.next<end&&ts[r.next].type==="p"&&ts[r.next].v==="?"){const a=csExpr(ts,r.next+1,end,names,false);if(!a.ok)return a;if(a.next>=end||ts[a.next].type!=="p"||ts[a.next].v!==":")return{ok:false,error:"三目运算符 ? 缺少 :"};const b=csCond(ts,a.next+1,end,names);if(!b.ok)return b;return{ok:true,next:b.next}}return r}
 function csExpr(ts,i,end,names,allowComma){let r=csCond(ts,i,end,names);if(!r.ok)return r;if(allowComma){while(r.next<end&&ts[r.next].v===","){const rr=csCond(ts,r.next+1,end,names);if(!rr.ok)return rr;r={ok:true,next:rr.next}}}return r}
-function csDeclarator(ts,i,end,names,source){let j=i,name=null;if(ts[j]&&ts[j].v==="("){let k=j+1;while(k<end&&ts[k].v==="*")k++;if(k<end&&ts[k].type==="id"){name=ts[k].v;const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"声明中的括号没有闭合")};j=c+1}else return{ok:false,error:csErr(source,ts[j].at,"声明格式无法识别")}}else{while(j<end&&ts[j].v==="*")j++;if(j<end&&ts[j].type==="id"){name=ts[j].v;j++}else return{ok:false,error:csErr(source,ts[i].at,"声明缺少名字")}}
+function csDeclarator(ts,i,end,names,source){let j=i,name=null;if(ts[j]&&ts[j].v==="("){let k=j+1;while(k<end&&ts[k].v==="*")k++;if(k<end&&ts[k].type==="id"){name=ts[k].v;const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"声明中的括号没有闭合")};j=c+1}else return{ok:false,error:csErr(source,ts[j].at,"声明格式无法识别")}}else{while(j<end&&(ts[j].v==="*"||ts[j].v==="const"||ts[j].v==="volatile"||ts[j].v==="restrict"))j++;if(j<end&&ts[j].type==="id"&&!csTypeStart(ts[j].v,new Set())){name=ts[j].v;j++}else return{ok:false,error:csErr(source,ts[i].at,"声明缺少名字")}}
 for(;;){if(j>=end)break;if(ts[j].v==="["){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"数组下标没有闭合")};j=c+1;continue}if(ts[j].v==="("){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"参数列表没有闭合")};j=c+1;continue}break}
 if(ts[j]&&ts[j].v==="="){if(ts[j+1]&&ts[j+1].v==="{"){const c=closeGroupRange(ts,j+1,end);if(c<0)return{ok:false,error:csErr(source,ts[j+1].at,"初始化列表没有闭合")};j=c+1}else{const r=csExpr(ts,j+1,end,names,false);if(!r.ok)return{ok:false,error:csErr(source,ts[j+1]?ts[j+1].at:ts[j].at,r.error)};j=r.next}}return{ok:true,next:j,name}}
-function csDeclarationCore(ts,i,end,names,source){let j=i,sawBody=false,state=0;while(j<end){const v=ts[j].v;if(state===1&&v==="{"){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"类型定义的花括号没有闭合")};j=c+1;sawBody=true;state=0;continue}if(state===1&&ts[j].type==="id"){j++;state=2;continue}if(state===2&&v==="{"){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"类型定义的花括号没有闭合")};j=c+1;sawBody=true;state=0;continue}if(csTypeStart(v,names)){state=(v==="struct"||v==="enum"||v==="union")?1:0;j++;continue}break}
+function csDeclarationCore(ts,i,end,names,source){let j=i,sawBody=false,state=0;while(j<end){const v=ts[j].v;if(state===1&&v==="{"){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"类型定义的花括号没有闭合")};j=c+1;sawBody=true;state=0;continue}if(state===1&&ts[j].type==="id"){j++;state=2;continue}if(state===2&&v==="{"){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"类型定义的花括号没有闭合")};j=c+1;sawBody=true;state=0;continue}if(csTypeStart(v,names)){const nx=ts[j+1];if(ts[j].type==="id"&&nx&&(nx.v===";"||nx.v===","||nx.v==="="||nx.v==="["||nx.v===")"))break;state=(v==="struct"||v==="enum"||v==="union")?1:0;j++;continue}break}
 if(j===i&&!sawBody)return{ok:false,error:csErr(source,ts[i].at,"无法识别的声明")};
 if(ts[i].v==="_Static_assert"){const c=closeGroupRange(ts,j,end);if(c<0)return{ok:false,error:csErr(source,ts[j].at,"_Static_assert 括号没有闭合")};if(c+1>=end||ts[c+1].v!==";")return{ok:false,error:csErr(source,ts[j].at,"_Static_assert 后缺少分号")};return{ok:true,next:c+1,name:null}}
 if(sawBody&&ts[j]&&ts[j].v===";")return{ok:true,next:j,name:null};
@@ -1678,7 +1243,7 @@ for(;;){const r=csDeclarator(ts,j,end,names,source);if(!r.ok)return r;if(firstNa
 return{ok:true,next:j,name:firstName}}
 function csDeclaration(ts,i,end,names,source){const r=csDeclarationCore(ts,i,end,names,source);if(!r.ok)return r;if(r.next<end&&ts[r.next].v===";")return{ok:true,next:r.next+1};return{ok:false,error:csErr(source,r.next<end?ts[r.next].at:ts[i].at,"声明语句后缺少分号 ;")}}
 function csStatement(ts,i,end,names,source){if(i>=end)return{ok:true,next:i};const t=ts[i],v=t.v;
-if(v==="#"){let le=source.indexOf("\n",t.at);if(le<0)le=source.length;let j=i+1;while(j<end&&ts[j].at<le)j++;return{ok:true,next:j}}
+if(v==="#"){let le=source.indexOf("\n",t.at);while(le>0&&source[le-1]==="\\"){le=source.indexOf("\n",le+1)}if(le<0)le=source.length;let j=i+1;while(j<end&&ts[j].at<le)j++;return{ok:true,next:j}}
 if(v===";")return{ok:true,next:i+1};
 if(v==="{"){const e=closeGroupRange(ts,i,end);if(e<0)return{ok:false,error:csErr(source,t.at,"花括号没有闭合")};const c=csCompound(ts,i+1,e,names,source);if(!c.ok)return c;return{ok:true,next:e+1}}
 if(v==="if"||v==="while"){if(!ts[i+1]||ts[i+1].v!=="(")return{ok:false,error:csErr(source,t.at,v+" 后需要条件括号")};const p=closeGroupRange(ts,i+1,end);if(p<0)return{ok:false,error:csErr(source,t.at,v+" 的条件括号没有闭合")};if(p>i+2){const r=csExpr(ts,i+2,p,names,false);if(!r.ok)return{ok:false,error:csErr(source,t.at,v+" 条件表达式有误: "+r.error)};if(r.next!==p)return{ok:false,error:csErr(source,ts[r.next]?ts[r.next].at:t.at,v+" 条件表达式后缺少 )")}}const s=csStatement(ts,p+1,end,names,source);if(!s.ok)return s;let next=s.next;if(v==="if"&&next<end&&ts[next].v==="else"){const s2=csStatement(ts,next+1,end,names,source);if(!s2.ok)return s2;next=s2.next}return{ok:true,next}}
@@ -1694,39 +1259,85 @@ if(t.type==="id"&&ts[i+1]&&ts[i+1].v===":")return{ok:true,next:i+2};
 if(csTypeStart(v,names)&&(v==="struct"||v==="enum"||v==="union"||v==="typedef"||v==="_Static_assert"||(ts[i+1]&&(ts[i+1].type==="id"||ts[i+1].v==="*"||ts[i+1].v==="(")))){const r=csDeclaration(ts,i,end,names,source);if(!r.ok)return r;return{ok:true,next:r.next}}
 const r=csExpr(ts,i,end,names,true);if(!r.ok)return{ok:false,error:csErr(source,t.at,r.error)};if(r.next>=end)return{ok:false,error:csErr(source,t.at,"语句缺少分号 ;")};if(ts[r.next].v!==";")return{ok:false,error:csErr(source,ts[r.next].at,"语句缺少分号 ;（在 '"+ts[r.next].v+"' 前）")};return{ok:true,next:r.next+1}}
 function csCompound(ts,start,endExclusive,names,source){let i=start;while(i<endExclusive){const r=csStatement(ts,i,endExclusive,names,source);if(!r.ok)return r;i=r.next}return{ok:true,next:endExclusive}}
-function csTopItem(ts,i,end,names,source,fns){const t=ts[i];if(t.v==="#"){let le=source.indexOf("\n",t.at);if(le<0)le=source.length;let j=i+1;while(j<end&&ts[j].at<le)j++;return{ok:true,next:j}}if(!csTypeStart(t.v,names)&&t.type!=="id")return{ok:false,error:csErr(source,t.at,"无法识别的顶层内容: "+t.v)};const core=csDeclarationCore(ts,i,end,names,source);if(!core.ok)return core;const j=core.next;if(j>=end)return{ok:false,error:csErr(source,t.at,"顶层声明缺少分号 ;")};if(ts[j].v===";")return{ok:true,next:j+1};if(ts[j].v==="{"){const name=core.name;if(name){if(fns.has(name))return{ok:false,error:csErr(source,t.at,"函数 "+name+" 被重复定义")};fns.add(name)}const e=closeGroupRange(ts,j,end);if(e<0)return{ok:false,error:csErr(source,ts[j].at,"函数体的花括号没有闭合")};const c=csCompound(ts,j+1,e,names,source);if(!c.ok)return c;return{ok:true,next:e+1}}return{ok:false,error:csErr(source,ts[j].at,"顶层声明后缺少分号 ;")}}
+function csTopItem(ts,i,end,names,source,fns){const t=ts[i];if(t.v==="#"){let le=source.indexOf("\n",t.at);while(le>0&&source[le-1]==="\\"){le=source.indexOf("\n",le+1)}if(le<0)le=source.length;let j=i+1;while(j<end&&ts[j].at<le)j++;return{ok:true,next:j}}if(!csTypeStart(t.v,names)&&t.type!=="id")return{ok:false,error:csErr(source,t.at,"无法识别的顶层内容: "+t.v)};const core=csDeclarationCore(ts,i,end,names,source);if(!core.ok)return core;const j=core.next;if(j>=end)return{ok:false,error:csErr(source,t.at,"顶层声明缺少分号 ;")};if(ts[j].v===";")return{ok:true,next:j+1};if(ts[j].v==="{"){const name=core.name;if(name){if(fns.has(name))return{ok:false,error:csErr(source,t.at,"函数 "+name+" 被重复定义")};fns.add(name)}const e=closeGroupRange(ts,j,end);if(e<0)return{ok:false,error:csErr(source,ts[j].at,"函数体的花括号没有闭合")};const c=csCompound(ts,j+1,e,names,source);if(!c.ok)return c;return{ok:true,next:e+1}}return{ok:false,error:csErr(source,ts[j].at,"顶层声明后缺少分号 ;")}}
 function parseProgram(ts,source){const names=collectTypeNames(ts);const fns=new Set();const end=ts.length;let i=0;while(i<end){const r=csTopItem(ts,i,end,names,source,fns);if(!r.ok)return r;i=r.next}return{ok:true}}
-function challengeResult(ts,source,id){
- const all=vals(ts),has=p=>seq(ts,p),main=func(ts,'main','int'),headers={'stdio.h':'stdio\\.h','string.h':'string\\.h','stdlib.h':'stdlib\\.h','stddef.h':'stddef\\.h','limits.h':'limits\\.h','stdatomic.h':'stdatomic\\.h'};
- const include=n=>new RegExp('^\\s*#\\s*include\\s*<\\s*'+headers[n]+'\\s*>\\s*$','m').test(cMask(source));
- const no=m=>({ok:false,message:'检查未通过：'+m}),yes=m=>({ok:true,message:'本地结构检查通过：'+m});
- switch(id){
- case 1:if(!include('stdio.h')||!main||!has(['int','main','(','void',')'])||!calls(main.body,'printf').some(c=>c.args[0]&&c.args[0][0]&&c.args[0][0].v.includes('Hello, C!'))||!ret(main.body,'0'))return no('需要 stdio.h、完整 main(void)、实际输出 Hello, C! 的 printf，以及 return 0;');return yes('main 入口、输出调用和正常返回都齐全。');
- case 2:if(!include('stdio.h')||!main||!seq(main.body,['int','count','='])||!fmt(main.body,'%d',a=>a.length>0&&a[0].some(t=>t.v==='count')))return no('请在 main 中声明 int count，并让 printf 用 %d 输出该变量；注释或字符串中的写法不算。');return yes('int 变量 count 与 %d 输出实参相匹配。');
- case 3:{const i=all.findIndex((v,j)=>v==='enum'&&all[j+1]==='Level'&&all[j+2]==='{'),e=i>=0?closeGroup(ts,i+2):-1,members=e>i?vals(ts.slice(i+3,e)):[],b=main?main.body:[];if(!include('stdio.h')||!main||!members.includes('EASY')||!members.includes('HARD')||!seq(b,['int','value','='])||!seq(b,['(','double',')','value'])||!seq(b,['double','converted','=','(','double',')','value'])||!fmt(b,'%f',a=>a.some(x=>x.some(t=>t.v==='converted'))))return no('请定义含 EASY、HARD 的 enum Level；在 main 声明 int value，转换成 double 并用 %f 输出 converted。');return yes('枚举、显式转换和结果输出都已匹配。')}
- case 4:{const b=main?main.body:[],decl=seq(b,['unsigned','flags','=','0'])||seq(b,['unsigned','int','flags','=','0']),set=seq(b,['flags','|=','(','1u','<<','2',')'])||seq(b,['flags','=','flags','|','(','1u','<<','2',')']),check=ifs(b).some(x=>seq(x.cond,['flags','&','(','1u','<<','2',')']));if(!include('stdio.h')||!main||!decl||!set||!check)return no('请在 main 用 unsigned flags 设置 bit 2，并在 if 条件里用按位与检查同一位；包含 stdio.h。');return yes('无符号标志的置位和同位检查都已找到。')}
- case 5:{const b=main?main.body:[],branch=ifs(b).some(x=>seq(x.cond,['temperature','>=','30'])&&x.elseBody&&calls(x.then,'puts').some(c=>c.args[0]&&c.args[0][0]&&c.args[0][0].v==='hot')&&calls(x.elseBody,'puts').some(c=>c.args[0]&&c.args[0][0]&&c.args[0][0].v==='mild'));if(!include('stdio.h')||!main||!seq(b,['int','temperature','='])||!branch)return no('请在 main 声明 int temperature，用 >= 30 的 if/else 分支分别调用 puts 输出 hot 和 mild。');return yes('温度比较和两条对应输出分支都已匹配。')}
- case 6:{const b=main?main.body:[],loop=fors(b).find(f=>{const a=f.parts[0]||[],c=f.parts[1]||[],u=f.parts[2]||[];return(seq(a,['i','=','1'])||seq(a,['int','i','=','1']))&&(seq(c,['i','<=','10'])||seq(c,['i','<','11']))&&(seq(u,['++','i'])||seq(u,['i','++']))&&seq(f.body,['sum','+=','i',';'])}),output=loop&&calls(b,'printf').some(c=>c.at>=loop.end&&c.args[0]&&c.args[0][0]&&c.args[0][0].v.includes('%d')&&c.args.slice(1).some(a=>a.some(t=>t.v==='sum')));if(!include('stdio.h')||!main||!seq(b,['int','sum','=','0'])||!loop||!output)return no('请在 main 从 1 到 10 循环累加到 sum，并在循环结束后用 %d 输出总和。');return yes('循环起点、终止条件、更新、累加和循环后输出都已匹配。')}
- case 7:{const f=func(ts,'max','int'),branches=f&&ifs(f.body).some(x=>(seq(x.cond,['a','>','b'])||seq(x.cond,['a','>=','b']))&&x.elseBody&&ret(x.then,'a')&&ret(x.elseBody,'b')),tern=f&&(seq(f.body,['return','a','>','b','?','a',':','b',';'])||seq(f.body,['return','(','a','>','b',')','?','a',':','b',';'])),used=main&&calls(main.body,'max').some(c=>c.args.length===2);if(!include('stdio.h')||!f||!has(['int','max','(','int','a',',','int','b',')'])||(!branches&&!tern)||!main||!used||!fmt(main.body,'%d',a=>a.some(x=>calls(x,'max').length>0)))return no('请定义 int max(int a, int b)，比较并返回较大值，再在 main 调用 max 并输出结果。');return yes('max 函数、比较、返回和 main 中的实际调用都已匹配。')}
- case 8:{const f=func(ts,'factorial','int'),base=f&&ifs(f.body).some(x=>(seq(x.cond,['n','<=','1'])||seq(x.cond,['n','==','0'])||seq(x.cond,['n','==','1']))&&ret(x.then,'1')),rec=f&&seq(f.body,['return','n','*','factorial','(','n','-','1',')',';']),used=main&&calls(main.body,'factorial').length>0;if(!include('stdio.h')||!f||!has(['int','factorial','(','int','n',')'])||!base||!rec||!used||!fmt(main.body,'%d',a=>a.some(x=>calls(x,'factorial').length>0)))return no('请定义 factorial，写基准分支和 n * factorial(n - 1)，并在 main 调用、输出结果。');return yes('递归基准、递减参数、乘积和 main 中的调用都已匹配。')}
- case 9:{const f=func(ts,'sum','int'),loop=f&&fors(f.body).some(x=>{const a=x.parts[0]||[],c=x.parts[1]||[],u=x.parts[2]||[];return(seq(a,['i','=','0'])||seq(a,['int','i','=','0']))&&seq(c,['i','<','length'])&&(seq(u,['++','i'])||seq(u,['i','++']))&&seq(x.body,['total','+=','values','[','i',']',';'])}),call=main&&calls(main.body,'sum').some(c=>c.args.length===2&&c.args[0].some(t=>t.v==='values')&&c.args[1].some(t=>t.v==='length')),out=main&&fmt(main.body,'%d',a=>a.some(x=>calls(x,'sum').length>0));if(!include('stdio.h')||!f||!has(['int','sum','(','const','int','values','[',']',',','int','length',')'])||!seq(f.body,['int','total','=','0'])||!loop||!main||!seq(main.body,['int','values','[',']','=','{'])||!(seq(main.body,['int','length','=','sizeof','values','/','sizeof','values','[','0',']'])||seq(main.body,['int','length','=','sizeof','(','values',')','/','sizeof','(','values','[','0',']',')']))||!call||!out)return no('定义 sum 按 length 遍历 values 累加并返回；main 准备数组、调用 sum，再输出结果。');return yes('数组长度、下标循环、累加、返回和 main 调用都已匹配。')}
- case 10:{const b=main?main.body:[],p=indexSeq(b,['char','word','[',']','=']),decl=p>=0&&b[p+5]&&b[p+5].type==='string',length=calls(b,'strlen').some(c=>c.args[0]&&c.args[0].length===1&&c.args[0][0].v==='word'),out=fmt(b,'%zu',a=>a.some(x=>seq(x,['strlen','(','word',')'])));if(!include('string.h')||!include('stdio.h')||!main||!decl||!length||!out)return no('在 main 中定义 char word[] 字符串，调用 strlen(word)，再用 %zu 输出长度；包含 string.h 和 stdio.h。');return yes('字符串变量、strlen 实参和匹配的输出格式都已找到。')}
- case 11:{const b=main?main.body:[],ptr=seq(b,['int','*','p','=','&','value']),write=seq(b,['*','p','=']),out=fmt(b,'%d',a=>a.some(x=>x.some(t=>t.v==='value')));if(!include('stdio.h')||!main||!seq(b,['int','value'])||!ptr||!write||!out)return no('在 main 声明 int value 和 int *p = &value，通过 *p 修改目标，再输出 value。');return yes('指针地址、解引用写入和结果输出都已匹配。')}
- case 12:{const b=main?main.body:[],alloc=calls(b,'malloc').find(c=>c.args[0]&&seq(c.args[0],['n','*','sizeof','*','items'])),guard=ifs(b).find(x=>seq(x.cond,['items','==','NULL'])&&ret(x.then,'1')),use=indexSeq(b,['items','[','0',']','=']),release=calls(b,'free').find(c=>c.args[0]&&c.args[0].length===1&&c.args[0][0].v==='items'),output=fmt(b,'%d',a=>a.some(x=>seq(x,['items','[','0',']'])));if(!include('stdlib.h')||!include('stdio.h')||!main||!positiveIntVariable(b,'n')||!seq(b,['int','*','items','=','malloc'])||!alloc||!guard||use<0||!output||!release||alloc.at>=guard.at||guard.end>use||use>=release.at)return no('计算 n * sizeof *items 并申请，检查 NULL，写入和输出 items[0]，最后 free(items)。');return yes('动态申请、失败检查、有效使用、输出和释放顺序都已匹配。')}
- case 13:{const b=main?main.body:[],i=all.findIndex((v,j)=>v==='typedef'&&all[j+1]==='struct');let good=false;if(i>=0){let brace=i+2;if(all[brace]!=='{')brace++;const e=all[brace]==='{'?closeGroup(ts,brace):-1;if(e>brace)good=seq(ts.slice(brace+1,e),['char','name','['])&&seq(ts.slice(brace+1,e),['int','score'])&&all[e+1]==='Student'&&all[e+2]===';'}const out=fmt(b,'%d',a=>a.some(x=>seq(x,['s','.','score'])));if(!include('stdio.h')||!main||!good||!(seq(b,['Student','s','=','{'])||seq(b,['s','.','score','=']))||!seq(b,['s','.','score'])||!out)return no('定义含 name 和 score 的 Student，在 main 创建 s，通过 s.score 访问并用 printf 输出。');return yes('结构体字段、对象、成员访问和输出都已匹配。')}
- case 14:{const b=main?main.body:[],open=calls(b,'fopen').find(c=>c.args.length>=2),guard=ifs(b).find(x=>seq(x.cond,['file','==','NULL'])&&ret(x.then,'1')),read=calls(b,'fgets').find(c=>c.args.length===3&&seq(c.args[0],['line'])&&seq(c.args[1],['sizeof','line'])&&seq(c.args[2],['file'])),close=calls(b,'fclose').find(c=>c.args[0]&&c.args[0].length===1&&c.args[0][0].v==='file');if(!include('stdio.h')||!main||!seq(b,['FILE','*','file','=','fopen'])||!open||!guard||!seq(b,['char','line','['])||!read||!close||open.at>=guard.at||guard.end>read.at||read.at>=close.at)return no('在 main 打开文件并处理 NULL；成功后用 fgets(line, sizeof line, file) 读取，最后关闭同一个 file。');return yes('文件打开、失败分支、限长读取和关闭顺序都已匹配。')}
- case 15:{const guard=new RegExp('^\\s*#\\s*ifndef\\s+([A-Za-z_]\\w*)\\s*$[\\s\\S]*?^\\s*#\\s*define\\s+\\1\\b\\s*$[\\s\\S]*?^\\s*int\\s+add\\s*\\(\\s*int\\s+a\\s*,\\s*int\\s+b\\s*\\)\\s*;\\s*$[\\s\\S]*?^\\s*#\\s*endif\\b\\s*$','m').test(cMask(source));if(!guard)return no('请把 #ifndef、#define、int add(int a, int b); 和 #endif 各写在自己的行上，宏名前后一致。');return yes('头文件保护顺序和函数原型都已匹配。')}
- case 16:{const apply=func(ts,'apply','int'),twice=func(ts,'twice','int'),sig=has(['int','apply','(','int','x',',','int','(','*','callback',')','(','int',')',')']),use=apply&&seq(apply.body,['return','callback','(','x',')',';']),impl=twice&&(seq(twice.body,['return','2','*','n',';'])||seq(twice.body,['return','n','*','2',';'])),pass=main&&calls(main.body,'apply').some(c=>c.args.length===2&&seq(c.args[0],['4'])&&seq(c.args[1],['twice'])),out=main&&fmt(main.body,'%d',a=>a.some(x=>seq(x,['apply','(','4',',','twice',')'])));if(!include('stdio.h')||!apply||!twice||!sig||!use||!impl||!pass||!out)return no('实现 twice 和函数指针 apply；main 需把 twice 传给 apply 并输出结果。');return yes('回调定义、函数指针调用、传递和输出都已匹配。')}
- case 17:{const b=main?main.body:[],cmp=func(ts,'compare_ints','int'),casts=cmp&&seq(cmp.body,['*','(','const','int','*',')','a'])&&seq(cmp.body,['*','(','const','int','*',')','b']),safe=cmp&&seq(cmp.body,['return','(','x','>','y',')','-','(','x','<','y',')',';']),ifsCmp=cmp?ifs(cmp.body):[],branches=ifsCmp.some(x=>seq(x.cond,['x','<','y'])&&seq(x.then,['return','-','1',';']))&&ifsCmp.some(x=>seq(x.cond,['x','>','y'])&&ret(x.then,'1'))&&ret(cmp?cmp.body:[],'0'),sort=calls(b,'qsort').some(c=>c.args.length===4&&seq(c.args[0],['values'])&&seq(c.args[2],['sizeof','values','[','0',']'])&&seq(c.args[3],['compare_ints']));if(!include('stdlib.h')||!main||!seq(b,['int','values','[',']','=','{'])||!(seq(b,['size_t','count','=','sizeof','values','/','sizeof','values','[','0',']'])||seq(b,['int','count','=','sizeof','values','/','sizeof','values','[','0',']']))||!cmp||!has(['int','compare_ints','(','const','void','*','a',',','const','void','*','b',')'])||!casts||(!safe&&!branches)||!sort)return no('准备 int values 数组和数量，实现比较两个 int 的 compare_ints，再将数组、元素大小和回调传给 qsort。');return yes('比较器读取并比较两个 int，qsort 收到数组信息和回调。')}
- case 18:{const f=func(ts,'first','int'),checks=f?ifs(f.body):[],failed=pat=>checks.some(x=>seq(x.cond,pat)&&ret(x.then,'0')),write=f&&seq(f.body,['*','out','=','values','[','0',']',';']);if(!include('stddef.h')||!f||!has(['int','first','(','const','int','*','values',',','size_t','length',',','int','*','out',')'])||!failed(['values','==','NULL'])||!failed(['out','==','NULL'])||!failed(['length','==','0'])||!write||!ret(f.body,'1'))return no('先检查 first 的 values、out 和 length == 0；失败返回 0，成功写入首项并返回 1。');return yes('参数检查、数组访问前置条件、成功写回和状态码都已匹配。')}
- case 19:{const sa=calls(ts,'_Static_assert').some(c=>c.args.length>=2&&seq(c.args[0],['CHAR_BIT','==','8'])&&seq(c.args[0],['sizeof','(','int',')'])),b=main?main.body:[],atomic=calls(b,'atomic_fetch_add').some(c=>c.args.length===2&&seq(c.args[0],['&','counter'])&&seq(c.args[1],['1']));if(!include('limits.h')||!include('stdatomic.h')||!sa||!main||!seq(b,['_Atomic','int','counter','=','0'])||!atomic||!ret(b,'0'))return no('用 CHAR_BIT 和 sizeof(int) 写 _Static_assert；在 main 初始化 _Atomic int，原子递增后正常返回。');return yes('编译期检查、原子变量、原子递增和 main 返回都已匹配。')}
- case 20:{const i=all.findIndex((v,j)=>v==='typedef'&&all[j+1]==='struct');let student=false;if(i>=0){let brace=i+2;if(all[brace]!=='{')brace++;const e=all[brace]==='{'?closeGroup(ts,brace):-1;if(e>brace)student=seq(ts.slice(brace+1,e),['char','name','['])&&seq(ts.slice(brace+1,e),['int','score'])&&all[e+1]==='Student'}const avg=func(ts,'average_score','int'),bad=avg?ifs(avg.body):[],fails=pat=>bad.some(x=>seq(x.cond,pat)&&ret(x.then,'0')),loop=avg&&fors(avg.body).some(x=>{const a=x.parts[0]||[],c=x.parts[1]||[],u=x.parts[2]||[];return(seq(a,['i','=','0'])||seq(a,['int','i','=','0'])||seq(a,['size_t','i','=','0']))&&seq(c,['i','<','count'])&&(seq(u,['++','i'])||seq(u,['i','++']))&&seq(x.body,['total','+=','students','[','i',']','.','score',';'])}),write=avg&&seq(avg.body,['*','out','=','total','/','(','double',')','count',';']),b=main?main.body:[],build=main&&seq(b,['Student','group','[',']','=','{'])&&seq(b,['double','average'])&&(seq(b,['size_t','count','=','sizeof','group','/','sizeof','group','[','0',']'])||seq(b,['int','count','=','sizeof','group','/','sizeof','group','[','0',']']))&&calls(b,'average_score').some(c=>c.args.length===3&&seq(c.args[0],['group'])&&seq(c.args[1],['count'])&&seq(c.args[2],['&','average'])),checked=main&&ifs(b).some(x=>seq(x.cond,['average_score'])&&calls(x.then,'printf').length>0),printed=main&&fmt(b,'%.1f',a=>a.some(x=>x.some(t=>t.v==='average')));if(!include('stdio.h')||!include('stddef.h')||!student||!avg||!has(['int','average_score','(','const','Student','students','[',']',',','size_t','count',',','double','*','out',')'])||!fails(['students','==','NULL'])||!fails(['out','==','NULL'])||!fails(['count','==','0'])||!loop||!write||!ret(avg.body,'1')||!build||!checked||!printed)return no('完成 Student、带参数检查的 average_score、逐项累加和浮点平均；main 检查函数结果后输出平均分。');return yes('数据结构、边界检查、逐项统计、浮点计算和成功后输出都已匹配。')}
- default:return no('找不到本关的代码检查规则，请刷新页面后重试。')
+function cIdent(clean,name){return new RegExp('(^|[^A-Za-z0-9_])'+name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'([^A-Za-z0-9_]|$)').test(clean)}
+function cHasType(clean,kind,name){return new RegExp('\\b'+kind+'\\s+'+name+'\\b').test(clean)}
+function runCheckSpec(ts,source,spec){
+ const bad=m=>({ok:false,message:'检查未通过：'+(m||(spec&&spec.message)||'还没有达到本关的要求，再对照示例改一改。')});
+ const yes=m=>({ok:true,message:'结构检查通过：'+(m||(spec&&spec.ok)||'本关的代码要求都已满足。')});
+ if(!spec)return yes('本关没有额外的结构要求，请在本机编译运行确认结果正确。');
+ const clean=cMask(source);
+ const main=func(ts,'main','int');
+ const body=main?main.body:[];
+ if(spec.include)for(const h of (Array.isArray(spec.include)?spec.include:[spec.include])){
+  const esc2=h.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  if(!new RegExp('^[ \\t]*#[ \\t]*include[ \\t]*<[ \\t]*'+esc2+'[ \\t]*>','m').test(clean))return bad('需要 #include <'+h+'>。');
  }
+ if(spec.noInclude)for(const h of spec.noInclude){
+  const esc2=h.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  if(new RegExp('^[ \\t]*#[ \\t]*include[ \\t]*<[ \\t]*'+esc2+'[ \\t]*>','m').test(clean))return bad('本关不要使用 <'+h+'>。');
+ }
+ if(spec.main!==false&&!main)return bad('需要一个完整的 int main(void) { … }。');
+ if(spec.return0&&!seq(body,['return','0',';']))return bad('main 结束前需要 return 0; 。');
+ if(spec.seq)for(const p of spec.seq)if(!seq(body,p))return bad('还缺少这段写法：'+p.join(' ')+' 。');
+ if(spec.seqAny){const hit=spec.seqAny.some(function(p){return seq(body,p)});if(!hit)return bad('需要用到其中一种写法：'+spec.seqAny.map(function(p){return p.join(' ')}).join('　或　')+' 。')}
+ if(spec.calls)for(const c of spec.calls){
+  const name=Array.isArray(c)?c[0]:c,needle=Array.isArray(c)?c[1]:null;
+  const list=calls(spec.callsAnywhere?ts:body,name);
+  if(!list.length)return bad('需要'+(spec.callsAnywhere?'在代码里':'在 main 里')+'调用 '+name+'()。');
+  if(needle&&!list.some(function(x){return x.args[0]&&x.args[0].some(function(t){return String(t.v).indexOf(needle)>=0})}))return bad(name+'() 的用法还不对，本关要用到 '+needle+' 。');
+ }
+ if(spec.callCounts)for(const cc of spec.callCounts){
+  const n=calls(ts,cc[0]).length;
+  if(cc[1]&&n<cc[1])return bad(cc[0]+'() 至少要调用 '+cc[1]+' 次。');
+  if(cc[2]&&n>cc[2])return bad(cc[0]+'() 不要超过 '+cc[2]+' 次。');
+ }
+ if(spec.forbid)for(const f of spec.forbid)if(cIdent(clean,f))return bad('本关请不要使用 '+f+' 。');
+ const req=spec.require||{};
+ if(req.if&&!ifs(ts).length)return bad('需要用到 if 判断。');
+ if(req.switch&&!cIdent(clean,'switch'))return bad('需要用到 switch 。');
+ if(req.for&&!cIdent(clean,'for'))return bad('需要用到 for 循环。');
+ if(req.while&&!cIdent(clean,'while'))return bad('需要用到 while 循环。');
+ if(req.doWhile&&!cIdent(clean,'do'))return bad('需要用到 do…while 循环。');
+ if(req.loop&&!['for','while','do'].some(function(k){return cIdent(clean,k)}))return bad('需要用到循环。');
+ if(req.array&&!/\w+\s*\[[^\]]*\]/.test(clean))return bad('需要用到数组（形如 int a[5];）。');
+ if(req.pointer&&!/\w+\s*\*+\s*\w+/.test(clean))return bad('需要用到指针变量（形如 int *p;）。');
+ if(req.malloc&&!cIdent(clean,'malloc')&&!cIdent(clean,'calloc')&&!cIdent(clean,'realloc'))return bad('需要用 malloc/calloc 申请动态内存。');
+ if(req.free&&!cIdent(clean,'free'))return bad('申请了内存，就要用 free 释放。');
+ if(req.struct&&!cHasType(clean,'struct',req.struct))return bad('需要定义 struct '+req.struct+' 。');
+ if(req.enum&&!cHasType(clean,'enum',req.enum))return bad('需要定义 enum '+req.enum+' 。');
+ if(req.union&&!cIdent(clean,'union'))return bad('需要用到 union 。');
+ if(req.typedef&&!cIdent(clean,'typedef'))return bad('需要用到 typedef 。');
+ if(req.file&&!cIdent(clean,'fopen'))return bad('需要用 fopen 打开文件。');
+ if(req.recursion){
+  const fnNames=(req.recursion===true)?null:req.recursion;
+  const self=(fnNames||[]).some(function(fn){return new RegExp('\\b'+fn+'\\s*\\([^;]*\\)\\s*\\{').test(clean)&&new RegExp('\\b'+fn+'\\s*\\(').test(clean)});
+  if(fnNames&&!self)return bad('需要用递归实现（函数内部调用自己）。');
+  if(!fnNames&&!/(\w+)\s*\([^;{]*\)\s*\{[^}]*\b\1\s*\(/.test(clean))return bad('需要用递归实现（函数内部调用自己）。');
+ }
+ if(req.funcs)for(const fn of req.funcs){
+  const re2=new RegExp('\\b[a-zA-Z_][A-Za-z0-9_ \\t\\*]*\\b'+fn+'\\s*\\([^;{]*\\)\\s*\\{');
+  if(!re2.test(clean))return bad('需要自己定义一个 '+fn+'() 函数（不是只写声明）。');
+ }
+ if(spec.minStatements){
+  const n=(clean.match(/;/g)||[]).length;
+  if(n<spec.minStatements)return bad('代码还不够完整，本关至少需要 '+spec.minStatements+' 条语句。');
+ }
+ return yes();
 }
-function validateChallenge(level,source){if(!source.trim())return{ok:false,message:'请先按本关要求写代码，再检查。'};const p=tokenizeChallengeC(source);if(p.error)return{ok:false,message:'代码还不能检查：'+p.error};const ts=p.tokens,stack=[],pairs={'(':')','{':'}','[':']'};for(const t of ts){const v=t.v;if(pairs[v])stack.push({v,at:t.at});else if(v===')'||v==='}'||v===']'){const prev=stack.pop();if(!prev||pairs[prev.v]!==v)return{ok:false,message:'检查未通过：括号或花括号没有按顺序配对。'}}}if(stack.length)return{ok:false,message:'检查未通过：还有未闭合的括号或花括号。'};const st=parseProgram(ts,source);if(!st.ok)return{ok:false,message:'结构检查未通过：'+st.error+'。请用语法完整、可以编译的 C 代码完成本关。'};return challengeResult(ts,source,level.id)}
-function checkCode(){const ta=document.getElementById("codeAnswer");window.codeDraft=ta.value;const result=validateChallenge(activeLevel,ta.value);codePassed=result.ok;window.codeFeedback=result.message;if(codePassed){if(!isDone(activeLevel)){maybeComplete()}else{render()}}else{render()}}
-
+function challengeResult(ts,source,level){
+ const spec=(level&&level.check)||null;
+ return runCheckSpec(ts,source,spec);
+}
+function validateChallenge(level,source){if(!source.trim())return{ok:false,message:'请先按本关要求写代码，再检查。'};const p=tokenizeChallengeC(source);if(p.error)return{ok:false,message:'代码还不能检查：'+p.error};const ts=p.tokens,stack=[],pairs={'(':')','{':'}','[':']'};for(const t of ts){if(t.type==="string"||t.type==="char")continue;const v=t.v;if(pairs[v])stack.push({v,at:t.at});else if(v===')'||v==='}'||v===']'){const prev=stack.pop();if(!prev||pairs[prev.v]!==v)return{ok:false,message:'检查未通过：括号或花括号没有按顺序配对。'}}}if(stack.length)return{ok:false,message:'检查未通过：还有未闭合的括号或花括号。'};const st=parseProgram(ts,source);if(!st.ok)return{ok:false,message:'结构检查未通过：'+st.error+'。请用语法完整、可以编译的 C 代码完成本关。'};return challengeResult(ts,source,level)}
+function checkCode(){
+ const ta=document.getElementById("codeAnswer");if(!ta)return;
+ window.codeDraft=ta.value;saveEditorValue(ta);
+ const result=validateChallenge(activeLevel,ta.value);
+ codePassed=result.ok;window.codeFeedback=result.message;
+ maybeComplete();
+}
 function playVictoryAnimation(level){
  const existing=document.querySelector(".victory-overlay");if(existing)existing.remove();
  const pieces=[[-145,-112,-35,0,"#6f91ee"],[-116,-150,48,35,"#ffd36b"],[-82,-128,125,70,"#59c99c"],[-42,-166,-20,15,"#a888f3"],[-4,-142,76,85,"#83b9ff"],[38,-161,-58,45,"#ffd36b"],[79,-129,38,110,"#59c99c"],[121,-151,148,25,"#7794f0"],[150,-94,-76,70,"#b58af4"],[-157,34,52,100,"#59c99c"],[-113,87,-42,40,"#ffd36b"],[-73,121,98,130,"#7794f0"],[-28,148,-95,55,"#80b9ff"],[26,132,44,120,"#59c99c"],[72,104,-30,20,"#ffd36b"],[118,70,115,95,"#a888f3"],[157,22,-55,60,"#83b9ff"]];
@@ -1738,25 +1349,95 @@ function playVictoryAnimation(level){
  function close(){if(closed)return;closed=true;window.clearTimeout(timer);overlay.classList.add("is-leaving");window.setTimeout(function(){overlay.remove()},430)}
  overlay.querySelector(".victory-dismiss").addEventListener("click",close);
 }
-function maybeComplete(){if(quizPassed&&codePassed&&!isDone(activeLevel)){data.completed[activeLevel.id]={at:Date.now()};data.xp+=30;save();playVictoryAnimation(activeLevel);if(completedCount()===levels.length){setTimeout(function(){activeLevel=null;page="summary";render()},950)}else{render()}}}
+function normOut(t){return String(t||"").replace(/\r\n?/g,"\n").split("\n").map(function(x){return x.replace(/\s+/g," ").trim()}).join("\n").replace(/^\n+/,"").replace(/\n+$/,"")}
+function compareOutput(expected,got){
+ const e=normOut(expected),g=normOut(got);
+ if(!g)return {ok:false,message:"还没有填入运行结果。"};
+ if(e===g)return {ok:true,message:"运行结果与预期完全一致。"};
+ const el=e.split("\n"),gl=g.split("\n"),n=Math.max(el.length,gl.length);
+ for(let i=0;i<n;i++){if((el[i]||"")!==(gl[i]||""))return {ok:false,message:"第 "+(i+1)+" 行不一致：预期「"+(el[i]===undefined?"（没有这一行）":el[i])+"」，你的是「"+(gl[i]===undefined?"（没有这一行）":gl[i])+"」。"}}
+ return {ok:false,message:"和预期还有差别，再对比一下。"};
+}
+function cQuizOk(l){
+ if(l.questions&&l.questions.length){return questionsRatioOk(l,ensureTaskState(l))}
+ return quizPassed;
+}
+function cOutputOk(l){
+ if(!l.expectedOutput)return true;
+ const got=data.runOutputs&&data.runOutputs[l.id];
+ return !!got&&compareOutput(l.expectedOutput,got).ok;
+}
+function cReady(l){return cQuizOk(l)&&codePassed&&cOutputOk(l)}
+function maybeComplete(){
+ const l=activeLevel;if(!l)return;
+ if(isDone(l)){render();return}
+ if(cReady(l)){
+  data.completed[l.id]={at:Date.now()};data.xp+=30;save();playVictoryAnimation(l);
+  if(completedCount()===levels.length){setTimeout(function(){activeLevel=null;page="summary";render()},950)}else{render()}
+  return;
+ }
+ render();
+ const miss=[];
+ if(!cQuizOk(l))miss.push(l.questions&&l.questions.length?"知识快问还没达标":"知识快问还没答对");
+ if(!codePassed)miss.push("代码结构检查还没通过");
+ if(!cOutputOk(l))miss.push("运行结果还没比对一致");
+ if(miss.length)toast("还差：" + miss.join("、") + "。");
+}
+function checkRunOutput(){
+ const l=activeLevel;if(!l||!l.expectedOutput)return;
+ const ta=document.getElementById("runOutput");if(!ta)return;
+ data.runOutputs=data.runOutputs||{};data.runOutputs[l.id]=ta.value;save();
+ const cmp=compareOutput(l.expectedOutput,ta.value);
+ if(cmp.ok&&cReady(l)){maybeComplete();return}
+ render();
+ if(!cmp.ok)toast("再对一下：" + cmp.message);
+ else if(!codePassed)toast("运行结果对了，但代码结构检查还没通过，先点「检查代码」。");
+ else toast("运行结果对了，知识快问还没达标。");
+}
+function checkCode(){
+ const ta=document.getElementById("codeAnswer");if(!ta)return;
+ window.codeDraft=ta.value;saveEditorValue(ta);
+ const result=validateChallenge(activeLevel,ta.value);
+ codePassed=result.ok;window.codeFeedback=result.message;
+ if(codePassed&&activeLevel.expectedOutput&&!cOutputOk(activeLevel)){
+  window.codeFeedback=result.message+" 别忘了把本机运行结果粘贴到下方「运行结果比对」里。";
+ }
+ maybeComplete();
+}
 function handleClick(e){
  const pageBtn=e.target.closest("[data-page]");if(pageBtn){switchPage(pageBtn.dataset.page);return}
  const levelBtn=e.target.closest("[data-level]");if(levelBtn){openLevel(Number(levelBtn.dataset.level));return}
  const action=e.target.closest("[data-action]");if(!action)return;
  const a=action.dataset.action;
  if(a==="cycle-theme"){const next={system:"light",light:"dark",dark:"system"}[themeMode]||"system";applyTheme(next,true);toast(({system:"已改为跟随系统外观",light:"已切换到浅色模式",dark:"已切换到深色模式"})[next]);return}
- if(a==="open-course"){const route=document.getElementById("course-c-route");if(route)route.scrollIntoView({behavior:"smooth",block:"start"});return}
- if(a==="continue"){if(activeLevel&&isDone(activeLevel)){const next=levels.find(function(l){return l.id===activeLevel.id+1});if(next){openLevel(next.id);return}page="summary";activeLevel=null;render();return}const n=nextLevel();openLevel(n.id)}
+ if(a==="switch-course"){setCourse(action.dataset.course);return}
+ if(a==="open-course"){const route=document.getElementById("course-route");if(route)route.scrollIntoView({behavior:"smooth",block:"start"});return}
+ if(a==="toggle-transcript"){const el=document.getElementById(action.dataset.target);if(el){el.hidden=!el.hidden;action.textContent=el.hidden?"显示原文":"隐藏原文"}return}
+ if(a==="check-task"){checkWrittenTask();return}
+ if(a==="submit-mock"){submitMock();return}
+ if(a==="retry-task"){retryTask();return}
+ if(a==="rec-start"){startRecorder();return}
+ if(a==="skip-rec"){
+  const l0=activeLevel;if(!l0)return;
+  const st0=ensureTaskState(l0);st0.recordSkipped=!st0.recordSkipped;
+  render();toast(st0.recordSkipped?"已选择用跟读自评代替录音。":"已取消「跟读自评代替」，请完成录音。");
+  return}
+ if(a==="rec-stop"){stopRecorder();render();return}
+ if(a==="self-check"){toggleSelfCheck(action.dataset.key);return}
+ if(a==="next-level"){const ni=levels.indexOf(activeLevel),nx=levels[ni+1];if(nx){openLevel(nx.id)}else{page="summary";activeLevel=null;render()}return}
+ if(a==="continue"){if(activeLevel&&isDone(activeLevel)){const i=levels.indexOf(activeLevel),next=levels[i+1];if(next){openLevel(next.id);return}page="summary";activeLevel=null;render();return}const n=nextLevel();openLevel(n.id)}
  if(a==="back"){activeLevel=null;page="map";render()}
  if(a==="hint"){hintVisible=!hintVisible;render()}
  if(a==="toggle-solution"){if(!activeLevel)return;if(!isDone(activeLevel)&&!answerUnlocked){openAnswerDialog();return}solutionVisible=!solutionVisible;render();return}
- if(a==="copy-solution"){if(!activeLevel)return;if(!isDone(activeLevel)&&!answerUnlocked){openAnswerDialog();return}copyText(formatSample(solutions[activeLevel.id]||""));return}
+ if(a==="copy-solution"){if(!activeLevel)return;if(!isDone(activeLevel)&&!answerUnlocked){openAnswerDialog();return}copyText(activeLevel.solution||"");return}
  if(a==="check-code")checkCode()
+ if(a==="check-output"){checkRunOutput();return}
  if(a==="insert-template"){const ta=document.getElementById("codeAnswer");if(!ta)return;if(ta.value.trim()){toast("编辑器已有内容，模板不会覆盖。");ta.focus();return}const template="#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}";ta.value=template;ta.dispatchEvent(new Event("input",{bubbles:true}));ta.focus();const caret=template.indexOf("    \n")+4;ta.setSelectionRange(caret,caret);updateEditor();return}
  if(a==="reset-progress"){openResetDialog();return}
  if(a==="reset-cancel"){closeResetDialog();return}
 }
 document.addEventListener("click",function(e){
+ const pick=e.target.closest("[data-pick]");if(pick){pickAnswer(Number(pick.dataset.q),Number(pick.dataset.pick));return}
  const opt=e.target.closest("[data-option]");if(opt){selectedOption=Number(opt.dataset.option);awardForQuiz();return}
  handleClick(e)
 });
@@ -1793,7 +1474,7 @@ document.addEventListener("keydown",function(e){
  }
  if([")","]","}"].includes(e.key)&&start===end&&value[start]===e.key){e.preventDefault();input.setSelectionRange(start+1,start+1);updateEditor()}
 });
-document.addEventListener("input",function(e){if(e.target.id==="codeAnswer")saveEditorValue(e.target)});
+document.addEventListener("input",function(e){if(e.target.id==="codeAnswer"){saveEditorValue(e.target);return}if(e.target.id==="taskAnswer"&&activeLevel){data.drafts[activeLevel.id]=e.target.value;save();const el=document.getElementById("liveWords");if(el)el.textContent=(e.target.value.match(/[A-Za-z][A-Za-z'’-]*/g)||[]).length}});
 document.addEventListener("keyup",function(e){if(e.target.id==="codeAnswer")updateEditor()});
 document.addEventListener("click",function(e){if(e.target.id==="codeAnswer")updateEditor()});
 document.addEventListener("selectionchange",function(){if(document.activeElement&&document.activeElement.id==="codeAnswer")updateEditor()});

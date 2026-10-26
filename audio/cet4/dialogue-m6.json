@@ -1,0 +1,98 @@
+[
+  {
+    "file": "701-1.mp3",
+    "note": "短对话：学生与同学商量去不去职业讲座（en-US-AriaNeural 女声 / en-US-GuyNeural 男声交替，轮次间 0.35 秒静音）",
+    "parts": [
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "Hi Tom, are you coming to the career talk this afternoon?"
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "I was planning to, but I've got a lab report due tomorrow morning."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "Can you finish it tonight?"
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "I don't think so. I still have to run the last two experiments, and the lab closes at eight."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "Then why not go to the ten o'clock session on Thursday? It's the same speaker."
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "Good idea. I'll check whether there are still seats, and I'll send you the sign-up link."
+      }
+    ]
+  },
+  {
+    "file": "701-2.mp3",
+    "note": "长对话：学生向课程顾问咨询暑期田野课程（en-US-AriaNeural 女声 / en-US-GuyNeural 男声交替，轮次间 0.35 秒静音）",
+    "parts": [
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "Good morning, Dr Bennett. I'd like to ask about the summer field course in Scotland."
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "Morning. Applications closed last Friday, I'm afraid, but we do keep a waiting list."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "I only saw the notice yesterday — I was away at my sister's wedding."
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "That's all right. How many weeks would you like to join for? The course runs for six weeks, but you can come for the last three."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "Three weeks would suit me. I'm going home in August."
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "Fine. One thing to remember: the last three weeks are spent at the coast, so you'll need waterproof clothing."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "Noted. What kind of work would I be doing?"
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "Mostly counting seabirds and recording what they eat. You'll work in pairs, and one of the pair has to be able to read a map, because we walk a long way from the road."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "I did a map-reading course last year, so that should be fine."
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "Good. And you'll need to be up before six most mornings, because that is when the birds are active."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "Before six? That will take some getting used to."
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "Everyone says that in the first week. The good news is that the afternoons are free, and the food and the equipment are all included in the course fee."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "That's helpful. Is there anything I should do now?"
+      },
+      {
+        "voice": "en-US-GuyNeural",
+        "text": "Send me a short email saying why you'd like to join, and I'll put your name on the list. Two students usually drop out before the course starts."
+      },
+      {
+        "voice": "en-US-AriaNeural",
+        "text": "Great — I'll write it this evening. Thank you."
+      }
+    ]
+  }
+]

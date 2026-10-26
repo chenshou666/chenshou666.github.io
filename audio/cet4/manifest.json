@@ -1,0 +1,32 @@
+[
+  {
+    "file": "201-2.mp3",
+    "text": "Attention, students. The library will close at six this Friday for maintenance. If you need a quiet place to study, the reading room on the second floor of the teaching building stays open until ten. Please remember to bring your student card.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-8%"
+  },
+  {
+    "file": "102-1.mp3",
+    "text": "I work in a small office every day.\nI worked in a bank two years ago.\nI have worked here for three years.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "103-1.mp3",
+    "text": "The book that I bought yesterday is really useful.\nI don't know why he was late.\nWhat he said surprised everyone.\nIf you need help, call me.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "107-1.mp3",
+    "text": "The researchers, who had been studying the effects of sleep on memory for more than ten years, found that students who slept for at least seven hours before an exam performed significantly better than those who stayed up late, although the difference became smaller when the test was taken in the afternoon.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-8%"
+  },
+  {
+    "file": "108-1.mp3",
+    "text": "How's it going?\nLong time no see.\nCould you do me a favour?\nI was wondering if you could help me.\nThanks a lot. I really appreciate it.\nSorry, my mistake.\nIt might be a good idea to take a break.\nAs far as I'm concerned, the plan works.\nSorry, could you say that again?\nAnyway, I'd better get going.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  }
+]

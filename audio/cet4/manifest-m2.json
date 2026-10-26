@@ -1,0 +1,62 @@
+[
+  {
+    "file": "301-1.mp3",
+    "text": "I said fifteen, not fifty.\nWould you like coffee or tea?\nSorry, I didn't catch that.\nCould you say it again, a little slower?",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "302-1.mp3",
+    "text": "Hi, I'm Li Ming. Nice to meet you.\nI'm a second-year student in the English Department.\nIn my free time I like playing badminton and watching documentaries.\nAnyway, it was nice talking to you. See you around.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "303-1.mp3",
+    "text": "Good evening. A table for two, please.\nI'll have the chicken salad, please.\nExcuse me, could you tell me how to get to the train station?\nIs it within walking distance? Thank you.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "304-1.mp3",
+    "text": "Good morning. I'd like to check in for the flight to Boston.\nCould I have an aisle seat, please?\nI have one suitcase. Also, I have a reservation under the name Li, for two nights.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "305-1.mp3",
+    "text": "Hello, this is Li Ming speaking.\nCould I speak to Mr. Brown, please?\nI'm afraid I have to reschedule our appointment.\nWould Thursday morning be possible?\nCould you ask him to call me back?",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "306-1.mp3",
+    "text": "Excuse me, Professor. Could I ask a question about the reading?\nSorry, I didn't quite follow. Would you mind going over it again?\nThat's a good point, but I see it a bit differently.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "307-1.mp3",
+    "text": "Good morning, everyone. Just a quick update on the report.\nWe've finished the first draft, but we're still waiting for the client's feedback.\nI'll send it out by Friday.\nCould I add one more thing?",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "308-1.mp3",
+    "text": "That's a good point, but have we considered the cost?\nI see what you mean, but I'm not sure it would work in practice.\nI'm afraid I disagree.\nMaybe we could look at the numbers together.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "309-1.mp3",
+    "text": "Good morning. My name is Li Ming, and I'm a second-year student at Nanjing University, majoring in Business English.\nIn my free time I enjoy playing badminton.\nI'm glad to be here today.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  },
+  {
+    "file": "310-1.mp3",
+    "text": "Today I'd like to talk about part-time jobs for students.\nIn my opinion, a part-time job is helpful, as long as it doesn't affect our study.\nThat's a good question. Let me think for a second.",
+    "voice": "en-US-AriaNeural",
+    "rate": "-5%"
+  }
+]
