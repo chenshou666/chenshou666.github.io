@@ -685,6 +685,182 @@ body[data-theme="dark"] .self-check{background:rgba(45,59,88,.6);border-color:rg
 body[data-theme="dark"] .course-card{background:linear-gradient(135deg,rgba(45,59,88,.96),rgba(33,48,76,.92));border-color:rgba(145,164,255,.2);box-shadow:0 14px 34px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.07)}
 body[data-theme="dark"] .course-card-body small{color:#a6b3cb}
 body[data-theme="dark"] .course-card-meta{color:#93a2bd}
+
+/* ==== 开屏：转圈结束后「网站的各种组件」从天上掉下来 ==== */
+.splash-rain{position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden;opacity:1;transition:opacity .55s ease}
+.splash-rain.is-gone{opacity:0}
+.splash-drop{position:absolute;top:-24vh;left:var(--x);transform-origin:center;will-change:transform,opacity;animation:rain-fall var(--d) var(--dl) cubic-bezier(.33,.61,.47,1) forwards}
+@keyframes rain-fall{0%{transform:translate3d(0,-26vh,0) rotate(0deg) scale(var(--sc,1));opacity:0}9%{opacity:1}74%{opacity:1}100%{transform:translate3d(var(--dx),118vh,0) rotate(var(--rot)) scale(var(--sc,1));opacity:0}}
+/* 迷你组件：沿用站点的卡片 / 统计 / 关卡卡 / 代码框 / 音频条 / 选项视觉语言 */
+.mini{display:grid;gap:5px;padding:9px 10px;border-radius:13px;background:rgba(255,255,255,.92);border:1px solid rgba(150,172,230,.42);box-shadow:0 12px 26px rgba(45,72,140,.16),inset 0 1px #fff;backdrop-filter:blur(6px)}
+.mini-lines{display:grid;gap:4px;align-content:center}
+.mini-lines i,.mini-bar i,.mini-wave i{display:block;height:4px;border-radius:99px;background:linear-gradient(90deg,#8fa4e8,#b9c8f5)}
+.mini-bar{display:block;height:4px;border-radius:99px;background:rgba(120,140,200,.18);overflow:hidden;margin-top:2px}
+.mini-bar i{background:linear-gradient(90deg,#57c5a0,#7284f5)}
+.mini-course{grid-template-columns:26px 1fr;align-items:center;min-width:118px}
+.mini-ico{display:grid;place-items:center;width:26px;height:26px;border-radius:9px;background:linear-gradient(145deg,#647df8,#435bdc);color:#fff;font:900 13px/1 "Segoe UI",Arial,sans-serif;box-shadow:0 5px 12px rgba(68,91,221,.3)}
+.mini-course .mini-bar{grid-column:1/-1}
+.mini-stat{min-width:74px;justify-items:start}
+.mini-stat b{font:900 16px/1 "Segoe UI",Arial,sans-serif;color:#2b3f6b}
+.mini-stat small{font-size:9px;color:#7e8ca8;letter-spacing:.4px}
+.mini-level{grid-template-columns:auto 1fr;align-items:center;min-width:112px}
+.mini-num{display:grid;place-items:center;min-width:24px;height:22px;padding:0 5px;border-radius:7px;background:rgba(120,150,255,.16);color:#4b63c9;font:800 10px/1 "Segoe UI",Arial,sans-serif}
+.mini-code{min-width:92px;background:linear-gradient(160deg,#152036,#0f172a);border-color:rgba(120,150,220,.35)}
+.mini-code .cl{display:block;height:4px;border-radius:99px;background:#7f96ff}
+.mini-code .cl.c1{width:52%;background:#c7a6ff}
+.mini-code .cl.c2{width:74%;background:#7dd3fc}
+.mini-code .cl.c3{width:38%;background:#a5e075}
+.mini-code .cl.c4{width:60%;background:#ffc777}
+.mini-audio{grid-auto-flow:column;align-items:center;gap:8px;min-width:96px}
+.mini-play{width:20px;height:20px;border-radius:50%;background:linear-gradient(145deg,#647df8,#435bdc);box-shadow:0 4px 10px rgba(68,91,221,.3)}
+.mini-wave{display:flex;align-items:flex-end;gap:3px;height:18px}
+.mini-wave i{width:3px}
+.mini-wave i:nth-child(1){height:40%}.mini-wave i:nth-child(2){height:80%}.mini-wave i:nth-child(3){height:56%}.mini-wave i:nth-child(4){height:92%}.mini-wave i:nth-child(5){height:48%}
+.mini-quiz{gap:4px;min-width:86px}
+.mini-opt{display:block;height:9px;border-radius:6px;background:rgba(120,140,200,.16);border:1px solid rgba(150,172,230,.32)}
+.mini-opt.ok{background:rgba(60,190,140,.26);border-color:rgba(60,190,140,.5)}
+.mini-chip{padding:7px 12px;border-radius:99px;background:rgba(120,150,255,.16);border:1px solid rgba(130,155,255,.34);color:#4b63c9;font:800 11px/1 "Segoe UI",Arial,sans-serif;justify-items:center}
+.mini-ring{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#7284f5 72%,rgba(120,140,200,.18) 0);position:relative}
+.mini-ring::after{content:"";position:absolute;inset:5px;border-radius:50%;background:rgba(255,255,255,.94)}
+.mini-ring span{position:relative;z-index:1;font:800 9px/1 "Segoe UI",Arial,sans-serif;color:#4b63c9}
+.mini-panel{grid-template-columns:auto 1fr;align-items:center;min-width:120px}
+.mini-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(145deg,#57c5a0,#7284f5)}
+body[data-theme="dark"] .mini{background:rgba(26,36,60,.94);border-color:rgba(140,165,235,.24);box-shadow:0 14px 30px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.06)}
+body[data-theme="dark"] .mini-stat b,body[data-theme="dark"] .mini-num,body[data-theme="dark"] .mini-chip{color:#c9d6ff}
+body[data-theme="dark"] .mini-ring::after{background:rgba(22,32,54,.94)}
+body[data-theme="dark"] .mini-ring span{color:#c9d6ff}
+@media(prefers-reduced-motion:reduce){.splash-rain{display:none}}
+
+/* ==== 深色主题打磨 ==== */
+body[data-theme="dark"]{
+  --ink:#e9efff;--muted:#9fb0cc;--line:rgba(152,172,220,.14);--paper:#162036;
+  --shadow:0 18px 44px rgba(0,0,0,.42),0 2px 10px rgba(0,0,0,.26);
+  background-color:#0e1626;
+  background-image:radial-gradient(ellipse 70% 50% at 18% 0%,rgba(88,120,200,.16),transparent 60%),radial-gradient(ellipse 60% 44% at 88% 8%,rgba(96,80,180,.14),transparent 58%),linear-gradient(160deg,#0e1626 0%,#121c33 52%,#0e1626 100%);
+  background-attachment:fixed;
+}
+/* 骨架：侧栏、顶栏、面板统一层次 */
+body[data-theme="dark"] .sidebar{background:#111a2e;border-right:1px solid var(--line)}
+body[data-theme="dark"] .topbar{background:rgba(17,26,46,.88);backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.28)}
+body[data-theme="dark"] .brand-name{color:var(--ink)}
+body[data-theme="dark"] .nav-label{color:#66799b}
+body[data-theme="dark"] .nav-btn{color:#a9b8d4}
+body[data-theme="dark"] .nav-btn:hover{background:rgba(255,255,255,.055);color:#eef3ff}
+body[data-theme="dark"] .nav-btn.active{background:linear-gradient(100deg,rgba(70,96,170,.55),rgba(52,74,140,.42));box-shadow:inset 3px 0 #8fa8ff}
+body[data-theme="dark"] .side-card{background:linear-gradient(150deg,#192540,#141d33);border-color:var(--line)}
+
+/* 面板 / 卡片 / 路线 */
+body[data-theme="dark"] .panel,
+body[data-theme="dark"] .stat,
+body[data-theme="dark"] .level-card,
+body[data-theme="dark"] .hero-progress,
+body[data-theme="dark"] .track,
+body[data-theme="dark"] .course-card,
+body[data-theme="dark"] .summary-hero{
+  background:linear-gradient(160deg,#17213a,#141d33);
+  border-color:var(--line);
+  box-shadow:var(--shadow);
+}
+body[data-theme="dark"] .course-card:hover{border-color:rgba(130,155,255,.42);box-shadow:0 22px 46px rgba(0,0,0,.48)}
+body[data-theme="dark"] .level-card:hover{border-color:rgba(130,155,255,.38)}
+body[data-theme="dark"] .level-card.completed{border-color:rgba(90,200,160,.3)}
+
+/* 文字层次 */
+body[data-theme="dark"] .subhead,
+body[data-theme="dark"] .meta-line,
+body[data-theme="dark"] .level-meta,
+body[data-theme="dark"] .track-note,
+body[data-theme="dark"] .progress-foot,
+body[data-theme="dark"] .footer-note,
+body[data-theme="dark"] .lesson-copy,
+body[data-theme="dark"] .audio-hint,
+body[data-theme="dark"] .hint,
+body[data-theme="dark"] .guide-idea p,
+body[data-theme="dark"] .challenge-copy,
+body[data-theme="dark"] .course-card-body small,
+body[data-theme="dark"] .course-card-meta,
+body[data-theme="dark"] .side-mini{color:var(--muted)}
+body[data-theme="dark"] .eyebrow{color:#8ba1c6}
+body[data-theme="dark"] .lesson-title-row h2,
+body[data-theme="dark"] .challenge-label,
+body[data-theme="dark"] .track-title,
+body[data-theme="dark"] .section-head h2{color:var(--ink)}
+
+/* 输入框 / 答案框 / 运行结果框 */
+body[data-theme="dark"] .task-input,
+body[data-theme="dark"] #runOutput,
+body[data-theme="dark"] .code-input,
+body[data-theme="dark"] textarea,
+body[data-theme="dark"] input{
+  background:#0d1526!important;color:var(--ink)!important;border:1px solid var(--line)!important;
+}
+body[data-theme="dark"] .task-input::placeholder,
+body[data-theme="dark"] #runOutput::placeholder,
+body[data-theme="dark"] .code-input::placeholder,
+body[data-theme="dark"] textarea::placeholder{color:#64748f!important}
+body[data-theme="dark"] .task-input:focus,
+body[data-theme="dark"] #runOutput:focus,
+body[data-theme="dark"] .code-input:focus,
+body[data-theme="dark"] textarea:focus,
+body[data-theme="dark"] input:focus{border-color:rgba(125,155,255,.55)!important;box-shadow:0 0 0 3px rgba(90,120,255,.16)!important;outline:none}
+
+/* 新组件：快问 / 录音 / 要点 / 技能 */
+body[data-theme="dark"] .quiz-item,
+body[data-theme="dark"] .recorder-row,
+body[data-theme="dark"] .passage,
+body[data-theme="dark"] .audio-row,
+body[data-theme="dark"] .point-item,
+body[data-theme="dark"] .skill-item,
+body[data-theme="dark"] .takeaway-item{background:rgba(255,255,255,.03);border-color:var(--line)!important}
+body[data-theme="dark"] .quiz-question{color:var(--ink)}
+body[data-theme="dark"] .option{background:#141d33;border-color:var(--line);color:var(--ink)}
+body[data-theme="dark"] .option:hover{background:#1b2743;border-color:rgba(130,155,255,.4)}
+body[data-theme="dark"] .option.selected{border-color:rgba(130,155,255,.75);background:rgba(80,110,220,.22)}
+body[data-theme="dark"] .option.correct{border-color:rgba(70,200,150,.7);background:rgba(40,160,120,.2)}
+body[data-theme="dark"] .option.wrong{border-color:rgba(240,110,130,.7);background:rgba(200,70,90,.2)}
+body[data-theme="dark"] .option[disabled]{opacity:.85}
+
+/* 按钮 */
+body[data-theme="dark"] .btn-ghost,
+body[data-theme="dark"] .theme-button,
+body[data-theme="dark"] .reset-button{background:rgba(255,255,255,.045);border-color:var(--line);color:var(--ink)}
+body[data-theme="dark"] .btn-ghost:hover,
+body[data-theme="dark"] .theme-button:hover,
+body[data-theme="dark"] .reset-button:hover{background:rgba(255,255,255,.1);color:#fff}
+body[data-theme="dark"] .btn-primary{box-shadow:0 10px 26px rgba(60,90,220,.4)}
+body[data-theme="dark"] .btn-soft{background:rgba(120,150,255,.14);border-color:rgba(130,155,255,.28);color:#c9d6ff}
+body[data-theme="dark"] .btn-soft:hover{background:rgba(120,150,255,.22)}
+
+/* 代码区 / IDE */
+body[data-theme="dark"] .codebox{background:#0b1322;border-color:var(--line)}
+body[data-theme="dark"] .codebar{background:#111b2f;border-bottom:1px solid var(--line);color:#93a5c4}
+body[data-theme="dark"] .codebox pre{color:#dbe6ff}
+body[data-theme="dark"] .ide-frame{background:#0b1322;border-color:var(--line)}
+body[data-theme="dark"] .ide-toolbar{background:#111b2f;border-bottom:1px solid var(--line)}
+body[data-theme="dark"] .ide-gutter{background:#0d1628;color:#56658a;border-right:1px solid var(--line)}
+body[data-theme="dark"] .ide-highlight{color:#dbe6ff}
+body[data-theme="dark"] .ide-standard{background:rgba(120,150,255,.16);border-color:rgba(130,155,255,.3);color:#c2d2ff}
+
+/* 反馈 / 状态 / 芯片 */
+body[data-theme="dark"] .feedback.ok{background:rgba(40,160,120,.16);border-color:rgba(70,200,150,.35);color:#b9f0da}
+body[data-theme="dark"] .feedback.no{background:rgba(200,70,90,.16);border-color:rgba(240,110,130,.35);color:#ffd2dc}
+body[data-theme="dark"] .chip{background:rgba(120,150,255,.14);border-color:rgba(130,155,255,.26);color:#c6d4ff}
+body[data-theme="dark"] .progress-bar{background:rgba(255,255,255,.08)}
+body[data-theme="dark"] .progress-bar i{background:linear-gradient(90deg,#6bd3b0,#7f96ff)}
+body[data-theme="dark"] .toast{background:#1b2740;color:var(--ink);border:1px solid var(--line);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+body[data-theme="dark"] .section-head .btn-ghost{border-color:var(--line)}
+
+/* 滚动条 */
+body[data-theme="dark"]{scrollbar-color:#33415f #0e1626;scrollbar-width:thin}
+body[data-theme="dark"] ::-webkit-scrollbar{width:10px;height:10px}
+body[data-theme="dark"] ::-webkit-scrollbar-track{background:#0e1626}
+body[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#2b3a58;border-radius:8px;border:2px solid #0e1626}
+body[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:#3a4c70}
+
+/* 开屏与胜利动画在深色下 */
+body[data-theme="dark"] .splash-mark{background:linear-gradient(145deg,rgba(38,52,84,.9),rgba(24,36,62,.82));border-color:rgba(150,175,235,.3)}
+body[data-theme="dark"] .splash-code{background:linear-gradient(180deg,#dfe8ff 0%,#a9c0ff 55%,#7f98ff 100%);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-stroke:.6px rgba(255,255,255,.4)}
+body[data-theme="dark"] .victory-card{background:linear-gradient(160deg,#192540,#131c31);border-color:var(--line)}
 </style>
 </head>
 <body class="splash-active">
@@ -1495,6 +1671,38 @@ render();
  const splash=document.getElementById("splash-screen"),skip=document.getElementById("splash-skip"),app=document.querySelector(".app");if(!splash||!app)return;
  let launched=false;const reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
  const targetSelector=".hero-main,.hero-progress,.stat,.course-library,.section-head,.course-route-heading,.track-head,.level-card,.panel,.summary-hero";
+ function spawnRain(){
+  if(launched||reduced)return;
+  var layer=document.createElement("div");layer.className="splash-rain";layer.setAttribute("aria-hidden","true");document.body.appendChild(layer);
+  var pieces=[
+   function(){return '<div class="mini mini-course"><span class="mini-ico">C</span><span class="mini-lines"><i style="width:64%"></i><i style="width:42%"></i></span><span class="mini-bar"><i style="width:38%"></i></span></div>'},
+   function(){return '<div class="mini mini-course" style="--h:0"><span class="mini-ico" style="background:linear-gradient(145deg,#7c6cf6,#5a4bd8)">英</span><span class="mini-lines"><i style="width:58%"></i><i style="width:36%"></i></span><span class="mini-bar"><i style="width:66%;background:linear-gradient(90deg,#9d8bff,#6f7bff)"></i></span></div>'},
+   function(){return '<div class="mini mini-stat"><b>62</b><small>关卡</small><span class="mini-bar"><i style="width:72%"></i></span></div>'},
+   function(){return '<div class="mini mini-stat"><b>+30</b><small>学习点</small><span class="mini-bar"><i style="width:48%;background:linear-gradient(90deg,#ffcf6b,#f5a94d)"></i></span></div>'},
+   function(){return '<div class="mini mini-level"><span class="mini-num">03</span><span class="mini-lines"><i style="width:72%"></i><i style="width:46%"></i></span></div>'},
+   function(){return '<div class="mini mini-level"><span class="mini-num" style="background:rgba(60,190,140,.2);color:#1f8f65">✓</span><span class="mini-lines"><i style="width:64%"></i><i style="width:52%"></i></span></div>'},
+   function(){return '<div class="mini mini-code"><i class="cl c1"></i><i class="cl c2"></i><i class="cl c3"></i><i class="cl c4"></i></div>'},
+   function(){return '<div class="mini mini-audio"><span class="mini-play"></span><span class="mini-wave"><i></i><i></i><i></i><i></i><i></i></span></div>'},
+   function(){return '<div class="mini mini-quiz"><span class="mini-opt ok"></span><span class="mini-opt"></span><span class="mini-opt"></span></div>'},
+   function(){return '<div class="mini mini-chip">+30 点</div>'},
+   function(){return '<div class="mini mini-ring"><span>72%</span></div>'},
+   function(){return '<div class="mini mini-panel"><span class="mini-dot"></span><span class="mini-lines"><i style="width:82%"></i><i style="width:56%"></i><i style="width:68%"></i></span></div>'}
+  ];
+  var n=window.innerWidth<700?13:22;
+  for(var i=0;i<n;i++){
+   var wrap=document.createElement("div");wrap.className="splash-drop";
+   wrap.style.setProperty("--x",(2+Math.random()*86).toFixed(2)+"vw");
+   wrap.style.setProperty("--d",(2.2+Math.random()*1.7).toFixed(2)+"s");
+   wrap.style.setProperty("--dl",(Math.random()*1.15).toFixed(2)+"s");
+   wrap.style.setProperty("--dx",((Math.random()-.5)*16).toFixed(1)+"vw");
+   wrap.style.setProperty("--rot",((Math.random()*2-1)*70).toFixed(0)+"deg");
+   wrap.style.setProperty("--sc",(0.7+Math.random()*0.55).toFixed(2));
+   wrap.innerHTML=pieces[(Math.random()*pieces.length)|0]();
+   layer.appendChild(wrap);
+  }
+  window.setTimeout(function(){layer.classList.add("is-gone")},2600);
+  window.setTimeout(function(){layer.remove()},3500);
+ }
  function revealInterface(){
   if(launched)return;launched=true;window.clearTimeout(revealTimer);window.clearTimeout(skipTimer);
   const targets=Array.from(app.querySelectorAll(targetSelector)).filter(function(el){return !el.parentElement.closest(targetSelector)});
@@ -1506,6 +1714,7 @@ render();
  function onSplashKey(event){if(event.key==="Escape")revealInterface()}
  const skipTimer=window.setTimeout(function(){splash.classList.add("can-skip")},reduced?0:1100);
  const revealTimer=window.setTimeout(revealInterface,reduced?120:1400);
+ window.setTimeout(spawnRain,reduced?0:900);
  if(skip)skip.addEventListener("click",revealInterface);window.addEventListener("keydown",onSplashKey);
 })();
 </script>
