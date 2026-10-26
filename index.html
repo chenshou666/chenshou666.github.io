@@ -1379,6 +1379,25 @@ html[data-sky="night"] .side-card.tilting{box-shadow:0 20px 44px rgba(0,0,0,.5),
   #view.view-enter .stat,#view.view-enter .course-entry,#view.view-enter .panel,#view.view-enter .track,
   .topbar.title-enter .top-title,.topbar.title-enter .top-right{animation:none!important}
 }
+
+/* ==== 通关后底部悬浮条（下一关入口） ==== */
+.next-bar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;
+  display:flex;align-items:center;gap:12px;padding:9px 10px 9px 18px;border-radius:999px;
+  background:rgba(255,255,255,.82);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);
+  border:1px solid rgba(255,255,255,.92);
+  box-shadow:0 18px 46px rgba(20,44,86,.22),inset 0 1px 0 #fff;
+  color:var(--ink);animation:nextbar-in .46s cubic-bezier(.2,.86,.24,1) both;white-space:nowrap}
+@keyframes nextbar-in{0%{opacity:0;transform:translate(-50%,20px) scale(.94)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}
+.next-bar .nb-ok{font-size:12px;font-weight:700;color:#0aa578;letter-spacing:.2px}
+.next-bar .nb-actions{display:flex;align-items:center;gap:8px}
+.next-bar .btn{padding:8px 15px!important;font-size:12px!important}
+html[data-sky="night"] .next-bar{background:rgba(20,32,54,.86);border-color:rgba(255,255,255,.22);box-shadow:0 18px 46px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.16);color:#eaf2ff}
+html[data-sky="night"] .next-bar .nb-ok{color:#7ef3d0}
+@media(max-width:900px){
+  .next-bar{bottom:14px;left:14px;right:14px;transform:none;width:auto;justify-content:space-between;padding:9px 12px;animation:nextbar-in-m .42s cubic-bezier(.2,.86,.24,1) both}
+  @keyframes nextbar-in-m{0%{opacity:0;transform:translateY(18px)}100%{opacity:1;transform:none}}
+}
+@media(prefers-reduced-motion:reduce){.next-bar{animation:none!important}}
 </style>
 </head>
 <body class="splash-active">
@@ -1604,6 +1623,13 @@ function renderBeginnerGuide(l){
 }
 function switchPage(p){page=p;activeLevel=null;render()}
 function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
+function ensureNextBar(){
+ var v=document.getElementById("view");if(!v)return;
+ if(!(page==="lesson"&&activeLevel&&isDone(activeLevel)))return;
+ var bar=document.createElement("div");bar.className="next-bar";
+ bar.innerHTML='<span class="nb-ok">✓ 本关已通关</span><div class="nb-actions"><button class="btn btn-primary btn-small" data-action="continue">下一关&nbsp; →</button><button class="btn btn-ghost btn-small" data-page="map">返回路线</button></div>';
+ v.appendChild(bar);
+}
 var __lastViewKey="";
 function render(){
  var __v=document.getElementById("view");
@@ -1611,7 +1637,7 @@ function render(){
  var __changed=__k!==__lastViewKey;__lastViewKey=__k;
  if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
   var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
- navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else renderSummary()}
+ navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else renderSummary()}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
