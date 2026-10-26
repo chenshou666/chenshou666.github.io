@@ -1,0 +1,76 @@
+HT Lab — 版权与使用许可
+================================
+
+Copyright © 2026 HT Lab. All rights reserved.
+版权所有 © 2026 HT Lab。保留所有权利。
+
+本文件说明你「可以免费做什么」和「不可以做什么」。使用本站即表示你同意以下条款。
+
+
+一、你可以免费做的事（无需联系作者）
+
+1. 访问、浏览本网站；
+2. 在自己的设备上运行本站，用于你个人的学习与练习；
+3. 把本站的链接分享给其他人；
+4. 在你的笔记、作业、博客、视频里引用**少量**内容（题目、示例、讲解片段），
+   并注明来源为「HT Lab」。
+
+
+二、未经作者事先书面许可，不得做的事
+
+1. **修改与再分发**：复制、修改、演绎本站任何内容（文字讲解、题目、示例代码、
+   标准答案、音频、图标、界面设计与样式）后公开发布或分发——包括「改一改再发布」
+   和「换个名字再发布」；
+2. **商业使用**：将本站内容（全部或部分）用于任何商业目的，包括但不限于：
+   售卖、付费课程、付费社群、培训收费、广告变现、随产品/软件捆绑销售、
+   企业内部培训、印刷出版；
+3. **去除标识**：删除、隐藏或替换版权声明、免责声明、名称与图标后使用；
+4. **名称与标识**：将「HT Lab」名称、HT 字标、站点图标或与本站高度相似的
+   视觉设计，用于任何其他项目、产品或服务；
+5. **冒名发布**：以「HT Lab」名义发布、分发或宣传任何内容（包括修改版）；
+6. **训练数据**：将本站内容用于训练机器学习模型，或用于构建面向公众的商业数据集。
+
+
+三、名称与标识（商标性权利保留）
+
+「HT Lab」名称、HT 字标、站点图标（ht-lab.ico / favicon.svg）以及整体视觉设计，
+是作者的标识性资产，**不属于**上文第一条的免费使用范围。任何对外展示这些标识的
+用途，都需要事先取得书面许可。
+
+
+四、需要单独授权的场景
+
+以下用途请先联系作者取得书面许可：商业使用、机构或课堂教学使用、二次开发与
+再分发、全文转载、贴牌或定制开发、商业合作。
+
+
+五、无担保与责任限制
+
+本站按「现状」提供，不提供任何明示或暗示的担保（包括但不限于适销性与特定用途
+适用性）。课程内容仅供学习参考，不构成任何考试、升学、就业或专业建议；通过本站
+关卡不代表能通过相应考试。因使用或无法使用本站内容造成的任何直接或间接损失，
+作者不承担责任。
+
+
+六、联系方式（授权、合作、错误反馈）
+
+GitHub Issues：https://github.com/chenshou666/chenshou666.github.io/issues
+
+
+--------------------------------------------------------------------
+English summary
+
+HT Lab is free for personal, non-commercial study.
+You may read the site, run it locally for your own learning, share its link, and
+quote short excerpts with attribution.
+
+Without prior written permission you may NOT: modify or redistribute the content,
+use it commercially, remove the copyright/brand notices, use the "HT Lab" name,
+wordmark or icon for any other project, publish anything under the HT Lab name,
+or use the content as training data.
+
+The "HT Lab" name, wordmark and icon are reserved brand assets and are not covered
+by the free-use permission above.
+
+For commercial use, institutional teaching, redistribution or partnerships, please
+open an issue at the repository above.

@@ -702,11 +702,11 @@ body[data-theme="dark"] .course-card-meta{color:#93a2bd}
       <button class="nav-btn active" data-page="courses"><span class="nav-icon">⌂</span><span>学习课程</span></button>
       <button class="nav-btn" data-page="practice"><span class="nav-icon">⌘</span><span>继续挑战</span></button>
       <button class="nav-btn" data-page="summary"><span class="nav-icon">✦</span><span>我的总结</span></button>
-      <button class="nav-btn" data-page="about"><span class="nav-icon">ⓘ</span><span>关于与免责</span></button>
+      <button class="nav-btn" data-page="about"><span class="nav-icon">ⓘ</span><span>关于 / 许可</span></button>
     </nav>
     <div class="side-bottom">
       <div class="side-card"><strong>每天前进一步</strong><p>稳稳通关，比一次学很多更重要。</p><button class="btn btn-soft btn-small" data-action="continue">继续学习&nbsp; →</button></div>
-      <div class="side-mini">学习进度只保存在此设备<br><button type="button" data-page="about" style="border:0;background:none;color:#8fa0c4;font-size:11px;text-decoration:underline;padding:0;margin-top:4px;cursor:pointer;font-family:inherit">免责声明 · 内容说明</button></div>
+      <div class="side-mini">学习进度只保存在此设备<br><button type="button" data-page="about" style="border:0;background:none;color:#8fa0c4;font-size:11px;text-decoration:underline;padding:0;margin-top:4px;cursor:pointer;font-family:inherit">免责声明 · 版权与许可</button></div>
     </div>
   </aside>
   <section class="main">
@@ -747,13 +747,13 @@ const COURSES=[
   heroCopy:"86 关，把 C 语言从第一行代码讲到能独立写项目：起步上路 8 关 + 流程控制 8 + 函数与程序结构 8 + 数组与字符串 8 + 指针与内存 10 + 自定义类型与数据结构 8 + 文件与输入输出 6 + 预处理器与工程实践 8 + 数据结构与算法 10 + 系统与底层 6 + 综合项目 6。每一关先讲透原理，再给可编译运行的示例，最后自己动手写：先过结构检查，再在本机编译运行、把真实输出粘回来做逐行比对（涉及 sizeof、地址等平台相关数值的关卡以结构检查为主）。",
   routeNote:"起步 → 流程控制 → 函数 → 数组与字符串 → 指针与内存 → 自定义类型 → 文件 → 工程实践 → 算法 → 系统底层 → 综合项目",
   mapNote:"每关：读讲解 → 看示例（可直接编译运行）→ 躲开常见陷阱 → 答知识快问 → 写代码并通过结构检查与运行结果比对。",
-  footNote:"示例与标准答案均在 TDM-GCC 4.9（Dev-C++ 自带）下用 -std=c11 -Wall 编译验证；代码挑战在本机浏览器做结构检查，正式提交前请用编译器实际运行确认。｜内容仅供学习参考，详见「关于与免责」。"},
+  footNote:"示例与标准答案均在 TDM-GCC 4.9（Dev-C++ 自带）下用 -std=c11 -Wall 编译验证；代码挑战在本机浏览器做结构检查，正式提交前请用编译器实际运行确认。｜内容仅供学习参考，详见「关于 / 许可」。Copyright © 2026 HT Lab，免费供个人学习使用，禁止商用与修改后分发。"},
  {id:"cet4",name:"英语四级",glyph:"英",sub:"听说读写 62 关 · 通关即具备上考场能力",store:"cquest.cet4.v1",chip:"四级全程",
   heroTitle:"听懂、说出口，<br>再把它写下来。",
   heroCopy:"从基础起步，62 关把听力、阅读、写作、翻译、口语一关一关练过去：地基 8 关 + 听力 12 + 阅读 14 + 写作 8 + 翻译 8 + 口语 10 + 全真模考 2。通关即具备上考场的能力，也能直接用在日常、校园、职场与出国场景。",
   routeNote:"地基 → 听力 → 阅读 → 写作 → 翻译 → 口语 → 全真模考",
   mapNote:"每关先学要点，再做听力/阅读题或写作/口语任务；通关后解锁下一站。",
-  footNote:"题目为按四级大纲自编的仿真题；音频由语音合成生成，最终请以真题材料为准。｜通过课程不等于通过考试，详见「关于与免责」。"}
+  footNote:"题目为按四级大纲自编的仿真题；音频由语音合成生成，最终请以真题材料为准。｜通过课程不等于通过考试，详见「关于 / 许可」。Copyright © 2026 HT Lab，免费供个人学习使用，禁止商用与修改后分发。"}
 ];
 const courseKey="cquest.course.v1";
 const resetPasswordKey="codesword.reset.password.v1";
@@ -909,7 +909,7 @@ function renderBeginnerGuide(l){
  return '<div class="beginner-guide"><div class="guide-heading">零基础拆解 · 不用急着背</div><div class="guide-idea"><div class="challenge-label">先抓住这一件事</div><p>'+esc(g.idea)+'</p></div><div class="guide-columns">'+list("示例逐步读",g.read)+list("挑战按这几步写",g.steps)+'</div><div class="guide-pitfall"><strong>新手易错点</strong><span>'+esc(g.pitfall)+'</span></div></div>';
 }
 function switchPage(p){page=p;activeLevel=null;render()}
-function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于与免责"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
+function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
 function render(){navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else renderSummary()}
 function renderCourses(){
  const cards=COURSES.map(function(c){
@@ -938,10 +938,14 @@ function renderAbout(){
   ["数据与隐私","本站不收集、不上传任何数据，也不联网同步。学习进度、代码草稿与录音只保存在本机浏览器（localStorage / 内存）。清除浏览器数据、更换浏览器或设备会导致进度丢失，本站不为此承担责任。"],
   ["内容准确性","内容经过脚本校验、真编译真运行与多轮独立复核，但仍可能存在错误、过时或表述不严谨之处；发现后欢迎反馈修正。"],
   ["责任","本站按「现状」提供，不提供任何明示或暗示的担保（包括但不限于适销性与特定用途适用性）。因使用或无法使用本站内容而造成的任何直接或间接损失，作者不承担责任。"],
-  ["开源与致谢","欢迎分享与二次分发，转载或修改后请保留本免责声明。名称、图标与第三方内容的权利归其各自所有者。"]
+  ["版权与名称","Copyright © 2026 HT Lab. 保留所有权利。\u300cHT Lab\u300d名称、HT 字标、站点图标（ht-lab.ico / favicon.svg）与整体视觉设计是作者的标识性资产，不属于免费使用范围；未经事先书面许可，不得把它们用于任何其他项目、产品或服务，也不得以「HT Lab」名义发布或宣传任何内容（包括修改版）。"],
+  ["免费使用的范围","本站免费供**个人学习**使用：你可以访问、在本机运行、按课程练习，也可以把链接分享给他人；在笔记、作业、博客里引用少量内容并注明「HT Lab」出处也可以。除此之外的权利均予保留。"],
+  ["禁止的事项","未经作者事先书面许可，不得：① 复制、修改、演绎本站内容后发布或分发（包括改一改再发布、换个名字再发布）；② 将本站内容用于任何商业目的（售卖、付费课程、付费社群、培训收费、广告变现、随产品捆绑、企业内部培训、印刷出版）；③ 去除或隐藏版权、免责声明、名称与图标后使用；④ 使用「HT Lab」名称/字标/图标或高度相似的视觉设计；⑤ 以「HT Lab」名义发布任何内容；⑥ 将本站内容用于训练机器学习模型或构建面向公众的商业数据集。"],
+  ["需要单独授权","商业使用、机构或课堂教学、二次开发与再分发、全文转载、贴牌定制、商业合作——请先联系作者取得书面许可。"],
+  ["联系方式与授权","授权、合作或内容错误反馈，请到 GitHub 仓库提 Issue：github.com/chenshou666/chenshou666.github.io/issues。本站会持续更新，最新许可文本以仓库中的 LICENSE 文件为准。"]
  ];
  const body=items.map(function(x){return '<section class="panel" style="margin-bottom:14px"><div class="challenge-head"><div class="challenge-label">'+esc(x[0])+'</div></div><p class="lesson-copy">'+esc(x[1])+'</p></section>'}).join("");
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">HT LAB</div><h1>关于与免责声明</h1><p class="subhead">使用本站前，请先了解下面的说明。</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回学习课程</button></div>'+body+'<div class="footer-note">最后更新：2026-10-26 · 本页内容如与你的使用场景有冲突，以你所在地区法律为准。</div>';
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">HT LAB</div><h1>关于 / 免责 / 版权与许可</h1><p class="subhead">本站免费供个人学习使用；名称、图标与内容版权归作者所有，禁止商用与修改后分发。</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回学习课程</button></div>'+body+'<div class="footer-note">最后更新：2026-10-26 · Copyright © 2026 HT Lab · 免费供个人学习使用，禁止商用与修改后分发 · 完整条款见仓库 LICENSE 文件</div>';
 }
 function renderPractice(){
  const l=nextLevel();
