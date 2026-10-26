@@ -1302,6 +1302,68 @@ html[data-sky="night"] .side-card.tilting{box-shadow:0 20px 44px rgba(0,0,0,.5),
   100%{opacity:1;translate:0 0}
 }
 @media(prefers-reduced-motion:reduce){.app.interface-reveal .slide-across{animation:none;translate:none;opacity:1}}
+
+/* ==== 页面切换：丝滑滑入 + 逐步进入 ==== */
+#view.view-enter{
+  animation:page-enter .62s cubic-bezier(.16,.84,.28,1) backwards;
+  will-change:opacity,transform,filter;
+}
+@keyframes page-enter{
+  0%{opacity:0;transform:translateY(16px);filter:blur(6px)}
+  55%{opacity:1;filter:blur(0)}
+  100%{opacity:1;transform:none;filter:blur(0)}
+}
+/* 区块逐个丝滑滑入（backwards 填充：动画结束后交还 hover/倾斜） */
+#view.view-enter > *{
+  animation:block-enter .66s cubic-bezier(.16,.84,.28,1) backwards;
+  will-change:opacity,transform;
+}
+#view.view-enter > *:nth-child(1){animation-delay:0s}
+#view.view-enter > *:nth-child(2){animation-delay:.055s}
+#view.view-enter > *:nth-child(3){animation-delay:.11s}
+#view.view-enter > *:nth-child(4){animation-delay:.165s}
+#view.view-enter > *:nth-child(5){animation-delay:.22s}
+#view.view-enter > *:nth-child(6){animation-delay:.275s}
+#view.view-enter > *:nth-child(7){animation-delay:.33s}
+#view.view-enter > *:nth-child(n+8){animation-delay:.375s}
+@keyframes block-enter{
+  0%{opacity:0;transform:translateY(22px) scale(.994)}
+  62%{opacity:1}
+  100%{opacity:1;transform:none}
+}
+/* 卡片层再细分一层：让同一区块里的卡片也依次进入 */
+#view.view-enter .course-card,
+#view.view-enter .level-card,
+#view.view-enter .stat,
+#view.view-enter .course-entry,
+#view.view-enter .panel,
+#view.view-enter .track{
+  animation:block-enter .6s cubic-bezier(.16,.84,.28,1) backwards;
+}
+#view.view-enter .course-card:nth-child(1){animation-delay:.06s}
+#view.view-enter .course-card:nth-child(2){animation-delay:.12s}
+#view.view-enter .course-card:nth-child(3){animation-delay:.18s}
+#view.view-enter .stat:nth-child(1){animation-delay:.1s}
+#view.view-enter .stat:nth-child(2){animation-delay:.15s}
+#view.view-enter .stat:nth-child(3){animation-delay:.2s}
+#view.view-enter .stat:nth-child(4){animation-delay:.25s}
+#view.view-enter .level-card:nth-child(1){animation-delay:.05s}
+#view.view-enter .level-card:nth-child(2){animation-delay:.09s}
+#view.view-enter .level-card:nth-child(3){animation-delay:.13s}
+#view.view-enter .level-card:nth-child(4){animation-delay:.17s}
+#view.view-enter .level-card:nth-child(5){animation-delay:.21s}
+#view.view-enter .level-card:nth-child(n+6){animation-delay:.25s}
+/* 顶栏：标题与按钮组顺次轻微滑入 */
+.topbar.title-enter .top-title{animation:title-enter .6s cubic-bezier(.16,.84,.28,1) .05s backwards}
+.topbar.title-enter .top-right{animation:title-enter .6s cubic-bezier(.16,.84,.28,1) .11s backwards}
+@keyframes title-enter{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+/* 侧栏导航：当前项指示条平滑过渡 */
+.nav-btn{transition:transform .3s cubic-bezier(.16,.84,.28,1),background .3s ease,color .3s ease,box-shadow .3s ease,border-color .3s ease}
+@media(prefers-reduced-motion:reduce){
+  #view.view-enter,#view.view-enter > *,#view.view-enter .course-card,#view.view-enter .level-card,
+  #view.view-enter .stat,#view.view-enter .course-entry,#view.view-enter .panel,#view.view-enter .track,
+  .topbar.title-enter .top-title,.topbar.title-enter .top-right{animation:none!important}
+}
 </style>
 </head>
 <body class="splash-active">
@@ -1527,7 +1589,14 @@ function renderBeginnerGuide(l){
 }
 function switchPage(p){page=p;activeLevel=null;render()}
 function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
-function render(){navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else renderSummary()}
+var __lastViewKey="";
+function render(){
+ var __v=document.getElementById("view");
+ var __k=page+"|"+activeCourse+"|"+(activeLevel?activeLevel.id:"");
+ var __changed=__k!==__lastViewKey;__lastViewKey=__k;
+ if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
+  var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
+ navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else renderSummary()}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
