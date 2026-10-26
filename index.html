@@ -1411,6 +1411,15 @@ html[data-sky="night"] .next-bar .nb-ok{color:#7ef3d0}
 .save-title{margin:0 0 6px!important}
 .save-box{margin:10px 0 8px;min-height:78px;font-family:"Cascadia Code",Consolas,monospace;font-size:11.5px;line-height:1.6;word-break:break-all}
 .save-hint{margin-top:10px;font-size:11px;line-height:1.75}
+
+/* ==== 反馈与建议面板 ==== */
+.feedback-panel{margin-top:4px}
+.feedback-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 4px}
+.feedback-actions .btn{text-decoration:none}
+.feedback-soon{font-size:12px;color:var(--ink-3);background:rgba(255,255,255,.45);border:1px dashed rgba(20,44,86,.14);
+  border-radius:99px;padding:7px 14px}
+.feedback-hint{margin-top:10px;font-size:11.5px;line-height:1.75}
+html[data-sky="night"] .feedback-soon{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
 </style>
 </head>
 <body class="splash-active">
@@ -1638,6 +1647,7 @@ function switchPage(p){page=p;activeLevel=null;render()}
 function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
 
 /* ==== 进度文件包：导出 / 导入（只含学习数据，不含个人信息） ==== */
+var CONTACT_QQ_GROUP="";/* 交流群号：填这里（例："123456789"），留空显示「筹备中」 */
 var PROGRESS_KEYS=["cquest.master.v1","cquest.cet4.v1","cquest.course.v1","cquest.appearance.v1","codesword.reset.password.v1"];
 function ensureProgressTools(){
  var v=document.getElementById("view");if(!v)return;
@@ -1856,10 +1866,10 @@ function renderAbout(){
   ["免费使用的范围","本站免费供**个人学习**使用：你可以访问、在本机运行、按课程练习，也可以把链接分享给他人；在笔记、作业、博客里引用少量内容并注明「HT Lab」出处也可以。除此之外的权利均予保留。"],
   ["禁止的事项","未经作者事先书面许可，不得：① 复制、修改、演绎本站内容后发布或分发（包括改一改再发布、换个名字再发布）；② 将本站内容用于任何商业目的（售卖、付费课程、付费社群、培训收费、广告变现、随产品捆绑、企业内部培训、印刷出版）；③ 去除或隐藏版权、免责声明、名称与图标后使用；④ 使用「HT Lab」名称/字标/图标或高度相似的视觉设计；⑤ 以「HT Lab」名义发布任何内容；⑥ 将本站内容用于训练机器学习模型或构建面向公众的商业数据集。"],
   ["需要单独授权","商业使用、机构或课堂教学、二次开发与再分发、全文转载、贴牌定制、商业合作——请先联系作者取得书面许可。"],
-  ["联系方式与授权","授权、合作或内容错误反馈，请到 GitHub 仓库提 Issue：github.com/chenshou666/chenshou666.github.io/issues。本站会持续更新，最新许可文本以仓库中的 LICENSE 文件为准。"]
+  ["联系方式与授权","授权、合作或内容反馈：优先加文末「反馈与建议」里的交流群；技术用户也可以在 GitHub 仓库提 Issue（github.com/chenshou666/chenshou666.github.io/issues，国内访问可能不稳定）。本站会持续更新，最新许可文本以仓库中的 LICENSE 文件为准。"]
  ];
  const body=items.map(function(x){return '<section class="panel" style="margin-bottom:14px"><div class="challenge-head"><div class="challenge-label">'+esc(x[0])+'</div></div><p class="lesson-copy">'+esc(x[1])+'</p></section>'}).join("");
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">HT LAB</div><h1>关于 / 免责 / 版权与许可</h1><p class="subhead">本站免费供个人学习使用；名称、图标与内容版权归作者所有，禁止商用与修改后分发。</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回学习课程</button></div>'+body+'<div class="footer-note">最后更新：2026-10-26 · Copyright © 2026 HT Lab · 免费供个人学习使用，禁止商用与修改后分发 · 完整条款见仓库 LICENSE 文件</div>';
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">HT LAB</div><h1>关于 / 免责 / 版权与许可</h1><p class="subhead">本站免费供个人学习使用；名称、图标与内容版权归作者所有，禁止商用与修改后分发。</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回学习课程</button></div>'+body+'<section class="panel feedback-panel"><div class="challenge-head"><div class="challenge-label">反馈与建议</div><span class="chip">欢迎</span></div>'+'<p class="lesson-copy">内容会按大家的建议继续增加；使用中觉得哪里不好用、哪里有错、想加什么内容，都可以直接告诉作者。</p>'+'<div class="feedback-actions">'+(CONTACT_QQ_GROUP?'<button class="btn btn-primary btn-small" data-action="copy-qq-group">复制交流群号：'+esc(CONTACT_QQ_GROUP)+'</button>':''+'<span class="feedback-soon">交流群正在筹备中，稍后在本页公布</span>')+'<a class="btn btn-ghost btn-small" href="https://github.com/chenshou666/chenshou666.github.io/issues" target="_blank" rel="noopener">在 GitHub 提 Issue（国内可能打不开）</a>'+'</div>'+'<div class="hint feedback-hint">加群请说明来意（学习 / 反馈问题）。遇到内容错误，说清楚是哪一关、哪一段，方便快速修正。</div></section>'+'<div class="footer-note">最后更新：2026-10-26 · Copyright © 2026 HT Lab · 免费供个人学习使用，禁止商用与修改后分发 · 完整条款见仓库 LICENSE 文件</div>';
 }
 function renderPractice(){
  const l=nextLevel();
@@ -2357,6 +2367,7 @@ function handleClick(e){
  if(a==="copy-save-code"){var __c1=document.getElementById("saveCodeBox");if(__c1)copyTextSmart(__c1.value||"");return}
  if(a==="copy-save-link"){var __c2=document.getElementById("saveCodeBox");if(__c2)copyTextSmart(saveLinkFrom(__c2.value||""));return}
  if(a==="import-save-code"){importSaveFromBox();return}
+ if(a==="copy-qq-group"){copyTextSmart(CONTACT_QQ_GROUP);return}
  if(a==="export-progress"){exportProgress();return}
  if(a==="import-progress"){var __pf=document.getElementById("progressFile");if(__pf)__pf.click();else toast("找不到文件选择控件，请刷新页面。");return}
  if(a==="reset-progress"){openResetDialog();return}
