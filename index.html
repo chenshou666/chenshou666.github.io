@@ -1415,7 +1415,7 @@ function setCourse(id){
 let themeMode=localStorage.getItem(themeKey)||"system";
 function applyTheme(mode,persist){
  if(!["system","light","dark"].includes(mode))mode="system";
- themeMode=mode;const resolved=mode==="system"?(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):mode;
+ themeMode=mode;const resolved="light";/* 外观只由「天空预设」控制，不跟随手机系统深色模式 */
  document.body.dataset.theme=resolved;document.body.dataset.themeMode=mode;document.documentElement.style.colorScheme=resolved;
  const names={system:"跟随系统",light:"浅色模式",dark:"深色模式"};
  const button=document.getElementById("themeButton"),icon=resolved==="dark"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 15.2A8.7 8.7 0 0 1 8.8 3.2 8.7 8.7 0 1 0 20.8 15.2Z"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>';
@@ -1425,7 +1425,7 @@ function applyTheme(mode,persist){
 }
 applyTheme(themeMode,false);
 const systemThemeQuery=window.matchMedia?window.matchMedia("(prefers-color-scheme: dark)"):null;
-if(systemThemeQuery){const syncSystemTheme=function(){if(themeMode==="system")applyTheme("system",false)};if(systemThemeQuery.addEventListener)systemThemeQuery.addEventListener("change",syncSystemTheme);else if(systemThemeQuery.addListener)systemThemeQuery.addListener(syncSystemTheme)}
+if(systemThemeQuery){const syncSystemTheme=function(){};if(systemThemeQuery.addEventListener)systemThemeQuery.addEventListener("change",syncSystemTheme);else if(systemThemeQuery.addListener)systemThemeQuery.addListener(syncSystemTheme)}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function highlightC(source){
  const pattern=/^[ \t]*#[^\n]*|\/\*[\s\S]*?\*\/|\/\/[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:break|case|continue|default|do|else|for|goto|if|return|switch|while|auto|const|extern|inline|register|restrict|static|typedef|volatile|_Alignas|_Alignof|_Atomic|_Generic|_Noreturn|_Static_assert|_Thread_local)\b|\b(?:char|double|enum|float|int|long|short|signed|struct|union|unsigned|void|_Bool|_Complex|_Imaginary|size_t|FILE)\b|\b(?:0[xX][0-9a-fA-F]+|0[bB][01]+|\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)[uUlLfF]*\b|[A-Za-z_]\w*|[\s\S]/gm;
