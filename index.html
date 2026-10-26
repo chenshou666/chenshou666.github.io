@@ -1398,6 +1398,13 @@ html[data-sky="night"] .next-bar .nb-ok{color:#7ef3d0}
   @keyframes nextbar-in-m{0%{opacity:0;transform:translateY(18px)}100%{opacity:1;transform:none}}
 }
 @media(prefers-reduced-motion:reduce){.next-bar{animation:none!important}}
+
+/* ==== 进度备份面板 ==== */
+.progress-tools{margin-top:18px}
+.progress-tools .challenge-copy{font-size:12.5px;line-height:1.85;color:var(--ink-2);margin:6px 0 14px}
+.progress-tools .exercise-actions{display:flex;gap:10px;flex-wrap:wrap}
+.progress-tools .progress-hint{margin-top:14px;font-size:11.5px;line-height:1.8;color:var(--ink-3)}
+.progress-tools .progress-hint b{color:var(--ink);font-weight:700}
 </style>
 </head>
 <body class="splash-active">
@@ -1623,6 +1630,61 @@ function renderBeginnerGuide(l){
 }
 function switchPage(p){page=p;activeLevel=null;render()}
 function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
+
+/* ==== 进度文件包：导出 / 导入（只含学习数据，不含个人信息） ==== */
+var PROGRESS_KEYS=["cquest.master.v1","cquest.cet4.v1","cquest.course.v1","cquest.appearance.v1","codesword.reset.password.v1"];
+function ensureProgressTools(){
+ var v=document.getElementById("view");if(!v)return;
+ if(v.querySelector(".progress-tools"))return;
+ var wrap=document.createElement("section");
+ wrap.className="panel progress-tools";
+ wrap.innerHTML='<div class="challenge-head"><div class="challenge-label">进度备份与迁移</div><span class="chip">JSON 文件</span></div>'
+  +'<p class="challenge-copy">学习进度只保存在这台设备的浏览器里（不会上传）。换手机、换浏览器或清理缓存前，先「导出进度文件」；到新设备打开本站，再「导入进度文件」就能接着学。</p>'
+  +'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="export-progress">⬇ 导出进度文件</button>'
+  +'<button class="btn btn-ghost btn-small" data-action="import-progress">⬆ 导入进度文件</button>'
+  +'<input type="file" id="progressFile" accept="application/json,.json" hidden></div>'
+  +'<div class="hint progress-hint" id="progressHint">文件包含：C 语言进度、英语四级进度、外观设置、当前课程与答案锁密码。<b>不含</b>任何个人信息；可以放到网盘或发给自己的另一台设备。</div>';
+ v.appendChild(wrap);
+}
+function exportProgress(){
+ var out={app:"HT Lab",kind:"progress",version:1,exportedAt:new Date().toISOString(),data:{}};
+ PROGRESS_KEYS.forEach(function(k){var cur=localStorage.getItem(k);if(cur!==null)out.data[k]=cur});
+ try{
+  var blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json;charset=utf-8"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  var d=new Date(),pad=function(n){return String(n).padStart(2,"0")};
+  a.href=url;a.download="htlab-progress-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+".json";
+  a.style.display="none";document.body.appendChild(a);a.click();
+  window.setTimeout(function(){URL.revokeObjectURL(url);if(a.parentNode)a.parentNode.removeChild(a)},600);
+  toast("进度文件已导出，去「下载」里找它。");
+ }catch(e){toast("导出失败："+(e.message||"浏览器不支持下载"));}
+}
+function importProgressFile(file){
+ if(!file){return}
+ if(file.size>2*1024*1024){toast("文件太大，可能不是进度文件。");return}
+ var reader=new FileReader();
+ reader.onload=function(){
+  try{
+   var obj=JSON.parse(String(reader.result||""));
+   if(!obj||obj.app!=="HT Lab"||!obj.data||typeof obj.data!=="object")throw new Error("不是 HT Lab 的进度文件");
+   var n=0;
+   PROGRESS_KEYS.forEach(function(k){
+    var val=obj.data[k];
+    if(typeof val==="string"&&val){localStorage.setItem(k,val);n++}
+   });
+   if(!n)throw new Error("文件里没有可导入的进度");
+   toast("已导入 "+n+" 项进度，正在刷新…");
+   window.setTimeout(function(){location.reload()},800);
+  }catch(err){toast("导入失败："+(err.message||"文件格式不对"));}
+ };
+ reader.onerror=function(){toast("读取文件失败，请重试。")};
+ reader.readAsText(file,"utf-8");
+}
+document.addEventListener("change",function(e){
+ if(e.target&&e.target.id==="progressFile"){importProgressFile(e.target.files&&e.target.files[0]);e.target.value=""}
+},false);
+
 function ensureNextBar(){
  var v=document.getElementById("view");if(!v)return;
  if(!(page==="lesson"&&activeLevel&&isDone(activeLevel)))return;
@@ -1637,7 +1699,7 @@ function render(){
  var __changed=__k!==__lastViewKey;__lastViewKey=__k;
  if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
   var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
- navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else renderSummary()}
+ navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else{renderSummary();ensureProgressTools()}}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
@@ -2165,6 +2227,8 @@ function handleClick(e){
  if(a==="check-code")checkCode()
  if(a==="check-output"){checkRunOutput();return}
  if(a==="insert-template"){const ta=document.getElementById("codeAnswer");if(!ta)return;if(ta.value.trim()){toast("编辑器已有内容，模板不会覆盖。");ta.focus();return}const template="#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}";ta.value=template;ta.dispatchEvent(new Event("input",{bubbles:true}));ta.focus();const caret=template.indexOf("    \n")+4;ta.setSelectionRange(caret,caret);updateEditor();return}
+ if(a==="export-progress"){exportProgress();return}
+ if(a==="import-progress"){var __pf=document.getElementById("progressFile");if(__pf)__pf.click();else toast("找不到文件选择控件，请刷新页面。");return}
  if(a==="reset-progress"){openResetDialog();return}
  if(a==="reset-cancel"){closeResetDialog();return}
 }
