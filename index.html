@@ -1501,6 +1501,28 @@ html[data-sky="night"] .wrong-due{background:rgba(255,255,255,.1);border-color:r
 html[data-sky="night"] .plan-result{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
 html[data-sky="night"] .plan-chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#cfe0ff}
 html[data-sky="night"] .plan-chip.on{background:rgba(90,160,255,.2);border-color:#7fb0ff;color:#dbeaff}
+
+/* ==== 7 天项目 ==== */
+.proj-progress{margin:6px 0 18px}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.proj-card{padding:18px;border-radius:18px;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.8);
+  box-shadow:0 1px 2px rgba(20,44,86,.05),0 8px 22px rgba(20,44,86,.08);display:flex;flex-direction:column}
+.proj-card.done{background:linear-gradient(158deg,rgba(255,255,255,.62),rgba(226,252,242,.6));border-color:rgba(120,215,180,.6)}
+.proj-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.proj-day{font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
+.proj-state{font-size:11px;font-weight:700;color:var(--ink-3)}
+.proj-card.done .proj-state{color:#0aa578}
+.proj-card h3{font-size:14.5px;font-weight:750;color:var(--ink);margin:0 0 7px;line-height:1.45}
+.proj-goal{font-size:12.5px;color:var(--ink-2);line-height:1.75;margin:0 0 8px;flex:1}
+.proj-meta{font-size:10.5px;color:var(--ink-3);margin-bottom:8px}
+.proj-detail{margin:4px 0 10px}
+.proj-detail summary{font-size:11.5px;font-weight:650;color:var(--accent);cursor:pointer;padding:5px 0}
+.proj-why{font-size:12px;color:var(--ink-2);line-height:1.75;padding:9px 11px;margin:6px 0;
+  background:rgba(47,124,246,.08);border-left:3px solid rgba(47,124,246,.45);border-radius:8px}
+.proj-detail .codebox{margin-top:8px}
+.daily-makeup{margin-top:8px;width:100%;font-size:11px!important;padding:6px 10px!important}
+html[data-sky="night"] .proj-card{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+html[data-sky="night"] .proj-card.done{background:rgba(80,225,175,.14);border-color:rgba(120,235,195,.36)}
 </style>
 </head>
 <body class="splash-active">
@@ -1518,6 +1540,7 @@ html[data-sky="night"] .plan-chip.on{background:rgba(90,160,255,.2);border-color
       <button class="nav-btn active" data-page="courses"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M9.5 20v-5h5v5"/></svg></span><span>学习课程</span></button>
       <button class="nav-btn" data-page="practice"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M10 8.8 15.6 12 10 15.2Z"/></svg></span><span>继续挑战</span></button>
       <button class="nav-btn" data-page="summary"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10.5"/><path d="M12 20V4.5"/><path d="M19 20v-6.5"/></svg></span><span>我的总结</span></button>
+      <button class="nav-btn" data-page="project"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v12H4z"/><path d="M8 7V5h8v2"/><path d="M8 12h8"/><path d="M8 15.5h5"/></svg></span><span>7 天项目</span></button>
       <button class="nav-btn" data-page="mistakes"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h9a3 3 0 0 1 3 3V20"/><path d="M19 4.5h-2.5a3 3 0 0 0-3 3V20"/><path d="M7.5 11h3"/></svg></span><span>错题本</span><span class="nav-badge" id="wrongBadge" hidden></span></button>
       <button class="nav-btn" data-page="about"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 10.5v5.5"/><path d="M12 7.8h.01"/></svg></span><span>关于 / 许可</span></button>
     </nav>
@@ -1776,7 +1799,8 @@ function renderDailyStat(el){
  var st=todayStat(),s=loadStats(),mins=Math.floor((st.sec||0)/60),goal=s.goalMin||20,pct=Math.min(100,Math.round(mins/goal*100));
  el.innerHTML='<div class="daily-row"><span>今日</span><b>'+mins+' / '+goal+' 分钟</b></div>'
   +'<div class="daily-bar"><i style="width:'+pct+'%"></i></div>'
-  +'<div class="daily-foot">'+(st.levels?'今日通关 '+st.levels+' 关 · ':'')+'连续学习 '+streakDays()+' 天</div>';
+  +'<div class="daily-foot">'+(st.levels?'今日通关 '+st.levels+' 关 · ':'')+'连续学习 '+streakDays()+' 天'+(streakDays()===0?'（今天还没开始）':'')+'</div>'
+  +(function(){try{var mi=makeUpInfo();return mi.can?'<button class="btn btn-ghost btn-small daily-makeup" data-action="makeup">补签昨天</button>':''}catch(e){return ''}})();
 }
 function startStudyTimer(){
  if(window.__studyTimer)return;
@@ -1956,13 +1980,82 @@ function renderStartGuide(){
  v.appendChild(wrap);
 }
 
+
+/* ==== 7 天小作品支线：控制台记账本 ==== */
+var PROJECT_KEY="cquest.project.v1";
+var PROJECT_DAYS=[
+ {d:1,title:"跑起来：能输入、能输出",goal:"写一个程序：输出一行欢迎语，再读入一个金额并原样打印出来。",
+  learn:"第 01、04 关（程序结构、输入输出）",code:'#include <stdio.h>\n\nint main(void) {\n    double n;\n    printf("记账本 v0.1\\n请输入一笔金额：");\n    scanf("%lf", &n);\n    printf("已记录：%.2f\\n", n);\n    return 0;\n}',why:"这一步把「程序能和我对话」跑通，后面所有功能都建立在这上面。"},
+ {d:2,title:"存住数据：数组",goal:"把 5 笔金额存进数组，最后统一打印并算总和。",
+  learn:"第 25–32 关（数组与字符串）",code:'#include <stdio.h>\n\nint main(void) {\n    double a[5];\n    int i;\n    for (i = 0; i < 5; i++) scanf("%lf", &a[i]);\n    double sum = 0;\n    for (i = 0; i < 5; i++) { printf("%.2f\\n", a[i]); sum += a[i]; }\n    printf("合计：%.2f\\n", sum);\n    return 0;\n}',why:"从「一次一笔」升级到「一次一批」，这是记账功能的地基。"},
+ {d:3,title:"加分类：字符串与循环",goal:"每笔记录带一个分类（food/transport/other），并按分类统计金额。",
+  learn:"第 31–32、33–40 关（字符串、循环）",code:'#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char cat[5][10] = {"food","transport","other","food","other"};\n    double amt[5] = {12.5, 3, 28, 9.9, 15};\n    double sum[3] = {0,0,0};\n    for (int i = 0; i < 5; i++) {\n        if (strcmp(cat[i], "food") == 0) sum[0] += amt[i];\n        else if (strcmp(cat[i], "transport") == 0) sum[1] += amt[i];\n        else sum[2] += amt[i];\n    }\n    printf("food %.2f  transport %.2f  other %.2f\\n", sum[0], sum[1], sum[2]);\n    return 0;\n}',why:"账本的价值不在「记」而在「分得清」——分类统计是记账的第一步洞察。"},
+ {d:4,title:"抽成函数：让代码不重复",goal:"把「加一笔」和「打印汇总」拆成两个函数，主函数只负责调度。",
+  learn:"第 17–24 关（函数与程序结构）",code:'#include <stdio.h>\n\ndouble total(double *a, int n) {\n    double s = 0;\n    for (int i = 0; i < n; i++) s += a[i];\n    return s;\n}\nvoid show(double *a, int n) {\n    for (int i = 0; i < n; i++) printf("%d: %.2f\\n", i + 1, a[i]);\n    printf("合计：%.2f\\n", total(a, n));\n}\nint main(void) {\n    double a[3] = {10, 20.5, 5};\n    show(a, 3);\n    return 0;\n}',why:"函数拆分是可维护的分水岭：以后加功能只改一个地方。"},
+ {d:5,title:"用指针操作数据",goal:"用指针遍历数组，实现「查找最大一笔支出」。",
+  learn:"第 41–50 关（指针与内存）",code:'#include <stdio.h>\n\ndouble max_of(const double *a, int n) {\n    const double *p = a, *best = a;\n    for (int i = 0; i < n; i++, p++)\n        if (*p > *best) best = p;\n    return *best;\n}\nint main(void) {\n    double a[4] = {8, 30.5, 12, 45.2};\n    printf("最大一笔：%.2f\\n", max_of(a, 4));\n    return 0;\n}',why:"指针看着吓人，但它的用途很朴素：让函数高效地访问同一份数据。"},
+ {d:6,title:"存在文件里：下次还在",goal:"把账本存进 accounts.txt，重新运行时读出来，追加新记录。",
+  learn:"第 59–64 关（文件与输入输出）",code:'#include <stdio.h>\n\nint main(void) {\n    double n;\n    FILE *fp = fopen("accounts.txt", "a");\n    if (!fp) { printf("打不开文件\\n"); return 1; }\n    while (scanf("%lf", &n) == 1) fprintf(fp, "%.2f\\n", n);\n    fclose(fp);\n\n    double sum = 0, x;\n    fp = fopen("accounts.txt", "r");\n    while (fscanf(fp, "%lf", &x) == 1) sum += x;\n    fclose(fp);\n    printf("全部合计：%.2f\\n", sum);\n    return 0;\n}',why:"程序从「跑完就忘」变成「有记忆」，这是工具的起点。"},
+ {d:7,title:"最后一公里：做出能用的记账本",goal:"组合前 6 天，做出一个能循环输入、能查总额、能按分类统计的完整记账本，并处理输入错误。",
+  learn:"综合运用 + 第 65–72 关（工程实践）",code:'#include <stdio.h>\n#include <string.h>\n\n#define MAXN 100\n\nint main(void) {\n    char cats[MAXN][16];\n    double amt[MAXN];\n    int n = 0;\n    char op[16];\n    while (scanf("%15s", op) == 1) {\n        if (strcmp(op, "add") == 0 && n < MAXN) {\n            scanf("%lf %15s", &amt[n], cats[n]);\n            n++;\n            printf("已记录 %d 笔\\n", n);\n        } else if (strcmp(op, "list") == 0) {\n            for (int i = 0; i < n; i++) printf("%d) %.2f [%s]\\n", i + 1, amt[i], cats[i]);\n        } else if (strcmp(op, "total") == 0) {\n            double s = 0;\n            for (int i = 0; i < n; i++) s += amt[i];\n            printf("合计：%.2f\\n", s);\n        } else if (strcmp(op, "quit") == 0) break;\n        else printf("未知命令\\n");\n    }\n    return 0;\n}',why:"到这里你已拥有一个真正能用的程序：可以自己用，也可以给同学看。"}
+];
+function loadProject(){try{var o=JSON.parse(localStorage.getItem(PROJECT_KEY)||"{}");o.done=o.done||{};return o}catch(e){return {done:{}}}}
+function saveProject(o){try{localStorage.setItem(PROJECT_KEY,JSON.stringify(o))}catch(e){}}
+function projectProgress(){var o=loadProject(),n=0;PROJECT_DAYS.forEach(function(x){if(o.done[x.d])n++});return n}
+function renderProject(){
+ var o=loadProject(),fin=projectProgress();
+ var cards=PROJECT_DAYS.map(function(p){
+  var done=!!o.done[p.d];
+  return '<article class="proj-card'+(done?" done":"")+'">'
+   +'<div class="proj-head"><span class="proj-day">Day '+p.d+'</span><span class="proj-state">'+(done?"✓ 已完成":"待完成")+'</span></div>'
+   +'<h3>'+esc(p.title)+'</h3>'
+   +'<p class="proj-goal">'+esc(p.goal)+'</p>'
+   +'<div class="proj-meta">对应课程：'+esc(p.learn)+'</div>'
+   +'<details class="proj-detail"><summary>展开可运行示例与说明</summary>'
+   +'<div class="proj-why">'+esc(p.why)+'</div>'
+   +'<div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>day'+p.d+'.c</span></div><pre>'+highlightC(p.code)+'</pre></div>'
+   +'</details>'
+   +'<div class="exercise-actions"><button class="btn '+(done?"btn-ghost":"btn-primary")+' btn-small" data-action="proj-toggle" data-day="'+p.d+'">'+(done?"撤销完成":"标记今天完成")+'</button></div>'
+   +'</article>';
+ }).join("");
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">做点真东西</div><h1>7 天，做出一个能用的记账本</h1>'
+  +'<p class="subhead">每天一个 20 分钟的小任务，第 7 天你会拿到一个可以自己用、也能给同学看的控制台程序。不需要学完 86 关也能开始。</p></div>'
+  +'<span class="chip">'+fin+' / 7 天完成</span></div>'
+  +'<div class="proj-progress"><div class="daily-bar"><i style="width:'+Math.round(fin/7*100)+'%"></i></div></div>'
+  +'<div class="proj-grid">'+cards+'</div>'
+  +'<div class="panel" style="margin-top:16px"><div class="challenge-label">提示</div><p class="challenge-copy">每段示例都能直接编译运行；建议先跑通示例，再按自己的需求改。卡住时去「错题本」或交流群问。</p></div>';
+}
+
+/* ==== 连续天数补签 ==== */
+function makeUpInfo(){
+ var st=loadStats(),today=(st.days[dayKey()]||{sec:0,levels:0});
+ var y=new Date();y.setDate(y.getDate()-1);
+ var yRec=st.days[dayKey(y)];
+ if(today&&((today.sec||0)>=60||today.levels>0))return {can:false,reason:"today"};
+ if(yRec&&((yRec.sec||0)>=60||yRec.levels>0))return {can:false,reason:"alive"};
+ if(st.makeupWeek===undefined)st.makeupWeek=0;
+ if(st.makeupWeek>=1)return {can:false,reason:"used"};
+ return {can:true,reason:"ok"};
+}
+function useMakeUp(){
+ var st=loadStats();
+ var info=makeUpInfo();
+ if(!info.can){toast("今天还不需要补签，或本周补签已用完。");return false}
+ var y=new Date();y.setDate(y.getDate()-1);
+ st.days[dayKey(y)]={sec:300,levels:0,makeup:true};
+ st.makeupWeek=(st.makeupWeek||0)+1;
+ saveStats(st);
+ toast("已补签昨天，今天学一点就能续上连续天数。");
+ return true;
+}
+
 function renderBeginnerGuide(l){
  const g=l.beginner;if(!g)return "";
  function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
  return '<div class="beginner-guide"><div class="guide-heading">零基础拆解 · 不用急着背</div><div class="guide-idea"><div class="challenge-label">先抓住这一件事</div><p>'+esc(g.idea)+'</p></div><div class="guide-columns">'+list("示例逐步读",g.read)+list("挑战按这几步写",g.steps)+'</div><div class="guide-pitfall"><strong>新手易错点</strong><span>'+esc(g.pitfall)+'</span></div></div>';
 }
 function switchPage(p){page=p;activeLevel=null;render()}
-function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",mistakes:"HT LAB  /  错题本",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
+function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",mistakes:"HT LAB  /  错题本",project:"HT LAB  /  7 天项目",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
 
 /* ==== 进度文件包：导出 / 导入（只含学习数据，不含个人信息） ==== */
 var CONTACT_QQ_GROUP="1129793963";/* 交流群号：填这里（例："123456789"），留空显示「筹备中」 */
@@ -2152,7 +2245,7 @@ function render(){
  var __changed=__k!==__lastViewKey;__lastViewKey=__k;
  if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
   var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
- navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses"){renderCourses();setTimeout(renderStartGuide,0)}else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="mistakes"){renderMistakes();ensureProgressTools()}else{renderSummary();ensureProgressTools()}}
+ navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses"){renderCourses();setTimeout(renderStartGuide,0)}else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="mistakes"){renderMistakes();ensureProgressTools()}else if(page==="project")renderProject();else{renderSummary();ensureProgressTools()}}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
@@ -2428,7 +2521,7 @@ function renderEnglishLesson(l){
 function renderSummary(){
  const done=completedCount(), pct=progressPct(), rate=data.attempts?Math.round(data.correct/data.attempts*100):0, finished=done===levels.length;
  let skills=groups.filter(function(g){return levels.some(function(l){return l.stage===g})}).map(function(g){const ls=levels.filter(function(l){return l.stage===g}), n=ls.filter(isDone).length;return '<div class="skill-row"><span>'+esc(g)+' <span style="color:#9aa5b5">('+n+'/'+ls.length+')</span></span><span class="skill-state">'+(n===ls.length?"已掌握":n?"学习中":"待开始")+'</span></div>'}).join("");
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习档案</div><h1>我的学习总结</h1><p class="subhead">记录每一步进步，也看看下一步可以做什么。</p></div><button class="btn btn-ghost btn-small" data-page="mistakes">错题本（'+wrongList().length+'）</button><button class="btn btn-ghost btn-small" data-page="map">← 返回学习地图</button></div>'+
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习档案</div><h1>我的学习总结</h1><p class="subhead">记录每一步进步，也看看下一步可以做什么。</p></div><button class="btn btn-ghost btn-small" data-page="project">7 天项目（'+projectProgress()+'/7）</button><button class="btn btn-ghost btn-small" data-page="mistakes">错题本（'+wrongList().length+'）</button><button class="btn btn-ghost btn-small" data-page="map">← 返回学习地图</button></div>'+
  '<div class="summary-grid">'
   +'<div class="stat"><div class="stat-icon">⏱</div><div><div class="stat-num">'+Math.floor((todayStat().sec||0)/60)+'</div><div class="stat-label">今日学习分钟</div></div></div>'
   +'<div class="stat"><div class="stat-icon">🔥</div><div><div class="stat-num">'+streakDays()+'</div><div class="stat-label">连续学习天数</div></div></div>'
@@ -2697,6 +2790,8 @@ function handleClick(e){
  if(a==="copy-save-link"){var __c2=document.getElementById("saveCodeBox");if(__c2)copyTextSmart(saveLinkFrom(__c2.value||""));return}
  if(a==="import-save-code"){importSaveFromBox();return}
  if(a==="copy-qq-group"){copyTextSmart(CONTACT_QQ_GROUP);return}
+ if(a==="proj-toggle"){var pj=loadProject();var d=Number(action.dataset.day);pj.done[d]=!pj.done[d];saveProject(pj);render();toast(pj.done[d]?"Day "+d+" 完成，继续保持。":"已撤销 Day "+d+"。");return}
+ if(a==="makeup"){if(useMakeUp())render();return}
  if(a==="plan-set"){var pp=loadPlan();pp[action.dataset.k]=action.dataset.v;savePlan(pp);renderStartGuide();return}
  if(a==="plan-go"){var plan=buildPlan(loadPlan());setCourse(plan.first);openLevel((courseLevels[plan.first]||[])[0].id);return}
  if(a==="wrong-go"){var wc=action.dataset.cid||activeCourse;setCourse(wc);openLevel(Number(action.dataset.lid));return}
