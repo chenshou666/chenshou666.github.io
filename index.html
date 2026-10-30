@@ -1473,6 +1473,17 @@ html[data-sky="night"] .rubric{background:rgba(255,255,255,.08);border-color:rgb
 .wrong-actions{display:flex;gap:8px;flex-wrap:wrap}
 html[data-sky="night"] .wrong-item{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
 html[data-sky="night"] .wrong-due{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+
+/* ==== 代码快捷输入条 ==== */
+.snippet-bar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:9px;padding:9px 11px;
+  border-radius:13px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.78)}
+.snippet-hint{font-size:10px;font-weight:750;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-3)}
+.snippet{font-family:"Cascadia Code",Consolas,monospace;font-size:11.5px;padding:5px 9px;border-radius:9px;
+  border:1px solid rgba(20,44,86,.14);background:rgba(255,255,255,.85);color:#1b2b45;cursor:pointer}
+.snippet:active{transform:scale(.96)}
+/* 触屏设备才显示（桌面有键盘，避免干扰） */
+/* 快捷输入条对所有设备可见 */
+.feedback{white-space:pre-line}
 </style>
 </head>
 <body class="splash-active">
@@ -1812,6 +1823,75 @@ function renderMistakes(){
   +(items.length?'<div class="exercise-actions" style="margin-top:6px"><button class="btn btn-ghost btn-small" data-action="wrong-clear">清理已完成</button></div>':"");
 }
 
+
+/* ==== B5 代码快捷输入条 / B2 错误诊断 ==== */
+function snippetBar(){
+ var items=[
+  ["#include","#include <stdio.h>\n"],
+  ["main","int main(void) {\n  \n  return 0;\n}\n"],
+  ["printf","printf(\"\");"],
+  ["scanf","scanf(\"%d\", &n);"],
+  ["for","for (int i = 0; i < n; i++) {\n  \n}"],
+  ["if","if () {\n  \n}"],
+  ["&","&"],
+  ["%d","%d"],
+  ["\\n","\\n"],
+  [";",";"],
+  ["{ }","{\n  \n}"]
+ ];
+ var html='<div class="snippet-bar"><span class="snippet-hint">快捷输入</span>';
+ items.forEach(function(it){
+  html+='<button type="button" class="snippet" data-action="insert-snippet" data-snippet="'+esc(it[1])+'">'+esc(it[0])+'</button>';
+ });
+ return html+'</div>';
+}
+function insertSnippet(text){
+ var ta=document.getElementById("codeAnswer");if(!ta)return;
+ var start=ta.selectionStart==null?ta.value.length:ta.selectionStart;
+ var end=ta.selectionEnd==null?ta.value.length:ta.selectionEnd;
+ var val=ta.value.slice(0,start)+text+ta.value.slice(end);
+ ta.value=val;
+ var caret=start+text.length;
+ ta.focus();
+ try{ta.setSelectionRange(caret,caret)}catch(e){}
+ window.codeDraft=val;
+ ta.dispatchEvent(new Event("input",{bubbles:true}));
+ ta.dispatchEvent(new Event("keyup",{bubbles:true}));
+}
+function diagnoseCode(level,source){
+ var src=String(source||""),hints=[];
+ if(!src.trim())return ["代码是空的，先写一段再检查。"];
+ // 括号配对
+ var open=(src.match(/\{/g)||[]).length, close=(src.match(/\}/g)||[]).length;
+ if(open!==close)hints.push("大括号数量对不上（{ "+open+" 个，} "+close+" 个），先把每个 { 补上对应的 }。");
+ var oP=(src.match(/\(/g)||[]).length, cP=(src.match(/\)/g)||[]).length;
+ if(oP!==cP)hints.push("圆括号数量对不上（( "+oP+" 个，) "+cP+" 个）。");
+ // scanf 缺 &
+ var m=src.match(/scanf\s*\(\s*"[^"]*"\s*,\s*([A-Za-z_]\w*)\s*\)/);
+ if(m)hints.push("scanf 要传变量地址：这里的「"+m[1]+"」前面应该加 &，写成 &"+m[1]+"。");
+ // 条件里误用 =
+ if(/if\s*\([^)&|]*[^=!<>+\-*/%]=[^=]/.test(src))hints.push("if 的条件里用了赋值 =，比较应该写 ==。");
+ // 缺头文件
+ if(/printf\s*\(|scanf\s*\(/.test(src)&&!/#include\s*<\s*stdio\.h\s*>/.test(src))
+  hints.push("用了 printf / scanf 但没有 #include <stdio.h>，加上这一行才能通过编译。");
+ // 不安全的 gets
+ if(/\bgets\s*\(/.test(src))hints.push("gets 已经被 C 标准移除且有缓冲区溢出风险，改用 fgets(buf, sizeof(buf), stdin)。");
+ // 漏分号（逐行粗查）
+ var lines=src.split("\n");
+ for(var i=0;i<lines.length;i++){
+  var t=lines[i].trim();
+  if(!t)continue;
+  if(/^(#|\/\/|\/\*|\*)/.test(t))continue;
+  if(/[{};,]$/.test(t))continue;
+  if(/[)\w"']\s*$/.test(t)&&!/^(if|for|while|switch|else|do)\b/.test(t)&&!/\)\s*$/.test(t))
+   hints.push("第 "+(i+1)+" 行「"+t.slice(0,24)+(t.length>24?"…":"")+"」可能少了分号。");
+ }
+ // 主函数返回
+ if(/int\s+main\s*\(/.test(src)&&!/return\s+0\s*;/.test(src))
+  hints.push("main 正常结束要写 return 0;，操作系统靠这个返回值判断程序是否成功。");
+ return hints.slice(0,3);
+}
+
 function renderBeginnerGuide(l){
  const g=l.beginner;if(!g)return "";
  function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
@@ -2081,7 +2161,7 @@ function renderCodeLesson(l,done){
  document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.stage||l.module||"")+' · 第 '+String(l.id).padStart(2,"0")+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
  '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 读透原理再动手写</div></div></div><p class="lesson-copy" style="margin:18px 0">'+fmtLesson(l.lesson)+'</p>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+fmtInline(t)+'</span></div>'}).join("")+'</div></section>'+
  exampleHtml+pitHtml+quizHtml+
- '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||l.starter||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-primary btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地检查会按真实 C 语法核对括号、分号、语句结构，再核对本关要求的写法；注释和字符串里的关键词不算通过。它不等同于编译器，写完请务必在本机编译运行一次。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(l.solution||"")+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并通过检查，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section>'+runHtml+'</div>'+sidebar+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
+ '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||l.starter||"")+snippetBar()+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-primary btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地检查会按真实 C 语法核对括号、分号、语句结构，再核对本关要求的写法；注释和字符串里的关键词不算通过。它不等同于编译器，写完请务必在本机编译运行一次。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(l.solution||"")+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并通过检查，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section>'+runHtml+'</div>'+sidebar+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
  startTaskTimer(l);
 }
 /* ==================== 英语四级任务引擎（听力/阅读/写作/翻译/口语） ==================== */
@@ -2447,7 +2527,7 @@ function checkCode(){
  const ta=document.getElementById("codeAnswer");if(!ta)return;
  window.codeDraft=ta.value;saveEditorValue(ta);
  const result=validateChallenge(activeLevel,ta.value);
- codePassed=result.ok;window.codeFeedback=result.message;
+ codePassed=result.ok;window.codeFeedback=result.ok?result.message:(result.message+(function(){try{var h=diagnoseCode(activeLevel,ta.value);return h.length?"\n可能原因：\n· "+h.join("\n· "):""}catch(e){return ""}})());
  maybeComplete();
 }
 function playVictoryAnimation(level){
@@ -2511,7 +2591,7 @@ function checkCode(){
  const ta=document.getElementById("codeAnswer");if(!ta)return;
  window.codeDraft=ta.value;saveEditorValue(ta);
  const result=validateChallenge(activeLevel,ta.value);
- codePassed=result.ok;window.codeFeedback=result.message;
+ codePassed=result.ok;window.codeFeedback=result.ok?result.message:(result.message+(function(){try{var h=diagnoseCode(activeLevel,ta.value);return h.length?"\n可能原因：\n· "+h.join("\n· "):""}catch(e){return ""}})());
  if(codePassed&&activeLevel.expectedOutput&&!cOutputOk(activeLevel)){
   window.codeFeedback=result.message+" 别忘了把本机运行结果粘贴到下方「运行结果比对」里。";
  }
@@ -2545,6 +2625,7 @@ function handleClick(e){
  if(a==="copy-solution"){if(!activeLevel)return;if(!isDone(activeLevel)&&!answerUnlocked){openAnswerDialog();return}copyText(activeLevel.solution||"");return}
  if(a==="check-code")checkCode()
  if(a==="check-output"){checkRunOutput();return}
+ if(a==="insert-snippet"){insertSnippet(action.dataset.snippet||"");return}
  if(a==="insert-template"){const ta=document.getElementById("codeAnswer");if(!ta)return;if(ta.value.trim()){toast("编辑器已有内容，模板不会覆盖。");ta.focus();return}const template="#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}";ta.value=template;ta.dispatchEvent(new Event("input",{bubbles:true}));ta.focus();const caret=template.indexOf("    \n")+4;ta.setSelectionRange(caret,caret);updateEditor();return}
  if(a==="make-save-code"){makeSaveCode(false);return}
  if(a==="make-save-link"){makeSaveCode(true);return}
