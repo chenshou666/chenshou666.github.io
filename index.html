@@ -1443,6 +1443,15 @@ html[data-sky="night"] .lesson-copy .kp-term,html[data-sky="night"] .takeaway-it
 html[data-sky="night"] .lesson-copy .kp-code,html[data-sky="night"] .takeaway-item .kp-code{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#cfe4ff}
 html[data-sky="night"] .kp-strong{color:#f1f6ff;background:linear-gradient(180deg,transparent 58%,rgba(90,160,255,.35) 58%)}
 html[data-sky="night"] .kp-warn-line{background:rgba(255,186,74,.14);border-left-color:rgba(240,170,60,.7)}
+
+/* ==== 写作/翻译自评量表 ==== */
+.rubric{margin:12px 0 4px;padding:13px 15px;border-radius:14px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.7)}
+.rubric-title{font-size:10.5px;font-weight:750;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px}
+.rubric-row{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:start;padding:5px 0;font-size:12.5px;color:var(--ink-2);border-top:1px dashed rgba(20,44,86,.08)}
+.rubric-row:first-of-type{border-top:0}
+.rubric-row b{color:var(--ink);font-weight:700;font-size:12px}
+.rubric-note{margin-top:9px;font-size:11.5px;color:var(--ink-3);line-height:1.7}
+html[data-sky="night"] .rubric{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
 </style>
 </head>
 <body class="splash-active">
@@ -1506,9 +1515,9 @@ const COURSES=[
   routeNote:"起步 → 流程控制 → 函数 → 数组与字符串 → 指针与内存 → 自定义类型 → 文件 → 工程实践 → 算法 → 系统底层 → 综合项目",
   mapNote:"每关：读讲解 → 看示例（可直接编译运行）→ 躲开常见陷阱 → 答知识快问 → 写代码并通过结构检查与运行结果比对。",
   footNote:"示例与标准答案均在 TDM-GCC 4.9（Dev-C++ 自带）下用 -std=c11 -Wall 编译验证；代码挑战在本机浏览器做结构检查，正式提交前请用编译器实际运行确认。｜内容仅供学习参考，详见「关于 / 许可」。Copyright © 2026 HT Lab，免费供个人学习使用，禁止商用与修改后分发。"},
- {id:"cet4",name:"英语四级",glyph:"英",sub:"听说读写 62 关 · 通关即具备上考场能力",store:"cquest.cet4.v1",chip:"四级全程",
+ {id:"cet4",name:"英语四级",glyph:"英",sub:"听说读写 62 关 · 学完能上手真题与模考",store:"cquest.cet4.v1",chip:"四级全程",
   heroTitle:"听懂、说出口，<br>再把它写下来。",
-  heroCopy:"从基础起步，62 关把听力、阅读、写作、翻译、口语一关一关练过去：地基 8 关 + 听力 12 + 阅读 14 + 写作 8 + 翻译 8 + 口语 10 + 全真模考 2。通关即具备上考场的能力，也能直接用在日常、校园、职场与出国场景。",
+  heroCopy:"从基础起步，62 关把听力、阅读、写作、翻译、口语一关一关练过去：地基 8 关 + 听力 12 + 阅读 14 + 写作 8 + 翻译 8 + 口语 10 + 全真模考 2。完成基础路线后，建议再用真题与模考检验；学到的表达也能用在日常、校园、职场与出国场景。",
   routeNote:"地基 → 听力 → 阅读 → 写作 → 翻译 → 口语 → 全真模考",
   mapNote:"每关先学要点，再做听力/阅读题或写作/口语任务；通关后解锁下一站。",
   footNote:"题目为按四级大纲自编的仿真题；音频由语音合成生成，最终请以真题材料为准。｜通过课程不等于通过考试，详见「关于 / 许可」。Copyright © 2026 HT Lab，免费供个人学习使用，禁止商用与修改后分发。"}
@@ -1906,7 +1915,7 @@ function renderMap(){
 function renderAbout(){
  const items=[
   ["用途","本网站是个人自学与教学演示项目。站内的讲解、题目、示例代码与音频都是自编的学习材料，不是官方教材，也不是历年真题。你可以自由用来学习。"],
-  ["考试相关","英语四级部分的题目与音频是按大纲自编的仿真材料，题型与难度不等同于真实考试；通过本站关卡不代表能通过相应考试，也不构成任何考试、升学或就业承诺。"],
+  ["考试相关","英语四级部分的题目与音频是按大纲自编的仿真材料，题型与难度不等同于真实考试；通过本站关卡不代表能通过相应考试，也不构成任何考试、升学或就业承诺。四级成绩采用常模参照、官方不设及格线，425 分只是常见参考线，具体以中国教育考试网 cet.neea.edu.cn 的说明为准（本站核对时间 2026-10）。"],
   ["代码与运行","C 课程的示例与标准答案在 TDM-GCC 4.9.2（Dev-C++ 自带）下以 -std=c11 -Wall -Wextra 验证过。站内的代码检查是轻量结构检查，不等同于编译器，最终请以你本机编译器的结果为准；涉及 sizeof、地址等平台相关数值的关卡，换平台结果可能不同。"],
   ["数据与隐私","本站不收集、不上传任何数据，也不联网同步。学习进度、代码草稿与录音只保存在本机浏览器（localStorage / 内存）。清除浏览器数据、更换浏览器或设备会导致进度丢失，本站不为此承担责任。"],
   ["内容准确性","内容经过脚本校验、真编译真运行与多轮独立复核，但仍可能存在错误、过时或表述不严谨之处；发现后欢迎反馈修正。"],
@@ -2091,8 +2100,8 @@ function checkWrittenTask(){
  const st=ensureTaskState(l);st.checkResult=gradeText(l,ta.value);
  if(st.checkResult.ok&&questionsRatioOk(l,st)){st.passed=true;completeTask(l);return}
  render();
- if(st.checkResult.ok)toast("实操部分通过了，但客观题还没达标，先把上面的题目做对。");
- else toast("还差一点，按下方提示补齐要点再来。");
+ if(st.checkResult.ok)toast("要点自查通过（不代表表达达标），但客观题还没达标，先把上面的题目做对。");
+ else toast("要点还差一些，按下方提示补齐再来。");
 }
 function startRecorder(){
  const l=activeLevel;if(!l)return;
@@ -2132,13 +2141,19 @@ function renderEnglishLesson(l){
  if(t==="write"||t==="translate"){
   const res=st.checkResult;
   const pts=res?'<div class="point-list">'+res.pts.map(function(p){return '<div class="point-item"><span class="'+(p.hit?"point-ok":"point-no")+'">'+(p.hit?"✓":"✗")+'</span><span>要点：'+esc(p.label)+'</span></div>'}).join("")+'</div>':"";
+   const rubric='<div class="rubric"><div class="rubric-title">自评量表 · 自己打分（系统不评分）</div>'
+    +'<div class="rubric-row"><b>内容</b><span>是否覆盖题目要求的每个要点，有没有跑题</span></div>'
+    +'<div class="rubric-row"><b>结构</b><span>开头点题 → 主体分点展开 → 结尾收束，段落是否清楚</span></div>'
+    +'<div class="rubric-row"><b>语法</b><span>主谓一致、时态、单复数、冠词、拼写有没有明显错误</span></div>'
+    +'<div class="rubric-row"><b>表达</b><span>有没有生硬直译，句式是否多样，用词是否地道</span></div>'
+    +'<div class="rubric-note">建议每项打 1–5 分；低于 3 分的项，对照参考范文重写一遍。</div></div>';
   const wc='<div class="wordcount">当前 <b id="liveWords">'+((data.drafts[l.id]||"").match(/[A-Za-z][A-Za-z'’-]*/g)||[]).length+'</b> 词'+(l.minWords?'，要求 ≥ '+l.minWords+' 词':"")+'</div>';
-  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✎</span>'+esc(l.taskTitle||(t==="write"?"写作任务":"翻译任务"))+'</div><span class="chip">完成 +30 点</span>'+(l.timeLimit?'<span class="chip" id="taskTimer">剩余 '+l.timeLimit+':00</span>':"")+'</div><p class="challenge-copy">'+esc(l.prompt)+'</p>'+(l.source?'<div class="passage">'+esc(l.source)+'</div>':"")+'<textarea class="task-input" id="taskAnswer" spellcheck="false" placeholder="'+esc(l.placeholder||"在这里作答…")+'">'+esc(data.drafts[l.id]||"")+'</textarea>'+wc+'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="check-task">检查并提交</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起参考范文":((done||answerUnlocked)?"查看参考范文":"🔒 查看参考范文"))+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="next-level">下一关 →</button>':"")+'</div>'+pts+(res&&!res.ok?'<div class="feedback no">还没通过：把上面标 ✗ 的要点补进去，再检查一次。</div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>参考范文 / 参考译文</span></div><pre>'+esc(l.sample||"")+'</pre><div class="hint">参考范文只用于对照结构与表达，考试时请用自己的话写。</div></div>':"")+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
+  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✎</span>'+esc(l.taskTitle||(t==="write"?"写作任务":"翻译任务"))+'</div><span class="chip">完成 +30 点</span>'+(l.timeLimit?'<span class="chip" id="taskTimer">剩余 '+l.timeLimit+':00</span>':"")+'</div><p class="challenge-copy">'+esc(l.prompt)+'</p>'+(l.source?'<div class="passage">'+esc(l.source)+'</div>':"")+'<textarea class="task-input" id="taskAnswer" spellcheck="false" placeholder="'+esc(l.placeholder||"在这里作答…")+'">'+esc(data.drafts[l.id]||"")+'</textarea>'+wc+'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="check-task">自查要点并提交</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起参考范文":((done||answerUnlocked)?"查看参考范文":"🔒 查看参考范文"))+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="next-level">下一关 →</button>':"")+'</div>'+pts+rubric+(res&&!res.ok?'<div class="feedback no">要点自查还差：把上面标 ✗ 的要点补上再试。<b>注意：</b>这里只检查要点与词数，不代表表达整体达标。</div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>参考范文 / 参考译文</span></div><pre>'+esc(l.sample||"")+'</pre><div class="hint">参考范文只用于对照结构与表达，考试时请用自己的话写。</div></div>':"")+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
  }
  if(t==="speak"){
   const list=l.checklist||[];
   const checks=list.map(function(c,i){const k="c"+i;return '<button type="button" class="takeaway-item self-check'+(st.checks[k]?" on":"")+'" data-action="self-check" data-key="'+k+'"><span class="'+(st.checks[k]?"tick":"")+'">'+(st.checks[k]?"✓":"○")+'</span><span>'+esc(c)+'</span></button>'}).join("");
-  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">◍</span>跟读与口语任务</div><span class="chip">录音 + 自评</span></div><p class="challenge-copy">'+esc(l.prompt||l.taskCopy||"")+'</p>'+(l.model?'<div class="audio-row"><div class="audio-head"><span class="audio-label">示范朗读</span>'+(l.model.voice?'<span class="chip chip-mini">'+esc(l.model.voice)+'</span>':"")+'<button class="btn btn-ghost btn-small" type="button" data-action="toggle-transcript" data-target="tr-'+l.id+'-m">显示原文</button></div><audio controls preload="metadata" src="./audio/cet4/'+esc(l.model.file)+'"></audio><div class="transcript" id="tr-'+l.id+'-m" hidden>'+esc(l.model.text||"")+'</div></div>':"")+'<div class="recorder-row">'+(window.recording?'<span class="rec-dot"></span><span class="audio-hint">正在录音…</span><button class="btn btn-soft btn-small" data-action="rec-stop">停止录音</button>':'<button class="btn btn-primary btn-small" data-action="rec-start">'+(st.recordUrl?"重新录音":"开始录音跟读")+'</button>')+(st.recordUrl?'<audio controls preload="metadata" src="'+st.recordUrl+'"></audio>':"")+'</div><div class="hint">录音只保存在这台设备的浏览器内存里，刷新页面即消失，不会上传；没有麦克风或浏览器不支持录音时，可点下方按钮用「跟读自评」代替，同样计入通关。</div><div class="exercise-actions" style="margin:10px 0 0"><button class="btn btn-ghost btn-small" data-action="skip-rec">'+(st.recordSkipped?"已选择用跟读自评代替":"没有麦克风？用跟读自评代替")+'</button></div><div class="challenge-label" style="margin:14px 0 6px">自评清单（全部打勾且录过音才算通关）</div><div class="takeaway">'+checks+'</div>'+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
+  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">◍</span>跟读与口语任务</div><span class="chip">录音 + 自评</span></div><p class="challenge-copy">'+esc(l.prompt||l.taskCopy||"")+'</p>'+(l.model?'<div class="audio-row"><div class="audio-head"><span class="audio-label">示范朗读</span>'+(l.model.voice?'<span class="chip chip-mini">'+esc(l.model.voice)+'</span>':"")+'<button class="btn btn-ghost btn-small" type="button" data-action="toggle-transcript" data-target="tr-'+l.id+'-m">显示原文</button></div><audio controls preload="metadata" src="./audio/cet4/'+esc(l.model.file)+'"></audio><div class="transcript" id="tr-'+l.id+'-m" hidden>'+esc(l.model.text||"")+'</div></div>':"")+'<div class="recorder-row">'+(window.recording?'<span class="rec-dot"></span><span class="audio-hint">正在录音…</span><button class="btn btn-soft btn-small" data-action="rec-stop">停止录音</button>':'<button class="btn btn-primary btn-small" data-action="rec-start">'+(st.recordUrl?"重新录音":"开始录音跟读")+'</button>')+(st.recordUrl?'<audio controls preload="metadata" src="'+st.recordUrl+'"></audio>':"")+'</div><div class="hint">录音只保存在这台设备的浏览器内存里，刷新页面即消失，不会上传；没有麦克风或浏览器不支持录音时，可点下方按钮用「跟读自评」代替，同样计入通关。<b>提示：</b>录音与自评都不会被自动评分，发音与自然度请自己回听，或在交流群里请人帮听。</div><div class="exercise-actions" style="margin:10px 0 0"><button class="btn btn-ghost btn-small" data-action="skip-rec">'+(st.recordSkipped?"已选择用跟读自评代替":"没有麦克风？用跟读自评代替")+'</button></div><div class="challenge-label" style="margin:14px 0 6px">自评清单（全部打勾且录过音才算通关）</div><div class="takeaway">'+checks+'</div>'+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
  }
  const condition='<section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway">'+
   ((l.questions&&l.questions.length)?'<div class="takeaway-item"><span class="'+(st.passed||done?"tick":"")+'">'+(st.passed||done?"✓":"○")+'</span><span>客观题答对率 ≥ '+Math.round((l.passRatio||0.8)*100)+'%</span></div>':"")+
