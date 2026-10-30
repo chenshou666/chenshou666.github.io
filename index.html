@@ -1484,6 +1484,23 @@ html[data-sky="night"] .wrong-due{background:rgba(255,255,255,.1);border-color:r
 /* 触屏设备才显示（桌面有键盘，避免干扰） */
 /* 快捷输入条对所有设备可见 */
 .feedback{white-space:pre-line}
+
+/* ==== 起步指南 ==== */
+.start-guide{margin-top:18px}
+.plan-group{margin:12px 0}
+.plan-label{font-size:10.5px;font-weight:750;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:7px}
+.plan-chips{display:flex;gap:8px;flex-wrap:wrap}
+.plan-chip{padding:8px 14px;border-radius:99px;border:1px solid rgba(255,255,255,.8);
+  background:rgba(255,255,255,.5);color:var(--ink-2);font:inherit;font-size:12px;cursor:pointer;transition:.18s}
+.plan-chip:hover{background:rgba(255,255,255,.75);transform:translateY(-1px)}
+.plan-chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
+.plan-result{margin:16px 0 6px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.7)}
+.plan-line{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:7px 0;font-size:12.5px;color:var(--ink-2);border-top:1px dashed rgba(20,44,86,.08)}
+.plan-line:first-child{border-top:0}
+.plan-line b{color:var(--ink);font-weight:700;font-size:12px}
+html[data-sky="night"] .plan-result{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+html[data-sky="night"] .plan-chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#cfe0ff}
+html[data-sky="night"] .plan-chip.on{background:rgba(90,160,255,.2);border-color:#7fb0ff;color:#dbeaff}
 </style>
 </head>
 <body class="splash-active">
@@ -1892,6 +1909,53 @@ function diagnoseCode(level,source){
  return hints.slice(0,3);
 }
 
+
+/* ==== B4 新手起步诊断 + 每周计划 ==== */
+var PLAN_KEY="cquest.plan.v1";
+function loadPlan(){try{var o=JSON.parse(localStorage.getItem(PLAN_KEY)||"null");if(o&&o.base&&o.goal&&o.hours)return o}catch(e){}return {base:"zero",goal:"both",hours:"mid"}}
+function savePlan(p){try{localStorage.setItem(PLAN_KEY,JSON.stringify(p))}catch(e){}}
+var PLAN_BASE={zero:"零基础",some:"学过一点",solid:"有基础"};
+var PLAN_GOAL={c:"主攻 C 语言",cet4:"主攻英语四级",both:"两门都要"};
+var PLAN_HOURS={low:"每周 < 3 小时",mid:"每周 3–6 小时",high:"每周 > 6 小时"};
+function buildPlan(p){
+ var cPer=({low:3,mid:5,high:8})[p.hours]||5;
+ var ePer=({low:2,mid:3,high:5})[p.hours]||3;
+ var showC=p.goal!=="cet4",showE=p.goal!=="c";
+ var weeks=Math.max(showC?Math.ceil(86/cPer):0,showE?Math.ceil(62/ePer):0);
+ var first=showC?"c":"cet4";
+ var baseAdvice=p.base==="zero"?"从最基础开始：先看讲解、照着示例敲一遍，再自己写。每关先过「知识快问」，再写代码。"
+  :p.base==="some"?"跳过纯概念关也可以，但建议每关的「常见陷阱」都看——那里最容易丢分。"
+  :"可以直接从模块中段挑不熟的关做，用「错题本」集中补弱项。";
+ return {p:p,cPer:cPer,ePer:ePer,showC:showC,showE:showE,weeks:weeks,first:first,baseAdvice:baseAdvice};
+}
+function renderStartGuide(){
+ var v=document.getElementById("view");if(!v||page!=="courses")return;
+ var old=v.querySelector(".start-guide");if(old)old.remove();
+ var p=loadPlan(),plan=buildPlan(p);
+ function chips(k,map){
+  var html='<div class="plan-group"><span class="plan-label">'+({base:"你的基础",goal:"你的目标",hours:"每周可投入"})[k]+'</span><div class="plan-chips">';
+  Object.keys(map).forEach(function(key){
+   html+='<button class="plan-chip'+(p[k]===key?" on":"")+'" data-action="plan-set" data-k="'+k+'" data-v="'+key+'">'+map[key]+'</button>';
+  });
+  return html+'</div></div>';
+ }
+ var wrap=document.createElement("section");
+ wrap.className="panel start-guide";
+ wrap.innerHTML='<div class="challenge-head"><div class="challenge-label">起步指南 · 30 秒</div><span class="chip">生成每周计划</span></div>'
+  +'<p class="challenge-copy">第一次来不知道从哪开始？选一下你的情况，给你一条明确的起步路线和每周任务。</p>'
+  +chips("base",PLAN_BASE)+chips("goal",PLAN_GOAL)+chips("hours",PLAN_HOURS)
+  +'<div class="plan-result">'
+   +'<div class="plan-line"><b>建议起点</b><span>'+(plan.first==="c"?"C 语言第 01 关（认识 C 程序）":"英语四级地基第 1 关（认识考试）")+'</span></div>'
+   +'<div class="plan-line"><b>每周任务</b><span>'+[plan.showC?"C 语言 "+plan.cPer+" 关":"",plan.showE?"英语四级 "+plan.ePer+" 关":""].filter(Boolean).join(" + ")+'</span></div>'
+   +'<div class="plan-line"><b>预计周期</b><span>约 '+plan.weeks+' 周（按每周投入估算，可随时调整）</span></div>'
+   +'<div class="plan-line"><b>起步建议</b><span>'+esc(plan.baseAdvice)+'</span></div>'
+   +'<div class="plan-line"><b>每日节奏</b><span>先学 1 关（10–20 分钟）→ 做本关快问 → 写代码并检查 → 睡前花 5 分钟看错题本</span></div>'
+  +'</div>'
+  +'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="plan-go">开始第一关 →</button>'
+  +'<button class="btn btn-ghost btn-small" data-page="mistakes">看错题本</button></div>';
+ v.appendChild(wrap);
+}
+
 function renderBeginnerGuide(l){
  const g=l.beginner;if(!g)return "";
  function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
@@ -2088,7 +2152,7 @@ function render(){
  var __changed=__k!==__lastViewKey;__lastViewKey=__k;
  if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
   var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
- navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="mistakes"){renderMistakes();ensureProgressTools()}else{renderSummary();ensureProgressTools()}}
+ navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses"){renderCourses();setTimeout(renderStartGuide,0)}else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="mistakes"){renderMistakes();ensureProgressTools()}else{renderSummary();ensureProgressTools()}}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
@@ -2633,6 +2697,8 @@ function handleClick(e){
  if(a==="copy-save-link"){var __c2=document.getElementById("saveCodeBox");if(__c2)copyTextSmart(saveLinkFrom(__c2.value||""));return}
  if(a==="import-save-code"){importSaveFromBox();return}
  if(a==="copy-qq-group"){copyTextSmart(CONTACT_QQ_GROUP);return}
+ if(a==="plan-set"){var pp=loadPlan();pp[action.dataset.k]=action.dataset.v;savePlan(pp);renderStartGuide();return}
+ if(a==="plan-go"){var plan=buildPlan(loadPlan());setCourse(plan.first);openLevel((courseLevels[plan.first]||[])[0].id);return}
  if(a==="wrong-go"){var wc=action.dataset.cid||activeCourse;setCourse(wc);openLevel(Number(action.dataset.lid));return}
  if(a==="wrong-done"){wrongReviewed(action.dataset.cid||activeCourse,Number(action.dataset.lid),Number(action.dataset.qi));render();toast("已记一次复习，下次复习时间已更新。");return}
  if(a==="wrong-clear"){clearWrongDone();render();return}
