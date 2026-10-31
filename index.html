@@ -1420,59 +1420,6 @@ html[data-sky="night"] .next-bar .nb-ok{color:#7ef3d0}
   border-radius:99px;padding:7px 14px}
 .feedback-hint{margin-top:10px;font-size:11.5px;line-height:1.75}
 html[data-sky="night"] .feedback-soon{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
-
-/* ==== 知识点重点标记样式 ==== */
-.lesson-copy .kp-term,.takeaway-item .kp-term{
-  background:linear-gradient(180deg,transparent 56%,rgba(47,124,246,.24) 56%);
-  border-radius:3px;padding:0 2px;font-weight:650;color:#152238;
-}
-.lesson-copy .kp-code,.takeaway-item .kp-code{
-  font-family:"Cascadia Code",Consolas,"SF Mono",monospace;font-size:.92em;
-  background:rgba(28,44,78,.07);border:1px solid rgba(28,44,78,.14);border-radius:6px;
-  padding:1px 5px;color:#17305a;white-space:pre;
-}
-.kp-strong{font-weight:750;color:#0f1c33;background:linear-gradient(180deg,transparent 58%,rgba(47,124,246,.3) 58%);padding:0 2px;border-radius:3px}
-.kp-hl{background:rgba(47,124,246,.16);border-radius:4px;padding:0 3px}
-.kp-warn{background:rgba(255,186,74,.32);border-bottom:2px solid rgba(240,170,60,.85);border-radius:3px;padding:0 2px;font-weight:650}
-.kp-warn-line{
-  display:block;background:rgba(255,186,74,.14);border-left:3px solid rgba(240,170,60,.8);
-  border-radius:7px;padding:4px 11px;margin:4px 0;
-}
-/* 夜空 */
-html[data-sky="night"] .lesson-copy .kp-term,html[data-sky="night"] .takeaway-item .kp-term{color:#dbe8ff;background:linear-gradient(180deg,transparent 56%,rgba(90,160,255,.3) 56%)}
-html[data-sky="night"] .lesson-copy .kp-code,html[data-sky="night"] .takeaway-item .kp-code{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#cfe4ff}
-html[data-sky="night"] .kp-strong{color:#f1f6ff;background:linear-gradient(180deg,transparent 58%,rgba(90,160,255,.35) 58%)}
-html[data-sky="night"] .kp-warn-line{background:rgba(255,186,74,.14);border-left-color:rgba(240,170,60,.7)}
-/* ==== 卡片统一交互：hover 提亮（照搬侧栏导航键的效果）==== */
-/* 只改背景/描边/阴影，不做位移、旋转、缩放、动画 → 不会触发玻璃模糊层重采样，不会消失 */
-.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.summary-hero,.side-card,.guide-card,.skill-row,.hero-main,.save-box,.quiz-item,.feedback-panel{
-  transition:background .26s ease,border-color .26s ease,box-shadow .26s ease,color .26s ease;
-}
-.level-card:hover,.course-card:hover,.course-entry:hover,.stat:hover,.panel:hover,.track:hover,.challenge-card:hover,.exercise:hover,.summary-hero:hover,.side-card:hover,.guide-card:hover,.skill-row:hover,.hero-main:hover,.save-box:hover,.quiz-item:hover,.feedback-panel:hover{
-  animation:none!important;
-  background:rgba(255,255,255,calc(var(--glass-alpha) + .22))!important;
-  border-color:rgba(255,255,255,1)!important;
-  box-shadow:0 8px 20px rgba(20,44,86,.10),0 24px 54px rgba(20,44,86,.18),inset 0 1px 0 #fff!important;
-}
-.level-card:active,.course-card:active,.course-entry:active,.stat:active,.panel:active,.track:active,.challenge-card:active,.exercise:active,.summary-hero:active,.side-card:active,.guide-card:active,.skill-row:active,.hero-main:active,.save-box:active,.quiz-item:active,.feedback-panel:active{
-  animation:none!important;
-  background:rgba(255,255,255,calc(var(--glass-alpha) + .28))!important;
-  box-shadow:0 3px 8px rgba(20,44,86,.06),0 10px 24px rgba(20,44,86,.10),inset 0 1px 0 #fff!important;
-}
-html[data-sky="night"] .level-card:hover,.course-card:hover,.course-entry:hover,.stat:hover,.panel:hover,.track:hover,.challenge-card:hover,.exercise:hover,.summary-hero:hover,.side-card:hover,.guide-card:hover,.skill-row:hover,.hero-main:hover,.save-box:hover,.quiz-item:hover,.feedback-panel:hover{
-  background:rgba(255,255,255,calc(var(--glass-alpha-n) + .14))!important;
-  border-color:rgba(255,255,255,.34)!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.18)!important;
-}
-/* ==== 最终覆盖：卡片悬停/按下一律不做位移与动画 ==== */
-html body :is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.summary-hero,.side-card,.guide-card,.skill-row,.hero-main,.save-box,.quiz-item,.feedback-panel):hover,
-html body :is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.summary-hero,.side-card,.guide-card,.skill-row,.hero-main,.save-box,.quiz-item,.feedback-panel):active{
-  transform:none!important;
-  animation:none!important;
-  translate:none!important;
-  rotate:none!important;
-  scale:none!important;
-}
 </style>
 </head>
 <body class="splash-active">
@@ -1691,32 +1638,6 @@ function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t
 function copyText(text){const done=function(){toast("标准答案已复制到剪贴板。")};const fb=function(){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta);done()};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fb)}else{fb()}}
 function formatSample(s){return s}
 /* 注：内容统一用真实换行（JS 的 \n 转义），不再需要旧的字面量 \\n 还原逻辑 */
-
-/* ==== 知识点重点标记 ==== */
-var LESSON_CODE_RE=/#include\s*&lt;[^&]{1,40}&gt;|#define\b|-std=c\d+|\b(?:printf|scanf|fgets|fputs|fopen|fclose|malloc|free|sizeof|typedef|struct|union|enum|return|while|for|switch|break|continue|goto|strlen|strcpy|strcmp)\b|\b(?:stdio|stdbool|stdint|stdlib|string|math|ctype|time)\.h\b|\b(?:int|char|float|double|long|short|void|unsigned|signed|const|static|extern|volatile)\b|\b(?:main|argc|argv)\b|\b(?:gcc|F11|F9|Dev-C\+\+)\b|%(?:d|s|f|lf|ld|c|u|x|p)|\b[A-Za-z0-9_]+\.(?:c|h|exe)\b|\b0x[0-9a-fA-F]+\b|\\n/g;
-function fmtLesson(raw){
- if(raw===undefined||raw===null)return "";
- var out=esc(String(raw));
- out=out.replace(/\*\*([^*\n]{1,60})\*\*/g,'<mark class="kp-strong">$1</mark>');
- out=out.replace(/==([^=\n]{1,60})==/g,'<mark class="kp-hl">$1</mark>');
- out=out.replace(/!!([^!\n]{1,60})!!/g,'<span class="kp-warn">$1</span>');
- out=out.replace(/「([^」\n]{1,50})」/g,'<span class="kp-term">「$1」</span>');
- out=out.replace(LESSON_CODE_RE,function(m){return '<code class="kp-code">'+m+'</code>'});
- return out.split("\n").map(function(line){
-  var plain=line.replace(/<[^>]*>/g,"");
-  if(/^\s*(注意|易错|常见错误|坑|不要|必须|一定要|记住|核心|关键|重点)/.test(plain))return '<span class="kp-warn-line">'+line+'</span>';
-  return line;
- }).join("\n");
-}
-function fmtInline(raw){
- if(raw===undefined||raw===null)return "";
- var out=esc(String(raw));
- out=out.replace(/\*\*([^*\n]{1,60})\*\*/g,'<mark class="kp-strong">$1</mark>');
- out=out.replace(/「([^」\n]{1,50})」/g,'<span class="kp-term">「$1」</span>');
- out=out.replace(LESSON_CODE_RE,function(m){return '<code class="kp-code">'+m+'</code>'});
- return out;
-}
-
 function renderBeginnerGuide(l){
  const g=l.beginner;if(!g)return "";
  function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
@@ -1953,7 +1874,7 @@ function renderAbout(){
 function renderPractice(){
  const l=nextLevel();
  if(completedCount()===levels.length){page="summary";renderSummary();navTitle();return}
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">实战训练</div><h1>继续你的下一关</h1><p class="subhead">'+esc(activeCourse==="c"?"专注一件小事，写出一段自己的 C 代码。":"专注一个场景，练一段听说读写。")+'</p></div><span class="chip">当前 '+completedCount()+' / '+levels.length+' 关</span></div><div class="panel"><div class="lesson-title-row"><div class="lesson-badge">'+String(l.id).padStart(2,"0")+'</div><div><h2>'+esc(l.title)+'</h2><div class="meta-line">'+esc(l.stage)+' · 约 '+l.minutes+' 分钟</div></div></div><p class="lesson-copy" style="margin-top:19px">'+fmtInline(l.gist)+'</p><p class="lesson-copy">'+fmtLesson(l.lesson)+'</p><button class="btn btn-primary" data-level="'+l.id+'">进入本关 <span>→</span></button></div>';
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">实战训练</div><h1>继续你的下一关</h1><p class="subhead">'+esc(activeCourse==="c"?"专注一件小事，写出一段自己的 C 代码。":"专注一个场景，练一段听说读写。")+'</p></div><span class="chip">当前 '+completedCount()+' / '+levels.length+' 关</span></div><div class="panel"><div class="lesson-title-row"><div class="lesson-badge">'+String(l.id).padStart(2,"0")+'</div><div><h2>'+esc(l.title)+'</h2><div class="meta-line">'+esc(l.stage)+' · 约 '+l.minutes+' 分钟</div></div></div><p class="lesson-copy" style="margin-top:19px">'+esc(l.gist)+'</p><p class="lesson-copy">'+esc(l.lesson)+'</p><button class="btn btn-primary" data-level="'+l.id+'">进入本关 <span>→</span></button></div>';
 }
 function renderLesson(){
  const l=activeLevel,done=isDone(l);
@@ -1975,16 +1896,16 @@ function renderCodeLesson(l,done){
   const opts=(l.options||[]).map(function(o,i){let cl="option";if(selectedOption===i){cl+=" selected";if(quizPassed)cl+=" correct";else if(window.quizAnswered)cl+=" wrong"}return '<button class="'+cl+'" data-option="'+i+'">'+String.fromCharCode(65+i)+'. '+esc(o)+'</button>'}).join("");
   quizHtml='<section class="panel challenge-card"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✦</span>知识快问</div><span class="chip">答对 +10 点</span></div><div class="quiz-question">'+esc(l.quiz)+'</div><div class="option-list">'+opts+'</div>'+(window.quizAnswered?'<div class="feedback '+(quizPassed?"ok":"no")+'">'+(quizPassed?"回答正确！":"再想一想。 ")+esc(l.explain||"")+'</div>':"")+'</section>';
  }
- const exampleHtml=code?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▤</span>示例代码</div><span class="chip">建议自己敲一遍</span></div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>example.c</span></div><pre>'+highlightC(code)+'</pre></div>'+(out?'<div class="challenge-label" style="margin:14px 0 6px">这段代码的运行结果</div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>运行输出</span></div><pre>'+esc(out)+'</pre></div>':"")+(exExplain?'<p class="lesson-copy" style="margin-top:13px">'+fmtLesson(exExplain)+'</p>':"")+'</section>':"";
- const pitHtml=(l.pitfalls&&l.pitfalls.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#e2725b">⚠</span>常见陷阱</div><span class="chip">先躲开这些</span></div>'+l.pitfalls.map(function(p){return '<div class="takeaway-item" style="margin:9px 0"><span style="color:#e2725b;font-weight:800">!</span><span>'+fmtInline(p)+'</span></div>'}).join("")+'</section>':"";
- const masteryHtml=(l.mastery&&l.mastery.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label">掌握标准</div><span class="chip">学完你应该能做到</span></div>'+l.mastery.map(function(m){return '<div class="takeaway-item" style="margin:9px 0"><span class="tick">✓</span><span>'+fmtInline(m)+'</span></div>'}).join("")+'</section>':"";
+ const exampleHtml=code?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▤</span>示例代码</div><span class="chip">建议自己敲一遍</span></div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>example.c</span></div><pre>'+highlightC(code)+'</pre></div>'+(out?'<div class="challenge-label" style="margin:14px 0 6px">这段代码的运行结果</div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>运行输出</span></div><pre>'+esc(out)+'</pre></div>':"")+(exExplain?'<p class="lesson-copy" style="margin-top:13px">'+esc(exExplain)+'</p>':"")+'</section>':"";
+ const pitHtml=(l.pitfalls&&l.pitfalls.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#e2725b">⚠</span>常见陷阱</div><span class="chip">先躲开这些</span></div>'+l.pitfalls.map(function(p){return '<div class="takeaway-item" style="margin:9px 0"><span style="color:#e2725b;font-weight:800">!</span><span>'+esc(p)+'</span></div>'}).join("")+'</section>':"";
+ const masteryHtml=(l.mastery&&l.mastery.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label">掌握标准</div><span class="chip">学完你应该能做到</span></div>'+l.mastery.map(function(m){return '<div class="takeaway-item" style="margin:9px 0"><span class="tick">✓</span><span>'+esc(m)+'</span></div>'}).join("")+'</section>':"";
  const runHtml=l.expectedOutput?'<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▶</span>运行结果比对</div><span class="chip">'+(outOk?"已一致":"待比对")+'</span></div><p class="challenge-copy">把上面这段程序（或你自己写的版本）在本机编译运行——Dev-C++ 按 F11 编译运行，命令行用 gcc 文件名.c -o 程序名 再运行——然后把程序输出的内容<strong>原样</strong>粘贴到下面。逐行对比一致才算通过，行尾空格可以忽略。</p><div class="challenge-label" style="margin:10px 0 6px">预期输出</div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>expected output</span></div><pre>'+esc(l.expectedOutput)+'</pre></div><textarea class="task-input" id="runOutput" spellcheck="false" style="min-height:110px" placeholder="在这里粘贴你运行时看到的输出…">'+esc((data.runOutputs&&data.runOutputs[l.id])||"")+'</textarea><div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="check-output">比对运行结果</button></div>'+((data.runOutputs&&data.runOutputs[l.id])?'<div class="feedback '+(outOk?"ok":"no")+'">'+(outOk?"✓ ":"✗ ")+esc(compareOutput(l.expectedOutput,data.runOutputs[l.id]).message)+'</div>':"")+'</section>':"";
  const gate=(ok,label)=>'<div class="takeaway-item"><span class="'+(ok?"tick":"")+'">'+(ok?"✓":"○")+'</span><span>'+label+'</span></div>';
- const sidebar='<aside class="lesson-main"><section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway">'+gate(done||quizOk,qs.length?("知识快问答对 "+need+" 题以上"):"答对知识快问")+gate(done||codePassed,"代码通过结构检查")+(l.expectedOutput?gate(done||outOk,"运行结果与预期一致"):"")+gate(done,"获得学习点并解锁下一关")+'</div><div class="progress-bar" style="margin-top:18px"><i style="width:'+((Number(done||quizOk)+Number(done||codePassed)+Number(!l.expectedOutput||done||outOk))/(l.expectedOutput?3:2)*100)+'%"></i></div></section>'+masteryHtml+'<section class="panel"><div class="challenge-head"><div class="challenge-label">核心要点</div><span class="chip">速览</span></div>'+l.takeaways.map(function(t){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+fmtInline(t)+'</span></div>'}).join("")+'</section><section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside>';
+ const sidebar='<aside class="lesson-main"><section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway">'+gate(done||quizOk,qs.length?("知识快问答对 "+need+" 题以上"):"答对知识快问")+gate(done||codePassed,"代码通过结构检查")+(l.expectedOutput?gate(done||outOk,"运行结果与预期一致"):"")+gate(done,"获得学习点并解锁下一关")+'</div><div class="progress-bar" style="margin-top:18px"><i style="width:'+((Number(done||quizOk)+Number(done||codePassed)+Number(!l.expectedOutput||done||outOk))/(l.expectedOutput?3:2)*100)+'%"></i></div></section>'+masteryHtml+'<section class="panel"><div class="challenge-head"><div class="challenge-label">核心要点</div><span class="chip">速览</span></div>'+l.takeaways.map(function(t){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</section><section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside>';
  const challengeFeedback=window.codeFeedback?'<div class="feedback '+(codePassed?"ok":"no")+'">'+esc(window.codeFeedback)+'</div>':"";
  const lockMsg=done?'<div class="feedback ok">本关已通关。可以回看内容，也可以继续下一关。</div>':"";
  document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.stage||l.module||"")+' · 第 '+String(l.id).padStart(2,"0")+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
- '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 读透原理再动手写</div></div></div><p class="lesson-copy" style="margin:18px 0">'+fmtLesson(l.lesson)+'</p>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+fmtInline(t)+'</span></div>'}).join("")+'</div></section>'+
+ '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 读透原理再动手写</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</div></section>'+
  exampleHtml+pitHtml+quizHtml+
  '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||l.starter||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-primary btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地检查会按真实 C 语法核对括号、分号、语句结构，再核对本关要求的写法；注释和字符串里的关键词不算通过。它不等同于编译器，写完请务必在本机编译运行一次。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(l.solution||"")+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并通过检查，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section>'+runHtml+'</div>'+sidebar+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
  startTaskTimer(l);
@@ -2177,7 +2098,7 @@ function renderEnglishLesson(l){
   '<div class="takeaway-item"><span class="'+(done?"tick":"")+'">'+(done?"✓":"○")+'</span><span>获得本关学习点并解锁后续</span></div></div></section>';
  const side='<aside class="lesson-main">'+condition+'<section class="panel"><div class="challenge-head"><div class="challenge-label">核心要点</div><span class="chip">速览</span></div>'+l.takeaways.map(function(x){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(x)+'</span></div>'}).join("")+'</section><section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside>';
  document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.module||l.stage)+' · 第 '+(levels.indexOf(l)+1)+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
- '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关要点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 看完要点后完成任务</div></div></div><p class="lesson-copy" style="margin:18px 0">'+fmtLesson(l.lesson)+'</p>'+(l.usage?'<div class="hint" style="margin-bottom:12px"><b>能用在哪儿：</b>'+esc(l.usage)+'</div>':"")+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(x){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(x)+'</span></div>'}).join("")+'</div></section>'+material+task+'</div>'+side+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
+ '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关要点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 看完要点后完成任务</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p>'+(l.usage?'<div class="hint" style="margin-bottom:12px"><b>能用在哪儿：</b>'+esc(l.usage)+'</div>':"")+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(x){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(x)+'</span></div>'}).join("")+'</div></section>'+material+task+'</div>'+side+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
  startTaskTimer(l);
 }
 function renderSummary(){
@@ -2611,7 +2532,45 @@ function apBuild(){
 try{apBuild()}catch(e){console.error("外观面板初始化失败",e)}
 
 
-/* 卡片不再做指针跟随倾斜（位移动画会导致玻璃模糊层重采样、卡片短暂消失） */
+/* ==== 指针跟随倾斜（卡片随鼠标位置转动） ==== */
+(function(){
+ if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+ var SEL=".level-card,.course-card,.stat,.course-entry,.side-card,.guide-card,.skill-row,.summary-hero";
+ var MAX_X=7,MAX_Y=9;
+ var active=null,frame=0,px=0,py=0;
+ function paint(){
+  frame=0;
+  if(!active)return;
+  var r=active.getBoundingClientRect();
+  if(!r.width||!r.height)return;
+  var nx=(px-r.left)/r.width, ny=(py-r.top)/r.height;
+  if(nx<-.22||nx>1.22||ny<-.22||ny>1.22)return;
+  active.style.setProperty("--ry",((nx-.5)*MAX_Y*2).toFixed(2)+"deg");
+  active.style.setProperty("--rx",((.5-ny)*MAX_X*2).toFixed(2)+"deg");
+  active.style.setProperty("--gx",(nx*100).toFixed(1)+"%");
+  active.style.setProperty("--gy",(ny*100).toFixed(1)+"%");
+ }
+ function leave(){
+  if(active){
+   active.classList.remove("tilting");
+   active.style.setProperty("--rx","0deg");
+   active.style.setProperty("--ry","0deg");
+   active=null;
+  }
+ }
+ document.addEventListener("pointermove",function(e){
+  if(e.pointerType&&e.pointerType!=="mouse")return;
+  var card=e.target.closest?e.target.closest(SEL):null;
+  if(card!==active){leave();active=card;if(active)active.classList.add("tilting")}
+  if(!active)return;
+  px=e.clientX;py=e.clientY;
+  if(!frame)frame=requestAnimationFrame(paint);
+ },{passive:true});
+ document.addEventListener("pointerout",function(e){ if(!e.relatedTarget)leave(); },true);
+ document.addEventListener("pointercancel",leave,true);
+ window.addEventListener("blur",leave);
+ document.addEventListener("scroll",function(){ if(active){var r=active.getBoundingClientRect();if(r.bottom<0||r.top>window.innerHeight)leave();} },{passive:true});
+})();
 </script>
 </body>
 </html>
