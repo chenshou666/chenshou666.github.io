@@ -1464,6 +1464,49 @@ html[data-sky="night"] .kp-warn-line{background:rgba(255,186,74,.14);border-left
 html[data-sky="night"] .proj-card{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
 html[data-sky="night"] .proj-card.done{background:rgba(80,225,175,.14);border-color:rgba(120,235,195,.36)}
 
+
+/* ==== 卡片统一交互（补齐 7 天项目等遗漏的卡片）+ 7 天项目卡改为玻璃体系 ==== */
+/* 1) 7 天项目卡：改用全站同一套玻璃（与其它卡片一致） */
+.proj-card{
+  background:var(--glass-tint)!important;
+  border:1px solid var(--glass-border)!important;
+  border-radius:var(--r-l)!important;
+  box-shadow:var(--sh-card),inset 0 1px 0 var(--glass-edge)!important;
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+.proj-card.done{
+  background:linear-gradient(158deg,rgba(255,255,255,.62),rgba(226,252,242,.6))!important;
+  border-color:rgba(120,215,180,.6)!important;
+}
+html[data-sky="night"] .proj-card{background:rgba(255,255,255,.1)!important;border-color:rgba(255,255,255,.18)!important}
+html[data-sky="night"] .proj-card.done{background:rgba(80,225,175,.14)!important;border-color:rgba(120,235,195,.36)!important}
+/* 2) 所有卡片统一 hover：提亮背景 + 纯白描边 + 阴影加深（照搬侧栏导航键，不做位移） */
+.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.summary-hero,.side-card,.guide-card,.skill-row,.hero-main,.save-box,.quiz-item,.feedback-panel,.proj-card{
+  transition:background .26s ease,border-color .26s ease,box-shadow .26s ease,color .26s ease;
+}
+.level-card:hover,.course-card:hover,.course-entry:hover,.stat:hover,.panel:hover,.track:hover,.challenge-card:hover,.exercise:hover,.summary-hero:hover,.side-card:hover,.guide-card:hover,.skill-row:hover,.hero-main:hover,.save-box:hover,.quiz-item:hover,.feedback-panel:hover,.proj-card:hover{
+  animation:none!important;
+  background:rgba(255,255,255,calc(var(--glass-alpha) + .22))!important;
+  border-color:rgba(255,255,255,1)!important;
+  box-shadow:0 8px 20px rgba(20,44,86,.10),0 24px 54px rgba(20,44,86,.18),inset 0 1px 0 #fff!important;
+}
+.level-card:active,.course-card:active,.course-entry:active,.stat:active,.panel:active,.track:active,.challenge-card:active,.exercise:active,.summary-hero:active,.side-card:active,.guide-card:active,.skill-row:active,.hero-main:active,.save-box:active,.quiz-item:active,.feedback-panel:active,.proj-card:active{
+  animation:none!important;
+  background:rgba(255,255,255,calc(var(--glass-alpha) + .28))!important;
+  box-shadow:0 3px 8px rgba(20,44,86,.06),0 10px 24px rgba(20,44,86,.10),inset 0 1px 0 #fff!important;
+}
+html[data-sky="night"] .level-card:hover,.course-card:hover,.course-entry:hover,.stat:hover,.panel:hover,.track:hover,.challenge-card:hover,.exercise:hover,.summary-hero:hover,.side-card:hover,.guide-card:hover,.skill-row:hover,.hero-main:hover,.save-box:hover,.quiz-item:hover,.feedback-panel:hover,.proj-card:hover{
+  background:rgba(255,255,255,calc(var(--glass-alpha-n) + .14))!important;
+  border-color:rgba(255,255,255,.34)!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+/* 3) 最终覆盖：卡片悬停/按下一律不做位移与动画（避免玻璃模糊层重采样闪烁） */
+html body :is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.summary-hero,.side-card,.guide-card,.skill-row,.hero-main,.save-box,.quiz-item,.feedback-panel,.proj-card):hover,
+html body :is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.summary-hero,.side-card,.guide-card,.skill-row,.hero-main,.save-box,.quiz-item,.feedback-panel,.proj-card):active{
+  transform:none!important;animation:none!important;
+  translate:none!important;rotate:none!important;scale:none!important;
+}
 </style>
 </head>
 <body class="splash-active">
