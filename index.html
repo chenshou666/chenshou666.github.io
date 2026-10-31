@@ -1443,86 +1443,6 @@ html[data-sky="night"] .lesson-copy .kp-term,html[data-sky="night"] .takeaway-it
 html[data-sky="night"] .lesson-copy .kp-code,html[data-sky="night"] .takeaway-item .kp-code{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#cfe4ff}
 html[data-sky="night"] .kp-strong{color:#f1f6ff;background:linear-gradient(180deg,transparent 58%,rgba(90,160,255,.35) 58%)}
 html[data-sky="night"] .kp-warn-line{background:rgba(255,186,74,.14);border-left-color:rgba(240,170,60,.7)}
-
-/* ==== 写作/翻译自评量表 ==== */
-.rubric{margin:12px 0 4px;padding:13px 15px;border-radius:14px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.7)}
-.rubric-title{font-size:10.5px;font-weight:750;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px}
-.rubric-row{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:start;padding:5px 0;font-size:12.5px;color:var(--ink-2);border-top:1px dashed rgba(20,44,86,.08)}
-.rubric-row:first-of-type{border-top:0}
-.rubric-row b{color:var(--ink);font-weight:700;font-size:12px}
-.rubric-note{margin-top:9px;font-size:11.5px;color:var(--ink-3);line-height:1.7}
-html[data-sky="night"] .rubric{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
-
-/* ==== 每日统计 / 错题本 ==== */
-.nav-badge{margin-left:auto;min-width:18px;height:18px;border-radius:99px;background:#ff7a59;color:#fff;
-  font-size:10.5px;font-weight:800;display:inline-grid;place-items:center;padding:0 5px}
-.daily-stat{margin:8px 0 10px}
-.daily-row{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-3);margin-bottom:5px}
-.daily-row b{color:var(--ink);font-weight:750}
-.daily-bar{height:5px;border-radius:99px;background:rgba(20,44,86,.1);overflow:hidden}
-.daily-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#22d3a0,#2f7cf6);transition:width .4s ease}
-.daily-foot{margin-top:5px;font-size:10.5px;color:var(--ink-3)}
-.wrong-list{display:grid;gap:10px;margin-top:10px}
-.wrong-item{padding:13px 15px;border-radius:14px;background:rgba(255,255,255,.44);border:1px solid rgba(255,255,255,.7)}
-.wrong-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
-.wrong-head b{font-size:13px;color:var(--ink)}
-.wrong-due{font-size:10px;font-weight:700;letter-spacing:.6px;color:var(--ink-3);background:rgba(255,255,255,.6);border:1px solid rgba(20,44,86,.1);border-radius:99px;padding:3px 9px}
-.wrong-due.now{color:#b23a3a;background:rgba(255,110,110,.12);border-color:rgba(255,110,110,.3)}
-.wrong-q{font-size:13px;color:var(--ink);line-height:1.7;margin-bottom:5px}
-.wrong-ans{font-size:11.5px;color:var(--ink-2);margin-bottom:9px}
-.wrong-actions{display:flex;gap:8px;flex-wrap:wrap}
-html[data-sky="night"] .wrong-item{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
-html[data-sky="night"] .wrong-due{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
-
-/* ==== 代码快捷输入条 ==== */
-.snippet-bar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:9px;padding:9px 11px;
-  border-radius:13px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.78)}
-.snippet-hint{font-size:10px;font-weight:750;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-3)}
-.snippet{font-family:"Cascadia Code",Consolas,monospace;font-size:11.5px;padding:5px 9px;border-radius:9px;
-  border:1px solid rgba(20,44,86,.14);background:rgba(255,255,255,.85);color:#1b2b45;cursor:pointer}
-.snippet:active{transform:scale(.96)}
-/* 触屏设备才显示（桌面有键盘，避免干扰） */
-/* 快捷输入条对所有设备可见 */
-.feedback{white-space:pre-line}
-
-/* ==== 起步指南 ==== */
-.start-guide{margin-top:18px}
-.plan-group{margin:12px 0}
-.plan-label{font-size:10.5px;font-weight:750;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:7px}
-.plan-chips{display:flex;gap:8px;flex-wrap:wrap}
-.plan-chip{padding:8px 14px;border-radius:99px;border:1px solid rgba(255,255,255,.8);
-  background:rgba(255,255,255,.5);color:var(--ink-2);font:inherit;font-size:12px;cursor:pointer;transition:.18s}
-.plan-chip:hover{background:rgba(255,255,255,.75);transform:translateY(-1px)}
-.plan-chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
-.plan-result{margin:16px 0 6px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.7)}
-.plan-line{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:7px 0;font-size:12.5px;color:var(--ink-2);border-top:1px dashed rgba(20,44,86,.08)}
-.plan-line:first-child{border-top:0}
-.plan-line b{color:var(--ink);font-weight:700;font-size:12px}
-html[data-sky="night"] .plan-result{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
-html[data-sky="night"] .plan-chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#cfe0ff}
-html[data-sky="night"] .plan-chip.on{background:rgba(90,160,255,.2);border-color:#7fb0ff;color:#dbeaff}
-
-/* ==== 7 天项目 ==== */
-.proj-progress{margin:6px 0 18px}
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
-.proj-card{padding:18px;border-radius:18px;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.8);
-  box-shadow:0 1px 2px rgba(20,44,86,.05),0 8px 22px rgba(20,44,86,.08);display:flex;flex-direction:column}
-.proj-card.done{background:linear-gradient(158deg,rgba(255,255,255,.62),rgba(226,252,242,.6));border-color:rgba(120,215,180,.6)}
-.proj-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.proj-day{font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
-.proj-state{font-size:11px;font-weight:700;color:var(--ink-3)}
-.proj-card.done .proj-state{color:#0aa578}
-.proj-card h3{font-size:14.5px;font-weight:750;color:var(--ink);margin:0 0 7px;line-height:1.45}
-.proj-goal{font-size:12.5px;color:var(--ink-2);line-height:1.75;margin:0 0 8px;flex:1}
-.proj-meta{font-size:10.5px;color:var(--ink-3);margin-bottom:8px}
-.proj-detail{margin:4px 0 10px}
-.proj-detail summary{font-size:11.5px;font-weight:650;color:var(--accent);cursor:pointer;padding:5px 0}
-.proj-why{font-size:12px;color:var(--ink-2);line-height:1.75;padding:9px 11px;margin:6px 0;
-  background:rgba(47,124,246,.08);border-left:3px solid rgba(47,124,246,.45);border-radius:8px}
-.proj-detail .codebox{margin-top:8px}
-.daily-makeup{margin-top:8px;width:100%;font-size:11px!important;padding:6px 10px!important}
-html[data-sky="night"] .proj-card{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
-html[data-sky="night"] .proj-card.done{background:rgba(80,225,175,.14);border-color:rgba(120,235,195,.36)}
 </style>
 </head>
 <body class="splash-active">
@@ -1540,12 +1460,10 @@ html[data-sky="night"] .proj-card.done{background:rgba(80,225,175,.14);border-co
       <button class="nav-btn active" data-page="courses"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M9.5 20v-5h5v5"/></svg></span><span>学习课程</span></button>
       <button class="nav-btn" data-page="practice"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M10 8.8 15.6 12 10 15.2Z"/></svg></span><span>继续挑战</span></button>
       <button class="nav-btn" data-page="summary"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10.5"/><path d="M12 20V4.5"/><path d="M19 20v-6.5"/></svg></span><span>我的总结</span></button>
-      <button class="nav-btn" data-page="project"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v12H4z"/><path d="M8 7V5h8v2"/><path d="M8 12h8"/><path d="M8 15.5h5"/></svg></span><span>7 天项目</span></button>
-      <button class="nav-btn" data-page="mistakes"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h9a3 3 0 0 1 3 3V20"/><path d="M19 4.5h-2.5a3 3 0 0 0-3 3V20"/><path d="M7.5 11h3"/></svg></span><span>错题本</span><span class="nav-badge" id="wrongBadge" hidden></span></button>
       <button class="nav-btn" data-page="about"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 10.5v5.5"/><path d="M12 7.8h.01"/></svg></span><span>关于 / 许可</span></button>
     </nav>
     <div class="side-bottom">
-      <div class="side-card"><strong>每天前进一步</strong><div class="daily-stat" id="dailyStat"></div><p>稳稳通关，比一次学很多更重要。</p><button class="btn btn-soft btn-small" data-action="continue">继续学习&nbsp; →</button></div>
+      <div class="side-card"><strong>每天前进一步</strong><p>稳稳通关，比一次学很多更重要。</p><button class="btn btn-soft btn-small" data-action="continue">继续学习&nbsp; →</button></div>
       <div class="side-mini">学习进度只保存在此设备<br><button type="button" data-page="about" style="border:0;background:none;color:#8fa0c4;font-size:11px;text-decoration:underline;padding:0;margin-top:4px;cursor:pointer;font-family:inherit">免责声明 · 版权与许可</button></div>
     </div>
   </aside>
@@ -1588,9 +1506,9 @@ const COURSES=[
   routeNote:"起步 → 流程控制 → 函数 → 数组与字符串 → 指针与内存 → 自定义类型 → 文件 → 工程实践 → 算法 → 系统底层 → 综合项目",
   mapNote:"每关：读讲解 → 看示例（可直接编译运行）→ 躲开常见陷阱 → 答知识快问 → 写代码并通过结构检查与运行结果比对。",
   footNote:"示例与标准答案均在 TDM-GCC 4.9（Dev-C++ 自带）下用 -std=c11 -Wall 编译验证；代码挑战在本机浏览器做结构检查，正式提交前请用编译器实际运行确认。｜内容仅供学习参考，详见「关于 / 许可」。Copyright © 2026 HT Lab，免费供个人学习使用，禁止商用与修改后分发。"},
- {id:"cet4",name:"英语四级",glyph:"英",sub:"听说读写 62 关 · 学完能上手真题与模考",store:"cquest.cet4.v1",chip:"四级全程",
+ {id:"cet4",name:"英语四级",glyph:"英",sub:"听说读写 62 关 · 通关即具备上考场能力",store:"cquest.cet4.v1",chip:"四级全程",
   heroTitle:"听懂、说出口，<br>再把它写下来。",
-  heroCopy:"从基础起步，62 关把听力、阅读、写作、翻译、口语一关一关练过去：地基 8 关 + 听力 12 + 阅读 14 + 写作 8 + 翻译 8 + 口语 10 + 全真模考 2。完成基础路线后，建议再用真题与模考检验；学到的表达也能用在日常、校园、职场与出国场景。",
+  heroCopy:"从基础起步，62 关把听力、阅读、写作、翻译、口语一关一关练过去：地基 8 关 + 听力 12 + 阅读 14 + 写作 8 + 翻译 8 + 口语 10 + 全真模考 2。通关即具备上考场的能力，也能直接用在日常、校园、职场与出国场景。",
   routeNote:"地基 → 听力 → 阅读 → 写作 → 翻译 → 口语 → 全真模考",
   mapNote:"每关先学要点，再做听力/阅读题或写作/口语任务；通关后解锁下一站。",
   footNote:"题目为按四级大纲自编的仿真题；音频由语音合成生成，最终请以真题材料为准。｜通过课程不等于通过考试，详见「关于 / 许可」。Copyright © 2026 HT Lab，免费供个人学习使用，禁止商用与修改后分发。"}
@@ -1769,293 +1687,13 @@ function fmtInline(raw){
  return out;
 }
 
-
-/* ==== 学习统计（B6）与错题本（B3） ==== */
-var STATS_KEY="cquest.stats.v1", WRONG_KEY="cquest.wrong.v1";
-function dayKey(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-function loadStats(){try{var o=JSON.parse(localStorage.getItem(STATS_KEY)||"{}");if(!o||typeof o!=="object")o={};o.goalMin=o.goalMin||20;o.days=o.days||{};return o}catch(e){return {goalMin:20,days:{}}}}
-function saveStats(o){try{localStorage.setItem(STATS_KEY,JSON.stringify(o))}catch(e){}}
-function todayStat(){var s=loadStats();return s.days[dayKey()]||{sec:0,levels:0}}
-function addStudySec(n){
- var s=loadStats(),k=dayKey(),d=s.days[k]||{sec:0,levels:0};
- d.sec+=n;s.days[k]=d;
- var keys=Object.keys(s.days).sort();
- if(keys.length>120)keys.slice(0,keys.length-120).forEach(function(x){delete s.days[x]});
- saveStats(s);var el=document.getElementById("dailyStat");if(el)renderDailyStat(el);
-}
-function bumpTodayLevels(){
- var s=loadStats(),k=dayKey(),d=s.days[k]||{sec:0,levels:0};
- d.levels=(d.levels||0)+1;s.days[k]=d;saveStats(s);
-}
-function streakDays(){
- var s=loadStats(),n=0,d=new Date();
- for(var i=0;i<400;i++){
-  var rec=s.days[dayKey(d)];
-  if(rec&&((rec.sec||0)>=60||rec.levels>0)){n++;d.setDate(d.getDate()-1)}else break;
- }
- return n;
-}
-function renderDailyStat(el){
- var st=todayStat(),s=loadStats(),mins=Math.floor((st.sec||0)/60),goal=s.goalMin||20,pct=Math.min(100,Math.round(mins/goal*100));
- el.innerHTML='<div class="daily-row"><span>今日</span><b>'+mins+' / '+goal+' 分钟</b></div>'
-  +'<div class="daily-bar"><i style="width:'+pct+'%"></i></div>'
-  +'<div class="daily-foot">'+(st.levels?'今日通关 '+st.levels+' 关 · ':'')+'连续学习 '+streakDays()+' 天'+(streakDays()===0?'（今天还没开始）':'')+'</div>'
-  +(function(){try{var mi=makeUpInfo();return mi.can?'<button class="btn btn-ghost btn-small daily-makeup" data-action="makeup">补签昨天</button>':''}catch(e){return ''}})();
-}
-function startStudyTimer(){
- if(window.__studyTimer)return;
- window.__studyTimer=setInterval(function(){if(document.hidden)return;addStudySec(15)},15000);
-}
-function updateDailyStat(){
- var el=document.getElementById("dailyStat");if(el)renderDailyStat(el);
- var b=document.getElementById("wrongBadge");if(b){var n=wrongList().length;b.textContent=String(n);b.hidden=!n}
-}
-function loadWrong(){try{var o=JSON.parse(localStorage.getItem(WRONG_KEY)||"{}");o.items=Array.isArray(o.items)?o.items:[];return o}catch(e){return {items:[]}}}
-function saveWrong(o){try{localStorage.setItem(WRONG_KEY,JSON.stringify(o))}catch(e){}}
-function recordWrong(cid,lid,qi,picked){
- var o=loadWrong(),ex=null;
- o.items.forEach(function(x){if(x.cid===cid&&x.lid===lid&&x.qi===qi)ex=x});
- if(ex){ex.picked=picked;ex.at=Date.now();ex.due=Date.now()+86400000;ex.stage=0;ex.done=false}
- else o.items.push({cid:cid,lid:lid,qi:qi,picked:picked,at:Date.now(),due:Date.now()+86400000,stage:0,done:false});
- saveWrong(o);updateDailyStat();
-}
-function wrongList(){return loadWrong().items.filter(function(x){return !x.done})}
-function dueWrong(){var now=Date.now();return wrongList().filter(function(x){return (x.due||0)<=now})}
-function wrongReviewed(cid,lid,qi){
- var o=loadWrong();
- o.items.forEach(function(x){
-  if(x.cid===cid&&x.lid===lid&&x.qi===qi){
-   x.stage=(x.stage||0)+1;
-   if(x.stage>=3){x.done=true;x.due=0}
-   else{x.due=Date.now()+(x.stage===1?3:7)*86400000}
-  }
- });
- saveWrong(o);updateDailyStat();
-}
-function clearWrongDone(){
- var o=loadWrong();o.items=o.items.filter(function(x){return !x.done});saveWrong(o);updateDailyStat();
- toast("已清理标记完成的错题。");
-}
-function renderMistakes(){
- var items=wrongList(),due=dueWrong(),now=Date.now(),body="";
- if(!items.length){
-  body='<div class="blank-state">还没有错题。做错的题会自动收进这里，按 1 天 / 3 天 / 7 天的节奏安排复习。</div>';
- }else{
-  var byCourse={};items.forEach(function(x){(byCourse[x.cid]=byCourse[x.cid]||[]).push(x)});
-  Object.keys(byCourse).forEach(function(cid){
-   var c=courseById(cid)||{name:cid},ls=courseLevels[cid]||[];
-   body+='<section class="panel" style="margin-bottom:14px"><div class="challenge-head"><div class="challenge-label">'+esc(c.name)+'</div><span class="chip">'+byCourse[cid].length+' 题待复习</span></div><div class="wrong-list">';
-   byCourse[cid].forEach(function(x){
-    var lv=null;ls.forEach(function(l){if(l.id===x.lid)lv=l});
-    lv=lv||{title:"第 "+x.lid+" 关",questions:[]};
-    var q=(lv.questions||[])[x.qi]||{q:"（这道题的内容已更新）",options:[],answer:-1};
-    var dueTxt=(x.due||0)<=now?'<span class="wrong-due now">现在复习</span>':'<span class="wrong-due">'+new Date(x.due).toLocaleDateString("zh-CN")+' 复习</span>';
-    body+='<div class="wrong-item"><div class="wrong-head"><b>'+esc(lv.title)+'</b>'+dueTxt+'</div>'
-      +'<div class="wrong-q">'+esc(q.q)+'</div>'
-      +'<div class="wrong-ans">你选：'+esc((q.options&&q.options[x.picked])||"—")+'　正确：'+esc((q.options&&q.options[q.answer])||"—")+'</div>'
-      +'<div class="wrong-actions"><button class="btn btn-primary btn-small" data-action="wrong-go" data-cid="'+cid+'" data-lid="'+x.lid+'">去做这一关</button>'
-      +'<button class="btn btn-ghost btn-small" data-action="wrong-done" data-cid="'+cid+'" data-lid="'+x.lid+'" data-qi="'+x.qi+'">标记已复习</button></div></div>';
-   });
-   body+='</div></section>';
-  });
- }
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">复习</div><h1>错题本</h1><p class="subhead">做错的题会自动记录，按 1 天 → 3 天 → 7 天的节奏复习；答对 3 次后自动移出。</p></div>'
-  +'<span class="chip">'+items.length+' 题待复习'+(due.length?' · '+due.length+' 题今天到期':'')+'</span></div>'+body
-  +(items.length?'<div class="exercise-actions" style="margin-top:6px"><button class="btn btn-ghost btn-small" data-action="wrong-clear">清理已完成</button></div>':"");
-}
-
-
-/* ==== B5 代码快捷输入条 / B2 错误诊断 ==== */
-function snippetBar(){
- var items=[
-  ["#include","#include <stdio.h>\n"],
-  ["main","int main(void) {\n  \n  return 0;\n}\n"],
-  ["printf","printf(\"\");"],
-  ["scanf","scanf(\"%d\", &n);"],
-  ["for","for (int i = 0; i < n; i++) {\n  \n}"],
-  ["if","if () {\n  \n}"],
-  ["&","&"],
-  ["%d","%d"],
-  ["\\n","\\n"],
-  [";",";"],
-  ["{ }","{\n  \n}"]
- ];
- var html='<div class="snippet-bar"><span class="snippet-hint">快捷输入</span>';
- items.forEach(function(it){
-  html+='<button type="button" class="snippet" data-action="insert-snippet" data-snippet="'+esc(it[1])+'">'+esc(it[0])+'</button>';
- });
- return html+'</div>';
-}
-function insertSnippet(text){
- var ta=document.getElementById("codeAnswer");if(!ta)return;
- var start=ta.selectionStart==null?ta.value.length:ta.selectionStart;
- var end=ta.selectionEnd==null?ta.value.length:ta.selectionEnd;
- var val=ta.value.slice(0,start)+text+ta.value.slice(end);
- ta.value=val;
- var caret=start+text.length;
- ta.focus();
- try{ta.setSelectionRange(caret,caret)}catch(e){}
- window.codeDraft=val;
- ta.dispatchEvent(new Event("input",{bubbles:true}));
- ta.dispatchEvent(new Event("keyup",{bubbles:true}));
-}
-function diagnoseCode(level,source){
- var src=String(source||""),hints=[];
- if(!src.trim())return ["代码是空的，先写一段再检查。"];
- // 括号配对
- var open=(src.match(/\{/g)||[]).length, close=(src.match(/\}/g)||[]).length;
- if(open!==close)hints.push("大括号数量对不上（{ "+open+" 个，} "+close+" 个），先把每个 { 补上对应的 }。");
- var oP=(src.match(/\(/g)||[]).length, cP=(src.match(/\)/g)||[]).length;
- if(oP!==cP)hints.push("圆括号数量对不上（( "+oP+" 个，) "+cP+" 个）。");
- // scanf 缺 &
- var m=src.match(/scanf\s*\(\s*"[^"]*"\s*,\s*([A-Za-z_]\w*)\s*\)/);
- if(m)hints.push("scanf 要传变量地址：这里的「"+m[1]+"」前面应该加 &，写成 &"+m[1]+"。");
- // 条件里误用 =
- if(/if\s*\([^)&|]*[^=!<>+\-*/%]=[^=]/.test(src))hints.push("if 的条件里用了赋值 =，比较应该写 ==。");
- // 缺头文件
- if(/printf\s*\(|scanf\s*\(/.test(src)&&!/#include\s*<\s*stdio\.h\s*>/.test(src))
-  hints.push("用了 printf / scanf 但没有 #include <stdio.h>，加上这一行才能通过编译。");
- // 不安全的 gets
- if(/\bgets\s*\(/.test(src))hints.push("gets 已经被 C 标准移除且有缓冲区溢出风险，改用 fgets(buf, sizeof(buf), stdin)。");
- // 漏分号（逐行粗查）
- var lines=src.split("\n");
- for(var i=0;i<lines.length;i++){
-  var t=lines[i].trim();
-  if(!t)continue;
-  if(/^(#|\/\/|\/\*|\*)/.test(t))continue;
-  if(/[{};,]$/.test(t))continue;
-  if(/[)\w"']\s*$/.test(t)&&!/^(if|for|while|switch|else|do)\b/.test(t)&&!/\)\s*$/.test(t))
-   hints.push("第 "+(i+1)+" 行「"+t.slice(0,24)+(t.length>24?"…":"")+"」可能少了分号。");
- }
- // 主函数返回
- if(/int\s+main\s*\(/.test(src)&&!/return\s+0\s*;/.test(src))
-  hints.push("main 正常结束要写 return 0;，操作系统靠这个返回值判断程序是否成功。");
- return hints.slice(0,3);
-}
-
-
-/* ==== B4 新手起步诊断 + 每周计划 ==== */
-var PLAN_KEY="cquest.plan.v1";
-function loadPlan(){try{var o=JSON.parse(localStorage.getItem(PLAN_KEY)||"null");if(o&&o.base&&o.goal&&o.hours)return o}catch(e){}return {base:"zero",goal:"both",hours:"mid"}}
-function savePlan(p){try{localStorage.setItem(PLAN_KEY,JSON.stringify(p))}catch(e){}}
-var PLAN_BASE={zero:"零基础",some:"学过一点",solid:"有基础"};
-var PLAN_GOAL={c:"主攻 C 语言",cet4:"主攻英语四级",both:"两门都要"};
-var PLAN_HOURS={low:"每周 < 3 小时",mid:"每周 3–6 小时",high:"每周 > 6 小时"};
-function buildPlan(p){
- var cPer=({low:3,mid:5,high:8})[p.hours]||5;
- var ePer=({low:2,mid:3,high:5})[p.hours]||3;
- var showC=p.goal!=="cet4",showE=p.goal!=="c";
- var weeks=Math.max(showC?Math.ceil(86/cPer):0,showE?Math.ceil(62/ePer):0);
- var first=showC?"c":"cet4";
- var baseAdvice=p.base==="zero"?"从最基础开始：先看讲解、照着示例敲一遍，再自己写。每关先过「知识快问」，再写代码。"
-  :p.base==="some"?"跳过纯概念关也可以，但建议每关的「常见陷阱」都看——那里最容易丢分。"
-  :"可以直接从模块中段挑不熟的关做，用「错题本」集中补弱项。";
- return {p:p,cPer:cPer,ePer:ePer,showC:showC,showE:showE,weeks:weeks,first:first,baseAdvice:baseAdvice};
-}
-function renderStartGuide(){
- var v=document.getElementById("view");if(!v||page!=="courses")return;
- var old=v.querySelector(".start-guide");if(old)old.remove();
- var p=loadPlan(),plan=buildPlan(p);
- function chips(k,map){
-  var html='<div class="plan-group"><span class="plan-label">'+({base:"你的基础",goal:"你的目标",hours:"每周可投入"})[k]+'</span><div class="plan-chips">';
-  Object.keys(map).forEach(function(key){
-   html+='<button class="plan-chip'+(p[k]===key?" on":"")+'" data-action="plan-set" data-k="'+k+'" data-v="'+key+'">'+map[key]+'</button>';
-  });
-  return html+'</div></div>';
- }
- var wrap=document.createElement("section");
- wrap.className="panel start-guide";
- wrap.innerHTML='<div class="challenge-head"><div class="challenge-label">起步指南 · 30 秒</div><span class="chip">生成每周计划</span></div>'
-  +'<p class="challenge-copy">第一次来不知道从哪开始？选一下你的情况，给你一条明确的起步路线和每周任务。</p>'
-  +chips("base",PLAN_BASE)+chips("goal",PLAN_GOAL)+chips("hours",PLAN_HOURS)
-  +'<div class="plan-result">'
-   +'<div class="plan-line"><b>建议起点</b><span>'+(plan.first==="c"?"C 语言第 01 关（认识 C 程序）":"英语四级地基第 1 关（认识考试）")+'</span></div>'
-   +'<div class="plan-line"><b>每周任务</b><span>'+[plan.showC?"C 语言 "+plan.cPer+" 关":"",plan.showE?"英语四级 "+plan.ePer+" 关":""].filter(Boolean).join(" + ")+'</span></div>'
-   +'<div class="plan-line"><b>预计周期</b><span>约 '+plan.weeks+' 周（按每周投入估算，可随时调整）</span></div>'
-   +'<div class="plan-line"><b>起步建议</b><span>'+esc(plan.baseAdvice)+'</span></div>'
-   +'<div class="plan-line"><b>每日节奏</b><span>先学 1 关（10–20 分钟）→ 做本关快问 → 写代码并检查 → 睡前花 5 分钟看错题本</span></div>'
-  +'</div>'
-  +'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="plan-go">开始第一关 →</button>'
-  +'<button class="btn btn-ghost btn-small" data-page="mistakes">看错题本</button></div>';
- v.appendChild(wrap);
-}
-
-
-/* ==== 7 天小作品支线：控制台记账本 ==== */
-var PROJECT_KEY="cquest.project.v1";
-var PROJECT_DAYS=[
- {d:1,title:"跑起来：能输入、能输出",goal:"写一个程序：输出一行欢迎语，再读入一个金额并原样打印出来。",
-  learn:"第 01、04 关（程序结构、输入输出）",code:'#include <stdio.h>\n\nint main(void) {\n    double n;\n    printf("记账本 v0.1\\n请输入一笔金额：");\n    scanf("%lf", &n);\n    printf("已记录：%.2f\\n", n);\n    return 0;\n}',why:"这一步把「程序能和我对话」跑通，后面所有功能都建立在这上面。"},
- {d:2,title:"存住数据：数组",goal:"把 5 笔金额存进数组，最后统一打印并算总和。",
-  learn:"第 25–32 关（数组与字符串）",code:'#include <stdio.h>\n\nint main(void) {\n    double a[5];\n    int i;\n    for (i = 0; i < 5; i++) scanf("%lf", &a[i]);\n    double sum = 0;\n    for (i = 0; i < 5; i++) { printf("%.2f\\n", a[i]); sum += a[i]; }\n    printf("合计：%.2f\\n", sum);\n    return 0;\n}',why:"从「一次一笔」升级到「一次一批」，这是记账功能的地基。"},
- {d:3,title:"加分类：字符串与循环",goal:"每笔记录带一个分类（food/transport/other），并按分类统计金额。",
-  learn:"第 31–32、33–40 关（字符串、循环）",code:'#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char cat[5][10] = {"food","transport","other","food","other"};\n    double amt[5] = {12.5, 3, 28, 9.9, 15};\n    double sum[3] = {0,0,0};\n    for (int i = 0; i < 5; i++) {\n        if (strcmp(cat[i], "food") == 0) sum[0] += amt[i];\n        else if (strcmp(cat[i], "transport") == 0) sum[1] += amt[i];\n        else sum[2] += amt[i];\n    }\n    printf("food %.2f  transport %.2f  other %.2f\\n", sum[0], sum[1], sum[2]);\n    return 0;\n}',why:"账本的价值不在「记」而在「分得清」——分类统计是记账的第一步洞察。"},
- {d:4,title:"抽成函数：让代码不重复",goal:"把「加一笔」和「打印汇总」拆成两个函数，主函数只负责调度。",
-  learn:"第 17–24 关（函数与程序结构）",code:'#include <stdio.h>\n\ndouble total(double *a, int n) {\n    double s = 0;\n    for (int i = 0; i < n; i++) s += a[i];\n    return s;\n}\nvoid show(double *a, int n) {\n    for (int i = 0; i < n; i++) printf("%d: %.2f\\n", i + 1, a[i]);\n    printf("合计：%.2f\\n", total(a, n));\n}\nint main(void) {\n    double a[3] = {10, 20.5, 5};\n    show(a, 3);\n    return 0;\n}',why:"函数拆分是可维护的分水岭：以后加功能只改一个地方。"},
- {d:5,title:"用指针操作数据",goal:"用指针遍历数组，实现「查找最大一笔支出」。",
-  learn:"第 41–50 关（指针与内存）",code:'#include <stdio.h>\n\ndouble max_of(const double *a, int n) {\n    const double *p = a, *best = a;\n    for (int i = 0; i < n; i++, p++)\n        if (*p > *best) best = p;\n    return *best;\n}\nint main(void) {\n    double a[4] = {8, 30.5, 12, 45.2};\n    printf("最大一笔：%.2f\\n", max_of(a, 4));\n    return 0;\n}',why:"指针看着吓人，但它的用途很朴素：让函数高效地访问同一份数据。"},
- {d:6,title:"存在文件里：下次还在",goal:"把账本存进 accounts.txt，重新运行时读出来，追加新记录。",
-  learn:"第 59–64 关（文件与输入输出）",code:'#include <stdio.h>\n\nint main(void) {\n    double n;\n    FILE *fp = fopen("accounts.txt", "a");\n    if (!fp) { printf("打不开文件\\n"); return 1; }\n    while (scanf("%lf", &n) == 1) fprintf(fp, "%.2f\\n", n);\n    fclose(fp);\n\n    double sum = 0, x;\n    fp = fopen("accounts.txt", "r");\n    while (fscanf(fp, "%lf", &x) == 1) sum += x;\n    fclose(fp);\n    printf("全部合计：%.2f\\n", sum);\n    return 0;\n}',why:"程序从「跑完就忘」变成「有记忆」，这是工具的起点。"},
- {d:7,title:"最后一公里：做出能用的记账本",goal:"组合前 6 天，做出一个能循环输入、能查总额、能按分类统计的完整记账本，并处理输入错误。",
-  learn:"综合运用 + 第 65–72 关（工程实践）",code:'#include <stdio.h>\n#include <string.h>\n\n#define MAXN 100\n\nint main(void) {\n    char cats[MAXN][16];\n    double amt[MAXN];\n    int n = 0;\n    char op[16];\n    while (scanf("%15s", op) == 1) {\n        if (strcmp(op, "add") == 0 && n < MAXN) {\n            scanf("%lf %15s", &amt[n], cats[n]);\n            n++;\n            printf("已记录 %d 笔\\n", n);\n        } else if (strcmp(op, "list") == 0) {\n            for (int i = 0; i < n; i++) printf("%d) %.2f [%s]\\n", i + 1, amt[i], cats[i]);\n        } else if (strcmp(op, "total") == 0) {\n            double s = 0;\n            for (int i = 0; i < n; i++) s += amt[i];\n            printf("合计：%.2f\\n", s);\n        } else if (strcmp(op, "quit") == 0) break;\n        else printf("未知命令\\n");\n    }\n    return 0;\n}',why:"到这里你已拥有一个真正能用的程序：可以自己用，也可以给同学看。"}
-];
-function loadProject(){try{var o=JSON.parse(localStorage.getItem(PROJECT_KEY)||"{}");o.done=o.done||{};return o}catch(e){return {done:{}}}}
-function saveProject(o){try{localStorage.setItem(PROJECT_KEY,JSON.stringify(o))}catch(e){}}
-function projectProgress(){var o=loadProject(),n=0;PROJECT_DAYS.forEach(function(x){if(o.done[x.d])n++});return n}
-function renderProject(){
- var o=loadProject(),fin=projectProgress();
- var cards=PROJECT_DAYS.map(function(p){
-  var done=!!o.done[p.d];
-  return '<article class="proj-card'+(done?" done":"")+'">'
-   +'<div class="proj-head"><span class="proj-day">Day '+p.d+'</span><span class="proj-state">'+(done?"✓ 已完成":"待完成")+'</span></div>'
-   +'<h3>'+esc(p.title)+'</h3>'
-   +'<p class="proj-goal">'+esc(p.goal)+'</p>'
-   +'<div class="proj-meta">对应课程：'+esc(p.learn)+'</div>'
-   +'<details class="proj-detail"><summary>展开可运行示例与说明</summary>'
-   +'<div class="proj-why">'+esc(p.why)+'</div>'
-   +'<div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>day'+p.d+'.c</span></div><pre>'+highlightC(p.code)+'</pre></div>'
-   +'</details>'
-   +'<div class="exercise-actions"><button class="btn '+(done?"btn-ghost":"btn-primary")+' btn-small" data-action="proj-toggle" data-day="'+p.d+'">'+(done?"撤销完成":"标记今天完成")+'</button></div>'
-   +'</article>';
- }).join("");
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">做点真东西</div><h1>7 天，做出一个能用的记账本</h1>'
-  +'<p class="subhead">每天一个 20 分钟的小任务，第 7 天你会拿到一个可以自己用、也能给同学看的控制台程序。不需要学完 86 关也能开始。</p></div>'
-  +'<span class="chip">'+fin+' / 7 天完成</span></div>'
-  +'<div class="proj-progress"><div class="daily-bar"><i style="width:'+Math.round(fin/7*100)+'%"></i></div></div>'
-  +'<div class="proj-grid">'+cards+'</div>'
-  +'<div class="panel" style="margin-top:16px"><div class="challenge-label">提示</div><p class="challenge-copy">每段示例都能直接编译运行；建议先跑通示例，再按自己的需求改。卡住时去「错题本」或交流群问。</p></div>';
-}
-
-/* ==== 连续天数补签 ==== */
-function makeUpInfo(){
- var st=loadStats(),today=(st.days[dayKey()]||{sec:0,levels:0});
- var y=new Date();y.setDate(y.getDate()-1);
- var yRec=st.days[dayKey(y)];
- if(today&&((today.sec||0)>=60||today.levels>0))return {can:false,reason:"today"};
- if(yRec&&((yRec.sec||0)>=60||yRec.levels>0))return {can:false,reason:"alive"};
- if(st.makeupWeek===undefined)st.makeupWeek=0;
- if(st.makeupWeek>=1)return {can:false,reason:"used"};
- return {can:true,reason:"ok"};
-}
-function useMakeUp(){
- var st=loadStats();
- var info=makeUpInfo();
- if(!info.can){toast("今天还不需要补签，或本周补签已用完。");return false}
- var y=new Date();y.setDate(y.getDate()-1);
- st.days[dayKey(y)]={sec:300,levels:0,makeup:true};
- st.makeupWeek=(st.makeupWeek||0)+1;
- saveStats(st);
- toast("已补签昨天，今天学一点就能续上连续天数。");
- return true;
-}
-
 function renderBeginnerGuide(l){
  const g=l.beginner;if(!g)return "";
  function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
  return '<div class="beginner-guide"><div class="guide-heading">零基础拆解 · 不用急着背</div><div class="guide-idea"><div class="challenge-label">先抓住这一件事</div><p>'+esc(g.idea)+'</p></div><div class="guide-columns">'+list("示例逐步读",g.read)+list("挑战按这几步写",g.steps)+'</div><div class="guide-pitfall"><strong>新手易错点</strong><span>'+esc(g.pitfall)+'</span></div></div>';
 }
 function switchPage(p){page=p;activeLevel=null;render()}
-function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",mistakes:"HT LAB  /  错题本",project:"HT LAB  /  7 天项目",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
+function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
 
 /* ==== 进度文件包：导出 / 导入（只含学习数据，不含个人信息） ==== */
 var CONTACT_QQ_GROUP="1129793963";/* 交流群号：填这里（例："123456789"），留空显示「筹备中」 */
@@ -2245,7 +1883,7 @@ function render(){
  var __changed=__k!==__lastViewKey;__lastViewKey=__k;
  if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
   var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
- navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses"){renderCourses();setTimeout(renderStartGuide,0)}else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="mistakes"){renderMistakes();ensureProgressTools()}else if(page==="project")renderProject();else{renderSummary();ensureProgressTools()}}
+ navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else{renderSummary();ensureProgressTools()}}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
@@ -2268,7 +1906,7 @@ function renderMap(){
 function renderAbout(){
  const items=[
   ["用途","本网站是个人自学与教学演示项目。站内的讲解、题目、示例代码与音频都是自编的学习材料，不是官方教材，也不是历年真题。你可以自由用来学习。"],
-  ["考试相关","英语四级部分的题目与音频是按大纲自编的仿真材料，题型与难度不等同于真实考试；通过本站关卡不代表能通过相应考试，也不构成任何考试、升学或就业承诺。四级成绩采用常模参照、官方不设及格线，425 分只是常见参考线，具体以中国教育考试网 cet.neea.edu.cn 的说明为准（本站核对时间 2026-10）。"],
+  ["考试相关","英语四级部分的题目与音频是按大纲自编的仿真材料，题型与难度不等同于真实考试；通过本站关卡不代表能通过相应考试，也不构成任何考试、升学或就业承诺。"],
   ["代码与运行","C 课程的示例与标准答案在 TDM-GCC 4.9.2（Dev-C++ 自带）下以 -std=c11 -Wall -Wextra 验证过。站内的代码检查是轻量结构检查，不等同于编译器，最终请以你本机编译器的结果为准；涉及 sizeof、地址等平台相关数值的关卡，换平台结果可能不同。"],
   ["数据与隐私","本站不收集、不上传任何数据，也不联网同步。学习进度、代码草稿与录音只保存在本机浏览器（localStorage / 内存）。清除浏览器数据、更换浏览器或设备会导致进度丢失，本站不为此承担责任。"],
   ["内容准确性","内容经过脚本校验、真编译真运行与多轮独立复核，但仍可能存在错误、过时或表述不严谨之处；发现后欢迎反馈修正。"],
@@ -2318,7 +1956,7 @@ function renderCodeLesson(l,done){
  document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.stage||l.module||"")+' · 第 '+String(l.id).padStart(2,"0")+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
  '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 读透原理再动手写</div></div></div><p class="lesson-copy" style="margin:18px 0">'+fmtLesson(l.lesson)+'</p>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+fmtInline(t)+'</span></div>'}).join("")+'</div></section>'+
  exampleHtml+pitHtml+quizHtml+
- '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||l.starter||"")+snippetBar()+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-primary btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地检查会按真实 C 语法核对括号、分号、语句结构，再核对本关要求的写法；注释和字符串里的关键词不算通过。它不等同于编译器，写完请务必在本机编译运行一次。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(l.solution||"")+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并通过检查，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section>'+runHtml+'</div>'+sidebar+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
+ '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||l.starter||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-primary btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地检查会按真实 C 语法核对括号、分号、语句结构，再核对本关要求的写法；注释和字符串里的关键词不算通过。它不等同于编译器，写完请务必在本机编译运行一次。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(l.solution||"")+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并通过检查，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section>'+runHtml+'</div>'+sidebar+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
  startTaskTimer(l);
 }
 /* ==================== 英语四级任务引擎（听力/阅读/写作/翻译/口语） ==================== */
@@ -2345,7 +1983,7 @@ function ensureTaskState(l){
 }
 function completeTask(l){
  if(isDone(l))return false;
- data.completed[l.id]={at:Date.now()};data.xp+=30;save();try{bumpTodayLevels()}catch(e){}
+ data.completed[l.id]={at:Date.now()};data.xp+=30;save();
  playVictoryAnimation(l);
  if(completedCount()===levels.length){setTimeout(function(){activeLevel=null;page="summary";render()},950)}else{render()}
  return true;
@@ -2390,7 +2028,7 @@ function pickAnswer(qi,pi){
  }
  if(st.answers[qi]!==null&&st.answers[qi]!==undefined)return;
  st.answers[qi]=pi;
- data.attempts++;if(pi===l.questions[qi].answer){data.correct++}else{try{recordWrong(activeCourse,l.id,qi,pi)}catch(e){}}save();
+ data.attempts++;if(pi===l.questions[qi].answer)data.correct++;save();
  const answered=st.answers.filter(function(a){return a!==null&&a!==undefined}).length;
  const needsTask=(l.type==="write"||l.type==="translate"||l.type==="speak");
  if(answered===l.questions.length&&!needsTask){
@@ -2453,8 +2091,8 @@ function checkWrittenTask(){
  const st=ensureTaskState(l);st.checkResult=gradeText(l,ta.value);
  if(st.checkResult.ok&&questionsRatioOk(l,st)){st.passed=true;completeTask(l);return}
  render();
- if(st.checkResult.ok)toast("要点自查通过（不代表表达达标），但客观题还没达标，先把上面的题目做对。");
- else toast("要点还差一些，按下方提示补齐再来。");
+ if(st.checkResult.ok)toast("实操部分通过了，但客观题还没达标，先把上面的题目做对。");
+ else toast("还差一点，按下方提示补齐要点再来。");
 }
 function startRecorder(){
  const l=activeLevel;if(!l)return;
@@ -2494,19 +2132,13 @@ function renderEnglishLesson(l){
  if(t==="write"||t==="translate"){
   const res=st.checkResult;
   const pts=res?'<div class="point-list">'+res.pts.map(function(p){return '<div class="point-item"><span class="'+(p.hit?"point-ok":"point-no")+'">'+(p.hit?"✓":"✗")+'</span><span>要点：'+esc(p.label)+'</span></div>'}).join("")+'</div>':"";
-   const rubric='<div class="rubric"><div class="rubric-title">自评量表 · 自己打分（系统不评分）</div>'
-    +'<div class="rubric-row"><b>内容</b><span>是否覆盖题目要求的每个要点，有没有跑题</span></div>'
-    +'<div class="rubric-row"><b>结构</b><span>开头点题 → 主体分点展开 → 结尾收束，段落是否清楚</span></div>'
-    +'<div class="rubric-row"><b>语法</b><span>主谓一致、时态、单复数、冠词、拼写有没有明显错误</span></div>'
-    +'<div class="rubric-row"><b>表达</b><span>有没有生硬直译，句式是否多样，用词是否地道</span></div>'
-    +'<div class="rubric-note">建议每项打 1–5 分；低于 3 分的项，对照参考范文重写一遍。</div></div>';
   const wc='<div class="wordcount">当前 <b id="liveWords">'+((data.drafts[l.id]||"").match(/[A-Za-z][A-Za-z'’-]*/g)||[]).length+'</b> 词'+(l.minWords?'，要求 ≥ '+l.minWords+' 词':"")+'</div>';
-  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✎</span>'+esc(l.taskTitle||(t==="write"?"写作任务":"翻译任务"))+'</div><span class="chip">完成 +30 点</span>'+(l.timeLimit?'<span class="chip" id="taskTimer">剩余 '+l.timeLimit+':00</span>':"")+'</div><p class="challenge-copy">'+esc(l.prompt)+'</p>'+(l.source?'<div class="passage">'+esc(l.source)+'</div>':"")+'<textarea class="task-input" id="taskAnswer" spellcheck="false" placeholder="'+esc(l.placeholder||"在这里作答…")+'">'+esc(data.drafts[l.id]||"")+'</textarea>'+wc+'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="check-task">自查要点并提交</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起参考范文":((done||answerUnlocked)?"查看参考范文":"🔒 查看参考范文"))+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="next-level">下一关 →</button>':"")+'</div>'+pts+rubric+(res&&!res.ok?'<div class="feedback no">要点自查还差：把上面标 ✗ 的要点补上再试。<b>注意：</b>这里只检查要点与词数，不代表表达整体达标。</div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>参考范文 / 参考译文</span></div><pre>'+esc(l.sample||"")+'</pre><div class="hint">参考范文只用于对照结构与表达，考试时请用自己的话写。</div></div>':"")+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
+  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✎</span>'+esc(l.taskTitle||(t==="write"?"写作任务":"翻译任务"))+'</div><span class="chip">完成 +30 点</span>'+(l.timeLimit?'<span class="chip" id="taskTimer">剩余 '+l.timeLimit+':00</span>':"")+'</div><p class="challenge-copy">'+esc(l.prompt)+'</p>'+(l.source?'<div class="passage">'+esc(l.source)+'</div>':"")+'<textarea class="task-input" id="taskAnswer" spellcheck="false" placeholder="'+esc(l.placeholder||"在这里作答…")+'">'+esc(data.drafts[l.id]||"")+'</textarea>'+wc+'<div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="check-task">检查并提交</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起参考范文":((done||answerUnlocked)?"查看参考范文":"🔒 查看参考范文"))+'</button>'+(done?'<button class="btn btn-soft btn-small" data-action="next-level">下一关 →</button>':"")+'</div>'+pts+(res&&!res.ok?'<div class="feedback no">还没通过：把上面标 ✗ 的要点补进去，再检查一次。</div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>参考范文 / 参考译文</span></div><pre>'+esc(l.sample||"")+'</pre><div class="hint">参考范文只用于对照结构与表达，考试时请用自己的话写。</div></div>':"")+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
  }
  if(t==="speak"){
   const list=l.checklist||[];
   const checks=list.map(function(c,i){const k="c"+i;return '<button type="button" class="takeaway-item self-check'+(st.checks[k]?" on":"")+'" data-action="self-check" data-key="'+k+'"><span class="'+(st.checks[k]?"tick":"")+'">'+(st.checks[k]?"✓":"○")+'</span><span>'+esc(c)+'</span></button>'}).join("");
-  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">◍</span>跟读与口语任务</div><span class="chip">录音 + 自评</span></div><p class="challenge-copy">'+esc(l.prompt||l.taskCopy||"")+'</p>'+(l.model?'<div class="audio-row"><div class="audio-head"><span class="audio-label">示范朗读</span>'+(l.model.voice?'<span class="chip chip-mini">'+esc(l.model.voice)+'</span>':"")+'<button class="btn btn-ghost btn-small" type="button" data-action="toggle-transcript" data-target="tr-'+l.id+'-m">显示原文</button></div><audio controls preload="metadata" src="./audio/cet4/'+esc(l.model.file)+'"></audio><div class="transcript" id="tr-'+l.id+'-m" hidden>'+esc(l.model.text||"")+'</div></div>':"")+'<div class="recorder-row">'+(window.recording?'<span class="rec-dot"></span><span class="audio-hint">正在录音…</span><button class="btn btn-soft btn-small" data-action="rec-stop">停止录音</button>':'<button class="btn btn-primary btn-small" data-action="rec-start">'+(st.recordUrl?"重新录音":"开始录音跟读")+'</button>')+(st.recordUrl?'<audio controls preload="metadata" src="'+st.recordUrl+'"></audio>':"")+'</div><div class="hint">录音只保存在这台设备的浏览器内存里，刷新页面即消失，不会上传；没有麦克风或浏览器不支持录音时，可点下方按钮用「跟读自评」代替，同样计入通关。<b>提示：</b>录音与自评都不会被自动评分，发音与自然度请自己回听，或在交流群里请人帮听。</div><div class="exercise-actions" style="margin:10px 0 0"><button class="btn btn-ghost btn-small" data-action="skip-rec">'+(st.recordSkipped?"已选择用跟读自评代替":"没有麦克风？用跟读自评代替")+'</button></div><div class="challenge-label" style="margin:14px 0 6px">自评清单（全部打勾且录过音才算通关）</div><div class="takeaway">'+checks+'</div>'+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
+  task+='<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">◍</span>跟读与口语任务</div><span class="chip">录音 + 自评</span></div><p class="challenge-copy">'+esc(l.prompt||l.taskCopy||"")+'</p>'+(l.model?'<div class="audio-row"><div class="audio-head"><span class="audio-label">示范朗读</span>'+(l.model.voice?'<span class="chip chip-mini">'+esc(l.model.voice)+'</span>':"")+'<button class="btn btn-ghost btn-small" type="button" data-action="toggle-transcript" data-target="tr-'+l.id+'-m">显示原文</button></div><audio controls preload="metadata" src="./audio/cet4/'+esc(l.model.file)+'"></audio><div class="transcript" id="tr-'+l.id+'-m" hidden>'+esc(l.model.text||"")+'</div></div>':"")+'<div class="recorder-row">'+(window.recording?'<span class="rec-dot"></span><span class="audio-hint">正在录音…</span><button class="btn btn-soft btn-small" data-action="rec-stop">停止录音</button>':'<button class="btn btn-primary btn-small" data-action="rec-start">'+(st.recordUrl?"重新录音":"开始录音跟读")+'</button>')+(st.recordUrl?'<audio controls preload="metadata" src="'+st.recordUrl+'"></audio>':"")+'</div><div class="hint">录音只保存在这台设备的浏览器内存里，刷新页面即消失，不会上传；没有麦克风或浏览器不支持录音时，可点下方按钮用「跟读自评」代替，同样计入通关。</div><div class="exercise-actions" style="margin:10px 0 0"><button class="btn btn-ghost btn-small" data-action="skip-rec">'+(st.recordSkipped?"已选择用跟读自评代替":"没有麦克风？用跟读自评代替")+'</button></div><div class="challenge-label" style="margin:14px 0 6px">自评清单（全部打勾且录过音才算通关）</div><div class="takeaway">'+checks+'</div>'+(done?'<div class="feedback ok">本关已通关。</div>':"")+'</section>';
  }
  const condition='<section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway">'+
   ((l.questions&&l.questions.length)?'<div class="takeaway-item"><span class="'+(st.passed||done?"tick":"")+'">'+(st.passed||done?"✓":"○")+'</span><span>客观题答对率 ≥ '+Math.round((l.passRatio||0.8)*100)+'%</span></div>':"")+
@@ -2521,17 +2153,13 @@ function renderEnglishLesson(l){
 function renderSummary(){
  const done=completedCount(), pct=progressPct(), rate=data.attempts?Math.round(data.correct/data.attempts*100):0, finished=done===levels.length;
  let skills=groups.filter(function(g){return levels.some(function(l){return l.stage===g})}).map(function(g){const ls=levels.filter(function(l){return l.stage===g}), n=ls.filter(isDone).length;return '<div class="skill-row"><span>'+esc(g)+' <span style="color:#9aa5b5">('+n+'/'+ls.length+')</span></span><span class="skill-state">'+(n===ls.length?"已掌握":n?"学习中":"待开始")+'</span></div>'}).join("");
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习档案</div><h1>我的学习总结</h1><p class="subhead">记录每一步进步，也看看下一步可以做什么。</p></div><button class="btn btn-ghost btn-small" data-page="project">7 天项目（'+projectProgress()+'/7）</button><button class="btn btn-ghost btn-small" data-page="mistakes">错题本（'+wrongList().length+'）</button><button class="btn btn-ghost btn-small" data-page="map">← 返回学习地图</button></div>'+
- '<div class="summary-grid">'
-  +'<div class="stat"><div class="stat-icon">⏱</div><div><div class="stat-num">'+Math.floor((todayStat().sec||0)/60)+'</div><div class="stat-label">今日学习分钟</div></div></div>'
-  +'<div class="stat"><div class="stat-icon">🔥</div><div><div class="stat-num">'+streakDays()+'</div><div class="stat-label">连续学习天数</div></div></div>'
-  +'<div class="stat"><div class="stat-icon">📌</div><div><div class="stat-num">'+wrongList().length+'</div><div class="stat-label">待复习错题</div></div></div>'
-  +'<div class="summary-hero"><div class="eyebrow" style="color:#dbe2ff">'+(finished?"学习旅程":"持续成长中")+'</div><h2>'+(finished?"恭喜你，完成全部关卡！":"你的每一次练习都在累积")+'</h2><p>'+(finished?(activeCourse==="c"?"你从程序结构出发，练习了类型、流程、函数、数组、字符串、指针、内存管理、文件、工程实践、数据结构与算法，并完成了综合项目。现在你可以用真实项目继续巩固。":"你走完了地基、听力、阅读、写作、翻译、口语与全真模考，掌握了应试与实用两套能力。接下来保持每周一套模考的节奏，把错题按题型归类复盘。")+"" :"完成 "+done+" 个关卡，已经覆盖 "+pct+"% 的学习路线。继续按自己的节奏前进，已学内容会自动保存在这台设备。")+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(finished?"回顾毕业项目":"继续学习")+' →</button></div><div class="summary-emoji">'+(finished?"🎓":"✦")+'</div></div><div class="panel"><div class="challenge-head"><div class="challenge-label">成长数据</div><span class="chip">'+pct+'%</span></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+' / '+levels.length+'</div><div class="stat-label">已通关关卡</div></div></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">累计学习点</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+rate+'%</div><div class="stat-label">知识快问正确率 · '+data.correct+'/'+data.attempts+'</div></div></div></div></div>'+
- '<div class="exercise-actions" style="margin:2px 0 16px"><span class="audio-hint">每日目标：</span><button class="btn btn-ghost btn-small" data-action="set-goal" data-min="10">10 分钟</button><button class="btn btn-ghost btn-small" data-action="set-goal" data-min="20">20 分钟</button><button class="btn btn-ghost btn-small" data-action="set-goal" data-min="30">30 分钟</button><button class="btn btn-ghost btn-small" data-action="set-goal" data-min="45">45 分钟</button></div>'+'<div class="summary-grid" style="margin-top:18px"><section class="panel"><div class="challenge-head"><div class="challenge-label">技能地图</div><span class="chip">按模块回顾</span></div><div class="skill-list">'+skills+'</div></section><section class="panel"><div class="challenge-head"><div class="challenge-label">'+(finished?"下一阶段建议":"给未来自己的话")+'</div><span class="chip">'+(finished?"继续实践":"保持节奏")+'</span></div><p class="lesson-copy">'+(finished?(activeCourse==="c"?"把学到的内容组合成一个小项目：例如通讯录、命令行记账本或简易文本分析器。为函数补充错误处理、拆分头文件，并用 -Wall -Wextra 检查代码。":"找一段英文材料先裸听、再读原文、复述一遍、写下三句话总结；每周一套模考，把错题按题型归类。"):(activeCourse==="c"?"学编程不是背完所有语法，而是能用合适的工具把问题拆开。先把当前关卡做完，再回头复习卡住的知识点。":"语言能力靠积累：每天 20 分钟精听加跟读，比周末突击三小时更有效。先把当前关卡做完，再回头复习卡住的题型。"))+'</p><div class="takeaway"><div class="takeaway-item"><span class="tick">✓</span><span>'+(activeCourse==="c"?"代码在本机浏览器做结构检查，并可在本机编译运行比对输出":"听力与口语音频来自本地文件，可反复重听")+'</span></div><div class="takeaway-item"><span class="tick">✓</span><span>学习进度自动保存</span></div><div class="takeaway-item"><span class="tick">✓</span><span>可以随时回看已完成课程</span></div></div></section></div>'+
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习档案</div><h1>我的学习总结</h1><p class="subhead">记录每一步进步，也看看下一步可以做什么。</p></div><button class="btn btn-ghost btn-small" data-page="map">← 返回学习地图</button></div>'+
+ '<div class="summary-grid"><div class="summary-hero"><div class="eyebrow" style="color:#dbe2ff">'+(finished?"学习旅程":"持续成长中")+'</div><h2>'+(finished?"恭喜你，完成全部关卡！":"你的每一次练习都在累积")+'</h2><p>'+(finished?(activeCourse==="c"?"你从程序结构出发，练习了类型、流程、函数、数组、字符串、指针、内存管理、文件、工程实践、数据结构与算法，并完成了综合项目。现在你可以用真实项目继续巩固。":"你走完了地基、听力、阅读、写作、翻译、口语与全真模考，掌握了应试与实用两套能力。接下来保持每周一套模考的节奏，把错题按题型归类复盘。")+"" :"完成 "+done+" 个关卡，已经覆盖 "+pct+"% 的学习路线。继续按自己的节奏前进，已学内容会自动保存在这台设备。")+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(finished?"回顾毕业项目":"继续学习")+' →</button></div><div class="summary-emoji">'+(finished?"🎓":"✦")+'</div></div><div class="panel"><div class="challenge-head"><div class="challenge-label">成长数据</div><span class="chip">'+pct+'%</span></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+' / '+levels.length+'</div><div class="stat-label">已通关关卡</div></div></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">累计学习点</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+rate+'%</div><div class="stat-label">知识快问正确率 · '+data.correct+'/'+data.attempts+'</div></div></div></div></div>'+
+ '<div class="summary-grid" style="margin-top:18px"><section class="panel"><div class="challenge-head"><div class="challenge-label">技能地图</div><span class="chip">按模块回顾</span></div><div class="skill-list">'+skills+'</div></section><section class="panel"><div class="challenge-head"><div class="challenge-label">'+(finished?"下一阶段建议":"给未来自己的话")+'</div><span class="chip">'+(finished?"继续实践":"保持节奏")+'</span></div><p class="lesson-copy">'+(finished?(activeCourse==="c"?"把学到的内容组合成一个小项目：例如通讯录、命令行记账本或简易文本分析器。为函数补充错误处理、拆分头文件，并用 -Wall -Wextra 检查代码。":"找一段英文材料先裸听、再读原文、复述一遍、写下三句话总结；每周一套模考，把错题按题型归类。"):(activeCourse==="c"?"学编程不是背完所有语法，而是能用合适的工具把问题拆开。先把当前关卡做完，再回头复习卡住的知识点。":"语言能力靠积累：每天 20 分钟精听加跟读，比周末突击三小时更有效。先把当前关卡做完，再回头复习卡住的题型。"))+'</p><div class="takeaway"><div class="takeaway-item"><span class="tick">✓</span><span>'+(activeCourse==="c"?"代码在本机浏览器做结构检查，并可在本机编译运行比对输出":"听力与口语音频来自本地文件，可反复重听")+'</span></div><div class="takeaway-item"><span class="tick">✓</span><span>学习进度自动保存</span></div><div class="takeaway-item"><span class="tick">✓</span><span>可以随时回看已完成课程</span></div></div></section></div>'+
  '<div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
 }
 function openLevel(id){const l=levels.find(function(x){return x.id===id});if(!l)return;if(!unlocked(l)&&!isDone(l)){toast("先完成上一关，就能解锁这里。");return}activeLevel=l;page="lesson";const quizDone=isDone(l)||!!data.quizRewards[l.id];selectedOption=quizDone?l.answer:null;quizPassed=quizDone;codePassed=isDone(l);hintVisible=false;solutionVisible=false;window.quizAnswered=quizDone;window.codeFeedback="";window.codeDraft=data.drafts[l.id]||"";window.taskState=(window.taskState&&window.taskState.levelId===l.id)?window.taskState:null;render()}
-function awardForQuiz(){if(quizPassed){toast("这道题的奖励已经领取，不会重复加分。");return}data.attempts++;if(selectedOption===activeLevel.answer){quizPassed=true;const firstCorrect=!data.quizRewards[activeLevel.id];if(firstCorrect){data.quizRewards[activeLevel.id]=true;data.correct++;data.xp+=10;toast("答对了，学习点 +10")}else{toast("答对了，这道题的学习点已领取。")}save();if(codePassed)maybeComplete();}else{try{recordWrong(activeCourse,activeLevel.id,0,selectedOption)}catch(e){}save();}window.quizAnswered=true;render()}
+function awardForQuiz(){if(quizPassed){toast("这道题的奖励已经领取，不会重复加分。");return}data.attempts++;if(selectedOption===activeLevel.answer){quizPassed=true;const firstCorrect=!data.quizRewards[activeLevel.id];if(firstCorrect){data.quizRewards[activeLevel.id]=true;data.correct++;data.xp+=10;toast("答对了，学习点 +10")}else{toast("答对了，这道题的学习点已领取。")}save();if(codePassed)maybeComplete();}else{save();}window.quizAnswered=true;render()}
 function tokenizeChallengeC(source){
  const tokens=[],ops=['<<=','>>=','...','->','++','--','&&','||','==','!=','<=','>=','+=','-=','*=','/=','%=','&=','|=','^=','<<','>>'];let i=0;
  while(i<source.length){const c=source[i];if(/\s/.test(c)){i++;continue}
@@ -2684,7 +2312,7 @@ function checkCode(){
  const ta=document.getElementById("codeAnswer");if(!ta)return;
  window.codeDraft=ta.value;saveEditorValue(ta);
  const result=validateChallenge(activeLevel,ta.value);
- codePassed=result.ok;window.codeFeedback=result.ok?result.message:(result.message+(function(){try{var h=diagnoseCode(activeLevel,ta.value);return h.length?"\n可能原因：\n· "+h.join("\n· "):""}catch(e){return ""}})());
+ codePassed=result.ok;window.codeFeedback=result.message;
  maybeComplete();
 }
 function playVictoryAnimation(level){
@@ -2748,7 +2376,7 @@ function checkCode(){
  const ta=document.getElementById("codeAnswer");if(!ta)return;
  window.codeDraft=ta.value;saveEditorValue(ta);
  const result=validateChallenge(activeLevel,ta.value);
- codePassed=result.ok;window.codeFeedback=result.ok?result.message:(result.message+(function(){try{var h=diagnoseCode(activeLevel,ta.value);return h.length?"\n可能原因：\n· "+h.join("\n· "):""}catch(e){return ""}})());
+ codePassed=result.ok;window.codeFeedback=result.message;
  if(codePassed&&activeLevel.expectedOutput&&!cOutputOk(activeLevel)){
   window.codeFeedback=result.message+" 别忘了把本机运行结果粘贴到下方「运行结果比对」里。";
  }
@@ -2782,7 +2410,6 @@ function handleClick(e){
  if(a==="copy-solution"){if(!activeLevel)return;if(!isDone(activeLevel)&&!answerUnlocked){openAnswerDialog();return}copyText(activeLevel.solution||"");return}
  if(a==="check-code")checkCode()
  if(a==="check-output"){checkRunOutput();return}
- if(a==="insert-snippet"){insertSnippet(action.dataset.snippet||"");return}
  if(a==="insert-template"){const ta=document.getElementById("codeAnswer");if(!ta)return;if(ta.value.trim()){toast("编辑器已有内容，模板不会覆盖。");ta.focus();return}const template="#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}";ta.value=template;ta.dispatchEvent(new Event("input",{bubbles:true}));ta.focus();const caret=template.indexOf("    \n")+4;ta.setSelectionRange(caret,caret);updateEditor();return}
  if(a==="make-save-code"){makeSaveCode(false);return}
  if(a==="make-save-link"){makeSaveCode(true);return}
@@ -2790,14 +2417,6 @@ function handleClick(e){
  if(a==="copy-save-link"){var __c2=document.getElementById("saveCodeBox");if(__c2)copyTextSmart(saveLinkFrom(__c2.value||""));return}
  if(a==="import-save-code"){importSaveFromBox();return}
  if(a==="copy-qq-group"){copyTextSmart(CONTACT_QQ_GROUP);return}
- if(a==="proj-toggle"){var pj=loadProject();var d=Number(action.dataset.day);pj.done[d]=!pj.done[d];saveProject(pj);render();toast(pj.done[d]?"Day "+d+" 完成，继续保持。":"已撤销 Day "+d+"。");return}
- if(a==="makeup"){if(useMakeUp())render();return}
- if(a==="plan-set"){var pp=loadPlan();pp[action.dataset.k]=action.dataset.v;savePlan(pp);renderStartGuide();return}
- if(a==="plan-go"){var plan=buildPlan(loadPlan());setCourse(plan.first);openLevel((courseLevels[plan.first]||[])[0].id);return}
- if(a==="wrong-go"){var wc=action.dataset.cid||activeCourse;setCourse(wc);openLevel(Number(action.dataset.lid));return}
- if(a==="wrong-done"){wrongReviewed(action.dataset.cid||activeCourse,Number(action.dataset.lid),Number(action.dataset.qi));render();toast("已记一次复习，下次复习时间已更新。");return}
- if(a==="wrong-clear"){clearWrongDone();render();return}
- if(a==="set-goal"){var gs=loadStats();gs.goalMin=Number(action.dataset.min)||20;saveStats(gs);render();toast("每日目标已设为 "+gs.goalMin+" 分钟。");return}
  if(a==="export-progress"){exportProgress();return}
  if(a==="import-progress"){var __pf=document.getElementById("progressFile");if(__pf)__pf.click();else toast("找不到文件选择控件，请刷新页面。");return}
  if(a==="reset-progress"){openResetDialog();return}
@@ -2960,8 +2579,6 @@ function apBuild(){
 }
 /* 定义完成后再初始化外观面板 */
 try{apBuild()}catch(e){console.error("外观面板初始化失败",e)}
-try{startStudyTimer();updateDailyStat()}catch(e){}
-
 
 
 /* ==== 指针跟随倾斜（卡片随鼠标位置转动） ==== */
