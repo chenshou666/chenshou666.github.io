@@ -1507,6 +1507,73 @@ html body :is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challe
   transform:none!important;animation:none!important;
   translate:none!important;rotate:none!important;scale:none!important;
 }
+
+/* ==== iOS 液态玻璃质感升级（白色玻璃卡片）==== */
+:is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.side-card,.guide-card,.skill-row,.save-box,.quiz-item,.feedback-panel,.proj-card) {
+  background-color:transparent!important;
+  background-image:
+    radial-gradient(120% 90% at 16% -12%, rgba(255,255,255,.60), rgba(255,255,255,0) 58%),
+    linear-gradient(155deg,
+      rgba(255,255,255,calc(var(--glass-alpha) + .06)) 0%,
+      rgba(255,255,255,calc(var(--glass-alpha) - .12)) 58%,
+      rgba(255,255,255,calc(var(--glass-alpha) + .02)) 100%)!important;
+  -webkit-backdrop-filter:blur(calc(var(--glass-blur) + 6px)) saturate(190%) brightness(1.05);
+  backdrop-filter:blur(calc(var(--glass-blur) + 6px)) saturate(190%) brightness(1.05);
+  border:1px solid rgba(255,255,255,.78)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(255,255,255,.26),
+    inset 0 0 0 1px rgba(255,255,255,.16),
+    0 1px 2px rgba(20,44,86,.05),
+    0 12px 32px rgba(20,44,86,.12),
+    0 34px 74px rgba(20,44,86,.16)!important;
+}
+/* 悬停：整块更亮、光晕更强（仍无位移） */
+:is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.side-card,.guide-card,.skill-row,.save-box,.quiz-item,.feedback-panel,.proj-card):hover {
+  background-image:
+    radial-gradient(120% 90% at 16% -12%, rgba(255,255,255,.78), rgba(255,255,255,0) 62%),
+    linear-gradient(155deg,
+      rgba(255,255,255,calc(var(--glass-alpha) + .20)) 0%,
+      rgba(255,255,255,calc(var(--glass-alpha) + .02)) 58%,
+      rgba(255,255,255,calc(var(--glass-alpha) + .16)) 100%)!important;
+  border-color:rgba(255,255,255,.95)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 0 rgba(255,255,255,.3),
+    0 1px 2px rgba(20,44,86,.05),
+    0 18px 44px rgba(20,44,86,.16),
+    0 44px 96px rgba(20,44,86,.20)!important;
+}
+/* 深色星球版 */
+html[data-sky="night"] :is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.side-card,.guide-card,.skill-row,.save-box,.quiz-item,.feedback-panel,.proj-card) {
+  background-image:
+    radial-gradient(120% 90% at 16% -12%, rgba(255,255,255,.14), rgba(255,255,255,0) 60%),
+    linear-gradient(155deg,
+      rgba(255,255,255,calc(var(--glass-alpha-n) + .06)) 0%,
+      rgba(255,255,255,calc(var(--glass-alpha-n) - .02)) 60%,
+      rgba(255,255,255,calc(var(--glass-alpha-n) + .04)) 100%)!important;
+  border-color:rgba(255,255,255,.26)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    inset 0 -1px 0 rgba(255,255,255,.06),
+    0 14px 36px rgba(0,0,0,.42),
+    0 34px 80px rgba(0,0,0,.5)!important;
+}
+html[data-sky="night"] :is(.level-card,.course-card,.course-entry,.stat,.panel,.track,.challenge-card,.exercise,.side-card,.guide-card,.skill-row,.save-box,.quiz-item,.feedback-panel,.proj-card):hover {
+  background-image:
+    radial-gradient(120% 90% at 16% -12%, rgba(255,255,255,.22), rgba(255,255,255,0) 62%),
+    linear-gradient(155deg,
+      rgba(255,255,255,calc(var(--glass-alpha-n) + .14)) 0%,
+      rgba(255,255,255,calc(var(--glass-alpha-n) + .04)) 100%)!important;
+  border-color:rgba(255,255,255,.4)!important;
+}
+/* 特殊情况保持原样 */
+.proj-card.done{
+  background-image:linear-gradient(158deg,rgba(255,255,255,.62),rgba(226,252,242,.6))!important;
+}
+html[data-sky="night"] .proj-card.done{
+  background-image:linear-gradient(158deg,rgba(80,225,175,.16),rgba(80,225,175,.1))!important;
+}
 </style>
 </head>
 <body class="splash-active">
