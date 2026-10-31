@@ -1420,6 +1420,50 @@ html[data-sky="night"] .next-bar .nb-ok{color:#7ef3d0}
   border-radius:99px;padding:7px 14px}
 .feedback-hint{margin-top:10px;font-size:11.5px;line-height:1.75}
 html[data-sky="night"] .feedback-soon{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+
+/* ==== 知识点重点标记样式 ==== */
+.lesson-copy .kp-term,.takeaway-item .kp-term{
+  background:linear-gradient(180deg,transparent 56%,rgba(47,124,246,.24) 56%);
+  border-radius:3px;padding:0 2px;font-weight:650;color:#152238;
+}
+.lesson-copy .kp-code,.takeaway-item .kp-code{
+  font-family:"Cascadia Code",Consolas,"SF Mono",monospace;font-size:.92em;
+  background:rgba(28,44,78,.07);border:1px solid rgba(28,44,78,.14);border-radius:6px;
+  padding:1px 5px;color:#17305a;white-space:pre;
+}
+.kp-strong{font-weight:750;color:#0f1c33;background:linear-gradient(180deg,transparent 58%,rgba(47,124,246,.3) 58%);padding:0 2px;border-radius:3px}
+.kp-hl{background:rgba(47,124,246,.16);border-radius:4px;padding:0 3px}
+.kp-warn{background:rgba(255,186,74,.32);border-bottom:2px solid rgba(240,170,60,.85);border-radius:3px;padding:0 2px;font-weight:650}
+.kp-warn-line{
+  display:block;background:rgba(255,186,74,.14);border-left:3px solid rgba(240,170,60,.8);
+  border-radius:7px;padding:4px 11px;margin:4px 0;
+}
+/* 夜空 */
+html[data-sky="night"] .lesson-copy .kp-term,html[data-sky="night"] .takeaway-item .kp-term{color:#dbe8ff;background:linear-gradient(180deg,transparent 56%,rgba(90,160,255,.3) 56%)}
+html[data-sky="night"] .lesson-copy .kp-code,html[data-sky="night"] .takeaway-item .kp-code{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#cfe4ff}
+html[data-sky="night"] .kp-strong{color:#f1f6ff;background:linear-gradient(180deg,transparent 58%,rgba(90,160,255,.35) 58%)}
+html[data-sky="night"] .kp-warn-line{background:rgba(255,186,74,.14);border-left-color:rgba(240,170,60,.7)}
+/* ==== 7 天项目 ==== */
+.proj-progress{margin:6px 0 18px}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.proj-card{padding:18px;border-radius:18px;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.8);
+  box-shadow:0 1px 2px rgba(20,44,86,.05),0 8px 22px rgba(20,44,86,.08);display:flex;flex-direction:column}
+.proj-card.done{background:linear-gradient(158deg,rgba(255,255,255,.62),rgba(226,252,242,.6));border-color:rgba(120,215,180,.6)}
+.proj-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.proj-day{font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent)}
+.proj-state{font-size:11px;font-weight:700;color:var(--ink-3)}
+.proj-card.done .proj-state{color:#0aa578}
+.proj-card h3{font-size:14.5px;font-weight:750;color:var(--ink);margin:0 0 7px;line-height:1.45}
+.proj-goal{font-size:12.5px;color:var(--ink-2);line-height:1.75;margin:0 0 8px;flex:1}
+.proj-meta{font-size:10.5px;color:var(--ink-3);margin-bottom:8px}
+.proj-detail{margin:4px 0 10px}
+.proj-detail summary{font-size:11.5px;font-weight:650;color:var(--accent);cursor:pointer;padding:5px 0}
+.proj-why{font-size:12px;color:var(--ink-2);line-height:1.75;padding:9px 11px;margin:6px 0;
+  background:rgba(47,124,246,.08);border-left:3px solid rgba(47,124,246,.45);border-radius:8px}
+.proj-detail .codebox{margin-top:8px}
+html[data-sky="night"] .proj-card{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+html[data-sky="night"] .proj-card.done{background:rgba(80,225,175,.14);border-color:rgba(120,235,195,.36)}
+
 </style>
 </head>
 <body class="splash-active">
@@ -1437,6 +1481,7 @@ html[data-sky="night"] .feedback-soon{background:rgba(255,255,255,.1);border-col
       <button class="nav-btn active" data-page="courses"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5"/><path d="M6 9.5V20h12V9.5"/><path d="M9.5 20v-5h5v5"/></svg></span><span>学习课程</span></button>
       <button class="nav-btn" data-page="practice"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M10 8.8 15.6 12 10 15.2Z"/></svg></span><span>继续挑战</span></button>
       <button class="nav-btn" data-page="summary"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10.5"/><path d="M12 20V4.5"/><path d="M19 20v-6.5"/></svg></span><span>我的总结</span></button>
+      <button class="nav-btn" data-page="project"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v12H4z"/><path d="M8 7V5h8v2"/><path d="M8 12h8"/><path d="M8 15.5h5"/></svg></span><span>7 天项目</span></button>
       <button class="nav-btn" data-page="about"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 10.5v5.5"/><path d="M12 7.8h.01"/></svg></span><span>关于 / 许可</span></button>
     </nav>
     <div class="side-bottom">
@@ -1638,13 +1683,39 @@ function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t
 function copyText(text){const done=function(){toast("标准答案已复制到剪贴板。")};const fb=function(){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta);done()};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fb)}else{fb()}}
 function formatSample(s){return s}
 /* 注：内容统一用真实换行（JS 的 \n 转义），不再需要旧的字面量 \\n 还原逻辑 */
+
+/* ==== 知识点重点标记 ==== */
+var LESSON_CODE_RE=/#include\s*&lt;[^&]{1,40}&gt;|#define\b|-std=c\d+|\b(?:printf|scanf|fgets|fputs|fopen|fclose|malloc|free|sizeof|typedef|struct|union|enum|return|while|for|switch|break|continue|goto|strlen|strcpy|strcmp)\b|\b(?:stdio|stdbool|stdint|stdlib|string|math|ctype|time)\.h\b|\b(?:int|char|float|double|long|short|void|unsigned|signed|const|static|extern|volatile)\b|\b(?:main|argc|argv)\b|\b(?:gcc|F11|F9|Dev-C\+\+)\b|%(?:d|s|f|lf|ld|c|u|x|p)|\b[A-Za-z0-9_]+\.(?:c|h|exe)\b|\b0x[0-9a-fA-F]+\b|\\n/g;
+function fmtLesson(raw){
+ if(raw===undefined||raw===null)return "";
+ var out=esc(String(raw));
+ out=out.replace(/\*\*([^*\n]{1,60})\*\*/g,'<mark class="kp-strong">$1</mark>');
+ out=out.replace(/==([^=\n]{1,60})==/g,'<mark class="kp-hl">$1</mark>');
+ out=out.replace(/!!([^!\n]{1,60})!!/g,'<span class="kp-warn">$1</span>');
+ out=out.replace(/「([^」\n]{1,50})」/g,'<span class="kp-term">「$1」</span>');
+ out=out.replace(LESSON_CODE_RE,function(m){return '<code class="kp-code">'+m+'</code>'});
+ return out.split("\n").map(function(line){
+  var plain=line.replace(/<[^>]*>/g,"");
+  if(/^\s*(注意|易错|常见错误|坑|不要|必须|一定要|记住|核心|关键|重点)/.test(plain))return '<span class="kp-warn-line">'+line+'</span>';
+  return line;
+ }).join("\n");
+}
+function fmtInline(raw){
+ if(raw===undefined||raw===null)return "";
+ var out=esc(String(raw));
+ out=out.replace(/\*\*([^*\n]{1,60})\*\*/g,'<mark class="kp-strong">$1</mark>');
+ out=out.replace(/「([^」\n]{1,50})」/g,'<span class="kp-term">「$1」</span>');
+ out=out.replace(LESSON_CODE_RE,function(m){return '<code class="kp-code">'+m+'</code>'});
+ return out;
+}
+
 function renderBeginnerGuide(l){
  const g=l.beginner;if(!g)return "";
  function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
  return '<div class="beginner-guide"><div class="guide-heading">零基础拆解 · 不用急着背</div><div class="guide-idea"><div class="challenge-label">先抓住这一件事</div><p>'+esc(g.idea)+'</p></div><div class="guide-columns">'+list("示例逐步读",g.read)+list("挑战按这几步写",g.steps)+'</div><div class="guide-pitfall"><strong>新手易错点</strong><span>'+esc(g.pitfall)+'</span></div></div>';
 }
 function switchPage(p){page=p;activeLevel=null;render()}
-function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
+function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",project:"HT LAB  /  7 天项目",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
 
 /* ==== 进度文件包：导出 / 导入（只含学习数据，不含个人信息） ==== */
 var CONTACT_QQ_GROUP="1129793963";/* 交流群号：填这里（例："123456789"），留空显示「筹备中」 */
@@ -1834,7 +1905,7 @@ function render(){
  var __changed=__k!==__lastViewKey;__lastViewKey=__k;
  if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
   var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
- navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else{renderSummary();ensureProgressTools()}}
+ navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="project")renderProject();else{renderSummary();ensureProgressTools()}}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
@@ -1874,7 +1945,7 @@ function renderAbout(){
 function renderPractice(){
  const l=nextLevel();
  if(completedCount()===levels.length){page="summary";renderSummary();navTitle();return}
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">实战训练</div><h1>继续你的下一关</h1><p class="subhead">'+esc(activeCourse==="c"?"专注一件小事，写出一段自己的 C 代码。":"专注一个场景，练一段听说读写。")+'</p></div><span class="chip">当前 '+completedCount()+' / '+levels.length+' 关</span></div><div class="panel"><div class="lesson-title-row"><div class="lesson-badge">'+String(l.id).padStart(2,"0")+'</div><div><h2>'+esc(l.title)+'</h2><div class="meta-line">'+esc(l.stage)+' · 约 '+l.minutes+' 分钟</div></div></div><p class="lesson-copy" style="margin-top:19px">'+esc(l.gist)+'</p><p class="lesson-copy">'+esc(l.lesson)+'</p><button class="btn btn-primary" data-level="'+l.id+'">进入本关 <span>→</span></button></div>';
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">实战训练</div><h1>继续你的下一关</h1><p class="subhead">'+esc(activeCourse==="c"?"专注一件小事，写出一段自己的 C 代码。":"专注一个场景，练一段听说读写。")+'</p></div><span class="chip">当前 '+completedCount()+' / '+levels.length+' 关</span></div><div class="panel"><div class="lesson-title-row"><div class="lesson-badge">'+String(l.id).padStart(2,"0")+'</div><div><h2>'+esc(l.title)+'</h2><div class="meta-line">'+esc(l.stage)+' · 约 '+l.minutes+' 分钟</div></div></div><p class="lesson-copy" style="margin-top:19px">'+fmtInline(l.gist)+'</p><p class="lesson-copy">'+fmtLesson(l.lesson)+'</p><button class="btn btn-primary" data-level="'+l.id+'">进入本关 <span>→</span></button></div>';
 }
 function renderLesson(){
  const l=activeLevel,done=isDone(l);
@@ -1896,16 +1967,16 @@ function renderCodeLesson(l,done){
   const opts=(l.options||[]).map(function(o,i){let cl="option";if(selectedOption===i){cl+=" selected";if(quizPassed)cl+=" correct";else if(window.quizAnswered)cl+=" wrong"}return '<button class="'+cl+'" data-option="'+i+'">'+String.fromCharCode(65+i)+'. '+esc(o)+'</button>'}).join("");
   quizHtml='<section class="panel challenge-card"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">✦</span>知识快问</div><span class="chip">答对 +10 点</span></div><div class="quiz-question">'+esc(l.quiz)+'</div><div class="option-list">'+opts+'</div>'+(window.quizAnswered?'<div class="feedback '+(quizPassed?"ok":"no")+'">'+(quizPassed?"回答正确！":"再想一想。 ")+esc(l.explain||"")+'</div>':"")+'</section>';
  }
- const exampleHtml=code?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▤</span>示例代码</div><span class="chip">建议自己敲一遍</span></div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>example.c</span></div><pre>'+highlightC(code)+'</pre></div>'+(out?'<div class="challenge-label" style="margin:14px 0 6px">这段代码的运行结果</div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>运行输出</span></div><pre>'+esc(out)+'</pre></div>':"")+(exExplain?'<p class="lesson-copy" style="margin-top:13px">'+esc(exExplain)+'</p>':"")+'</section>':"";
- const pitHtml=(l.pitfalls&&l.pitfalls.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#e2725b">⚠</span>常见陷阱</div><span class="chip">先躲开这些</span></div>'+l.pitfalls.map(function(p){return '<div class="takeaway-item" style="margin:9px 0"><span style="color:#e2725b;font-weight:800">!</span><span>'+esc(p)+'</span></div>'}).join("")+'</section>':"";
- const masteryHtml=(l.mastery&&l.mastery.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label">掌握标准</div><span class="chip">学完你应该能做到</span></div>'+l.mastery.map(function(m){return '<div class="takeaway-item" style="margin:9px 0"><span class="tick">✓</span><span>'+esc(m)+'</span></div>'}).join("")+'</section>':"";
+ const exampleHtml=code?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▤</span>示例代码</div><span class="chip">建议自己敲一遍</span></div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>example.c</span></div><pre>'+highlightC(code)+'</pre></div>'+(out?'<div class="challenge-label" style="margin:14px 0 6px">这段代码的运行结果</div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>运行输出</span></div><pre>'+esc(out)+'</pre></div>':"")+(exExplain?'<p class="lesson-copy" style="margin-top:13px">'+fmtLesson(exExplain)+'</p>':"")+'</section>':"";
+ const pitHtml=(l.pitfalls&&l.pitfalls.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label"><span style="color:#e2725b">⚠</span>常见陷阱</div><span class="chip">先躲开这些</span></div>'+l.pitfalls.map(function(p){return '<div class="takeaway-item" style="margin:9px 0"><span style="color:#e2725b;font-weight:800">!</span><span>'+fmtInline(p)+'</span></div>'}).join("")+'</section>':"";
+ const masteryHtml=(l.mastery&&l.mastery.length)?'<section class="panel"><div class="challenge-head"><div class="challenge-label">掌握标准</div><span class="chip">学完你应该能做到</span></div>'+l.mastery.map(function(m){return '<div class="takeaway-item" style="margin:9px 0"><span class="tick">✓</span><span>'+fmtInline(m)+'</span></div>'}).join("")+'</section>':"";
  const runHtml=l.expectedOutput?'<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">▶</span>运行结果比对</div><span class="chip">'+(outOk?"已一致":"待比对")+'</span></div><p class="challenge-copy">把上面这段程序（或你自己写的版本）在本机编译运行——Dev-C++ 按 F11 编译运行，命令行用 gcc 文件名.c -o 程序名 再运行——然后把程序输出的内容<strong>原样</strong>粘贴到下面。逐行对比一致才算通过，行尾空格可以忽略。</p><div class="challenge-label" style="margin:10px 0 6px">预期输出</div><div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>expected output</span></div><pre>'+esc(l.expectedOutput)+'</pre></div><textarea class="task-input" id="runOutput" spellcheck="false" style="min-height:110px" placeholder="在这里粘贴你运行时看到的输出…">'+esc((data.runOutputs&&data.runOutputs[l.id])||"")+'</textarea><div class="exercise-actions"><button class="btn btn-primary btn-small" data-action="check-output">比对运行结果</button></div>'+((data.runOutputs&&data.runOutputs[l.id])?'<div class="feedback '+(outOk?"ok":"no")+'">'+(outOk?"✓ ":"✗ ")+esc(compareOutput(l.expectedOutput,data.runOutputs[l.id]).message)+'</div>':"")+'</section>':"";
  const gate=(ok,label)=>'<div class="takeaway-item"><span class="'+(ok?"tick":"")+'">'+(ok?"✓":"○")+'</span><span>'+label+'</span></div>';
- const sidebar='<aside class="lesson-main"><section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway">'+gate(done||quizOk,qs.length?("知识快问答对 "+need+" 题以上"):"答对知识快问")+gate(done||codePassed,"代码通过结构检查")+(l.expectedOutput?gate(done||outOk,"运行结果与预期一致"):"")+gate(done,"获得学习点并解锁下一关")+'</div><div class="progress-bar" style="margin-top:18px"><i style="width:'+((Number(done||quizOk)+Number(done||codePassed)+Number(!l.expectedOutput||done||outOk))/(l.expectedOutput?3:2)*100)+'%"></i></div></section>'+masteryHtml+'<section class="panel"><div class="challenge-head"><div class="challenge-label">核心要点</div><span class="chip">速览</span></div>'+l.takeaways.map(function(t){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</section><section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside>';
+ const sidebar='<aside class="lesson-main"><section class="panel"><div class="challenge-head"><div class="challenge-label">本关通关条件</div><span class="chip">'+(done?"已完成":"待完成")+'</span></div><div class="takeaway">'+gate(done||quizOk,qs.length?("知识快问答对 "+need+" 题以上"):"答对知识快问")+gate(done||codePassed,"代码通过结构检查")+(l.expectedOutput?gate(done||outOk,"运行结果与预期一致"):"")+gate(done,"获得学习点并解锁下一关")+'</div><div class="progress-bar" style="margin-top:18px"><i style="width:'+((Number(done||quizOk)+Number(done||codePassed)+Number(!l.expectedOutput||done||outOk))/(l.expectedOutput?3:2)*100)+'%"></i></div></section>'+masteryHtml+'<section class="panel"><div class="challenge-head"><div class="challenge-label">核心要点</div><span class="chip">速览</span></div>'+l.takeaways.map(function(t){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+fmtInline(t)+'</span></div>'}).join("")+'</section><section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside>';
  const challengeFeedback=window.codeFeedback?'<div class="feedback '+(codePassed?"ok":"no")+'">'+esc(window.codeFeedback)+'</div>':"";
  const lockMsg=done?'<div class="feedback ok">本关已通关。可以回看内容，也可以继续下一关。</div>':"";
  document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.stage||l.module||"")+' · 第 '+String(l.id).padStart(2,"0")+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
- '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 读透原理再动手写</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(t)+'</span></div>'}).join("")+'</div></section>'+
+ '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关知识点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 读透原理再动手写</div></div></div><p class="lesson-copy" style="margin:18px 0">'+fmtLesson(l.lesson)+'</p>'+renderBeginnerGuide(l)+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(t){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+fmtInline(t)+'</span></div>'}).join("")+'</div></section>'+
  exampleHtml+pitHtml+quizHtml+
  '<section class="panel challenge-card exercise"><div class="challenge-head"><div class="challenge-label"><span style="color:#6176ed">⌘</span>代码挑战</div><span class="chip">完成 +30 点</span></div><p class="challenge-copy">'+esc(l.mission)+'</p>'+editorMarkup(window.codeDraft||l.starter||"")+'<div class="exercise-actions"><button class="btn btn-soft btn-small" data-action="insert-template">插入 main 框架</button><button class="btn btn-primary btn-small" data-action="check-code">检查代码</button><button class="btn btn-ghost btn-small" data-action="hint">'+(hintVisible?"收起提示":"查看提示")+'</button><button class="btn btn-ghost btn-small" data-action="toggle-solution">'+(solutionVisible?"收起标准答案":((done||answerUnlocked)?"查看标准答案":"🔒 查看标准答案"))+'</button>'+(done?'<button class="btn btn-primary btn-small" data-action="continue">下一关 →</button>':"")+'</div>'+(hintVisible?'<div class="hint">提示：'+esc(l.hint)+'<br><span style="color:#a0a9b7">本地检查会按真实 C 语法核对括号、分号、语句结构，再核对本关要求的写法；注释和字符串里的关键词不算通过。它不等同于编译器，写完请务必在本机编译运行一次。</span></div>':"")+(solutionVisible?'<div class="codebox" style="margin-top:13px"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>answer.c · 标准答案</span><button class="btn btn-soft btn-small" style="padding:4px 9px;font-size:10px" type="button" data-action="copy-solution">复制答案</button></div><pre>'+highlightC(l.solution||"")+'</pre><div class="hint">标准答案仅供参考——建议先自己写完并通过检查，再看答案对照。</div></div>':"")+challengeFeedback+lockMsg+'</section>'+runHtml+'</div>'+sidebar+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
  startTaskTimer(l);
@@ -2098,13 +2169,58 @@ function renderEnglishLesson(l){
   '<div class="takeaway-item"><span class="'+(done?"tick":"")+'">'+(done?"✓":"○")+'</span><span>获得本关学习点并解锁后续</span></div></div></section>';
  const side='<aside class="lesson-main">'+condition+'<section class="panel"><div class="challenge-head"><div class="challenge-label">核心要点</div><span class="chip">速览</span></div>'+l.takeaways.map(function(x){return '<div class="takeaway-item" style="margin:10px 0"><span class="tick">✓</span><span>'+esc(x)+'</span></div>'}).join("")+'</section><section class="panel"><div class="challenge-label" style="margin-bottom:10px">学习路线</div><div style="font-size:12px;color:#8490a2">'+completedCount()+' / '+levels.length+' 关完成</div><div class="progress-bar"><i style="width:'+progressPct()+'%"></i></div><button class="btn btn-ghost btn-small" data-page="map">查看全部关卡</button></section></aside>';
  document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(l.module||l.stage)+' · 第 '+(levels.indexOf(l)+1)+' 关</div><h1>'+esc(l.title)+'</h1><p class="subhead">'+esc(l.gist)+'</p></div><button class="btn btn-ghost btn-small" data-action="back">← 返回路线</button></div>'+
- '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关要点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 看完要点后完成任务</div></div></div><p class="lesson-copy" style="margin:18px 0">'+esc(l.lesson)+'</p>'+(l.usage?'<div class="hint" style="margin-bottom:12px"><b>能用在哪儿：</b>'+esc(l.usage)+'</div>':"")+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(x){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(x)+'</span></div>'}).join("")+'</div></section>'+material+task+'</div>'+side+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
+ '<div class="lesson-layout"><div class="lesson-main"><section class="panel"><div class="lesson-title-row"><div class="lesson-badge">学</div><div><h2>本关要点</h2><div class="meta-line">建议用时 '+l.minutes+' 分钟 · 看完要点后完成任务</div></div></div><p class="lesson-copy" style="margin:18px 0">'+fmtLesson(l.lesson)+'</p>'+(l.usage?'<div class="hint" style="margin-bottom:12px"><b>能用在哪儿：</b>'+esc(l.usage)+'</div>':"")+'<div class="takeaway" style="margin-top:16px">'+l.takeaways.map(function(x){return '<div class="takeaway-item"><span class="tick">✓</span><span>'+esc(x)+'</span></div>'}).join("")+'</div></section>'+material+task+'</div>'+side+'</div><div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
  startTaskTimer(l);
 }
+/* ==== 7 天小作品支线：控制台记账本 ==== */
+var PROJECT_KEY="cquest.project.v1";
+var PROJECT_DAYS=[
+ {d:1,title:"跑起来：能输入、能输出",goal:"写一个程序：输出一行欢迎语，再读入一个金额并原样打印出来。",
+  learn:"第 01、04 关（程序结构、输入输出）",code:'#include <stdio.h>\n\nint main(void) {\n    double n;\n    printf("记账本 v0.1\\n请输入一笔金额：");\n    scanf("%lf", &n);\n    printf("已记录：%.2f\\n", n);\n    return 0;\n}',why:"这一步把「程序能和我对话」跑通，后面所有功能都建立在这上面。"},
+ {d:2,title:"存住数据：数组",goal:"把 5 笔金额存进数组，最后统一打印并算总和。",
+  learn:"第 25–32 关（数组与字符串）",code:'#include <stdio.h>\n\nint main(void) {\n    double a[5];\n    int i;\n    for (i = 0; i < 5; i++) scanf("%lf", &a[i]);\n    double sum = 0;\n    for (i = 0; i < 5; i++) { printf("%.2f\\n", a[i]); sum += a[i]; }\n    printf("合计：%.2f\\n", sum);\n    return 0;\n}',why:"从「一次一笔」升级到「一次一批」，这是记账功能的地基。"},
+ {d:3,title:"加分类：字符串与循环",goal:"每笔记录带一个分类（food/transport/other），并按分类统计金额。",
+  learn:"第 31–32、33–40 关（字符串、循环）",code:'#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char cat[5][10] = {"food","transport","other","food","other"};\n    double amt[5] = {12.5, 3, 28, 9.9, 15};\n    double sum[3] = {0,0,0};\n    for (int i = 0; i < 5; i++) {\n        if (strcmp(cat[i], "food") == 0) sum[0] += amt[i];\n        else if (strcmp(cat[i], "transport") == 0) sum[1] += amt[i];\n        else sum[2] += amt[i];\n    }\n    printf("food %.2f  transport %.2f  other %.2f\\n", sum[0], sum[1], sum[2]);\n    return 0;\n}',why:"账本的价值不在「记」而在「分得清」——分类统计是记账的第一步洞察。"},
+ {d:4,title:"抽成函数：让代码不重复",goal:"把「加一笔」和「打印汇总」拆成两个函数，主函数只负责调度。",
+  learn:"第 17–24 关（函数与程序结构）",code:'#include <stdio.h>\n\ndouble total(double *a, int n) {\n    double s = 0;\n    for (int i = 0; i < n; i++) s += a[i];\n    return s;\n}\nvoid show(double *a, int n) {\n    for (int i = 0; i < n; i++) printf("%d: %.2f\\n", i + 1, a[i]);\n    printf("合计：%.2f\\n", total(a, n));\n}\nint main(void) {\n    double a[3] = {10, 20.5, 5};\n    show(a, 3);\n    return 0;\n}',why:"函数拆分是可维护的分水岭：以后加功能只改一个地方。"},
+ {d:5,title:"用指针操作数据",goal:"用指针遍历数组，实现「查找最大一笔支出」。",
+  learn:"第 41–50 关（指针与内存）",code:'#include <stdio.h>\n\ndouble max_of(const double *a, int n) {\n    const double *p = a, *best = a;\n    for (int i = 0; i < n; i++, p++)\n        if (*p > *best) best = p;\n    return *best;\n}\nint main(void) {\n    double a[4] = {8, 30.5, 12, 45.2};\n    printf("最大一笔：%.2f\\n", max_of(a, 4));\n    return 0;\n}',why:"指针看着吓人，但它的用途很朴素：让函数高效地访问同一份数据。"},
+ {d:6,title:"存在文件里：下次还在",goal:"把账本存进 accounts.txt，重新运行时读出来，追加新记录。",
+  learn:"第 59–64 关（文件与输入输出）",code:'#include <stdio.h>\n\nint main(void) {\n    double n;\n    FILE *fp = fopen("accounts.txt", "a");\n    if (!fp) { printf("打不开文件\\n"); return 1; }\n    while (scanf("%lf", &n) == 1) fprintf(fp, "%.2f\\n", n);\n    fclose(fp);\n\n    double sum = 0, x;\n    fp = fopen("accounts.txt", "r");\n    while (fscanf(fp, "%lf", &x) == 1) sum += x;\n    fclose(fp);\n    printf("全部合计：%.2f\\n", sum);\n    return 0;\n}',why:"程序从「跑完就忘」变成「有记忆」，这是工具的起点。"},
+ {d:7,title:"最后一公里：做出能用的记账本",goal:"组合前 6 天，做出一个能循环输入、能查总额、能按分类统计的完整记账本，并处理输入错误。",
+  learn:"综合运用 + 第 65–72 关（工程实践）",code:'#include <stdio.h>\n#include <string.h>\n\n#define MAXN 100\n\nint main(void) {\n    char cats[MAXN][16];\n    double amt[MAXN];\n    int n = 0;\n    char op[16];\n    while (scanf("%15s", op) == 1) {\n        if (strcmp(op, "add") == 0 && n < MAXN) {\n            scanf("%lf %15s", &amt[n], cats[n]);\n            n++;\n            printf("已记录 %d 笔\\n", n);\n        } else if (strcmp(op, "list") == 0) {\n            for (int i = 0; i < n; i++) printf("%d) %.2f [%s]\\n", i + 1, amt[i], cats[i]);\n        } else if (strcmp(op, "total") == 0) {\n            double s = 0;\n            for (int i = 0; i < n; i++) s += amt[i];\n            printf("合计：%.2f\\n", s);\n        } else if (strcmp(op, "quit") == 0) break;\n        else printf("未知命令\\n");\n    }\n    return 0;\n}',why:"到这里你已拥有一个真正能用的程序：可以自己用，也可以给同学看。"}
+];
+function loadProject(){try{var o=JSON.parse(localStorage.getItem(PROJECT_KEY)||"{}");o.done=o.done||{};return o}catch(e){return {done:{}}}}
+function saveProject(o){try{localStorage.setItem(PROJECT_KEY,JSON.stringify(o))}catch(e){}}
+function projectProgress(){var o=loadProject(),n=0;PROJECT_DAYS.forEach(function(x){if(o.done[x.d])n++});return n}
+function renderProject(){
+ var o=loadProject(),fin=projectProgress();
+ var cards=PROJECT_DAYS.map(function(p){
+  var done=!!o.done[p.d];
+  return '<article class="proj-card'+(done?" done":"")+'">'
+   +'<div class="proj-head"><span class="proj-day">Day '+p.d+'</span><span class="proj-state">'+(done?"✓ 已完成":"待完成")+'</span></div>'
+   +'<h3>'+esc(p.title)+'</h3>'
+   +'<p class="proj-goal">'+esc(p.goal)+'</p>'
+   +'<div class="proj-meta">对应课程：'+esc(p.learn)+'</div>'
+   +'<details class="proj-detail"><summary>展开可运行示例与说明</summary>'
+   +'<div class="proj-why">'+esc(p.why)+'</div>'
+   +'<div class="codebox"><div class="codebar"><span class="dots"><i></i><i></i><i></i></span><span>day'+p.d+'.c</span></div><pre>'+highlightC(p.code)+'</pre></div>'
+   +'</details>'
+   +'<div class="exercise-actions"><button class="btn '+(done?"btn-ghost":"btn-primary")+' btn-small" data-action="proj-toggle" data-day="'+p.d+'">'+(done?"撤销完成":"标记今天完成")+'</button></div>'
+   +'</article>';
+ }).join("");
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">做点真东西</div><h1>7 天，做出一个能用的记账本</h1>'
+  +'<p class="subhead">每天一个 20 分钟的小任务，第 7 天你会拿到一个可以自己用、也能给同学看的控制台程序。不需要学完 86 关也能开始。</p></div>'
+  +'<span class="chip">'+fin+' / 7 天完成</span></div>'
+  +'<div class="proj-progress"><div class="daily-bar"><i style="width:'+Math.round(fin/7*100)+'%"></i></div></div>'
+  +'<div class="proj-grid">'+cards+'</div>'
+  +'<div class="panel" style="margin-top:16px"><div class="challenge-label">提示</div><p class="challenge-copy">每段示例都能直接编译运行；建议先跑通示例，再按自己的需求改。卡住时到反馈面板的交流群里问。</p></div>';
+}
+
 function renderSummary(){
  const done=completedCount(), pct=progressPct(), rate=data.attempts?Math.round(data.correct/data.attempts*100):0, finished=done===levels.length;
  let skills=groups.filter(function(g){return levels.some(function(l){return l.stage===g})}).map(function(g){const ls=levels.filter(function(l){return l.stage===g}), n=ls.filter(isDone).length;return '<div class="skill-row"><span>'+esc(g)+' <span style="color:#9aa5b5">('+n+'/'+ls.length+')</span></span><span class="skill-state">'+(n===ls.length?"已掌握":n?"学习中":"待开始")+'</span></div>'}).join("");
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习档案</div><h1>我的学习总结</h1><p class="subhead">记录每一步进步，也看看下一步可以做什么。</p></div><button class="btn btn-ghost btn-small" data-page="map">← 返回学习地图</button></div>'+
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习档案</div><h1>我的学习总结</h1><p class="subhead">记录每一步进步，也看看下一步可以做什么。</p></div><button class="btn btn-ghost btn-small" data-page="project">7 天项目（'+projectProgress()+'/7）</button><button class="btn btn-ghost btn-small" data-page="map">← 返回学习地图</button></div>'+
  '<div class="summary-grid"><div class="summary-hero"><div class="eyebrow" style="color:#dbe2ff">'+(finished?"学习旅程":"持续成长中")+'</div><h2>'+(finished?"恭喜你，完成全部关卡！":"你的每一次练习都在累积")+'</h2><p>'+(finished?(activeCourse==="c"?"你从程序结构出发，练习了类型、流程、函数、数组、字符串、指针、内存管理、文件、工程实践、数据结构与算法，并完成了综合项目。现在你可以用真实项目继续巩固。":"你走完了地基、听力、阅读、写作、翻译、口语与全真模考，掌握了应试与实用两套能力。接下来保持每周一套模考的节奏，把错题按题型归类复盘。")+"" :"完成 "+done+" 个关卡，已经覆盖 "+pct+"% 的学习路线。继续按自己的节奏前进，已学内容会自动保存在这台设备。")+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(finished?"回顾毕业项目":"继续学习")+' →</button></div><div class="summary-emoji">'+(finished?"🎓":"✦")+'</div></div><div class="panel"><div class="challenge-head"><div class="challenge-label">成长数据</div><span class="chip">'+pct+'%</span></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+' / '+levels.length+'</div><div class="stat-label">已通关关卡</div></div></div><div class="stat" style="margin-bottom:9px"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">累计学习点</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+rate+'%</div><div class="stat-label">知识快问正确率 · '+data.correct+'/'+data.attempts+'</div></div></div></div></div>'+
  '<div class="summary-grid" style="margin-top:18px"><section class="panel"><div class="challenge-head"><div class="challenge-label">技能地图</div><span class="chip">按模块回顾</span></div><div class="skill-list">'+skills+'</div></section><section class="panel"><div class="challenge-head"><div class="challenge-label">'+(finished?"下一阶段建议":"给未来自己的话")+'</div><span class="chip">'+(finished?"继续实践":"保持节奏")+'</span></div><p class="lesson-copy">'+(finished?(activeCourse==="c"?"把学到的内容组合成一个小项目：例如通讯录、命令行记账本或简易文本分析器。为函数补充错误处理、拆分头文件，并用 -Wall -Wextra 检查代码。":"找一段英文材料先裸听、再读原文、复述一遍、写下三句话总结；每周一套模考，把错题按题型归类。"):(activeCourse==="c"?"学编程不是背完所有语法，而是能用合适的工具把问题拆开。先把当前关卡做完，再回头复习卡住的知识点。":"语言能力靠积累：每天 20 分钟精听加跟读，比周末突击三小时更有效。先把当前关卡做完，再回头复习卡住的题型。"))+'</p><div class="takeaway"><div class="takeaway-item"><span class="tick">✓</span><span>'+(activeCourse==="c"?"代码在本机浏览器做结构检查，并可在本机编译运行比对输出":"听力与口语音频来自本地文件，可反复重听")+'</span></div><div class="takeaway-item"><span class="tick">✓</span><span>学习进度自动保存</span></div><div class="takeaway-item"><span class="tick">✓</span><span>可以随时回看已完成课程</span></div></div></section></div>'+
  '<div class="footer-note">'+esc(currentCourse().footNote)+'</div>';
@@ -2367,6 +2483,7 @@ function handleClick(e){
  if(a==="copy-save-code"){var __c1=document.getElementById("saveCodeBox");if(__c1)copyTextSmart(__c1.value||"");return}
  if(a==="copy-save-link"){var __c2=document.getElementById("saveCodeBox");if(__c2)copyTextSmart(saveLinkFrom(__c2.value||""));return}
  if(a==="import-save-code"){importSaveFromBox();return}
+ if(a==="proj-toggle"){var pj=loadProject();var d=Number(action.dataset.day);pj.done[d]=!pj.done[d];saveProject(pj);render();toast(pj.done[d]?"Day "+d+" 完成，继续保持。":"已撤销 Day "+d+"。");return}
  if(a==="copy-qq-group"){copyTextSmart(CONTACT_QQ_GROUP);return}
  if(a==="export-progress"){exportProgress();return}
  if(a==="import-progress"){var __pf=document.getElementById("progressFile");if(__pf)__pf.click();else toast("找不到文件选择控件，请刷新页面。");return}
