@@ -2799,9 +2799,46 @@ try{apBuild()}catch(e){console.error("外观面板初始化失败",e)}
  document.addEventListener("scroll",function(){ if(active){var r=active.getBoundingClientRect();if(r.bottom<0||r.top>window.innerHeight)leave();} },{passive:true});
 })();
 </script>
-﻿<!-- ==================== HT LAB 双 UI 合并引擎：悬浮透明玻璃 + 18000 粒子引力星空 ==================== -->
+<!-- ==================== HT LAB 双 UI 终极合并引擎（含 FPS 监控 + 绚丽星云银河 + 18000 粒子跟随） ==================== -->
 <style>
-/* ---------- 1. 全局双 UI 切换器与进站选择门户 ---------- */
+/* ---------- 0. 实时帧数显示器 (FPS + MS + 动态波形图) ---------- */
+#htFpsMonitor {
+  position: fixed; left: 50%; top: 14px; transform: translateX(-50%);
+  z-index: 10002; display: inline-flex; align-items: center; gap: 9px;
+  padding: 5px 12px; border-radius: 999px;
+  background: rgba(10, 16, 34, 0.82);
+  border: 1px solid rgba(56, 189, 248, 0.42);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  color: #f8fafc; font: 700 11.5px/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  cursor: pointer; user-select: none; transition: transform .18s ease, border-color .18s ease;
+}
+#htFpsMonitor:hover {
+  transform: translateX(-50%) translateY(-1px);
+  border-color: rgba(125, 211, 252, 0.85);
+}
+#htFpsMonitor .fps-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #34d399; box-shadow: 0 0 8px #34d399;
+}
+#htFpsMonitor.warn .fps-dot { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+#htFpsMonitor.low .fps-dot { background: #f87171; box-shadow: 0 0 8px #f87171; }
+#htFpsMonitor .fps-val { color: #34d399; font-weight: 800; letter-spacing: 0.3px; }
+#htFpsMonitor.warn .fps-val { color: #fbbf24; }
+#htFpsMonitor.low .fps-val { color: #f87171; }
+#htFpsMonitor .fps-ms { color: #94a3b8; font-weight: 600; font-size: 10.5px; }
+#htFpsMonitor canvas {
+  width: 48px; height: 16px; display: block; border-radius: 3px;
+}
+#htFpsMonitor.compact .fps-ms,
+#htFpsMonitor.compact canvas { display: none; }
+
+/* 提升原站 Toast 与弹窗层级，防止被星空层遮挡 */
+.toast { z-index: 10005 !important; }
+.modal-backdrop { z-index: 10003 !important; }
+.victory-overlay { z-index: 10004 !important; }
+
+/* ---------- 1. 全局双 UI 切换器与进站选择门户（已去除 iOS 字样） ---------- */
 .ui-switch-pill {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 13px !important; border-radius: 999px !important;
@@ -2818,15 +2855,18 @@ try{apBuild()}catch(e){console.error("外观面板初始化失败",e)}
 #uiChooserModal {
   position: fixed; inset: 0; z-index: 9995;
   display: flex; align-items: center; justify-content: center; padding: 20px;
-  background: radial-gradient(circle at 50% 35%, rgba(12, 22, 46, 0.82), rgba(4, 7, 18, 0.94));
+  background:
+    radial-gradient(circle at 20% 25%, rgba(56, 189, 248, 0.22), transparent 45%),
+    radial-gradient(circle at 80% 75%, rgba(168, 85, 247, 0.24), transparent 50%),
+    radial-gradient(circle at 50% 35%, rgba(12, 22, 46, 0.86), rgba(4, 7, 18, 0.96));
   backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
   opacity: 1; visibility: visible; transition: opacity .35s ease, visibility .35s ease;
 }
 #uiChooserModal.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 .ui-chooser-box {
   width: min(780px, 100%); border-radius: 28px; padding: clamp(22px, 4vw, 38px);
-  background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(148, 163, 184, 0.28);
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  background: rgba(13, 20, 40, 0.82); border: 1px solid rgba(125, 211, 252, 0.3);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.22);
   color: #f8fafc; text-align: center;
 }
 .ui-chooser-kicker {
@@ -2838,7 +2878,7 @@ try{apBuild()}catch(e){console.error("外观面板初始化失败",e)}
   margin: 0 0 8px; color: #fff;
 }
 .ui-chooser-box p {
-  font-size: 13.5px; color: #94a3b8; margin: 0 auto 24px; max-width: 54ch; line-height: 1.65;
+  font-size: 13.5px; color: #cbd5e1; margin: 0 auto 24px; max-width: 54ch; line-height: 1.65;
 }
 .ui-chooser-grid {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;
@@ -2850,25 +2890,26 @@ try{apBuild()}catch(e){console.error("外观面板初始化失败",e)}
 }
 .ui-mode-card:hover { transform: translateY(-4px); }
 .ui-mode-card.glass-opt {
-  background: linear-gradient(145deg, rgba(224, 242, 254, 0.92), rgba(186, 230, 253, 0.78));
-  border: 1px solid rgba(255, 255, 255, 0.95); color: #0f172a;
-  box-shadow: 0 18px 45px rgba(56, 189, 248, 0.2), inset 0 1px 0 #fff;
+  background: linear-gradient(145deg, rgba(224, 242, 254, 0.94), rgba(186, 230, 253, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.96); color: #0f172a;
+  box-shadow: 0 18px 45px rgba(56, 189, 248, 0.22), inset 0 1px 0 #fff;
 }
 .ui-mode-card.cosmos-opt {
-  background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.25), transparent 55%),
-              radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.28), transparent 60%),
-              linear-gradient(155deg, #090d1e 0%, #111836 100%);
-  border: 1px solid rgba(56, 189, 248, 0.5); color: #f8fafc;
-  box-shadow: 0 18px 50px rgba(14, 165, 233, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  background:
+    radial-gradient(circle at 82% 18%, rgba(56, 189, 248, 0.35), transparent 52%),
+    radial-gradient(circle at 18% 82%, rgba(192, 132, 252, 0.35), transparent 58%),
+    linear-gradient(155deg, #0b132b 0%, #161f42 52%, #090d1e 100%);
+  border: 1px solid rgba(56, 189, 248, 0.6); color: #f8fafc;
+  box-shadow: 0 18px 50px rgba(14, 165, 233, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 .ui-mode-badge {
   display: inline-flex; align-items: center; gap: 6px; width: fit-content;
   padding: 5px 11px; border-radius: 99px; font-size: 11px; font-weight: 800; margin-bottom: 12px;
 }
 .glass-opt .ui-mode-badge { background: rgba(47, 124, 246, 0.14); color: #1d4ed8; }
-.cosmos-opt .ui-mode-badge { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
+.cosmos-opt .ui-mode-badge { background: rgba(56, 189, 248, 0.2); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
 .ui-mode-card h3 { font-size: 19px; font-weight: 800; margin: 0 0 8px; }
-.ui-mode-card small { display: block; font-size: 12.5px; line-height: 1.6; opacity: 0.85; margin-bottom: 16px; }
+.ui-mode-card small { display: block; font-size: 12.5px; line-height: 1.6; opacity: 0.88; margin-bottom: 16px; }
 .ui-mode-go { font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: space-between; }
 .glass-opt .ui-mode-go { color: #1d4ed8; }
 .cosmos-opt .ui-mode-go { color: #38bdf8; }
@@ -2878,6 +2919,8 @@ try{apBuild()}catch(e){console.error("外观面板初始化失败",e)}
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)) !important;
 }
 @media (max-width: 768px) {
+  #htFpsMonitor { top: auto; bottom: 132px; left: 12px; transform: none; padding: 4px 9px; font-size: 10.5px; }
+  #htFpsMonitor:hover { transform: none; }
   .ui-chooser-grid { grid-template-columns: 1fr; gap: 12px; }
   .ui-mode-card { min-height: 155px; padding: 18px 16px; }
   body:not([data-ui-mode="cosmos"]) .topbar {
@@ -2910,25 +2953,23 @@ try{apBuild()}catch(e){console.error("外观面板初始化失败",e)}
   body:not([data-ui-mode="cosmos"]) #view.content {
     padding: 12px 12px 135px !important;
   }
-  /* 防止下一关浮条与右下角外观按钮遮挡底部导航栏 */
-  body:not([data-ui-mode="cosmos"]) .next-bar {
-    bottom: 78px !important; z-index: 95 !important;
-  }
-  body:not([data-ui-mode="cosmos"]) .ap-fab {
-    bottom: 78px !important; right: 14px !important; z-index: 92 !important;
-  }
-  body:not([data-ui-mode="cosmos"]) .ap-sheet {
-    bottom: 128px !important; right: 12px !important; width: calc(100vw - 24px) !important;
-  }
+  body:not([data-ui-mode="cosmos"]) .next-bar { bottom: 78px !important; z-index: 95 !important; }
+  body:not([data-ui-mode="cosmos"]) .ap-fab { bottom: 78px !important; right: 14px !important; z-index: 92 !important; }
+  body:not([data-ui-mode="cosmos"]) .ap-sheet { bottom: 128px !important; right: 12px !important; width: calc(100vw - 24px) !important; }
 }
 
-/* ---------- 3. 星空宇宙 UI (Stardust Cosmos) 核心样式 ---------- */
-/* Win11 Edge 中文锐利化修复 */
+/* ---------- 3. 星空宇宙 UI：深空绚丽星云画布与卡片防遮挡修复 ---------- */
 body[data-ui-mode="cosmos"] {
   -webkit-font-smoothing: subpixel-antialiased !important;
   text-rendering: optimizeLegibility;
   font-family: 'Inter', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
-  background: #03050d !important;
+  /* 多层深空星云基底，不再是单调死黑 */
+  background:
+    radial-gradient(60% 45% at 18% 22%, rgba(29, 78, 216, 0.28), transparent 65%),
+    radial-gradient(55% 42% at 82% 28%, rgba(147, 51, 234, 0.26), transparent 65%),
+    radial-gradient(65% 50% at 50% 82%, rgba(14, 165, 233, 0.22), transparent 68%),
+    radial-gradient(40% 35% at 62% 48%, rgba(236, 72, 153, 0.12), transparent 60%),
+    linear-gradient(165deg, #050816 0%, #091128 48%, #040711 100%) fixed !important;
   color: #eef4ff !important;
   overflow-x: hidden;
 }
@@ -2936,73 +2977,74 @@ body[data-ui-mode="cosmos"]::before { opacity: 0 !important; }
 body[data-ui-mode="cosmos"] #apFab,
 body[data-ui-mode="cosmos"] #apSheet { display: none !important; }
 
-/* 双画布架构：底层星海/后半球 (z:1) + 背面卡片 (z:3) + 前景星球核/前半球 (z:5) + 正面卡片 (z:8) */
+/* 严格划分 3D 舞台与卡片点击层级，确保卡片 100% 可点进 */
 #cosmos-stage {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
   display: none; overflow: hidden;
 }
 body[data-ui-mode="cosmos"] #cosmos-stage { display: block; }
 #stardust-canvas {
   position: fixed; inset: 0; width: 100vw; height: 100vh;
-  z-index: 1; pointer-events: auto; cursor: grab;
+  z-index: 2; pointer-events: auto; cursor: grab;
 }
 #stardust-canvas:active { cursor: grabbing; }
 #stardust-fg-canvas {
   position: fixed; inset: 0; width: 100vw; height: 100vh;
-  z-index: 5; pointer-events: none;
+  z-index: 6; pointer-events: none;
 }
 #orbit-cards-layer {
-  position: fixed; inset: 0; z-index: auto; pointer-events: none;
+  position: fixed; inset: 0; z-index: 20; pointer-events: none;
 }
 
-/* 3D 星轨悬浮卡片（微粒子氛围 + 新星微光 + 三级清晰层级） */
+/* 3D 星轨悬浮卡片（流光星云玻璃 + 100% 可点击响应） */
 .orbit-card {
   position: fixed; left: 0; top: 0;
-  width: 214px; min-height: 118px; padding: 14px 16px;
-  border-radius: 18px; pointer-events: auto; cursor: pointer;
+  width: 224px; min-height: 124px; padding: 15px 17px;
+  border-radius: 20px; pointer-events: auto !important; cursor: pointer !important;
+  user-select: none;
   background:
-    radial-gradient(circle at 18% 18%, rgba(56, 189, 248, 0.18), transparent 55%),
-    radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
-    linear-gradient(155deg, rgba(12, 20, 44, 0.88), rgba(7, 12, 28, 0.94));
+    radial-gradient(120% 90% at 15% 10%, rgba(56, 189, 248, 0.28), transparent 55%),
+    radial-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(155deg, rgba(15, 26, 56, 0.9), rgba(8, 14, 32, 0.95));
   background-size: 100% 100%, 14px 14px, 100% 100%;
-  border: 1px solid rgba(125, 211, 252, 0.38);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(125, 211, 252, 0.52);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 22px rgba(56, 189, 248, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.32);
   color: #f8fafc;
   display: flex; flex-direction: column; justify-content: space-between;
   will-change: auto !important; backface-visibility: visible !important;
-  contain: layout style;
-  transition: border-color .22s ease, box-shadow .22s ease;
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
 .orbit-card.portal-card {
-  width: 268px; min-height: 158px; padding: 18px 20px;
-  border-radius: 22px;
-  border-color: rgba(56, 189, 248, 0.62);
-  box-shadow: 0 20px 55px rgba(14, 165, 233, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  width: 278px; min-height: 166px; padding: 20px 22px;
+  border-radius: 24px;
+  border: 1.5px solid rgba(56, 189, 248, 0.78);
+  box-shadow: 0 22px 60px rgba(14, 165, 233, 0.35), 0 0 32px rgba(56, 189, 248, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 .orbit-card.cet4-tone {
-  border-color: rgba(192, 132, 252, 0.55);
+  border-color: rgba(192, 132, 252, 0.68);
   background:
-    radial-gradient(circle at 82% 18%, rgba(192, 132, 252, 0.22), transparent 55%),
-    radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
-    linear-gradient(155deg, rgba(24, 14, 48, 0.88), rgba(11, 8, 28, 0.94));
+    radial-gradient(120% 90% at 85% 12%, rgba(192, 132, 252, 0.32), transparent 55%),
+    radial-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(155deg, rgba(28, 16, 58, 0.9), rgba(12, 9, 32, 0.95));
   background-size: 100% 100%, 14px 14px, 100% 100%;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 24px rgba(168, 85, 247, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.32);
 }
-.orbit-card.is-behind { z-index: 3 !important; }
-.orbit-card.is-front { z-index: 8 !important; }
+.orbit-card.is-behind { z-index: 4 !important; }
+.orbit-card.is-front { z-index: 22 !important; }
 .orbit-card:hover {
-  z-index: 28 !important;
-  border-color: #7dd3fc !important;
-  box-shadow: 0 0 28px rgba(56, 189, 248, 0.45), 0 18px 44px rgba(0, 0, 0, 0.75), inset 0 1px 0 #fff !important;
+  z-index: 32 !important;
+  border-color: #fff !important;
+  box-shadow: 0 0 34px rgba(56, 189, 248, 0.6), 0 20px 48px rgba(0, 0, 0, 0.8), inset 0 1px 0 #fff !important;
 }
 .orbit-card-top {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 6px; pointer-events: none;
 }
 .orbit-card-tag {
   font-size: 12px; font-weight: 700; letter-spacing: 0.6px;
   color: #7dd3fc; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95);
 }
-.cet4-tone .orbit-card-tag { color: #d8b4fe; }
+.cet4-tone .orbit-card-tag { color: #e9d5ff; }
 .nova-dot {
   width: 8px; height: 8px; border-radius: 50%;
   background: #38bdf8; box-shadow: 0 0 10px #38bdf8;
@@ -3010,45 +3052,48 @@ body[data-ui-mode="cosmos"] #cosmos-stage { display: block; }
 .nova-dot.done { background: #34d399; box-shadow: 0 0 10px #34d399; }
 .orbit-card-title {
   font-size: 16px; font-weight: 700; color: #ffffff; line-height: 1.35;
-  margin: 2px 0 6px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95);
+  margin: 2px 0 6px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95); pointer-events: none;
 }
-.portal-card .orbit-card-title { font-size: 20px; font-weight: 800; }
+.portal-card .orbit-card-title { font-size: 21px; font-weight: 800; }
 .orbit-card-desc {
-  font-size: 12.5px; font-weight: 500; color: rgba(232, 240, 255, 0.88);
-  line-height: 1.5; margin-bottom: 8px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92);
+  font-size: 12.5px; font-weight: 500; color: rgba(235, 243, 255, 0.9);
+  line-height: 1.5; margin-bottom: 8px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92); pointer-events: none;
 }
 .orbit-card-foot {
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 12px; font-weight: 600; color: #94a3b8;
-  border-top: 1px solid rgba(148, 163, 184, 0.16); padding-top: 7px;
+  font-size: 12px; font-weight: 600; color: #cbd5e1;
+  border-top: 1px solid rgba(148, 163, 184, 0.22); padding-top: 8px; pointer-events: none;
 }
-.orbit-card-action { color: #38bdf8; font-weight: 700; }
-.cet4-tone .orbit-card-action { color: #c084fc; }
+.orbit-card-action {
+  color: #38bdf8; font-weight: 800; padding: 2px 8px; border-radius: 99px;
+  background: rgba(56, 189, 248, 0.16);
+}
+.cet4-tone .orbit-card-action { color: #e9d5ff; background: rgba(192, 132, 252, 0.2); }
 
-/* 3D 卡片居中翻转放大检视弹窗 */
+/* 3D 卡片翻转检视弹窗 */
 #cosmosInspectModal {
-  position: fixed; inset: 0; z-index: 80;
+  position: fixed; inset: 0; z-index: 9990;
   display: flex; align-items: center; justify-content: center; padding: 20px;
-  background: rgba(3, 6, 16, 0.62); backdrop-filter: blur(10px);
+  background: rgba(3, 6, 16, 0.68); backdrop-filter: blur(12px);
   opacity: 0; visibility: hidden; pointer-events: none;
-  transition: opacity .28s ease, visibility .28s ease;
+  transition: opacity .25s ease, visibility .25s ease;
 }
 #cosmosInspectModal.open { opacity: 1; visibility: visible; pointer-events: auto; }
 .inspect-card {
-  width: min(440px, 92vw); border-radius: 26px; padding: 28px 26px;
+  width: min(460px, 92vw); border-radius: 26px; padding: 28px 26px;
   background:
-    radial-gradient(circle at 20% 10%, rgba(56, 189, 248, 0.25), transparent 55%),
-    linear-gradient(160deg, rgba(14, 24, 52, 0.95), rgba(7, 12, 28, 0.98));
-  border: 1.5px solid rgba(125, 211, 252, 0.78);
-  box-shadow: 0 0 50px rgba(56, 189, 248, 0.35), 0 30px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 #fff;
-  color: #fff; transform: perspective(900px) rotateY(-90deg) scale(0.82);
-  transition: transform .42s cubic-bezier(.2, .85, .25, 1.05);
+    radial-gradient(circle at 20% 10%, rgba(56, 189, 248, 0.28), transparent 55%),
+    linear-gradient(160deg, rgba(14, 24, 52, 0.96), rgba(7, 12, 28, 0.98));
+  border: 1.5px solid rgba(125, 211, 252, 0.82);
+  box-shadow: 0 0 55px rgba(56, 189, 248, 0.38), 0 30px 80px rgba(0, 0, 0, 0.85), inset 0 1px 0 #fff;
+  color: #fff; transform: perspective(900px) rotateY(-80deg) scale(0.86);
+  transition: transform .38s cubic-bezier(.2, .85, .25, 1.05);
 }
 #cosmosInspectModal.open .inspect-card {
   transform: perspective(900px) rotateY(0deg) scale(1);
 }
 
-/* 星空模式 HUD 顶栏与底栏 */
+/* 星空模式 HUD */
 #cosmosHud {
   position: fixed; inset: 0; z-index: 35; pointer-events: none;
   display: none; flex-direction: column; justify-content: space-between; padding: 18px 24px;
@@ -3060,9 +3105,9 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex; }
 }
 .cosmos-brand-block {
   pointer-events: auto;
-  background: rgba(9, 15, 32, 0.72); border: 1px solid rgba(148, 163, 184, 0.24);
-  backdrop-filter: blur(16px); border-radius: 20px; padding: 14px 18px;
-  max-width: 420px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  background: rgba(10, 18, 40, 0.76); border: 1px solid rgba(125, 211, 252, 0.28);
+  backdrop-filter: blur(18px); border-radius: 20px; padding: 14px 18px;
+  max-width: 430px; box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
 }
 .cosmos-kicker {
   font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
@@ -3073,20 +3118,20 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex; }
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
 }
 .cosmos-sub {
-  font-size: 12.5px; color: rgba(226, 232, 240, 0.88); margin: 0; line-height: 1.5;
+  font-size: 12.5px; color: rgba(226, 232, 240, 0.9); margin: 0; line-height: 1.5;
 }
 .cosmos-chapters {
   display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap;
 }
 .chapter-orb {
   height: 32px; padding: 0 11px; border-radius: 99px;
-  border: 1px solid rgba(148, 163, 184, 0.35); background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.38); background: rgba(15, 23, 42, 0.78);
   color: #e2e8f0; font-size: 12px; font-weight: 700; cursor: pointer;
   display: inline-flex; align-items: center; gap: 5px; transition: .18s;
 }
 .chapter-orb:hover, .chapter-orb.active {
-  border-color: #38bdf8; background: rgba(56, 189, 248, 0.22); color: #fff;
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+  border-color: #38bdf8; background: rgba(56, 189, 248, 0.25); color: #fff;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
 }
 .cosmos-nav-pills {
   pointer-events: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -3094,16 +3139,16 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex; }
 }
 .cosmos-pill {
   padding: 8px 13px; border-radius: 99px;
-  background: rgba(12, 20, 42, 0.76); border: 1px solid rgba(148, 163, 184, 0.28);
-  backdrop-filter: blur(14px); color: #e2e8f0; font-size: 12px; font-weight: 650;
+  background: rgba(12, 20, 42, 0.8); border: 1px solid rgba(125, 211, 252, 0.3);
+  backdrop-filter: blur(14px); color: #f1f5f9; font-size: 12px; font-weight: 650;
   cursor: pointer; white-space: nowrap; transition: .18s;
 }
 .cosmos-pill:hover, .cosmos-pill.active {
-  border-color: #38bdf8; color: #fff; background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8; color: #fff; background: rgba(56, 189, 248, 0.24);
 }
 .cosmos-pill.highlight {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(139, 92, 246, 0.28));
-  border-color: rgba(125, 211, 252, 0.65); color: #fff;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.34), rgba(168, 85, 247, 0.34));
+  border-color: rgba(125, 211, 252, 0.75); color: #fff;
 }
 
 .cosmos-bottom-row {
@@ -3112,56 +3157,49 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex; }
 }
 .cosmos-ctrl-bar {
   pointer-events: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  background: rgba(9, 15, 32, 0.78); border: 1px solid rgba(148, 163, 184, 0.26);
+  background: rgba(10, 18, 40, 0.82); border: 1px solid rgba(125, 211, 252, 0.28);
   backdrop-filter: blur(16px); border-radius: 18px; padding: 10px 14px;
-  font-size: 12px; color: #cbd5e1; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  font-size: 12px; color: #cbd5e1; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
 }
-.cosmos-ctrl-bar label {
-  display: inline-flex; align-items: center; gap: 6px; font-weight: 600;
-}
-.cosmos-ctrl-bar input[type="range"] {
-  width: 88px; accent-color: #38bdf8; cursor: pointer;
-}
+.cosmos-ctrl-bar label { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.cosmos-ctrl-bar input[type="range"] { width: 86px; accent-color: #38bdf8; cursor: pointer; }
 
-/* ---------- 4. 星空模式下的全息实训工作台 (复用并同步原站 #app) ---------- */
+/* ---------- 4. 星空模式下的全息工作台切换 ---------- */
 body[data-ui-mode="cosmos"] .app {
-  position: relative; z-index: 40;
-  transition: opacity .32s ease, transform .32s ease;
+  position: relative; z-index: 45;
 }
-/* 当处于 3D 星球全息视图时，隐藏常规 .app 面板，完全展示 3D 宇宙舞台 */
-body[data-ui-mode="cosmos"][data-cosmos-view="universe"] .app {
+html body[data-ui-mode="cosmos"][data-cosmos-view="universe"] .app {
   display: none !important;
 }
-/* 当在星空模式下打开关卡/路线/总结/项目时，将 .app 渲染为深空黑曜石全息琉璃工作台 */
-body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] #orbit-cards-layer,
-body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] #cosmosHud {
+html body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] #orbit-cards-layer,
+html body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] #cosmosHud {
   display: none !important;
 }
 body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] {
   --ink: #f1f5f9; --ink-2: #cbd5e1; --ink-3: #94a3b8;
-  --accent: #38bdf8; --accent-2: #34d399; --accent-soft: rgba(56, 189, 248, 0.16);
-  --glass-border: rgba(148, 163, 184, 0.24); --glass-edge: rgba(255, 255, 255, 0.18);
+  --accent: #38bdf8; --accent-2: #34d399; --accent-soft: rgba(56, 189, 248, 0.18);
+  --glass-border: rgba(125, 211, 252, 0.28); --glass-edge: rgba(255, 255, 255, 0.2);
 }
 body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] :is(.sidebar, .topbar, .panel, .stat, .course-card, .course-entry, .level-card, .track, .course-route, .challenge-card, .exercise, .side-card, .guide-card, .skill-row, .save-box, .quiz-item, .feedback-panel, .proj-card, .hero-progress) {
-  background-color: rgba(10, 17, 36, 0.76) !important;
-  background-image: radial-gradient(120% 90% at 16% -12%, rgba(56, 189, 248, 0.14), transparent 60%) !important;
-  border: 1px solid rgba(125, 211, 252, 0.24) !important;
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  background-color: rgba(10, 18, 40, 0.8) !important;
+  background-image: radial-gradient(120% 90% at 16% -12%, rgba(56, 189, 248, 0.16), transparent 60%) !important;
+  border: 1px solid rgba(125, 211, 252, 0.28) !important;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
   color: #f1f5f9 !important;
 }
 body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] :is(.option, .audio-row, .recorder-row, .self-check, .takeaway, .point-item, .transcript, .guide-idea, .hint, .lock-note, .blank-state) {
-  background: rgba(15, 23, 42, 0.72) !important;
-  border-color: rgba(148, 163, 184, 0.24) !important;
+  background: rgba(15, 25, 52, 0.76) !important;
+  border-color: rgba(125, 211, 252, 0.24) !important;
   color: #e2e8f0 !important;
 }
 body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn { color: #cbd5e1 !important; }
 body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
-  background: rgba(56, 189, 248, 0.18) !important;
-  border-color: rgba(56, 189, 248, 0.45) !important;
+  background: rgba(56, 189, 248, 0.22) !important;
+  border-color: rgba(56, 189, 248, 0.5) !important;
   color: #fff !important;
 }
 
-/* ---------- 5. 星空模式手机端防出界、防重叠专项适配 ---------- */
+/* ---------- 5. 星空模式手机端防重叠适配 ---------- */
 @media (max-width: 768px) {
   #cosmosHud { padding: 10px 10px; }
   .cosmos-top-row { flex-direction: column; align-items: stretch; gap: 8px; }
@@ -3170,27 +3208,23 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
   .cosmos-sub { font-size: 11.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .cosmos-chapters { margin-top: 6px; gap: 5px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
   .chapter-orb { height: 28px; padding: 0 9px; font-size: 11px; flex: none; }
-  .cosmos-nav-pills {
-    justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap;
-    padding-bottom: 3px; gap: 6px;
-  }
+  .cosmos-nav-pills { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 3px; gap: 6px; }
   .cosmos-pill { padding: 6px 10px; font-size: 11px; flex: none; }
 
-  /* 手机端将 3D 悬浮卡片自动切换为底部不重叠的滑动网格坞 */
   #orbit-cards-layer.mobile-dock-mode {
     position: fixed !important;
     left: 10px !important; right: 10px !important;
     top: auto !important; bottom: 56px !important;
-    max-height: 36vh !important;
+    max-height: 38vh !important;
     overflow-y: auto !important; overflow-x: hidden !important;
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(152px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)) !important;
     gap: 8px !important; padding: 6px 2px !important;
     pointer-events: auto !important; z-index: 38 !important;
   }
   #orbit-cards-layer.mobile-dock-mode .orbit-card {
     position: relative !important; left: auto !important; top: auto !important;
-    width: 100% !important; min-height: 96px !important; padding: 11px 12px !important;
+    width: 100% !important; min-height: 98px !important; padding: 11px 12px !important;
     transform: none !important; opacity: 1 !important; filter: none !important;
     mask-image: none !important; -webkit-mask-image: none !important;
   }
@@ -3206,7 +3240,15 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
 }
 </style>
 
-<!-- 进站双 UI 选择门户 -->
+<!-- 实时帧率显示器 (FPS + MS + 波形图，点击可折叠波形) -->
+<div id="htFpsMonitor" title="点击切换精简/详细帧率视图">
+  <span class="fps-dot"></span>
+  <span class="fps-val" id="htFpsVal">60 FPS</span>
+  <span class="fps-ms" id="htFpsMs">16.7 ms</span>
+  <canvas id="htFpsCanvas" width="48" height="16"></canvas>
+</div>
+
+<!-- 进站双 UI 选择门户（已去掉 iOS 字样） -->
 <div id="uiChooserModal" class="is-hidden" role="dialog" aria-modal="true" aria-label="选择界面风格">
   <div class="ui-chooser-box">
     <div class="ui-chooser-kicker">HT LAB · DUAL ENGINE</div>
@@ -3215,7 +3257,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     <div class="ui-chooser-grid">
       <div class="ui-mode-card glass-opt" data-choose-ui="glass">
         <div>
-          <span class="ui-mode-badge">🪟 iOS Liquid Glass</span>
+          <span class="ui-mode-badge">🪟 Liquid Glass</span>
           <h3>悬浮透明液态玻璃</h3>
           <small>晨曦 / 正午 / 黄昏 / 夜空四套云层画布，高透磨砂白玻璃卡片与可调模糊度外观面板，清爽专注。</small>
         </div>
@@ -3223,9 +3265,9 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
       </div>
       <div class="ui-mode-card cosmos-opt" data-choose-ui="cosmos">
         <div>
-          <span class="ui-mode-badge">🌌 18,000 粒子引力星海</span>
+          <span class="ui-mode-badge">🌌 18,000 粒子星云宇宙</span>
           <h3>3D 星尘粒子宇宙</h3>
-          <small>C 语言与英语四级双星球门户、摄像机穿云入星跃迁、3D 轨道翻转卡片，鼠标移到哪里星尘粒子就涌向哪里。</small>
+          <small>璀璨深空星云与银河光带、C 语言与英语四级双星球门户、3D 星轨卡片，鼠标移到哪里星尘粒子就涌向哪里。</small>
         </div>
         <div class="ui-mode-go"><span>进入星尘宇宙界面</span><span>→</span></div>
       </div>
@@ -3246,13 +3288,13 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     <div class="cosmos-brand-block">
       <div class="cosmos-kicker" id="cosmosKicker">BINARY UNIVERSE · 双星门户</div>
       <h2 class="cosmos-title" id="cosmosTitle">选择一颗知识星球跃迁进入</h2>
-      <p class="cosmos-sub" id="cosmosSub">移动鼠标或手指，成千上万颗星尘将跟随你的轨迹汇聚。点击星球进入模块星环。</p>
+      <p class="cosmos-sub" id="cosmosSub">移动鼠标或手指，成千上万颗星尘将跟随你的轨迹汇聚。点击星球卡直接进入课程。</p>
       <div class="cosmos-chapters">
-        <button type="button" class="chapter-orb active" data-chapter="binary" title="双星球课程入口">🌌 双星门户</button>
-        <button type="button" class="chapter-orb" data-chapter="countdown" title="5-4-3-2-1 粒子倒计时">5-1 倒计时</button>
-        <button type="button" class="chapter-orb" data-chapter="calligraphy" title="新的一阶粒子大字与烟花">✦ 新的一阶</button>
-        <button type="button" class="chapter-orb" data-chapter="orbit" title="倾斜星系轨道环">🪐 星系环</button>
-        <button type="button" class="chapter-orb" data-chapter="tower" title="三层立体星尘礼塔">🎂 星尘塔</button>
+        <button type="button" class="chapter-orb active" data-chapter="binary">🌌 双星门户</button>
+        <button type="button" class="chapter-orb" data-chapter="countdown">5-1 倒计时</button>
+        <button type="button" class="chapter-orb" data-chapter="calligraphy">✦ 新的一阶</button>
+        <button type="button" class="chapter-orb" data-chapter="orbit">🪐 星系环</button>
+        <button type="button" class="chapter-orb" data-chapter="tower">🎂 星尘塔</button>
       </div>
     </div>
     <div class="cosmos-nav-pills">
@@ -3269,6 +3311,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     <div class="cosmos-ctrl-bar">
       <span id="cosmosXpBadge" style="color:#38bdf8;font-weight:800">✦ 0 学习点</span>
       <button type="button" class="chapter-orb active" id="magnetModeBtn" style="height:28px">🧲 指哪跟哪：强磁聚拢</button>
+      <button type="button" class="chapter-orb" id="nebulaThemeBtn" style="height:28px">🌌 星云：极光深空</button>
       <label>粒子数 <input type="range" id="particleCountRange" min="8000" max="26000" step="2000" value="18000"><b id="particleCountVal">18k</b></label>
       <label>引力 <input type="range" id="magnetForceRange" min="0" max="100" step="5" value="85"></label>
     </div>
@@ -3282,12 +3325,62 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
 
 <script>
 (function(){
-  /* ===== 0. 内置兜底题库（当脱离本地 ./c/ 和 ./cet4/ 文件夹单独打开 HTML 时自动启用） ===== */
+  /* ===== 0. 实时帧数显示器 (FPS Monitor) 独立采样循环 ===== */
+  (function initFpsMonitor(){
+    const mon = document.getElementById("htFpsMonitor");
+    const valEl = document.getElementById("htFpsVal");
+    const msEl = document.getElementById("htFpsMs");
+    const cvs = document.getElementById("htFpsCanvas");
+    if (!mon || !valEl || !msEl || !cvs) return;
+    const fctx = cvs.getContext("2d");
+    const history = new Array(24).fill(60);
+    let frames = 0;
+    let lastTime = performance.now();
+    let lastFrameTime = lastTime;
+    let smoothMs = 16.7;
+
+    mon.addEventListener("click", function() {
+      mon.classList.toggle("compact");
+    });
+
+    function fpsLoop(now) {
+      frames++;
+      const dt = now - lastFrameTime;
+      lastFrameTime = now;
+      smoothMs = smoothMs * 0.85 + dt * 0.15;
+
+      if (now - lastTime >= 350) {
+        const fps = Math.min(240, Math.round((frames * 1000) / (now - lastTime)));
+        frames = 0;
+        lastTime = now;
+
+        valEl.textContent = fps + " FPS";
+        msEl.textContent = smoothMs.toFixed(1) + " ms";
+        mon.classList.toggle("warn", fps < 50 && fps >= 30);
+        mon.classList.toggle("low", fps < 30);
+
+        history.push(fps);
+        if (history.length > 24) history.shift();
+
+        fctx.clearRect(0, 0, 48, 16);
+        for (let i = 0; i < history.length; i++) {
+          const v = history[i];
+          const h = Math.max(2, Math.min(15, Math.round((v / 75) * 15)));
+          fctx.fillStyle = v >= 50 ? "#34d399" : (v >= 30 ? "#fbbf24" : "#f87171");
+          fctx.fillRect(i * 2, 16 - h, 1.5, h);
+        }
+      }
+      requestAnimationFrame(fpsLoop);
+    }
+    requestAnimationFrame(fpsLoop);
+  })();
+
+  /* ===== 1. 内置兜底题库（当脱离 ./c/ 与 ./cet4/ 外部脚本单独打开 HTML 时自动启用） ===== */
   if (!cLevels.length) {
     const fallbackC = [
       {id:1,course:"c",stage:"起步上路",module:"起步上路",type:"code",minutes:8,title:"第一个 C 程序：Hello, World",gist:"认识 #include <stdio.h>、main 函数与 printf 输出。",lesson:"每个 C 程序都从「main」函数开始执行。想在屏幕上打印文字，需要引入标准输入输出头文件 #include <stdio.h>，再调用 printf(\"Hello, World!\\n\"); 并在结尾 return 0;。",takeaways:["C 程序入口是 int main(void)","printf 用于格式化输出，\\n 表示换行","每条语句以英文分号 ; 结尾"],quiz:"C 语言程序从哪个函数开始执行？",options:["start()","main()","printf()","init()"],answer:1,explain:"main 是 C 语言标准规定的程序入口函数。",mission:"编写一个完整的 C 程序，使用 printf 输出 Hello, HT Lab! 并换行，最后返回 0。",starter:"#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}",hint:"在 main 里写 printf(\"Hello, HT Lab!\\n\");",solution:"#include <stdio.h>\n\nint main(void) {\n    printf(\"Hello, HT Lab!\\n\");\n    return 0;\n}",expectedOutput:"Hello, HT Lab!",check:{include:"stdio.h",return0:true,calls:[["printf","Hello, HT Lab!"]]}},
       {id:2,course:"c",stage:"流程控制",module:"流程控制",type:"code",minutes:10,title:"变量与条件判断 if-else",gist:"用 int 声明整型变量，并用 if 判断大小关系。",lesson:"声明变量如 int score = 85;。使用 if (score >= 60) 可以根据条件真假执行不同分支。注意判断相等用双等号 ==，赋值用单等号 =。",takeaways:["int 用于存储整数","if 括号内写条件表达式","== 判断相等，= 表示赋值"],quiz:"在 C 语言中，判断变量 x 是否等于 10 应该写？",options:["x = 10","x == 10","x === 10","x := 10"],answer:1,explain:"双等号 == 才是相等比较运算符。",mission:"定义整型变量 n = 12，用 if 判断若 n > 10 则 printf 输出 Pass\\n。",starter:"#include <stdio.h>\n\nint main(void) {\n    int n = 12;\n    \n    return 0;\n}",hint:"使用 if (n > 10) printf(\"Pass\\n\");",solution:"#include <stdio.h>\n\nint main(void) {\n    int n = 12;\n    if (n > 10) {\n        printf(\"Pass\\n\");\n    }\n    return 0;\n}",expectedOutput:"Pass",check:{include:"stdio.h",return0:true,require:{if:true},calls:[["printf","Pass"]]}},
-      {id:3,course:"c",stage:"函数与程序结构",module:"函数与程序结构",type:"code",minutes:12,title:"for 循环与累加求和",gist:"用 for 循环计算 1 到 10 的整数累加和。",lesson:"for (int i = 1; i <= 10; i++) 包含初始化、循环条件与步进三部分，非常适合已知次数的循环累加。",takeaways:["for 循环三要素用两个分号隔开","sum += i 等价于 sum = sum + i","累加变量使用前必须初始化为 0"],quiz:"int sum = 0; for(int i=1;i<=3;i++) sum += i; 执行后 sum 的值是？",options:["3","5","6","10"],answer:2,explain:"1 + 2 + 3 = 6。",mission:"用 for 循环计算 1 到 5 的累加和并调用 printf(\"%d\\n\", sum) 输出。",starter:"#include <stdio.h>\n\nint main(void) {\n    int sum = 0;\n    \n    return 0;\n}",hint:"for (int i = 1; i <= 5; i++) sum += i;",solution:"#include <stdio.h>\n\nint main(void) {\n    int sum = 0;\n    for (int i = 1; i <= 5; i++) {\n        sum += i;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",expectedOutput:"15",check:{include:"stdio.h",return0:true,require:{for:true},calls:["printf"]}},
+      {id:3,course:"c",stage:"函数与程序结构",module:"函数与程序结构",type:"code",minutes:12,title:"for 循环与累加求和",gist:"用 for 循环计算 1 到 5 的整数累加和。",lesson:"for (int i = 1; i <= 5; i++) 包含初始化、循环条件与步进三部分，非常适合已知次数的循环累加。",takeaways:["for 循环三要素用两个分号隔开","sum += i 等价于 sum = sum + i","累加变量使用前必须初始化为 0"],quiz:"int sum = 0; for(int i=1;i<=3;i++) sum += i; 执行后 sum 的值是？",options:["3","5","6","10"],answer:2,explain:"1 + 2 + 3 = 6。",mission:"用 for 循环计算 1 到 5 的累加和并调用 printf(\"%d\\n\", sum) 输出。",starter:"#include <stdio.h>\n\nint main(void) {\n    int sum = 0;\n    \n    return 0;\n}",hint:"for (int i = 1; i <= 5; i++) sum += i;",solution:"#include <stdio.h>\n\nint main(void) {\n    int sum = 0;\n    for (int i = 1; i <= 5; i++) {\n        sum += i;\n    }\n    printf(\"%d\\n\", sum);\n    return 0;\n}",expectedOutput:"15",check:{include:"stdio.h",return0:true,require:{for:true},calls:["printf"]}},
       {id:4,course:"c",stage:"指针与内存",module:"指针与内存",type:"code",minutes:15,title:"指针基础：取址 & 与解引用 *",gist:"理解内存地址，用指针指向变量并修改它的值。",lesson:"&a 取得变量 a 的内存地址；int *p = &a; 定义指针 p 保存该地址；*p = 20; 通过解引用直接读写 a 所在的内存。",takeaways:["& 是取地址运算符","int *p 声明指向 int 的指针","*p 访问指针所指向的目标变量"],quiz:"若 int a = 5; int *p = &a; *p = 9; 则此时 a 的值为？",options:["5","9","地址值","编译错误"],answer:1,explain:"*p 就是变量 a 本身，修改 *p 即修改 a。",mission:"定义 int a = 10; 和指针 int *p = &a; 通过 *p = 42; 修改后用 printf(\"%d\\n\", a) 输出。",starter:"#include <stdio.h>\n\nint main(void) {\n    int a = 10;\n    \n    return 0;\n}",hint:"int *p = &a; *p = 42; printf(\"%d\\n\", a);",solution:"#include <stdio.h>\n\nint main(void) {\n    int a = 10;\n    int *p = &a;\n    *p = 42;\n    printf(\"%d\\n\", a);\n    return 0;\n}",expectedOutput:"42",check:{include:"stdio.h",return0:true,require:{pointer:true},calls:["printf"]}}
     ];
     fallbackC.forEach(l => { cLevels.push(l); if (!cGroups.includes(l.stage)) cGroups.push(l.stage); });
@@ -3296,16 +3389,16 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     const fallbackCet = [
       {id:1,course:"cet4",stage:"核心地基",module:"核心地基",type:"read",minutes:10,title:"四级主谓一致与核心句架",gist:"三步抓出长难句主干：先找谓语动词，再定主语核心词。",lesson:"四级阅读长难句常夹杂介词短语（of/in/with...）与定语从句。先把修饰成分括起来，找到真正的谓语动词，句意立刻清晰。",takeaways:["介词短语不能做主语","找到谓语动词即可切分主干","连接词决定从句边界"],passage:"The rapid growth of online learning platforms over the past decade has transformed how university students acquire programming and language skills.",questions:[{q:"本句真正的主语核心词是哪一个？",options:["platforms","decade","growth","students"],answer:2,explain:"of online learning platforms 与 over the past decade 都是后置修饰语，核心主语是 The rapid growth。"},{q:"句中的谓语动词部分是？",options:["acquire","has transformed","learning","rapid"],answer:1,explain:"has transformed 是现在完成时谓语动词。"}]},
       {id:2,course:"cet4",stage:"阅读精练",module:"阅读精练",type:"read",minutes:12,title:"细节定位与同义替换",gist:"题干关键词定位原文，识别四级高频同义改写。",lesson:"四级仔细阅读正确选项极少照抄原文，90% 采用同义词或词性转换替换原文表达。",takeaways:["题干实词（名词/动词）定位句群","警惕原词照搬的干扰项","同义替换是正确选项核心特征"],passage:"Artificial intelligence tools can assist beginners in debugging code, yet independent problem-solving remains essential for deep comprehension.",questions:[{q:"What does the author emphasize about learning to code?",options:["AI can replace all human programmers","Independent problem-solving is still vital","Debugging is no longer necessary","Beginners should avoid AI completely"],answer:1,explain:"vital 同义替换原文的 essential。"}]},
-      {id:3,course:"cet4",stage:"写作与翻译",module:"写作与翻译",type:"write",minutes:15,title:"四级议论文首段：现象引入与观点亮明",gist:"用 3 句话稳稳写出高分首段。",lesson:"首段黄金结构：背景句（Nowadays, it is widely observed that...）+ 转折或聚焦 + 核心论点（From my perspective...）。",takeaways:["首段控制在 35-45 词","避免空洞套话，直接切入主题","善用连接词提升连贯度"],prompt:"请围绕 digital learning（数字化学习）写一段包含 phenomenon 或 perspective、digital、essential 等关键词的短文（不少于 15 词）。",minWords:15,points:[["digital","online"],["essential","important","vital"],["learning","study"]],sample:"Nowadays, digital learning has become an essential part of higher education, offering flexible resources for every student."}
+      {id:3,course:"cet4",stage:"写作与翻译",module:"写作与翻译",type:"write",minutes:15,title:"四级议论文首段：现象引入与观点亮明",gist:"用 3 句话稳稳写出高分首段。",lesson:"首段黄金结构：背景句（Nowadays, it is widely observed that...）+ 转折或聚焦 + 核心论点（From my perspective...）。",takeaways:["首段控制在 35-45 词","避免空洞套话，直接切入主题","善用连接词提升连贯度"],prompt:"请围绕 digital learning（数字化学习）写一段包含 digital、essential、learning 等关键词的短文（不少于 12 词）。",minWords:12,points:[["digital","online"],["essential","important","vital"],["learning","study"]],sample:"Nowadays, digital learning has become an essential part of higher education, offering flexible resources for every student."}
     ];
     fallbackCet.forEach(l => { cet4Levels.push(l); if (!cet4Groups.includes(l.stage)) cet4Groups.push(l.stage); });
   }
   levels = courseLevels[activeCourse];
   groups = courseGroups[activeCourse];
 
-  /* ===== 1. 在原站顶栏注入「双 UI 切换」与「返回 3D 星球」按钮 ===== */
+  /* ===== 2. 顶栏注入双 UI 切换与返回 3D 星球按钮 ===== */
   const topRight = document.querySelector(".topbar .top-right");
-  if (topRight) {
+  if (topRight && !document.getElementById("topUiSwitchBtn")) {
     const backCosmosBtn = document.createElement("button");
     backCosmosBtn.type = "button";
     backCosmosBtn.id = "workspaceBackCosmosBtn";
@@ -3329,7 +3422,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     topRight.insertBefore(switchBtn, topRight.firstChild);
   }
 
-  /* ===== 2. UI 模式状态管理与双向实时数据同步 ===== */
+  /* ===== 3. 双 UI 状态同步与关卡无障碍进入 ===== */
   const UI_MODE_KEY = "htlab.uimode.v1";
   let currentUiMode = localStorage.getItem(UI_MODE_KEY) || "cosmos";
 
@@ -3347,7 +3440,6 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     }
   }
 
-  // 劫持并增强原站 render() 与 save()，保证任何一方改动进度时两边 100% 同步
   const origRender = window.render;
   window.render = function() {
     origRender();
@@ -3376,12 +3468,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     localStorage.setItem(UI_MODE_KEY, currentUiMode);
     document.body.dataset.uiMode = currentUiMode;
     if (currentUiMode === "cosmos") {
-      // 若当前正处于具体关卡学习中，则直接展示深空全息工作台；否则展示 3D 星球宇宙
-      if (activeLevel) {
-        document.body.dataset.cosmosView = "workspace";
-      } else {
-        document.body.dataset.cosmosView = "universe";
-      }
+      document.body.dataset.cosmosView = activeLevel ? "workspace" : "universe";
       resizeCosmosCanvas();
       syncSharedDataToBothUIs();
     } else {
@@ -3390,7 +3477,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     }
     updateWorkspaceBackBtn();
     if (showToastMsg) {
-      toast(currentUiMode === "cosmos" ? "已切换至「3D 星尘粒子宇宙 UI」（进度已同步）" : "已切换至「悬浮透明液态玻璃 UI」（进度已同步）");
+      toast(currentUiMode === "cosmos" ? "已切换至「3D 星尘粒子宇宙 UI」" : "已切换至「悬浮透明液态玻璃 UI」");
     }
   }
 
@@ -3402,11 +3489,36 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     syncSharedDataToBothUIs();
   }
 
+  // 直接进入关卡实训工作台（即使用户点击了后续模块的代表卡，也允许直接打开学习，不再卡死没反应）
+  function forceOpenLevelInWorkspace(lv) {
+    if (!lv) return;
+    document.body.dataset.uiMode = "cosmos";
+    document.body.dataset.cosmosView = "workspace";
+    activeLevel = lv;
+    page = "lesson";
+    const quizDone = isDone(lv) || !!data.quizRewards[lv.id];
+    selectedOption = quizDone ? lv.answer : null;
+    quizPassed = quizDone;
+    codePassed = isDone(lv);
+    hintVisible = false;
+    solutionVisible = false;
+    window.quizAnswered = quizDone;
+    window.codeFeedback = "";
+    window.codeDraft = data.drafts[lv.id] || "";
+    window.taskState = (window.taskState && window.taskState.levelId === lv.id) ? window.taskState : null;
+    origRender();
+    ensureNextBar();
+    updateWorkspaceBackBtn();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   function openCosmosWorkspace(targetPage, levelId) {
     document.body.dataset.uiMode = "cosmos";
     document.body.dataset.cosmosView = "workspace";
     if (levelId !== undefined && levelId !== null) {
-      openLevel(levelId);
+      const targetLv = levels.find(x => x.id === levelId) || nextLevel();
+      forceOpenLevelInWorkspace(targetLv);
+      return;
     } else if (targetPage) {
       switchPage(targetPage);
     }
@@ -3414,7 +3526,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  /* ===== 3. 18,000+ 粒子 3D 宇宙 + 鼠标/手指强磁星流跟随引擎 ===== */
+  /* ===== 4. 绚丽深空星云 + 银河光带 + 动态流星 + 18,000 粒子引擎 ===== */
   const bgCanvas = document.getElementById("stardust-canvas");
   const fgCanvas = document.getElementById("stardust-fg-canvas");
   const ctx = bgCanvas.getContext("2d");
@@ -3423,25 +3535,36 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
 
   let W = window.innerWidth, H = window.innerHeight;
   let PARTICLE_COUNT = W <= 768 ? 10000 : 18000;
-  let SWARM_COUNT = W <= 768 ? 2200 : 4200; // 专门追随鼠标/手指的高亮星流群
+  let SWARM_COUNT = W <= 768 ? 2200 : 4200;
   const MAX_POOL = 26000;
   const particles = [];
   const bgStars = [];
+  const nebulaClouds = [];
+  const meteors = [];
   const fireworks = [];
   let orbitCardItems = [];
 
-  let sceneMode = "binary"; // binary | orbit | tower | countdown | calligraphy
+  // 多套绚丽星云配色方案
+  const NEBULA_THEMES = [
+    { name: "极光深空", hues: [205, 268, 175, 315], coreA: "rgba(29, 78, 216, 0.34)", coreB: "rgba(147, 51, 234, 0.28)", milky: "rgba(56, 189, 248, 0.12)" },
+    { name: "紫微星冕", hues: [275, 320, 230, 40], coreA: "rgba(126, 34, 206, 0.36)", coreB: "rgba(219, 39, 119, 0.28)", milky: "rgba(192, 132, 252, 0.14)" },
+    { name: "翡翠星河", hues: [165, 195, 225, 145], coreA: "rgba(5, 150, 105, 0.32)", coreB: "rgba(14, 165, 233, 0.28)", milky: "rgba(52, 211, 153, 0.13)" },
+    { name: "超新星烈焰", hues: [18, 42, 340, 205], coreA: "rgba(225, 29, 72, 0.32)", coreB: "rgba(217, 119, 6, 0.28)", milky: "rgba(251, 146, 60, 0.13)" }
+  ];
+  let nebulaIdx = 0;
+
+  let sceneMode = "binary";
   let rotX = 0.28, rotY = 0, targetRotX = 0.28, targetRotY = 0;
   let camZ = 0, targetCamZ = 0;
   let isDragging = false, dragStartX = 0, dragStartY = 0;
 
-  // 鼠标 / 触摸实时追踪坐标（用于“鼠标靠近哪里，粒子就跟到哪里”）
   const pointer = { x: W * 0.5, y: H * 0.5, active: false, lastMove: 0 };
-  let magnetMode = "attract"; // attract (聚拢跟随) | vortex (星璇环绕) | repel (斥力拨云)
+  let magnetMode = "attract";
   let magnetStrength = 0.85;
 
   function initParticlePool() {
     particles.length = 0;
+    const th = NEBULA_THEMES[nebulaIdx];
     for (let i = 0; i < MAX_POOL; i++) {
       const isSwarm = i < SWARM_COUNT;
       particles.push({
@@ -3450,32 +3573,69 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         z: (Math.random() - 0.5) * 800,
         tx: 0, ty: 0, tz: 0,
         vx: 0, vy: 0, vz: 0,
-        sx: (Math.random() - 0.5) * W, // 屏幕空间偏移（用于丝滑鼠标追随）
-        sy: (Math.random() - 0.5) * H,
+        sx: Math.random() * W,
+        sy: Math.random() * H,
         svx: 0, svy: 0,
-        ease: isSwarm ? (0.04 + Math.random() * 0.14) : (0.035 + Math.random() * 0.055),
-        size: isSwarm ? (0.55 + Math.random() * 1.35) : (0.42 + Math.random() * 1.15),
-        hue: isSwarm ? (185 + Math.random() * 95) : 205,
-        sat: 90,
-        light: isSwarm ? (68 + Math.random() * 28) : (60 + Math.random() * 32),
-        alpha: 0.25 + Math.random() * 0.72,
+        ease: isSwarm ? (0.045 + Math.random() * 0.14) : (0.035 + Math.random() * 0.055),
+        size: isSwarm ? (0.6 + Math.random() * 1.4) : (0.45 + Math.random() * 1.2),
+        hue: th.hues[i % th.hues.length] + (Math.random() - 0.5) * 24,
+        sat: 92,
+        light: isSwarm ? (70 + Math.random() * 26) : (62 + Math.random() * 30),
+        alpha: 0.3 + Math.random() * 0.7,
         phase: Math.random() * Math.PI * 2,
         orbitAng: Math.random() * Math.PI * 2,
-        orbitRad: 6 + Math.random() * 115,
+        orbitRad: 6 + Math.random() * 120,
         isSwarm: isSwarm
       });
     }
+
+    // 远景多彩闪烁星辰（包含十字星芒亮星）
     bgStars.length = 0;
-    for (let i = 0; i < 420; i++) {
+    for (let i = 0; i < 560; i++) {
       bgStars.push({
         x: Math.random() * W,
         y: Math.random() * H,
-        r: 0.5 + Math.random() * 1.2,
-        a: 0.2 + Math.random() * 0.6,
+        r: i < 36 ? (1.4 + Math.random() * 1.2) : (0.45 + Math.random() * 1.1),
+        a: 0.25 + Math.random() * 0.7,
         p: Math.random() * Math.PI * 2,
-        sp: 0.01 + Math.random() * 0.03
+        sp: 0.012 + Math.random() * 0.035,
+        hue: [200, 220, 275, 45, 180][i % 5],
+        isFlare: i < 24
       });
     }
+
+    // 5 团缓慢漂移的深空星云气团
+    nebulaClouds.length = 0;
+    const cloudDefs = [
+      { rx: 0.22, ry: 0.26, rad: 0.42, hue: 210, alpha: 0.18, spd: 0.0004 },
+      { rx: 0.78, ry: 0.28, rad: 0.40, hue: 278, alpha: 0.17, spd: -0.00035 },
+      { rx: 0.50, ry: 0.76, rad: 0.46, hue: 185, alpha: 0.15, spd: 0.0003 },
+      { rx: 0.32, ry: 0.62, rad: 0.34, hue: 320, alpha: 0.11, spd: -0.00045 },
+      { rx: 0.68, ry: 0.55, rad: 0.36, hue: 245, alpha: 0.14, spd: 0.00038 }
+    ];
+    cloudDefs.forEach((c, idx) => {
+      nebulaClouds.push({
+        ang: idx * 1.2,
+        baseX: c.rx, baseY: c.ry,
+        rad: c.rad, hue: c.hue, alpha: c.alpha, spd: c.spd
+      });
+    });
+  }
+
+  function spawnMeteor() {
+    if (meteors.length > 3) return;
+    const startX = Math.random() * W * 0.85 + W * 0.1;
+    const startY = Math.random() * H * 0.35;
+    const angle = Math.PI * (0.68 + Math.random() * 0.12);
+    const speed = 9 + Math.random() * 7;
+    meteors.push({
+      x: startX, y: startY,
+      vx: Math.cos(angle) * speed,
+      vy: -Math.sin(angle) * speed * -1,
+      len: 75 + Math.random() * 65,
+      alpha: 1,
+      hue: Math.random() > 0.5 ? 195 : 275
+    });
   }
 
   function resizeCosmosCanvas() {
@@ -3489,19 +3649,18 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
   }
   window.addEventListener("resize", resizeCosmosCanvas);
 
-  // 分配 3D 目标形状
   function shapeBinaryPlanets() {
     const sep = W <= 768 ? 145 : 250;
+    const th = NEBULA_THEMES[nebulaIdx];
     for (let i = 0; i < MAX_POOL; i++) {
       const p = particles[i];
       const leftPlanet = (i % 2 === 0);
       const cx = leftPlanet ? -sep : sep;
-      const rad = (W <= 768 ? 82 : 128) * Math.cbrt(0.25 + 0.75 * Math.random());
+      const rad = (W <= 768 ? 84 : 132) * Math.cbrt(0.22 + 0.78 * Math.random());
       const u = Math.random(), v = Math.random();
       const theta = u * 2 * Math.PI, phi = Math.acos(2 * v - 1);
-      // 25% 粒子形成行星星环
       if (i % 4 === 0) {
-        const rRing = (W <= 768 ? 105 : 165) + Math.random() * 48;
+        const rRing = (W <= 768 ? 108 : 172) + Math.random() * 52;
         const ang = Math.random() * Math.PI * 2;
         p.tx = cx + Math.cos(ang) * rRing;
         p.ty = Math.sin(ang) * rRing * 0.28;
@@ -3511,55 +3670,52 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         p.ty = rad * Math.sin(phi) * Math.sin(theta);
         p.tz = rad * Math.cos(phi);
       }
-      p.hue = leftPlanet ? (195 + Math.random() * 30) : (268 + Math.random() * 42);
-      p.sat = 88;
+      p.hue = leftPlanet ? (th.hues[0] + (Math.random() - 0.5) * 32) : (th.hues[1] + (Math.random() - 0.5) * 38);
+      p.sat = 90;
     }
   }
 
   function shapeGalaxyOrbit() {
-    const isC = (activeCourse === "c");
-    const baseHue = isC ? 198 : 272;
+    const th = NEBULA_THEMES[nebulaIdx];
+    const baseHue = (activeCourse === "c") ? th.hues[0] : th.hues[1];
     for (let i = 0; i < MAX_POOL; i++) {
       const p = particles[i];
       if (i < MAX_POOL * 0.28) {
-        // 中心高密星球核
-        const rad = 98 * Math.cbrt(Math.random());
+        const rad = 102 * Math.cbrt(Math.random());
         const u = Math.random(), v = Math.random();
-        const th = u * Math.PI * 2, ph = Math.acos(2 * v - 1);
-        p.tx = rad * Math.sin(ph) * Math.cos(th);
-        p.ty = rad * Math.sin(ph) * Math.sin(th);
+        const thAng = u * Math.PI * 2, ph = Math.acos(2 * v - 1);
+        p.tx = rad * Math.sin(ph) * Math.cos(thAng);
+        p.ty = rad * Math.sin(ph) * Math.sin(thAng);
         p.tz = rad * Math.cos(ph);
-        p.hue = baseHue + (Math.random() - 0.5) * 28;
+        p.hue = baseHue + (Math.random() - 0.5) * 30;
       } else {
-        // 多层倾斜星系环
         const band = i % 4;
-        const r = 145 + band * 72 + (Math.random() - 0.5) * 32;
+        const r = 148 + band * 72 + (Math.random() - 0.5) * 34;
         const a = Math.random() * Math.PI * 2;
         p.tx = Math.cos(a) * r;
-        p.ty = (Math.random() - 0.5) * 18 + Math.sin(a * 2) * 8;
+        p.ty = (Math.random() - 0.5) * 20 + Math.sin(a * 2) * 10;
         p.tz = Math.sin(a) * r;
-        p.hue = baseHue + band * 16 + (Math.random() - 0.5) * 20;
+        p.hue = baseHue + band * 18 + (Math.random() - 0.5) * 22;
       }
     }
   }
 
   function shapeStardustTower() {
-    const isC = (activeCourse === "c");
-    const baseHue = isC ? 195 : 275;
+    const th = NEBULA_THEMES[nebulaIdx];
+    const baseHue = (activeCourse === "c") ? th.hues[0] : th.hues[1];
     for (let i = 0; i < MAX_POOL; i++) {
       const p = particles[i];
-      if (i < 550) {
-        // 顶部摇曳烛火
+      if (i < 600) {
         const a = Math.random() * Math.PI * 2;
-        const r = Math.random() * 14;
+        const r = Math.random() * 15;
         p.tx = Math.cos(a) * r;
-        p.ty = -175 - Math.random() * 55;
+        p.ty = -175 - Math.random() * 58;
         p.tz = Math.sin(a) * r;
         p.hue = 38 + Math.random() * 22;
-        p.light = 78;
+        p.light = 80;
       } else {
         const tier = i % 3;
-        const radii = [210, 150, 96];
+        const radii = [212, 152, 98];
         const yTops = [95, 15, -65];
         const r = radii[tier] * (0.86 + Math.random() * 0.14);
         const a = Math.random() * Math.PI * 2;
@@ -3599,8 +3755,8 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         p.tx = pt.x + (Math.random() - 0.5) * 3.5;
         p.ty = pt.y + (Math.random() - 0.5) * 3.5;
         p.tz = (Math.random() - 0.5) * 28;
-        p.hue = 190 + (pt.x / 400) * 80;
-        p.light = 82;
+        p.hue = 190 + (pt.x / 400) * 85;
+        p.light = 84;
       } else {
         const a = Math.random() * Math.PI * 2, r = 240 + Math.random() * 260;
         p.tx = Math.cos(a) * r;
@@ -3627,12 +3783,11 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
       fireworks.push({
         x: cx, y: cy, vx: vx, vy: vy,
         gravity: 0.04, alpha: 1, decay: 0.012 + Math.random() * 0.01,
-        hue: (baseHue + i * 2) % 360, light: 76, size: 1.4 + Math.random() * 1.4
+        hue: (baseHue + i * 2) % 360, light: 78, size: 1.5 + Math.random() * 1.4
       });
     }
   }
 
-  // 摄像机穿云入星跃迁动画
   function warpIntoCoursePlanet(courseId) {
     if (courseId && courseId !== activeCourse) {
       activeCourse = courseId;
@@ -3643,11 +3798,12 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     }
     targetCamZ = -420;
     spawnFireworkBurst(W * 0.5, H * 0.5, "star");
+    toast("正在穿云跃迁至「" + currentCourse().name + "」星球…");
     setTimeout(function() {
       camZ = 340;
       targetCamZ = 0;
       setCosmosChapter("orbit");
-    }, 340);
+    }, 320);
   }
 
   let countdownTimer = null;
@@ -3699,15 +3855,29 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     if (sceneMode === "binary") {
       k.textContent = "BINARY UNIVERSE · 双星宇宙门户";
       t.textContent = "HT Lab · 选择你的知识星球";
-      s.textContent = "鼠标移到哪里，数千颗星尘就会跟到哪里。点击下方 C 语言或英语四级星球卡跃迁进入。";
+      s.textContent = "移动鼠标或手指，成千上万颗星尘将随你汇聚。点击下方 C 语言或英语四级星球卡直接进入。";
     } else {
       k.textContent = "PLANET CORE · " + cc.name.toUpperCase() + " (" + done + "/" + levels.length + " 关已通关)";
       t.textContent = cc.name + " · 星环全息实训场";
-      s.textContent = "拖拽旋转星系，点击悬浮卡片 3D 翻转检视或直接进入关卡实训舱。";
+      s.textContent = "拖拽背景可旋转星系；单击任意卡片直接进入该关卡实训舱。";
     }
   }
 
-  /* ===== 4. 构建 3D 星轨悬浮卡片（桌面端 3D 环绕遮挡 + 手机端底部防重叠星轨坞） ===== */
+  /* ===== 5. 构建可 100% 灵敏点击的 3D 星轨卡片 ===== */
+  function attachReliableCardClick(el, callback) {
+    let downX = 0, downY = 0;
+    el.addEventListener("pointerdown", function(e) {
+      e.stopPropagation(); // 阻止触发底层画布拖拽，保证卡片点击稳准狠
+      downX = e.clientX;
+      downY = e.clientY;
+    });
+    el.addEventListener("click", function(e) {
+      e.stopPropagation();
+      if (Math.hypot(e.clientX - downX, e.clientY - downY) > 25) return;
+      callback(e);
+    });
+  }
+
   function buildCosmosOrbitCards() {
     cardsLayer.innerHTML = "";
     orbitCardItems = [];
@@ -3726,17 +3896,16 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
           '<div class="orbit-card-top"><span class="orbit-card-tag">PLANET 0' + (idx + 1) + ' · ' + esc(c.chip) + '</span><span class="nova-dot' + (dn > 0 ? ' done' : '') + '"></span></div>' +
           '<div class="orbit-card-title">' + esc(c.name) + ' 星球</div>' +
           '<div class="orbit-card-desc">' + esc(c.sub) + '</div>' +
-          '<div class="orbit-card-foot"><span>已完成 ' + dn + '/' + ls.length + ' 关 (' + pct + '%)</span><span class="orbit-card-action">穿云入星 →</span></div>';
-        el.addEventListener("click", function(e) {
-          e.stopPropagation();
+          '<div class="orbit-card-foot"><span>已完成 ' + dn + '/' + ls.length + ' 关 (' + pct + '%)</span><span class="orbit-card-action">点击进入星球 →</span></div>';
+        attachReliableCardClick(el, function() {
           warpIntoCoursePlanet(c.id);
         });
         cardsLayer.appendChild(el);
         orbitCardItems.push({
           el: el,
           x: idx === 0 ? -sep : sep,
-          y: 125,
-          z: -30,
+          y: 120,
+          z: -35,
           isPortal: true,
           data: c
         });
@@ -3744,13 +3913,12 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
       return;
     }
 
-    // 星球内部：展示当前课程的代表性模块与下一待闯关卡
     const displayList = [];
     const nextLv = nextLevel();
     if (nextLv) {
       displayList.push({ level: nextLv, badge: "⚡ 当前推荐挑战" });
     }
-    groups.forEach((g, idx) => {
+    groups.forEach(g => {
       const modLevels = levels.filter(l => l.stage === g);
       if (!modLevels.length) return;
       const firstUnfinished = modLevels.find(l => !isDone(l)) || modLevels[0];
@@ -3773,10 +3941,10 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         '<div class="orbit-card-top"><span class="orbit-card-tag">' + esc(item.badge) + '</span><span class="nova-dot' + (done ? ' done' : '') + '"></span></div>' +
         '<div class="orbit-card-title">第 ' + String(lv.id).padStart(2, "0") + ' 关 · ' + esc(lv.title) + '</div>' +
         '<div class="orbit-card-desc">' + esc(lv.gist) + '</div>' +
-        '<div class="orbit-card-foot"><span>约 ' + lv.minutes + ' 分钟 · ' + (done ? '✓ 已通关' : '可挑战') + '</span><span class="orbit-card-action">翻转检视 ↗</span></div>';
-      el.addEventListener("click", function(e) {
-        e.stopPropagation();
-        openInspectCardModal(lv, item.badge);
+        '<div class="orbit-card-foot"><span>约 ' + lv.minutes + ' 分钟 · ' + (done ? '✓ 已通关' : '点击直接挑战') + '</span><span class="orbit-card-action">进入实训 →</span></div>';
+      attachReliableCardClick(el, function() {
+        // 单击卡片直接进入该关卡实训舱！
+        forceOpenLevelInWorkspace(lv);
       });
       cardsLayer.appendChild(el);
       orbitCardItems.push({
@@ -3789,36 +3957,6 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
       });
     }
   }
-
-  function openInspectCardModal(lv, badgeText) {
-    const modal = document.getElementById("cosmosInspectModal");
-    const box = document.getElementById("cosmosInspectCard");
-    const done = isDone(lv);
-    box.innerHTML =
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
-        '<span class="orbit-card-tag">' + esc(badgeText || lv.stage) + ' · LEVEL ' + String(lv.id).padStart(2, "0") + '</span>' +
-        '<span class="chip" style="background:rgba(56,189,248,0.2);color:#7dd3fc;border:1px solid rgba(56,189,248,0.4)">' + (done ? '✓ 已通关' : '待通关 +30 点') + '</span>' +
-      '</div>' +
-      '<h2 style="font-size:22px;margin:0 0 10px;color:#fff">' + esc(lv.title) + '</h2>' +
-      '<p style="font-size:13.5px;color:#cbd5e1;line-height:1.7;margin:0 0 16px">' + esc(lv.gist) + '</p>' +
-      '<div style="background:rgba(2,6,23,0.65);border:1px solid rgba(148,163,184,0.2);border-radius:14px;padding:12px 14px;margin-bottom:18px;font-size:12.5px;color:#94a3b8;line-height:1.65">' +
-        '<b>本关要点：</b>' + esc((lv.takeaways && lv.takeaways[0]) || "掌握核心原理并完成实操验证。") +
-      '</div>' +
-      '<div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">' +
-        '<button type="button" class="cosmos-pill" id="closeInspectBtn">返回星轨</button>' +
-        '<button type="button" class="ui-switch-pill" id="enterLevelWorkspaceBtn">🚀 进入本关全息实训舱 →</button>' +
-      '</div>';
-    modal.classList.add("open");
-    spawnFireworkBurst(W * 0.5, H * 0.5, "star");
-    document.getElementById("closeInspectBtn").onclick = function() { modal.classList.remove("open"); };
-    document.getElementById("enterLevelWorkspaceBtn").onclick = function() {
-      modal.classList.remove("open");
-      openCosmosWorkspace("lesson", lv.id);
-    };
-  }
-  document.getElementById("cosmosInspectModal").addEventListener("click", function(e) {
-    if (e.target === e.currentTarget) e.currentTarget.classList.remove("open");
-  });
 
   function project3D(x, y, z, cx, cy) {
     const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
@@ -3833,11 +3971,10 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     return { x: cx + x1 * scale, y: cy + y2 * scale, s: scale, z: z2 };
   }
 
-  /* ===== 5. 3D 卡片位置更新（含物理像素对齐、星球核心真实遮挡、手机端防重叠切换） ===== */
   function updateOrbitCardsLayout(cx, cy) {
     const isMobile = W <= 768;
     cardsLayer.classList.toggle("mobile-dock-mode", isMobile);
-    if (isMobile) return; // 手机端由 CSS Grid 底部星轨坞自动排列，彻底杜绝重叠与出界
+    if (isMobile) return;
 
     const dpr = window.devicePixelRatio || 1;
     const centerProj = project3D(0, 0, 0, cx, cy);
@@ -3846,54 +3983,51 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     orbitCardItems.forEach(item => {
       const el = item.el;
       const p = project3D(item.x, item.y, item.z, cx, cy);
-      const rawSc = Math.max(0.58, Math.min(1.06, p.s * 0.94));
+      const rawSc = Math.max(0.62, Math.min(1.06, p.s * 0.95));
       const sc = Math.round(rawSc * 50) / 50;
-      const w = item.isPortal ? 268 : 214;
-      const h = item.isPortal ? 158 : 118;
+      const w = item.isPortal ? 278 : 224;
+      const h = item.isPortal ? 166 : 124;
 
-      // 钳制在屏幕安全边距内，防止小窗口左右溢出
-      const clampedX = Math.max(w * 0.5 + 14, Math.min(W - w * 0.5 - 14, p.x));
-      const clampedY = Math.max(h * 0.5 + 86, Math.min(H - h * 0.5 - 64, p.y));
+      const clampedX = Math.max(w * 0.5 + 16, Math.min(W - w * 0.5 - 16, p.x));
+      const clampedY = Math.max(h * 0.5 + 90, Math.min(H - h * 0.5 - 66, p.y));
       const tx = Math.round((clampedX - w * 0.5) * dpr) / dpr;
       const ty = Math.round((clampedY - h * 0.5) * dpr) / dpr;
 
       el.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${sc})`;
 
-      const isBehind = !item.isPortal && p.z > 15;
+      const isBehind = !item.isPortal && p.z > 20;
       el.classList.toggle("is-behind", isBehind);
       el.classList.toggle("is-front", !isBehind);
 
       if (isBehind && coreRadius > 10) {
-        const distToCore = Math.hypot(clampedX - cx, clampedY - cy);
         const localCoreX = ((cx - clampedX) / sc) + w * 0.5;
         const localCoreY = ((cy - clampedY) / sc) + h * 0.5;
         const localCoreR = coreRadius / sc;
-        const maskGrad = `radial-gradient(circle ${localCoreR.toFixed(0)}px at ${localCoreX.toFixed(0)}px ${localCoreY.toFixed(0)}px, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.18) 58%, rgba(0,0,0,1) 100%)`;
+        const maskGrad = `radial-gradient(circle ${localCoreR.toFixed(0)}px at ${localCoreX.toFixed(0)}px ${localCoreY.toFixed(0)}px, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.28) 58%, rgba(0,0,0,1) 100%)`;
         el.style.webkitMaskImage = maskGrad;
         el.style.maskImage = maskGrad;
-        const depthFade = Math.max(0.2, Math.min(0.74, (p.s - 0.38) * 1.1));
+        const depthFade = Math.max(0.32, Math.min(0.82, (p.s - 0.35) * 1.2));
         el.style.opacity = depthFade.toFixed(2);
-        el.style.filter = "brightness(0.68) saturate(0.85)";
-        el.style.pointerEvents = distToCore < coreRadius * 0.78 ? "none" : "auto";
+        el.style.filter = "brightness(0.75) saturate(0.9)";
+        el.style.pointerEvents = "auto"; // 即使在背面露出边缘也可点击
       } else {
         el.style.webkitMaskImage = "none";
         el.style.maskImage = "none";
-        const alpha = Math.max(0.5, Math.min(1, (p.s - 0.35) * 1.5));
-        el.style.opacity = alpha.toFixed(2);
+        el.style.opacity = "1";
         el.style.filter = "none";
         el.style.pointerEvents = "auto";
       }
     });
   }
 
-  /* ===== 6. 主渲染循环：18,000+ 粒子 + 指哪跟哪强磁星流 ===== */
+  /* ===== 6. 主渲染循环：五彩星云 + 银河光带 + 流星 + 18,000 强磁星尘 ===== */
   function tickCosmos() {
     if (currentUiMode === "cosmos") {
       ctx.clearRect(0, 0, W, H);
       fgCtx.clearRect(0, 0, W, H);
 
       if (!isDragging && (sceneMode === "binary" || sceneMode === "orbit" || sceneMode === "tower")) {
-        targetRotY += 0.00085;
+        targetRotY += 0.0008;
       }
       rotX += (targetRotX - rotX) * 0.06;
       rotY += (targetRotY - rotY) * 0.06;
@@ -3902,24 +4036,97 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
       const isMobile = W <= 768;
       const cx = W * 0.5;
       const cy = isMobile ? H * 0.35 : H * 0.5;
+      const th = NEBULA_THEMES[nebulaIdx];
 
-      // 1) 远景呼吸恒星
+      // 1) 绘制斜贯天际的银河星带 (Milky Way Diagonal Band)
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(-0.38);
+      const mwGrad = ctx.createLinearGradient(0, -H * 0.32, 0, H * 0.32);
+      mwGrad.addColorStop(0, "rgba(0,0,0,0)");
+      mwGrad.addColorStop(0.35, th.milky);
+      mwGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.07)");
+      mwGrad.addColorStop(0.65, th.milky);
+      mwGrad.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = mwGrad;
+      ctx.fillRect(-W, -H * 0.32, W * 2, H * 0.64);
+      ctx.restore();
+
+      // 2) 绘制 5 团动态呼吸的深空星云气团 (Nebula Clouds)
+      for (let i = 0; i < nebulaClouds.length; i++) {
+        const nc = nebulaClouds[i];
+        nc.ang += nc.spd;
+        const nx = W * nc.baseX + Math.cos(nc.ang) * 55;
+        const ny = H * nc.baseY + Math.sin(nc.ang * 1.3) * 40;
+        const nr = Math.max(W, H) * nc.rad;
+        const ng = ctx.createRadialGradient(nx, ny, 10, nx, ny, nr);
+        const hVal = th.hues[i % th.hues.length];
+        ng.addColorStop(0, `hsla(${hVal}, 90%, 56%, ${nc.alpha})`);
+        ng.addColorStop(0.5, `hsla(${(hVal + 28) % 360}, 85%, 42%, ${nc.alpha * 0.45})`);
+        ng.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = ng;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      // 3) 远景多彩闪烁恒星与十字星芒
       for (let i = 0; i < bgStars.length; i++) {
         const s = bgStars[i];
         s.p += s.sp;
-        const a = s.a * (0.55 + 0.45 * Math.sin(s.p));
-        ctx.fillStyle = `rgba(216,230,255,${a.toFixed(2)})`;
+        const a = s.a * (0.5 + 0.5 * Math.sin(s.p));
+        ctx.fillStyle = `hsla(${s.hue}, 85%, 88%, ${a.toFixed(2)})`;
         ctx.fillRect(s.x, s.y, s.r, s.r);
+        if (s.isFlare && a > 0.65) {
+          ctx.fillStyle = `hsla(${s.hue}, 95%, 95%, ${(a * 0.45).toFixed(2)})`;
+          ctx.fillRect(s.x - s.r * 3, s.y, s.r * 7, 0.8);
+          ctx.fillRect(s.x, s.y - s.r * 3, 0.8, s.r * 7);
+        }
       }
 
-      // 2) 中心星球体积辉光（画在前景 fgCtx，用于真实遮挡转到星球背面的卡片）
-      if (sceneMode === "orbit" || sceneMode === "tower") {
+      // 4) 随机划过天际的流星 (Shooting Stars)
+      if (Math.random() < 0.018) spawnMeteor();
+      for (let i = meteors.length - 1; i >= 0; i--) {
+        const m = meteors[i];
+        m.x += m.vx;
+        m.y += m.vy;
+        m.alpha -= 0.016;
+        if (m.alpha <= 0 || m.x < -100 || m.y > H + 100) {
+          meteors.splice(i, 1);
+          continue;
+        }
+        const tailX = m.x - (m.vx / 12) * m.len;
+        const tailY = m.y - (m.vy / 12) * m.len;
+        const mg = ctx.createLinearGradient(m.x, m.y, tailX, tailY);
+        mg.addColorStop(0, `hsla(${m.hue}, 100%, 95%, ${m.alpha})`);
+        mg.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.strokeStyle = mg;
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(m.x, m.y);
+        ctx.lineTo(tailX, tailY);
+        ctx.stroke();
+      }
+
+      // 5) 星球核心多层星冕辉光
+      if (sceneMode === "binary") {
+        const sep = isMobile ? 145 : 250;
+        [-sep, sep].forEach((ox, idx) => {
+          const pCore = project3D(ox, 0, 0, cx, cy);
+          const rCore = (isMobile ? 110 : 175) * pCore.s;
+          const cg = ctx.createRadialGradient(pCore.x, pCore.y, 4, pCore.x, pCore.y, rCore);
+          cg.addColorStop(0, idx === 0 ? "rgba(56, 189, 248, 0.42)" : "rgba(192, 132, 252, 0.42)");
+          cg.addColorStop(0.5, idx === 0 ? "rgba(29, 78, 216, 0.16)" : "rgba(126, 34, 206, 0.16)");
+          cg.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = cg;
+          ctx.beginPath();
+          ctx.arc(pCore.x, pCore.y, rCore, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      } else if (sceneMode === "orbit" || sceneMode === "tower") {
         const cProj = project3D(0, 0, 0, cx, cy);
-        const coreR = (sceneMode === "orbit" ? 108 : 142) * cProj.s;
+        const coreR = (sceneMode === "orbit" ? 118 : 152) * cProj.s;
         const g = fgCtx.createRadialGradient(cx, cy, 2, cx, cy, coreR);
-        const isC = activeCourse === "c";
-        g.addColorStop(0, isC ? "rgba(14, 38, 78, 0.92)" : "rgba(44, 20, 82, 0.92)");
-        g.addColorStop(0.55, isC ? "rgba(10, 22, 48, 0.62)" : "rgba(26, 12, 52, 0.62)");
+        g.addColorStop(0, th.coreA);
+        g.addColorStop(0.55, th.coreB);
         g.addColorStop(1, "rgba(3, 5, 13, 0)");
         fgCtx.fillStyle = g;
         fgCtx.beginPath();
@@ -3927,20 +4134,20 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         fgCtx.fill();
       }
 
-      // 3) 鼠标/手指光标引力场光晕
+      // 6) 鼠标/手指引力光环
       const pointerRecent = pointer.active && (Date.now() - pointer.lastMove < 12000);
       if (pointerRecent && magnetStrength > 0) {
-        const mg = fgCtx.createRadialGradient(pointer.x, pointer.y, 1, pointer.x, pointer.y, 135);
-        mg.addColorStop(0, "rgba(56, 189, 248, 0.24)");
-        mg.addColorStop(0.5, "rgba(168, 85, 247, 0.08)");
+        const mg = fgCtx.createRadialGradient(pointer.x, pointer.y, 2, pointer.x, pointer.y, 150);
+        mg.addColorStop(0, "rgba(56, 189, 248, 0.28)");
+        mg.addColorStop(0.45, "rgba(192, 132, 252, 0.11)");
         mg.addColorStop(1, "rgba(0, 0, 0, 0)");
         fgCtx.fillStyle = mg;
         fgCtx.beginPath();
-        fgCtx.arc(pointer.x, pointer.y, 135, 0, Math.PI * 2);
+        fgCtx.arc(pointer.x, pointer.y, 150, 0, Math.PI * 2);
         fgCtx.fill();
       }
 
-      // 4) 渲染 18,000+ 主粒子群（含 4,200 颗专属追随星流 + 全域磁吸变形）
+      // 7) 18,000+ 粒子物理与鼠标指哪跟哪更新
       const use3D = (sceneMode === "binary" || sceneMode === "orbit" || sceneMode === "tower");
       const activeSwarmLimit = Math.min(SWARM_COUNT, Math.floor(PARTICLE_COUNT * 0.25));
 
@@ -3948,7 +4155,6 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         const p = particles[i];
         p.phase += 0.04;
 
-        // A. 专属星流追随粒子：只要鼠标在屏幕上活动，就直接涌向鼠标坐标并螺旋环绕
         if (i < activeSwarmLimit && pointerRecent && magnetStrength > 0) {
           p.orbitAng += 0.045 + (i % 7) * 0.008;
           const ringR = p.orbitRad * (0.25 + 0.75 * Math.sin(p.phase * 0.5 + i));
@@ -3959,13 +4165,12 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
           p.sx += p.svx;
           p.sy += p.svy;
 
-          const al = Math.min(1, (0.55 + 0.45 * Math.sin(p.phase)) * 0.95);
-          fgCtx.fillStyle = `hsla(${p.hue}, 95%, 76%, ${al.toFixed(2)})`;
+          const al = Math.min(1, (0.58 + 0.42 * Math.sin(p.phase)) * 0.95);
+          fgCtx.fillStyle = `hsla(${p.hue}, 96%, 78%, ${al.toFixed(2)})`;
           fgCtx.fillRect(p.sx, p.sy, p.size * 1.45, p.size * 1.45);
           continue;
         }
 
-        // B. 3D 形态粒子弹簧物理更新
         p.vx = (p.vx + (p.tx - p.x) * p.ease) * 0.76;
         p.vy = (p.vy + (p.ty - p.y) * p.ease) * 0.76;
         p.vz = (p.vz + (p.tz - p.z) * p.ease) * 0.76;
@@ -3984,30 +4189,28 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         let drawY = proj.y;
         let extraLight = 0;
 
-        // C. 全域鼠标磁吸牵引：鼠标靠近哪里，周围 260px 内的星球/星环粒子都向鼠标聚拢
         if (pointerRecent && magnetStrength > 0) {
           const dx = pointer.x - drawX;
           const dy = pointer.y - drawY;
           const distSq = dx * dx + dy * dy;
-          const maxR = isMobile ? 190 : 275;
+          const maxR = isMobile ? 195 : 285;
           if (distSq < maxR * maxR && distSq > 1) {
             const dist = Math.sqrt(distSq);
             const factor = (1 - dist / maxR) * magnetStrength;
             if (magnetMode === "attract") {
-              drawX += dx * factor * 0.72;
-              drawY += dy * factor * 0.72;
+              drawX += dx * factor * 0.74;
+              drawY += dy * factor * 0.74;
             } else if (magnetMode === "vortex") {
-              drawX += dx * factor * 0.45 - dy * factor * 0.55;
-              drawY += dy * factor * 0.45 + dx * factor * 0.55;
+              drawX += dx * factor * 0.45 - dy * factor * 0.58;
+              drawY += dy * factor * 0.45 + dx * factor * 0.58;
             } else {
               drawX -= (dx / dist) * factor * 95;
               drawY -= (dy / dist) * factor * 95;
             }
-            extraLight = factor * 26;
+            extraLight = factor * 28;
           }
         }
 
-        // 同步记录屏幕坐标供星流粒子无缝切换
         p.sx = drawX;
         p.sy = drawY;
 
@@ -4015,7 +4218,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
 
         const twinkle = 0.68 + 0.32 * Math.sin(p.phase);
         const alpha = Math.min(1, p.alpha * twinkle * Math.min(1.2, proj.s));
-        const rad = Math.max(0.4, p.size * proj.s);
+        const rad = Math.max(0.42, p.size * proj.s);
         const targetCtx = (use3D && proj.z < 0) ? fgCtx : ctx;
 
         targetCtx.fillStyle = `hsla(${p.hue}, ${p.sat}%, ${Math.min(96, p.light + extraLight).toFixed(0)}%, ${alpha.toFixed(2)})`;
@@ -4028,7 +4231,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         }
       }
 
-      // 5) 烟花礼花粒子
+      // 8) 礼花粒子
       for (let i = fireworks.length - 1; i >= 0; i--) {
         const f = fireworks[i];
         f.x += f.vx; f.y += f.vy; f.vy += f.gravity;
@@ -4040,7 +4243,6 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
         fgCtx.fill();
       }
 
-      // 6) 更新 3D 卡片坐标
       if (orbitCardItems.length > 0 && document.body.dataset.cosmosView !== "workspace") {
         updateOrbitCardsLayout(cx, cy);
       }
@@ -4048,7 +4250,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     requestAnimationFrame(tickCosmos);
   }
 
-  /* ===== 7. 鼠标与手机触摸交互绑定 ===== */
+  /* ===== 7. 鼠标与触摸事件绑定 ===== */
   window.addEventListener("pointermove", function(e) {
     pointer.x = e.clientX;
     pointer.y = e.clientY;
@@ -4079,7 +4281,6 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     targetCamZ = Math.max(-260, Math.min(360, targetCamZ + e.deltaY * 0.35));
   }, { passive: true });
 
-  // HUD 按钮事件绑定
   document.querySelectorAll(".chapter-orb[data-chapter]").forEach(btn => {
     btn.addEventListener("click", function() {
       setCosmosChapter(btn.dataset.chapter);
@@ -4106,7 +4307,6 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     });
   });
 
-  // 引力模式与粒子数量滑块
   const magnetBtn = document.getElementById("magnetModeBtn");
   magnetBtn.addEventListener("click", function() {
     const order = ["attract", "vortex", "repel"];
@@ -4118,6 +4318,16 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     magnetMode = order[(order.indexOf(magnetMode) + 1) % order.length];
     magnetBtn.textContent = labels[magnetMode];
   });
+
+  const nebulaBtn = document.getElementById("nebulaThemeBtn");
+  nebulaBtn.addEventListener("click", function() {
+    nebulaIdx = (nebulaIdx + 1) % NEBULA_THEMES.length;
+    const th = NEBULA_THEMES[nebulaIdx];
+    nebulaBtn.textContent = "🌌 星云：" + th.name;
+    setCosmosChapter(sceneMode);
+    spawnFireworkBurst(W * 0.5, H * 0.5, "star");
+  });
+
   const pRange = document.getElementById("particleCountRange");
   const pVal = document.getElementById("particleCountVal");
   pRange.addEventListener("input", function() {
@@ -4130,7 +4340,7 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
     magnetStrength = Number(fRange.value) / 100;
   });
 
-  /* ===== 8. 初始化启动：展示双 UI 选择门户 ===== */
+  /* ===== 8. 启动初始化 ===== */
   resizeCosmosCanvas();
   initParticlePool();
   shapeBinaryPlanets();
@@ -4138,12 +4348,33 @@ body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] .nav-btn.active {
   setUiMode(currentUiMode, false);
   requestAnimationFrame(tickCosmos);
 
-  // 开屏动画结束后弹出 UI 选择门户（方便每次进入自由选择玻璃或星空）
   setTimeout(function() {
     document.getElementById("uiChooserModal").classList.remove("is-hidden");
   }, 1550);
 })();
 </script>
-
+<!-- 移动端补丁：FPS 胶囊不再遮挡底部星轨坞卡片 -->
+<style id="ht-mobile-fps-patch">
+@media (max-width: 768px) {
+  #htFpsMonitor {
+    left: auto !important; right: 10px !important;
+    top: 10px !important; bottom: auto !important;
+    transform: none !important;
+    padding: 4px 9px !important; font-size: 10.5px !important;
+  }
+  #htFpsMonitor:hover { transform: none !important; }
+  #htFpsMonitor .fps-ms, #htFpsMonitor canvas { display: none !important; }
+  /* 窄屏星轨坞卡片底部信息改为两行，避免「进度」与「进入」按钮挤在一起 */
+  #orbit-cards-layer.mobile-dock-mode .orbit-card-foot {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+  #orbit-cards-layer.mobile-dock-mode .orbit-card-action {
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+  }
+}
+</style>
 </body>
 </html>
