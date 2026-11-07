@@ -14,32 +14,67 @@
 ## 目录结构
 
 ```
-index.html                  单文件应用：界面、样式与运行时逻辑
-c/                          C 语言课程内容（每个模块一个 JS 数据文件，按模块号命名）
-  c0-getting-started.js     模块 0 · 起步上路（8 关）
-  c1-control-flow.js        模块 1 · 流程控制（8 关）
-  c2-functions.js           模块 2 · 函数与程序结构（8 关）
-  c3-arrays-strings.js      模块 3 · 数组与字符串（8 关）
-  c4-pointers-memory.js     模块 4 · 指针与内存（10 关）
-  c5-types-ds.js            模块 5 · 自定义类型与数据结构（8 关）
-  c6-file-io.js             模块 6 · 文件与输入输出（6 关）
-  c7-engineering.js         模块 7 · 预处理器与工程实践（8 关）
-  c8-algorithms.js          模块 8 · 数据结构与算法（10 关）
-  c9-systems.js             模块 9 · 系统与底层（6 关）
-  c10-projects.js           模块 10 · 综合项目（6 关）
-cet4/                       英语四级课程内容（每个模块一个 JS 数据文件，按模块号命名）
-  m0-foundation.js          模块 0 · 地基（8 关）
-  m1-listening.js           模块 1 · 听力（12 关）
-  m3-reading.js             模块 3 · 阅读（14 关）
-  m4-writing.js             模块 4 · 写作（8 关）
-  m5-translation.js         模块 5 · 翻译（8 关）
-  m2-speaking.js            模块 2 · 口语（10 关）
-  m6-mock.js                模块 6 · 全真模考（2 关）
-  （index.html 中的 script 顺序 = 学习路线顺序：地基 → 听力 → 阅读 → 写作 → 翻译 → 口语 → 模考）
-audio/cet4/                 英语四级音频（听力材料与口语示范，共 46 段）
-  manifest*.json            单声道音频清单：文本 ↔ 文件对应关系（用于校验一致性）
-  dialogue*.json            多角色对话清单：分段音色与文本
-favicon.svg                 站点图标
+index.html                  唯一页面：head 里的资源引用 + 页面 shell DOM（样式、脚本、课程数据都在外部文件）
+css/                        7 个样式文件，按编号顺序加载（编号 = 层叠顺序，顺序有意义）
+  01-base.css                 基础：变量、重置、侧栏/顶栏、课程卡、开屏底层样式
+  02-design-system.css        Liquid Glass 设计系统、天空/云层、通用组件、响应式
+  03-refinements.css          外观面板、玻璃质感、代码块、hover、四级组件、弹窗、胜利页
+  04-effects.css              外观参数联动、关卡区玻璃层次
+  05-motion.css               指针倾斜、滑入/转场、通关条、进度备份面板
+  06-fps.css                  FPS 监视器 + 双 UI（切换器/门户/星空/星轨卡/全息工作台）
+  07-mobile-patch.css         手机端补丁（FPS 防遮挡、星轨坞布局，必须最后加载）
+js/                         13 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
+  01-course-registry.js       课程注册表（COURSES / 关卡汇总 / 进度存储键）
+  02-app-core.js              状态与 localStorage、主题、编辑器、密码弹窗、统计
+  03-lesson-format.js         讲义排版、页面切换
+  04-progress-backup.js       进度导出/导入、存档码/存档链接
+  05-views.js                 渲染路由与各页面（课程页、路线、关于、继续、C 关卡页）
+  06-cet4-engine.js           英语四级任务引擎（听力/阅读/写作/翻译/口语/模考、录音、判分）
+  07-project-and-summary.js   7 天项目、学习总结页、关卡入口
+  08-c-checker.js             C 语言代码检查器、运行结果比对、通关判定
+  09-events.js                全局事件委托、编辑器快捷键（末尾首次渲染）
+  10-splash.js                开屏动画
+  11-appearance.js            外观设置面板（天空预设 / 玻璃参数）
+  12-pointer-tilt.js          指针跟随倾斜
+  13-dual-ui.js               双 UI 引擎（FPS + 星云粒子 + 3D 星轨卡，必须最后加载）
+content/
+  c/                        C 语言课程内容（每个模块一个 JS 数据文件，按模块号命名）
+    c0-getting-started.js   模块 0 · 起步上路（8 关）
+    c1-control-flow.js      模块 1 · 流程控制（8 关）
+    c2-functions.js         模块 2 · 函数与程序结构（8 关）
+    c3-arrays-strings.js    模块 3 · 数组与字符串（8 关）
+    c4-pointers-memory.js   模块 4 · 指针与内存（10 关）
+    c5-types-ds.js          模块 5 · 自定义类型与数据结构（8 关）
+    c6-file-io.js           模块 6 · 文件与输入输出（6 关）
+    c7-engineering.js       模块 7 · 预处理器与工程实践（8 关）
+    c8-algorithms.js        模块 8 · 数据结构与算法（10 关）
+    c9-systems.js           模块 9 · 系统与底层（6 关）
+    c10-projects.js         模块 10 · 综合项目（6 关）
+  cet4/                     英语四级课程内容（每个模块一个 JS 数据文件）
+    m0-foundation.js        模块 0 · 地基（8 关）
+    m1-listening.js         模块 1 · 听力（12 关）
+    m3-reading.js           模块 3 · 阅读（14 关）
+    m4-writing.js           模块 4 · 写作（8 关）
+    m5-translation.js       模块 5 · 翻译（8 关）
+    m2-speaking.js          模块 2 · 口语（10 关）
+    m6-mock.js              模块 6 · 全真模考（2 关）
+    （index.html 中的 script 顺序 = 学习路线顺序：地基 → 听力 → 阅读 → 写作 → 翻译 → 口语 → 模考）
+assets/
+  favicon.svg               站点图标（SVG）
+  ht-lab.ico                站点图标（ICO）
+  audio/cet4/               英语四级音频（听力材料与口语示范，共 46 段 mp3）
+    manifest*.json          单声道音频清单：文本 ↔ 文件对应关系（作者校验用，页面不加载）
+    dialogue*.json          多角色对话清单：分段音色与文本（作者校验用，页面不加载）
+docs/
+  ARCHITECTURE.md           架构说明：加载顺序、子系统、存储键、全局符号、约束
+  CONTENT-GUIDE.md          内容编写指南：关卡数据格式、加关卡/模块/音频、数量同步
+tools/
+  verify-site.mjs           本地验证脚本：Node 起本地服务 + 无头 Edge/Chrome 走交互矩阵（不参与站点运行）
+AGENTS.md                   给维护者 / AI 编码代理的仓库须知（先读这个）
+README.md                   本文件
+.gitignore                  忽略验证报告/截图（.verify/）与系统垃圾文件
+.nojekyll                   GitHub Pages 配置（关闭 Jekyll 处理，保留）
+LICENSE                     版权与使用许可
 ```
 
 ## 本地使用
@@ -53,17 +88,30 @@ python -m http.server 8000
 # 然后访问 http://localhost:8000
 ```
 
-## 音频生成（内容作者用，不需要随站点发布）
+## 开发与维护
 
-站点音频由 [edge-tts](https://github.com/rany2/edge-tts) 语音合成生成，脚本为 `work/gen_audio.py`：
+本站没有构建步骤：改完文件刷新浏览器即可。仓库内的文档与工具：
 
-```bash
-python -m pip install --target ./work/tts edge-tts
-python work/gen_audio.py            # 增量生成缺失的音频
-python work/gen_audio.py --check    # 只校验：文件是否存在、时长是否正常
-```
+- **`AGENTS.md`**——维护者/AI 编码代理必读：加载顺序与全局作用域约定、常见任务对应文件、验证与部署流程。
+- **`docs/ARCHITECTURE.md`**——架构地图：页面生命周期、加载顺序、各子系统、localStorage 键、数据流、已知约束。
+- **`docs/CONTENT-GUIDE.md`**——课程内容编写指南：C / 四级关卡的数据格式、`check` 检查规格、如何加关卡/模块/音频、需要同步的数量文案。
+- **`tools/verify-site.mjs`**——本地验证脚本（开发辅助，不随站点发布）：需要 Node.js ≥ 20 和本机 Edge/Chrome，示例：
 
-多角色对话（男女声交替）由分段合成后用 ffmpeg 拼接，生成记录写在 `audio/cet4/dialogue.json`。
+  ```bash
+  node tools/verify-site.mjs --root . --label after --out ../.verify
+  ```
+
+  报告（`report.md` / `report.json` / `screenshots/`）写到 `--out` 指定的目录，不要提交进仓库；与上一次基线对比可加 `--compare baseline`。
+
+## 音频与作者素材
+
+站点音频由 [edge-tts](https://github.com/rany2/edge-tts) 语音合成生成；多角色对话（男女声交替）是分段合成后用 ffmpeg 拼接的（轮次间约 0.35 秒静音）。
+
+**音频生成/校验脚本不包含在本仓库**：它属于作者另行维护的创作工具链，不在站点中发布。仓库只包含成品 mp3 和作者记录用的清单：
+
+- `assets/audio/cet4/manifest*.json`：单声道音频清单，记录每个文件对应的文本、音色与语速，用于校验「文本 ↔ 文件」一致性。
+- `assets/audio/cet4/dialogue*.json`：多角色对话清单，记录每个文件的分段音色与文本，配合生成记录与拼接结果。
+- 这些 JSON 只在内容维护时使用，页面运行时不加载。
 
 ## 部署
 

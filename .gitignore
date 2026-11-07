@@ -1,0 +1,10 @@
+# 验证脚本输出（tools/verify-site.mjs 默认输出目录：截图、report.json、report.md）
+.verify/
+
+# 系统 / 编辑器垃圾文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 若以后引入 npm 工具链（当前站点零依赖，不需要）
+node_modules/
