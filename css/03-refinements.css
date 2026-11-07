@@ -181,7 +181,6 @@ html[data-sky="night"] body .app::after{background:linear-gradient(180deg,rgba(0
 .course-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(20,44,86,.10),0 30px 66px rgba(20,44,86,.20),inset 0 1px 0 rgba(255,255,255,.98)!important}
 .level-card:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(20,44,86,.08),0 18px 40px rgba(20,44,86,.15),inset 0 1px 0 rgba(255,255,255,.95)!important}
 .course-card:active,.level-card:active{transform:translateY(-1px) scale(.998)}
-.option:hover{transform:translateY(-1px)}
 /* ---------- 键盘可达性 ---------- */
 .course-card:focus-visible,.level-card:focus-visible,.option:focus-visible,.nav-btn:focus-visible,
 .btn:focus-visible,.course-entry:focus-visible,[tabindex]:focus-visible{

@@ -21,12 +21,10 @@ button{cursor:pointer}
 .nav-btn:hover{background:#1b2945;color:#fff}
 .nav-btn.active{background:linear-gradient(100deg,#25385f,#213254);color:#fff;box-shadow:inset 3px 0 #86a0ff}
 .nav-icon{width:20px;text-align:center;font-size:17px}
-.side-bottom{margin-top:auto}
 .side-card{border:1px solid #2a3a5b;background:linear-gradient(145deg,#182743,#1d2d4c);border-radius:16px;padding:15px;color:#f2f5fc}
 .side-card strong{font-size:13px}
 .side-card p{font-size:12px;color:#a9b5cb;margin:6px 0 12px}
 .side-mini{font-size:11px;color:#8190ae;margin-top:15px;padding:0 7px}
-.main{min-width:0}
 .topbar{height:72px;background:rgba(255,255,255,.84);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4vw,54px);position:sticky;top:0;z-index:4}
 .top-title{font-size:13px;color:#7d899c;font-weight:600}
 .top-right{display:flex;align-items:center;gap:13px}.reset-button{white-space:nowrap;padding:7px 10px;font-size:11px}
@@ -129,7 +127,6 @@ h3{font-size:16px;margin-bottom:6px}
 .lesson-copy p:last-child{margin-bottom:0}
 .codebox{border-radius:13px;background:#172238;color:#e7edf9;overflow:hidden}
 .codebar{height:34px;border-bottom:1px solid #ffffff16;display:flex;align-items:center;justify-content:space-between;padding:0 13px;color:#aeb9cb;font-size:10px}
-.dots{display:flex;gap:5px}
 .dots i{width:7px;height:7px;background:#ff7774;border-radius:50%}
 .dots i:nth-child(2){background:#f5c45d}.dots i:nth-child(3){background:#66d1a0}
 pre{margin:0;padding:16px;overflow:auto;color:#dce6fb;font:12px/1.75 "SFMono-Regular",Consolas,"Liberation Mono",monospace;white-space:pre}
@@ -249,7 +246,6 @@ body[data-theme="dark"] .splash-skip{background:rgba(255,255,255,.08);border-col
 @keyframes splash-orbit-spin{to{transform:rotate(360deg)}}
 @keyframes splash-glass-sweep{to{transform:translateX(130%)}}
 @keyframes splash-scan{from{transform:translateY(-10vh)}to{transform:translateY(120vh)}}
-@keyframes interface-card-drop{0%{opacity:0;translate:0 -112vh}62%{opacity:1;translate:0 15px}82%{translate:0 -5px}100%{opacity:1;translate:0 0}}
 @media(max-width:600px){.splash-skip{top:16px;right:16px}.splash-logo-stage{width:116px;height:116px}.splash-mark{width:82px;height:82px;border-radius:25px}.splash-code{font-size:36px}}
 @media(prefers-reduced-motion:reduce){.splash-screen::before,.splash-screen::after,.splash-orbit,.splash-mark::before{animation:none}.splash-screen::before{opacity:.55}.splash-orbit{opacity:1}.splash-content{animation:none}.app.interface-reveal .drop-in{animation:none;translate:none;opacity:1;will-change:auto}}
 /* ==== 开屏：转圈结束后，界面各组件落回自己的位置，最后 logo 落到底部 ==== */

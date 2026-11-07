@@ -10,7 +10,7 @@
  *   sample        参考译文（逐句检查过语法与搭配）
  *   questions     [{q,options,answer,explain}]  answer 为正确选项下标（从 0 起）
  *   timeLimit     限时关卡的倒计时（分钟），页面顶部显示剩余时间
- *   audio         [{file,label,voice,hint,transcript}]  音频放 ./audio/cet4/
+ *   audio         [{file,label,voice,hint,transcript}]  音频放 ./assets/audio/cet4/
  * ===================================================================== */
 window.CET4_MODULES = window.CET4_MODULES || [];
 window.CET4_MODULES.push({

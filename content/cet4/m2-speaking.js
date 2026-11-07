@@ -5,7 +5,7 @@
  *   id            关卡号（模块 2 → 3xx，与 C 语言课程 1-20 不冲突）
  *   type          quiz | listen | read | write | translate | speak | mock
  *   prompt        跟读 / 口语任务说明
- *   model         {file,text,voice}  示范朗读，音频放 ./audio/cet4/
+ *   model         {file,text,voice}  示范朗读，音频放 ./assets/audio/cet4/
  *   checklist     自评清单（全部打勾且录过音才算通关）
  *   questions     [{q,options,answer,explain}]  answer 为正确选项下标（从 0 起）
  *   passRatio     客观题通关线（0.8 = 答对 80%）

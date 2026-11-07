@@ -9,7 +9,7 @@
  *   minWords      本关最低词数（考试要求 120–180 词，前几关降低要求做脚手架）
  *   points        必含要点：["关键词",...]，同组内任一命中即算命中（大小写不敏感、按子串匹配）
  *   sample        参考范文（均为 120–180 词的达标作文，可逐句对照）
- *   audio         音频放在 ./audio/cet4/，清单见 outputs/audio/cet4/manifest-m4.json
+ *   audio         音频放在 ./assets/audio/cet4/，清单见 assets/audio/cet4/manifest-m4.json
  * ===================================================================== */
 window.CET4_MODULES = window.CET4_MODULES || [];
 window.CET4_MODULES.push({

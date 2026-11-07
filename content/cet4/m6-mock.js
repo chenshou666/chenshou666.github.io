@@ -4,7 +4,7 @@
  * 字段说明：
  *   id            关卡号（模块 6 = 7xx）
  *   type          listen | read | write | translate | speak | mock
- *   audio         [{file,label,voice,hint,transcript}]  音频放 ./audio/cet4/
+ *   audio         [{file,label,voice,hint,transcript}]  音频放 ./assets/audio/cet4/
  *   questions     [{q,options,answer,explain}]          answer 为正确选项下标（从 0 起）
  *   timeLimit     模考倒计时（分钟），页面会显示剩余时间
  *   passRatio     客观题通关线（0.6 = 答对 60%）

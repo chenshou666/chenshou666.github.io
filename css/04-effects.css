@@ -15,7 +15,6 @@
   backdrop-filter:blur(var(--glass-blur)) saturate(var(--glass-sat));
 }
 .level-card{border-radius:var(--r-card)!important;background:rgba(255,255,255,var(--glass-alpha))!important}
-.level-card::after{opacity:var(--edge)!important}
 .level-card:hover{background:rgba(255,255,255,calc(var(--glass-alpha) + .14))!important}
 .level-card.locked{background:rgba(255,255,255,calc(var(--glass-alpha) - .22))!important}
 .level-card.locked:hover{background:rgba(255,255,255,calc(var(--glass-alpha) - .04))!important}

@@ -7,7 +7,7 @@
  *   passage       自编英文材料（150–350 词）；passageLabel / passageTag 为页面标签
  *   questions     [{q,options,answer,explain}]   answer 为正确选项下标（从 0 起）
  *   passRatio     客观题通关线（0.75 = 答对 75%）
- *   audio         [{file,label,voice,hint,transcript}]  音频放 ./audio/cet4/
+ *   audio         [{file,label,voice,hint,transcript}]  音频放 ./assets/audio/cet4/
  *   timeLimit     倒计时（分钟），页面会显示
  * 约定：材料全部自编，不取自历年真题；英文拼写统一用英式。
  * ===================================================================== */

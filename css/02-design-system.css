@@ -182,12 +182,9 @@ html[data-sky="night"] .hero-progress{background:rgba(255,255,255,.08)!important
 /* ---------- 路线 / 关卡 ---------- */
 .course-route{border-radius:var(--r-xl)!important;padding:22px!important;box-shadow:var(--sh-card),inset 0 1px 0 var(--glass-edge)!important}
 .course-route-heading h2{font-size:17px!important;font-weight:700!important;color:var(--ink)!important}
-.course-route-heading p{font-size:11px!important;color:var(--ink-3)!important}
 .track{border-radius:var(--r-l)!important;padding:18px!important;box-shadow:var(--sh-card),inset 0 1px 0 var(--glass-edge)!important;margin-top:14px}
 .track-head{gap:8px}
-.track-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
 .track-title{font-size:13.5px!important;font-weight:680;letter-spacing:-.1px;color:var(--ink)!important}
-.track-note{font-size:9.5px!important;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-3)!important}
 .level-grid{gap:11px!important;margin-top:12px}
 .level-card{border-radius:var(--r-m)!important;padding:13px!important;box-shadow:var(--sh-card),inset 0 1px 0 rgba(255,255,255,.7)!important;transition:transform .2s,box-shadow .2s}
 .level-card:hover{transform:translateY(-2px);box-shadow:var(--sh-soft),inset 0 1px 0 var(--glass-edge)!important}
@@ -205,7 +202,6 @@ html[data-sky="night"] .level-card.completed{background:rgba(255,255,255,.14)!im
 .meta-line{font-size:10.5px!important;color:var(--ink-3)!important}
 .lesson-copy{font-size:13.5px!important;color:var(--ink-2)!important;line-height:1.85!important}
 .challenge-label{font-size:10.5px!important;font-weight:700!important;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink)!important}
-.challenge-copy{font-size:12.5px!important;color:var(--ink-2)!important}
 .chip{background:rgba(255,255,255,.45)!important;border:1px solid var(--glass-border)!important;color:var(--ink-2)!important;font-size:9.5px!important;letter-spacing:1.1px;text-transform:uppercase;font-weight:650;border-radius:99px!important;padding:4px 10px!important}
 html[data-sky="night"] .chip{background:rgba(255,255,255,.12)!important}
 .takeaway-item{font-size:12.5px!important;color:var(--ink-2)}

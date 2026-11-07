@@ -55,7 +55,7 @@
     requestAnimationFrame(fpsLoop);
   })();
 
-  /* ===== 1. 内置兜底题库（当脱离 ./c/ 与 ./cet4/ 外部脚本单独打开 HTML 时自动启用） ===== */
+  /* ===== 1. 内置兜底题库（当脱离 ./content/c/ 与 ./content/cet4/ 外部脚本单独打开 HTML 时自动启用） ===== */
   if (!cLevels.length) {
     const fallbackC = [
       {id:1,course:"c",stage:"起步上路",module:"起步上路",type:"code",minutes:8,title:"第一个 C 程序：Hello, World",gist:"认识 #include <stdio.h>、main 函数与 printf 输出。",lesson:"每个 C 程序都从「main」函数开始执行。想在屏幕上打印文字，需要引入标准输入输出头文件 #include <stdio.h>，再调用 printf(\"Hello, World!\\n\"); 并在结尾 return 0;。",takeaways:["C 程序入口是 int main(void)","printf 用于格式化输出，\\n 表示换行","每条语句以英文分号 ; 结尾"],quiz:"C 语言程序从哪个函数开始执行？",options:["start()","main()","printf()","init()"],answer:1,explain:"main 是 C 语言标准规定的程序入口函数。",mission:"编写一个完整的 C 程序，使用 printf 输出 Hello, HT Lab! 并换行，最后返回 0。",starter:"#include <stdio.h>\n\nint main(void) {\n    \n    return 0;\n}",hint:"在 main 里写 printf(\"Hello, HT Lab!\\n\");",solution:"#include <stdio.h>\n\nint main(void) {\n    printf(\"Hello, HT Lab!\\n\");\n    return 0;\n}",expectedOutput:"Hello, HT Lab!",check:{include:"stdio.h",return0:true,calls:[["printf","Hello, HT Lab!"]]}},

@@ -11,7 +11,6 @@ function handleClick(e){
  const a=action.dataset.action;
  if(a==="cycle-theme"){apCycleSky();return}
  if(a==="switch-course"){setCourse(action.dataset.course);return}
- if(a==="open-course"){const route=document.getElementById("course-route");if(route)route.scrollIntoView({behavior:"smooth",block:"start"});return}
  if(a==="toggle-transcript"){const el=document.getElementById(action.dataset.target);if(el){el.hidden=!el.hidden;action.textContent=el.hidden?"显示原文":"隐藏原文"}return}
  if(a==="check-task"){checkWrittenTask();return}
  if(a==="submit-mock"){submitMock();return}

@@ -4,7 +4,7 @@
  * 字段说明：
  *   id            关卡号（四级课程从 101 起，与 C 语言课程的 1-20 不冲突）
  *   type          listen | read | write | translate | speak | mock
- *   audio         [{file,label,voice,hint,transcript}]  音频放 ./audio/cet4/
+ *   audio         [{file,label,voice,hint,transcript}]  音频放 ./assets/audio/cet4/
  *   questions     [{q,options,answer,explain}]          answer 为正确选项下标（从 0 起）
  *   passRatio     客观题通关线（0.8 = 答对 80%）
  *   points        写作/翻译的必含要点：["关键词",...]，同组内任一命中即可

@@ -22,17 +22,13 @@ function tokenizeChallengeC(source){
 function cMask(source){let out='',i=0;while(i<source.length){const c=source[i],n=source[i+1];if(c==='/'&&n==='/'){while(i<source.length&&source[i]!=='\n'&&source[i]!=='\r'){out+=' ';i++}continue}if(c==='/'&&n==='*'){out+='  ';i+=2;while(i<source.length&&!(source[i]==='*'&&source[i+1]==='/')){out+=source[i]==='\n'||source[i]==='\r'?source[i]:' ';i++}if(i<source.length){out+='  ';i+=2}continue}if(c==='"'||c==="'"){const q=c;out+=' ';i++;while(i<source.length){if(source[i]==='\\'){out+=' ';i++;if(i<source.length){out+=source[i]==='\n'||source[i]==='\r'?source[i]:' ';i++}continue}if(source[i]===q){out+=' ';i++;break}out+=source[i]==='\n'||source[i]==='\r'?source[i]:' ';i++}continue}out+=c;i++}return out}
 function vals(ts){return ts.map(t=>t.v)}
 function seq(ts,pat){const a=vals(ts);for(let i=0;i<=a.length-pat.length;i++){let ok=true;for(let j=0;j<pat.length;j++)if(a[i+j]!==pat[j]){ok=false;break}if(ok)return true}return false}
-function indexSeq(ts,pat){const a=vals(ts);for(let i=0;i<=a.length-pat.length;i++){let ok=true;for(let j=0;j<pat.length;j++)if(a[i+j]!==pat[j]){ok=false;break}if(ok)return i}return-1}
 function closeGroup(ts,s){const open=ts[s]&&ts[s].v,match={'(':')','{':'}','[':']'},end=match[open];if(!end)return-1;let d=0;for(let i=s;i<ts.length;i++){if(ts[i].type==="string"||ts[i].type==="char")continue;if(ts[i].v===open)d++;else if(ts[i].v===end&&--d===0)return i}return-1}
 function splitTop(ts,sep){const r=[];let s=0,d=0;for(let i=0;i<ts.length;i++){const v=ts[i].v;if(v==='('||v==='['||v==='{')d++;else if(v===')'||v===']'||v==='}')d--;else if(v===sep&&d===0){r.push(ts.slice(s,i));s=i+1}}r.push(ts.slice(s));return r}
 function calls(ts,name){const r=[];for(let i=0;i<ts.length-1;i++)if(ts[i].v===name&&ts[i+1].v==='('){const e=closeGroup(ts,i+1);if(e>0)r.push({args:splitTop(ts.slice(i+2,e),','),at:i,end:e})}return r}
 function func(ts,name,ret){for(let i=0;i<ts.length-2;i++){if(ts[i].v!==ret||ts[i+1].v!==name||ts[i+2].v!=='(')continue;const p=closeGroup(ts,i+2);if(p<0||!ts[p+1]||ts[p+1].v!=='{')continue;const e=closeGroup(ts,p+1);if(e>=0)return{params:splitTop(ts.slice(i+3,p),','),body:ts.slice(p+2,e),at:i,bodyAt:p+1,end:e+1}}return null}
 function takeStatement(ts,s){if(!ts[s])return-1;if(ts[s].v==='{'){const e=closeGroup(ts,s);return e<0?-1:e+1}let d=0;for(let i=s;i<ts.length;i++){const v=ts[i].v;if(v==='('||v==='['||v==='{')d++;else if(v===')'||v===']'||v==='}'){d--;if(d<0)return-1}else if(v===';'&&d===0)return i+1}return-1}
 function ifs(ts){const r=[];for(let i=0;i<ts.length-2;i++){if(ts[i].v!=='if'||ts[i+1].v!=='(')continue;const p=closeGroup(ts,i+1);if(p<0||!ts[p+1])continue;let end,thenSlice,other=null;if(ts[p+1].v==='{'){const e=closeGroup(ts,p+1);if(e<0)continue;end=e+1;thenSlice=ts.slice(p+2,e)}else{end=takeStatement(ts,p+1);if(end<0)continue;thenSlice=ts.slice(p+1,end)}if(ts[end]&&ts[end].v==='else'){if(ts[end+1]&&ts[end+1].v==='{'){const x=closeGroup(ts,end+1);if(x>0){other=ts.slice(end+2,x);end=x+1}}else{const x=takeStatement(ts,end+1);if(x>0){other=ts.slice(end+1,x);end=x}}}r.push({cond:ts.slice(i+2,p),then:thenSlice,elseBody:other,at:i,end})}return r}
-function fors(ts){const r=[];for(let i=0;i<ts.length-2;i++){if(ts[i].v!=='for'||ts[i+1].v!=='(')continue;const p=closeGroup(ts,i+1);if(p<0||!ts[p+1])continue;let end,body;if(ts[p+1].v==='{'){const e=closeGroup(ts,p+1);if(e<0)continue;end=e+1;body=ts.slice(p+2,e)}else{end=takeStatement(ts,p+1);if(end<0)continue;body=ts.slice(p+1,end)}r.push({parts:splitTop(ts.slice(i+2,p),';'),body,at:i,end})}return r}
 function ret(ts,v){return seq(ts,['return',v,';'])}
-function fmt(ts,format,pred){return calls(ts,'printf').some(c=>c.args[0]&&c.args[0][0]&&c.args[0][0].type==='string'&&c.args[0][0].v.includes(format)&&pred(c.args.slice(1)))}
-function positiveIntVariable(ts,name){for(let i=0;i<ts.length-3;i++)if((ts[i].v==='int'||ts[i].v==='size_t'||ts[i].v==='unsigned')&&ts[i+1].v===name&&ts[i+2].v==='='&&ts[i+3].type==='num'){const n=Number(ts[i+3].v.replace(/[uUlL]/g,''));if(Number.isFinite(n)&&n>0)return true}return false}
 /* ---------- 轻量 C 语法解析器：分号、括号、控制流、声明、函数定义都要符合真实 C 语法 ---------- */
 const CS_TYPES=["void","char","short","int","long","float","double","signed","unsigned","_Bool","_Complex","_Imaginary","struct","enum","union","typedef","extern","static","auto","register","const","volatile","restrict","inline","_Atomic","_Static_assert","_Alignas","size_t","FILE"];
 const CS_BIN={"=":2,"+=":2,"-=":2,"*=":2,"/=":2,"%=":2,"<<=":2,">>=":2,"&=":2,"|=":2,"^=":2,"||":4,"&&":5,"|":6,"^":7,"&":8,"==":9,"!=":9,"<":10,">":10,"<=":10,">=":10,"<<":11,">>":11,"+":12,"-":12,"*":13,"/":13,"%":13};
@@ -152,13 +148,6 @@ function challengeResult(ts,source,level){
  return runCheckSpec(ts,source,spec);
 }
 function validateChallenge(level,source){if(!source.trim())return{ok:false,message:'请先按本关要求写代码，再检查。'};const p=tokenizeChallengeC(source);if(p.error)return{ok:false,message:'代码还不能检查：'+p.error};const ts=p.tokens,stack=[],pairs={'(':')','{':'}','[':']'};for(const t of ts){if(t.type==="string"||t.type==="char")continue;const v=t.v;if(pairs[v])stack.push({v,at:t.at});else if(v===')'||v==='}'||v===']'){const prev=stack.pop();if(!prev||pairs[prev.v]!==v)return{ok:false,message:'检查未通过：括号或花括号没有按顺序配对。'}}}if(stack.length)return{ok:false,message:'检查未通过：还有未闭合的括号或花括号。'};const st=parseProgram(ts,source);if(!st.ok)return{ok:false,message:'结构检查未通过：'+st.error+'。请用语法完整、可以编译的 C 代码完成本关。'};return challengeResult(ts,source,level)}
-function checkCode(){
- const ta=document.getElementById("codeAnswer");if(!ta)return;
- window.codeDraft=ta.value;saveEditorValue(ta);
- const result=validateChallenge(activeLevel,ta.value);
- codePassed=result.ok;window.codeFeedback=result.message;
- maybeComplete();
-}
 function playVictoryAnimation(level){
  const existing=document.querySelector(".victory-overlay");if(existing)existing.remove();
  const pieces=[[-145,-112,-35,0,"#6f91ee"],[-116,-150,48,35,"#ffd36b"],[-82,-128,125,70,"#59c99c"],[-42,-166,-20,15,"#a888f3"],[-4,-142,76,85,"#83b9ff"],[38,-161,-58,45,"#ffd36b"],[79,-129,38,110,"#59c99c"],[121,-151,148,25,"#7794f0"],[150,-94,-76,70,"#b58af4"],[-157,34,52,100,"#59c99c"],[-113,87,-42,40,"#ffd36b"],[-73,121,98,130,"#7794f0"],[-28,148,-95,55,"#80b9ff"],[26,132,44,120,"#59c99c"],[72,104,-30,20,"#ffd36b"],[118,70,115,95,"#a888f3"],[157,22,-55,60,"#83b9ff"]];
