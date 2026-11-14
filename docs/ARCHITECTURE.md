@@ -108,7 +108,8 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
       js/02-app-core.js
       ...
       js/12-pointer-tilt.js
-      js/13-dual-ui.js         ← 必须在最后（enhance 前面的 DOM 与全局函数）
+      js/13-dual-ui.js         ← 应用逻辑收尾（enhance 前面的 DOM 与全局函数）
+      js/14-liquid-glass.js    ← 可选皮肤视觉增强（必须在 13 之后；不改业务）
 ```
 
 要点：
@@ -123,7 +124,7 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 ```
 浏览器打开 index.html
   │
-  ├─ 解析 <head>，并行请求 7 个 CSS 文件（若启用 visionOS 皮肤则为 8 个）
+  ├─ 解析 <head>，并行请求 7 个 CSS 文件（若启用液态玻璃皮肤则为 9 个：08-liquid-glass + 09-liquid-site）
   ├─ 解析 <body> 骨架（页面壳已存在：splash、sidebar、topbar、#view 空容器、toast、modal、双 UI 节点）
   ├─ 同步执行 content/c/*.js ×11   → window.C_MODULES   （每关 level 数据）
   ├─ 同步执行 content/cet4/*.js ×7 → window.CET4_MODULES（每关 level 数据）

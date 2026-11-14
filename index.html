@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-sky="noon" lang="zh-CN" data-skin="visionos">
+<html data-sky="noon" lang="zh-CN" data-skin="liquid-glass">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,8 +19,9 @@
 <link rel="stylesheet" href="./css/05-motion.css">
 <link rel="stylesheet" href="./css/06-fps.css">
 <link rel="stylesheet" href="./css/07-mobile-patch.css">
-<!-- visionOS 皮肤（仅作用于星空 UI；不想要可删除本行并去掉 html 上的 data-skin） -->
-<link rel="stylesheet" href="./css/08-visionos.css">
+<!-- iOS 液态玻璃皮肤：08 = showcase 材质原样，09 = 站点组件映射（不想要可删这两行与 html 上的 data-skin） -->
+<link rel="stylesheet" href="./css/08-liquid-glass.css">
+<link rel="stylesheet" href="./css/09-liquid-site.css">
 </head>
 <body class="splash-active">
 <div class="splash-screen" id="splash-screen" role="status" aria-label="HT Lab 正在启动">
@@ -173,5 +174,7 @@
 
 <!-- 双 UI 引擎：必须在应用逻辑之后加载（会读取并增强上面的 DOM 与全局函数） -->
 <script src="./js/13-dual-ui.js"></script>
+<!-- 液态玻璃引擎：极光画布 + 光标高光 + 点击涟漪（纯视觉，不改业务） -->
+<script src="./js/14-liquid-glass.js"></script>
 </body>
 </html>

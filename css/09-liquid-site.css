@@ -1,0 +1,611 @@
+/*!
+ * 09-liquid-site.css — 把 showcase 的液态玻璃材质套到 HT Lab 站点组件上
+ * ---------------------------------------------------------------------------
+ * 08-liquid-glass.css 提供材质本体（.liquid-glass / .liquid-pill / .glass-ripple），
+ * 本文件负责：
+ *   1) 站点变量改成深空语义（白字、青紫强调色）
+ *   2) 把玻璃材质强制映射到站点组件（站点原规则大量 !important，需同级覆盖）
+ *   3) 讲义/选项/代码等深色可读性
+ *   4) 手机端与无障碍
+ *
+ * 不改任何业务逻辑与课程内容；关闭皮肤只需去掉 html 的 data-skin 与 08/09 的 <link>
+ * ---------------------------------------------------------------------------
+ */
+
+/* ==========================================================================
+ * 1. 站点变量：深空语义
+ * ========================================================================== */
+html[data-skin="liquid-glass"] {
+  --ink: #ffffff;
+  --ink-2: rgba(226, 236, 255, 0.76);
+  --ink-3: rgba(190, 205, 230, 0.56);
+  --ink-inv: #ffffff;
+  --accent: #38bdf8;
+  --accent-2: #a855f7;
+  --accent-soft: rgba(56, 189, 248, 0.22);
+  --line: rgba(255, 255, 255, 0.16);
+  --muted: var(--ink-3);
+
+  --glass-alpha: 0.11;
+  --glass-alpha-n: 0.11;
+  --glass-tint: rgba(255, 255, 255, 0.11);
+  --glass-tint-2: rgba(255, 255, 255, 0.14);
+  --glass-blur: 28px;
+  --glass-sat: 210%;
+  --glass-border: rgba(255, 255, 255, 0.21);
+  --glass-edge: rgba(255, 255, 255, 0.65);
+  --glass-inner: rgba(255, 255, 255, 0.14);
+
+  --r-xl: 32px;
+  --r-l: 26px;
+  --r-m: 20px;
+  --r-s: 14px;
+
+  --sky-a: #060814;
+  --sky-b: #0a1024;
+  --sky-c: #0e1630;
+  --cloud-a: rgba(56, 189, 248, 0.22);
+  --cloud-b: rgba(168, 85, 247, 0.2);
+
+  --paper: transparent;
+  --wash: #060814;
+  --blue: #38bdf8;
+  --blue-dark: #0ea5e9;
+  --shadow: 0 24px 54px -12px rgba(0, 0, 0, 0.45);
+
+  --edge: 0.85;
+  --noise: 0.03;
+}
+
+/* 页面壳浮在极光画布之上 */
+html[data-skin="liquid-glass"] .app { position: relative; z-index: 2; }
+html[data-skin="liquid-glass"] .splash-screen { z-index: 100 !important; }
+
+/* 覆盖站点原有的云层，交给 showcase 的极光画布 */
+html[data-skin="liquid-glass"] body::before {
+  opacity: 0 !important;
+  display: none !important;
+}
+
+html[data-skin="liquid-glass"] body {
+  background-color: #060814 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif !important;
+}
+
+/* ==========================================================================
+ * 2. 把玻璃材质映射到站点组件
+ *    —— 数值与 08 的 .liquid-glass 完全一致，只为覆盖站点已有的 !important
+ * ========================================================================== */
+html[data-skin="liquid-glass"] :is(
+  .sidebar, .topbar,
+  .panel, .stat, .hero, .hero-main, .hero-progress,
+  .course-card, .course-entry, .level-card, .track, .course-route,
+  .challenge-card, .exercise, .summary-hero, .summary-grid > section,
+  .side-card, .guide-card, .skill-row, .save-box, .quiz-item,
+  .feedback-panel, .proj-card, .wrong-item, .victory-card,
+  .save-block, .progress-tools, .beginner-guide, .plan-result,
+  .inspect-card, .reset-dialog, .ui-chooser-box
+) {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.65)) 0%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 0.65)) 50%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.1)) 100%
+  ) !important;
+  backdrop-filter: blur(28px) saturate(210%) brightness(1.06) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(210%) brightness(1.06) !important;
+  border-radius: 30px !important;
+  border: 1px solid rgba(255, 255, 255, calc(var(--rim-intensity) * 0.32)) !important;
+  box-shadow:
+    0 24px 54px -12px rgba(0, 0, 0, 0.45),
+    0 6px 18px -4px rgba(0, 0, 0, 0.28),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, var(--rim-intensity)),
+    inset 1.5px 0 1.5px 0 rgba(255, 255, 255, calc(var(--rim-intensity) * 0.7)),
+    inset 0 -1.5px 2px 0 rgba(255, 255, 255, calc(var(--rim-intensity) * 0.28)),
+    inset -1px 0 2px 0 rgba(255, 255, 255, calc(var(--rim-intensity) * 0.2)),
+    inset 0 12px 28px -8px rgba(255, 255, 255, calc(var(--rim-intensity) * 0.18)) !important;
+  color: #ffffff !important;
+  /* backdrop-filter 元素禁止位移动画 */
+  transform: none !important;
+  transition: background 0.35s var(--smooth-easing), border-color 0.35s var(--smooth-easing),
+    box-shadow 0.45s var(--smooth-easing) !important;
+}
+
+/* 悬停：材质提亮（不位移，避免玻璃重采样闪烁） */
+html[data-skin="liquid-glass"] :is(
+  .course-card, .course-entry, .level-card, .stat, .side-card,
+  .guide-card, .skill-row, .proj-card, .quiz-item, .save-box, .track
+):hover {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 2.15)) 0%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.0)) 50%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.55)) 100%) !important;
+  border-color: rgba(255, 255, 255, calc(var(--rim-intensity) * 0.5)) !important;
+  box-shadow:
+    0 30px 66px -14px rgba(0, 0, 0, 0.55),
+    0 8px 22px -4px rgba(0, 0, 0, 0.32),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.78),
+    inset 1.5px 0 1.5px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1.5px 2px 0 rgba(255, 255, 255, 0.3),
+    inset -1px 0 2px 0 rgba(255, 255, 255, 0.24) !important;
+  transform: none !important;
+}
+
+/* ==========================================================================
+ * 3. 胶囊按钮映射（对应 .liquid-pill）
+ * ========================================================================== */
+html[data-skin="liquid-glass"] :is(
+  .btn, .btn-primary, .btn-soft, .btn-ghost, .btn-small,
+  .ui-switch-pill, .chip, .chip-mini, .nav-btn,
+  .cosmos-pill, .chapter-orb, .ap-chip, .ap-btn, .theme-chip
+) {
+  border-radius: 9999px !important;
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.7)) 0%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 0.75)) 100%) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, calc(var(--rim-intensity) * 0.28)) !important;
+  box-shadow:
+    0 8px 20px -4px rgba(0, 0, 0, 0.28),
+    inset 0 1.2px 1.2px 0 rgba(255, 255, 255, var(--rim-intensity)),
+    inset 0 -1px 1.5px 0 rgba(255, 255, 255, calc(var(--rim-intensity) * 0.25)) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  transform: none !important;
+  transition: background 0.35s var(--spring-easing), border-color 0.3s ease,
+    box-shadow 0.35s var(--spring-easing), color 0.25s ease !important;
+}
+
+html[data-skin="liquid-glass"] :is(
+  .btn:hover, .btn-soft:hover, .btn-ghost:hover, .ui-switch-pill:hover,
+  .chip:hover, .nav-btn:hover, .cosmos-pill:hover, .chapter-orb:hover
+) {
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 2.2)) 0%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.1)) 100%) !important;
+  border-color: rgba(255, 255, 255, calc(var(--rim-intensity) * 0.5)) !important;
+  transform: none !important;
+}
+
+/* 主按钮 / 选中导航：对应 showcase 的 active-cyan */
+html[data-skin="liquid-glass"] .btn-primary {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.62) 0%, rgba(14, 165, 233, 0.35) 100%) !important;
+  border-color: rgba(186, 230, 253, 0.65) !important;
+  box-shadow:
+    0 10px 25px -4px rgba(14, 165, 233, 0.45),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.85),
+    inset 0 -2px 6px rgba(56, 189, 248, 0.4) !important;
+  color: #ffffff !important;
+}
+
+html[data-skin="liquid-glass"] .btn-primary:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.76) 0%, rgba(14, 165, 233, 0.5) 100%) !important;
+  border-color: rgba(224, 242, 254, 0.8) !important;
+}
+
+html[data-skin="liquid-glass"] .nav-btn {
+  justify-content: flex-start;
+  color: rgba(236, 244, 255, 0.94) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-skin="liquid-glass"] .nav-btn:hover {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06)) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+}
+
+html[data-skin="liquid-glass"] .nav-btn.active {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.32) 0%, rgba(129, 140, 248, 0.24) 100%) !important;
+  border-color: rgba(186, 230, 253, 0.45) !important;
+  color: #ffffff !important;
+  box-shadow:
+    0 10px 25px -6px rgba(14, 165, 233, 0.42),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.7) !important;
+}
+
+html[data-skin="liquid-glass"] .nav-btn.active .nav-icon { color: #bae6fd !important; }
+
+/* ==========================================================================
+ * 4. 文字层级与讲义可读性（深色）
+ * ========================================================================== */
+html[data-skin="liquid-glass"] :is(h1, h2, h3, h4, .page-header h1, .lesson-title-row h2,
+  .challenge-label, .track-title, .stat-num, .level-card h3, .course-card strong) {
+  color: #ffffff !important;
+}
+
+html[data-skin="liquid-glass"] :is(
+  .subhead, .challenge-copy, .track-note, .level-meta, .course-card small,
+  .course-card-meta, .stat-label, .takeaway-item, .point-item, .guide-list,
+  .meta-line, .footer-note, .audio-label, .audio-hint, .wordcount,
+  .progress-foot, .save-hint
+) {
+  color: rgba(226, 236, 255, 0.78) !important;
+}
+
+html[data-skin="liquid-glass"] :is(.eyebrow, .progress-kicker, .nav-label, .brand-sub, .footer-note) {
+  color: rgba(206, 220, 242, 0.7) !important;
+}
+
+html[data-skin="liquid-glass"] .lesson-copy {
+  color: rgba(238, 245, 255, 0.95) !important;
+  font-size: 14px !important;
+  line-height: 1.9 !important;
+}
+
+html[data-skin="liquid-glass"] .lesson-copy .kp-term,
+html[data-skin="liquid-glass"] .takeaway-item .kp-term {
+  color: #eaf7ff !important;
+  background: linear-gradient(180deg, transparent 56%, rgba(56, 189, 248, 0.34) 56%) !important;
+}
+
+html[data-skin="liquid-glass"] .lesson-copy .kp-code,
+html[data-skin="liquid-glass"] .takeaway-item .kp-code {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #cfeaff !important;
+}
+
+html[data-skin="liquid-glass"] .kp-strong { color: #ffffff !important; }
+html[data-skin="liquid-glass"] .kp-hl {
+  background: rgba(56, 189, 248, 0.28) !important;
+  color: #ffffff !important;
+}
+html[data-skin="liquid-glass"] .kp-warn,
+html[data-skin="liquid-glass"] .kp-warn-line {
+  color: #ffe6a8 !important;
+  background: rgba(251, 191, 36, 0.14) !important;
+  border-color: rgba(251, 191, 36, 0.4) !important;
+}
+
+/* ==========================================================================
+ * 5. 表单 / 选项 / 反馈 / 代码区
+ * ========================================================================== */
+html[data-skin="liquid-glass"] :is(.task-input, #runOutput, .save-box) {
+  background: rgba(8, 12, 26, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 22px !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+html[data-skin="liquid-glass"] :is(.task-input, #runOutput, .save-box)::placeholder {
+  color: rgba(190, 205, 230, 0.5) !important;
+}
+
+html[data-skin="liquid-glass"] .option {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.06)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 18px !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.26) !important;
+  transform: none !important;
+}
+
+html[data-skin="liquid-glass"] .option:hover {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1)) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: none !important;
+}
+
+html[data-skin="liquid-glass"] .option.selected {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.44), rgba(129, 140, 248, 0.3)) !important;
+  border-color: rgba(186, 230, 253, 0.65) !important;
+  color: #ffffff !important;
+}
+
+html[data-skin="liquid-glass"] .option.correct {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.38), rgba(16, 185, 129, 0.22)) !important;
+  border-color: rgba(167, 243, 208, 0.62) !important;
+  color: #eafff7 !important;
+}
+
+html[data-skin="liquid-glass"] .option.wrong {
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.36), rgba(244, 63, 94, 0.2)) !important;
+  border-color: rgba(253, 164, 175, 0.55) !important;
+  color: #fff1f2 !important;
+}
+
+html[data-skin="liquid-glass"] :is(.passage, .transcript, .audio-row, .recorder-row,
+  .self-check, .takeaway, .guide-idea) {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: rgba(234, 243, 255, 0.9) !important;
+  border-radius: 18px !important;
+}
+
+html[data-skin="liquid-glass"] .hint {
+  background: rgba(56, 189, 248, 0.1) !important;
+  border: 1px solid rgba(56, 189, 248, 0.26) !important;
+  color: #cdeaff !important;
+  border-radius: 16px !important;
+}
+
+html[data-skin="liquid-glass"] .feedback { border-radius: 16px !important; }
+html[data-skin="liquid-glass"] .feedback.ok {
+  background: rgba(52, 211, 153, 0.16) !important;
+  border: 1px solid rgba(52, 211, 153, 0.42) !important;
+  color: #d7fff0 !important;
+}
+html[data-skin="liquid-glass"] .feedback.no {
+  background: rgba(251, 113, 133, 0.14) !important;
+  border: 1px solid rgba(251, 113, 133, 0.4) !important;
+  color: #ffe4e6 !important;
+}
+
+html[data-skin="liquid-glass"] :is(.codebox, .ide-frame) {
+  background: rgba(5, 8, 20, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+html[data-skin="liquid-glass"] :is(.codebox pre, .codebox code, .ide-highlight,
+  .ide-code, .code-input) {
+  font-family: "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace !important;
+  color: #e8f3ff !important;
+}
+
+html[data-skin="liquid-glass"] .ide-gutter { color: rgba(168, 188, 220, 0.5) !important; }
+html[data-skin="liquid-glass"] .codebar {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 进度 */
+html[data-skin="liquid-glass"] .progress-bar {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-radius: 9999px !important;
+}
+html[data-skin="liquid-glass"] .progress-bar i {
+  background: linear-gradient(90deg, #38bdf8, #818cf8, #a855f7) !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.55);
+  border-radius: 9999px !important;
+}
+html[data-skin="liquid-glass"] .progress-ring {
+  background: conic-gradient(#38bdf8 var(--pct, 0%), rgba(255, 255, 255, 0.14) 0) !important;
+}
+html[data-skin="liquid-glass"] .progress-ring::before { background: rgba(8, 12, 26, 0.92) !important; }
+html[data-skin="liquid-glass"] .progress-ring span { color: #ffffff !important; }
+
+/* 音频控件深色化 */
+html[data-skin="liquid-glass"] audio {
+  filter: invert(0.92) hue-rotate(180deg);
+  border-radius: 9999px;
+}
+
+/* ==========================================================================
+ * 6. 弹窗 / 开屏
+ * ========================================================================== */
+html[data-skin="liquid-glass"] :is(.modal-backdrop, #uiChooserModal, #cosmosInspectModal, .victory-overlay) {
+  background: rgba(4, 6, 16, 0.72) !important;
+  backdrop-filter: blur(18px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%) !important;
+}
+
+html[data-skin="liquid-glass"] :is(.reset-dialog, .ui-chooser-box, .inspect-card, .victory-card) {
+  border-radius: 30px !important;
+  border: 1px solid rgba(255, 255, 255, calc(var(--rim-intensity) * 0.32)) !important;
+  color: #ffffff !important;
+}
+
+html[data-skin="liquid-glass"] :is(.reset-dialog h2, .ui-chooser-box h2, .inspect-card h3) { color: #ffffff !important; }
+html[data-skin="liquid-glass"] :is(.reset-dialog p, .ui-chooser-box p, .reset-form label) { color: rgba(226, 236, 255, 0.78) !important; }
+
+html[data-skin="liquid-glass"] .reset-form input {
+  background: rgba(8, 12, 26, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  border-radius: 16px !important;
+}
+
+html[data-skin="liquid-glass"] .ui-mode-card {
+  border-radius: 26px !important;
+  border: 1px solid rgba(255, 255, 255, calc(var(--rim-intensity) * 0.3)) !important;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+html[data-skin="liquid-glass"] :is(.ui-mode-card h3, .ui-mode-go) { color: #ffffff !important; }
+html[data-skin="liquid-glass"] .ui-mode-go { color: #bae6fd !important; }
+html[data-skin="liquid-glass"] .ui-mode-card small { color: rgba(226, 236, 255, 0.76) !important; }
+
+html[data-skin="liquid-glass"] .splash-screen {
+  background:
+    radial-gradient(56% 44% at 24% 22%, rgba(56, 189, 248, 0.22), transparent 66%),
+    radial-gradient(52% 40% at 76% 74%, rgba(168, 85, 247, 0.22), transparent 66%),
+    linear-gradient(165deg, #060814 0%, #0a1024 52%, #0e1630 100%) !important;
+  color: #ffffff !important;
+}
+
+html[data-skin="liquid-glass"] .splash-skip {
+  border-radius: 9999px !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.08)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+ * 7. 星空 UI（同一套玻璃，保持两套 UI 气质统一）
+ * ========================================================================== */
+html[data-skin="liquid-glass"] :is(
+  .cosmos-brand-block, .cosmos-nav-pills, .cosmos-ctrl-bar,
+  .orbit-card, #htFpsMonitor, #cosmosXpBadge
+) {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.65)) 0%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 0.65)) 50%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.1)) 100%) !important;
+  backdrop-filter: blur(28px) saturate(210%) brightness(1.06) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(210%) brightness(1.06) !important;
+  border: 1px solid rgba(255, 255, 255, calc(var(--rim-intensity) * 0.32)) !important;
+  color: #ffffff !important;
+}
+
+html[data-skin="liquid-glass"] :is(
+  .cosmos-brand-block, .orbit-card, .cosmos-ctrl-bar, .cosmos-nav-pills]
+) {
+  border-radius: 28px !important;
+}
+
+html[data-skin="liquid-glass"] :is(.cosmos-nav-pills, .cosmos-ctrl-bar, #htFpsMonitor, #cosmosXpBadge) {
+  border-radius: 9999px !important;
+}
+
+html[data-skin="liquid-glass"] :is(.cosmos-title, .orbit-card-title) { color: #ffffff !important; }
+html[data-skin="liquid-glass"] :is(.cosmos-sub, .orbit-card-desc, .orbit-card-foot) { color: rgba(226, 236, 255, 0.76) !important; }
+html[data-skin="liquid-glass"] :is(.cosmos-kicker, .orbit-card-tag) { color: #7dd3fc !important; }
+
+/* 星空工作台 */
+html[data-skin="liquid-glass"] body[data-ui-mode="cosmos"][data-cosmos-view="workspace"] :is(
+  .sidebar, .topbar, .panel, .stat, .level-card, .track, .challenge-card,
+  .exercise, .quiz-item, .proj-card, .guide-card, .skill-row, .save-box
+) {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.65)) 0%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 0.65)) 50%,
+    rgba(255, 255, 255, calc(var(--glass-opacity) * 1.1)) 100%) !important;
+}
+
+/* ==========================================================================
+ * 8. 手机端
+ * ========================================================================== */
+@media (max-width: 768px) {
+  html[data-skin="liquid-glass"] .sidebar { padding: 12px !important; border-radius: 24px !important; }
+  html[data-skin="liquid-glass"] .topbar { height: auto !important; padding: 10px 14px !important; border-radius: 26px !important; }
+  html[data-skin="liquid-glass"] .top-title { display: none !important; }
+  html[data-skin="liquid-glass"] .top-right { flex-wrap: wrap; gap: 8px; }
+
+  /* 手机端降低模糊，保证滚动流畅 */
+  html[data-skin="liquid-glass"] :is(
+    .sidebar, .topbar, .panel, .stat, .course-card, .course-entry,
+    .level-card, .track, .challenge-card, .exercise, .proj-card, .orbit-card
+  ) {
+    backdrop-filter: blur(16px) saturate(180%) brightness(1.04) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) brightness(1.04) !important;
+    border-radius: 22px !important;
+  }
+
+  /* 侧栏导航横向滚动，避免挤成竖排 */
+  html[data-skin="liquid-glass"] .sidebar .nav {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none;
+  }
+  html[data-skin="liquid-glass"] .sidebar .nav::-webkit-scrollbar { display: none; }
+  html[data-skin="liquid-glass"] .sidebar .nav-btn {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    width: auto !important;
+    min-height: 40px !important;
+    padding: 9px 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* 防止子项撑破视口 */
+  html[data-skin="liquid-glass"] :is(.app, .main, #view, .page-header) {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+  html[data-skin="liquid-glass"] .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  html[data-skin="liquid-glass"] .page-header h1 {
+    font-size: clamp(22px, 7vw, 30px) !important;
+    line-height: 1.2 !important;
+  }
+
+  html[data-skin="liquid-glass"] :is(.btn, .btn-small, .nav-btn, .chip, .cosmos-pill, .chapter-orb) {
+    min-height: 44px !important;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 480px) {
+  html[data-skin="liquid-glass"] .lesson-copy { font-size: 13.5px !important; }
+  html[data-skin="liquid-glass"] .panel { padding: 16px !important; }
+}
+
+/* ==========================================================================
+ * 9. 无障碍
+ * ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html[data-skin="liquid-glass"] *,
+  html[data-skin="liquid-glass"] *::before,
+  html[data-skin="liquid-glass"] *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html[data-skin="liquid-glass"] :is(.btn, .nav-btn, .option, .level-card, .course-card):focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+ * 0. 旧 UI 清零：站点原有装饰一律关闭，只保留布局骨架
+ *    （布局/网格/字号仍来自 01/02/03/05，视觉全部交给本文件 + 08 showcase 材质）
+ * ========================================================================== */
+html[data-skin="liquid-glass"] :is(
+  .panel, .stat, .hero, .hero-main, .hero-progress,
+  .course-card, .course-entry, .level-card, .track, .course-route,
+  .challenge-card, .exercise, .summary-hero, .side-card, .guide-card,
+  .skill-row, .save-box, .quiz-item, .feedback-panel, .proj-card,
+  .wrong-item, .victory-card, .beginner-guide, .progress-tools,
+  .lesson-layout > *, .page-header, .footer-note
+):not(.liquid-glass)::before,
+html[data-skin="liquid-glass"] :is(
+  .panel, .stat, .hero, .hero-main, .hero-progress,
+  .course-card, .course-entry, .level-card, .track, .course-route,
+  .challenge-card, .exercise, .summary-hero, .side-card, .guide-card,
+  .skill-row, .save-box, .quiz-item, .feedback-panel, .proj-card,
+  .wrong-item, .victory-card, .beginner-guide, .progress-tools
+):not(.liquid-glass)::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* 旧装饰线 / 旧渐变块 */
+html[data-skin="liquid-glass"] :is(
+  .course-route-heading, .track-head, .section-head, .page-header,
+  .challenge-head, .lesson-title-row, .progress-top
+) {
+  border-color: transparent !important;
+}
+
+html[data-skin="liquid-glass"] .brand-mark,
+html[data-skin="liquid-glass"] .course-card-icon,
+html[data-skin="liquid-glass"] .stat-icon,
+html[data-skin="liquid-glass"] .lesson-badge,
+html[data-skin="liquid-glass"] .course-route-icon {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.55), rgba(168, 85, 247, 0.45)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow:
+    0 8px 20px -6px rgba(56, 189, 248, 0.55),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.8) !important;
+  color: #ffffff !important;
+}
+
+/* 旧 hover 装饰（下划线/箭头色/边框色）统一成新材质暖光 */
+html[data-skin="liquid-glass"] :is(.course-card-go, .hero-link, .next-level, .track-note) {
+  color: #bae6fd !important;
+}

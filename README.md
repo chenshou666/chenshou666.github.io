@@ -23,7 +23,8 @@ css/                        7 个样式文件，按编号顺序加载（编号 =
   05-motion.css               指针倾斜、滑入/转场、通关条、进度备份面板
   06-fps.css                  FPS 监视器 + 双 UI（切换器/门户/星空/星轨卡/全息工作台）
   07-mobile-patch.css         手机端补丁（FPS 防遮挡、星轨坞布局，必须最后加载）
-  08-visionos.css             【可选皮肤】visionOS 深色玻璃（只作用于星空 UI；删掉 index.html 里的 link 与 data-skin 即可关闭）
+  08-liquid-glass.css         【液态玻璃皮肤】showcase 材质原样（深空极光画布 / .liquid-glass / .liquid-pill / 涟漪）
+  09-liquid-site.css          【液态玻璃皮肤】把材质映射到站点组件 + 深色可读性（删掉 08/09 与 html 的 data-skin 即还原）
 js/                         13 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
   01-course-registry.js       课程注册表（COURSES / 关卡汇总 / 进度存储键）
   02-app-core.js              状态与 localStorage、主题、编辑器、密码弹窗、统计
@@ -38,6 +39,7 @@ js/                         13 个应用脚本，按编号顺序加载（编号 
   11-appearance.js            外观设置面板（天空预设 / 玻璃参数）
   12-pointer-tilt.js          指针跟随倾斜
   13-dual-ui.js               双 UI 引擎（FPS + 星云粒子 + 3D 星轨卡，必须最后加载）
+  14-liquid-glass.js          液态玻璃引擎（极光画布 / 光标高光 / 点击涟漪；纯视觉，不改业务）
 content/
   c/                        C 语言课程内容（每个模块一个 JS 数据文件，按模块号命名）
     c0-getting-started.js   模块 0 · 起步上路（8 关）
