@@ -13,7 +13,7 @@ HT Lab 是一个**纯静态**的中文学习网站：C 语言 86 关 + 英语四
 3. **必须能 `file://` 双击打开**：不能 fetch 本地 JSON、不能用 `type="module"` / `import()`、不能依赖 Service Worker；否则双击 `index.html` 会坏。
 4. **不要随意改可见 UI 与课程内容**：样式/架构类任务不要顺手改文案、题目、版权声明；内容改动走 docs/CONTENT-GUIDE.md。
 5. **只有一个 UI**：旧星空宇宙、双 UI 门户、FPS 浮层、旧外观面板已**整体删除**（`css/06-fps.css`、`js/11-appearance.js`、`js/12-pointer-tilt.js`、`js/13-dual-ui.js` 均已移除）。不要再加回第二套界面或“切换 UI”按钮；所有界面改动只改 `css/10-ui.css`。
-6. **保持 js/css 的数字编号与加载顺序**：`css/08→10` 是层叠顺序（`08-liquid-glass` 材质 → `10-ui` 界面层，10 必须最后加载）；`js/01→10, 14` 是依赖顺序（`14-liquid-glass` 放在最后，仅做视觉增强；`09-events` 末尾的首次 `render()` 不能挪）。
+6. **保持 js/css 的数字编号与加载顺序**：`css/08→10` 是层叠顺序（`08-liquid-glass` 材质 → `10-ui` 界面层，10 必须最后加载）；`js/01→10, 14, 15` 是依赖顺序（`14-liquid-glass` 与 `15-ui-motion` 放在最后，仅做视觉增强；`09-events` 末尾的首次 `render()` 不能挪）。
 6. **js/ 是经典脚本，共享一个全局作用域**：不要转成 ES Module。顶层 `const/let` 跨文件重名会直接 SyntaxError（整页白屏）；同名 `function` 允许（后定义的覆盖前面的，这是经典脚本的坑）。新增顶层符号前先全仓搜重名。
 7. **学习进度只写 localStorage**，键名固定：`cquest.master.v1`、`cquest.cet4.v1`、`cquest.course.v1`、`cquest.appearance.v1`、`codesword.reset.password.v1`、`cquest.project.v1`、`codesword.theme.v1`、`htlab.uimode.v1`。不新增后端/请求/cookie/IndexedDB 存进度。
 8. **`index.html` 是唯一页面**：只作为资源引用 + 静态页面壳；不要往里塞大段内联 CSS/JS（这正是重构拆出去的原因）。

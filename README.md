@@ -18,7 +18,7 @@ index.html                  唯一页面：head 里的资源引用 + 页面 shel
 css/                        7 个样式文件，按编号顺序加载（编号 = 层叠顺序，顺序有意义）
   08-liquid-glass.css         「液态玻璃」材质原样（showcase：极光画布 / .liquid-glass / .liquid-pill / 涟漪）
   10-ui.css                   全新界面层（唯一 UI）：悬浮胶囊顶栏 + 底部 Dock + 玻璃组件 + 深色可读性 + 手机端
-js/                         11 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
+js/                         12 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
 js/                         13 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
   01-course-registry.js       课程注册表（COURSES / 关卡汇总 / 进度存储键）
   02-app-core.js              状态与 localStorage、主题、编辑器、密码弹窗、统计
@@ -31,6 +31,7 @@ js/                         13 个应用脚本，按编号顺序加载（编号 
   09-events.js                全局事件委托、编辑器快捷键（末尾首次渲染）
   10-splash.js                开屏动画
   14-liquid-glass.js          液态玻璃引擎（极光画布 / 光标高光 / 点击涟漪；纯视觉，不改业务）
+  15-ui-motion.js             高级页面切换动画（View Transitions 前进/后退出入 + 错峰入场 + Dock 弹跳；纯视觉）
 content/
   c/                        C 语言课程内容（每个模块一个 JS 数据文件，按模块号命名）
     c0-getting-started.js   模块 0 · 起步上路（8 关）

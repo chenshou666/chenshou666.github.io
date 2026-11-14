@@ -14,7 +14,7 @@ HT Lab 是一个**纯静态**的中文学习网站，包含 C 语言（86 关 / 
 - **没有后端**：不发起业务网络请求，不收集、不上传数据；学习进度、代码草稿、录音只存在访问者本机浏览器。
 - **GitHub Pages 托管**：仓库 `chenshou666/chenshou666.github.io` 的 `main` 分支根目录即发布目录，`.nojekyll` 已就位。
 - **必须支持 `file://` 双击打开**：所有资源引用都是相对路径；不能依赖 fetch 本地 JSON、Service Worker 等需要 HTTP 的能力。
-- **经典 `<script>`（不是 ES Module）**：`js/` 下 11 个文件共享同一个全局作用域，靠加载顺序表达依赖；`content/` 下的数据文件也是经典脚本。
+- **经典 `<script>`（不是 ES Module）**：`js/` 下 12 个文件共享同一个全局作用域，靠加载顺序表达依赖；`content/` 下的数据文件也是经典脚本。
 - **CSS 靠层叠顺序**：`css/` 下 3 个文件按 06 → 08 → 10 加载，10-ui.css 是全新界面层（最后加载、优先级最高）。
 
 ## 2. 目录树与职责
@@ -36,7 +36,7 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 ├─ css/                            2 个样式文件，按顺序加载（唯一 UI）
 │  ├─ 08-liquid-glass.css          showcase 液态玻璃材质原样：深空极光画布、.liquid-glass / .liquid-pill / .glass-ripple
 │  └─ 10-ui.css                    全新界面层（唯一 UI，必须最后加载）：悬浮胶囊顶栏 + 底部 Dock + 玻璃组件 + 深色可读性 + 手机端
-├─ js/                             11 个应用脚本，按编号顺序加载；共享全局作用域
+├─ js/                             12 个应用脚本，按编号顺序加载；共享全局作用域
 │  ├─ 01-course-registry.js        课程注册表：汇总 content 数据 → courseLevels / COURSES / 进度存储键
 │  ├─ 02-app-core.js               应用核心：stores/data 状态、localStorage、主题、编辑器工具、密码弹窗、统计
 │  ├─ 03-lesson-format.js          讲义排版（fmtLesson / fmtInline）、switchPage、navTitle
@@ -47,7 +47,8 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 │  ├─ 08-c-checker.js              C 语言检查器：词法/语法分析、结构检查、运行结果比对、通关判定、胜利动画
 │  ├─ 09-events.js                 全局事件委托（data-action / data-page / data-level / data-pick）、编辑器快捷键；末尾首次 render()
 │  ├─ 10-splash.js                 开屏动画：splash 落位、跳过、首屏元素 drop-in
-│  └─ 14-liquid-glass.js           液态玻璃视觉引擎（极光画布 / 光标高光 / 点击涟漪；纯视觉，不改业务）
+│  ├─ 14-liquid-glass.js           液态玻璃视觉引擎（极光画布 / 光标高光 / 点击涟漪；纯视觉，不改业务）
+│  └─ 15-ui-motion.js              高级页面切换动画（View Transitions / 降级动画 / 错峰入场 / Dock 弹跳；纯视觉）
 ├─ content/                        课程数据（经典脚本，先于 js/ 加载；只放数据，不放逻辑）
 │  ├─ c/                           C 语言，每个模块一个文件，按模块号命名
 │  │  ├─ c0-getting-started.js     模块 0 · 起步上路（8 关，id 1–8）

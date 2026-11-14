@@ -1780,3 +1780,206 @@ body.splash-active { overflow: hidden; }
   .top-right { justify-content: center; }
 }
 
+/* ==========================================================================
+ * 21. 高级页面切换动画（View Transitions + 降级 CSS 动画）
+ *     逻辑无关，纯视觉；js/15-ui-motion.js 负责触发
+ * ========================================================================== */
+
+/* 只快照内容区，避免整页（极光画布）被冻结重绘 */
+#view {
+  view-transition-name: ht-view;
+}
+
+::view-transition-old(ht-view),
+::view-transition-new(ht-view) {
+  animation-duration: 0.52s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+
+/* 前进：旧页面上移淡出 → 新页面从下方弹入 */
+::view-transition-old(ht-view) {
+  animation-name: ui-vt-out-forward;
+  animation-duration: 0.3s;
+  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+::view-transition-new(ht-view) {
+  animation-name: ui-vt-in-forward;
+}
+
+/* 后退：方向反转 */
+html[data-anim-dir="back"]::view-transition-old(ht-view) {
+  animation-name: ui-vt-out-back;
+}
+
+html[data-anim-dir="back"]::view-transition-new(ht-view) {
+  animation-name: ui-vt-in-back;
+}
+
+@keyframes ui-vt-out-forward {
+  to {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.992);
+    filter: blur(10px);
+  }
+}
+
+@keyframes ui-vt-in-forward {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(1.006);
+    filter: blur(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes ui-vt-out-back {
+  to {
+    opacity: 0;
+    transform: translateY(14px) scale(0.992);
+    filter: blur(10px);
+  }
+}
+
+@keyframes ui-vt-in-back {
+  from {
+    opacity: 0;
+    transform: translateY(-22px) scale(1.006);
+    filter: blur(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* —— 降级动画（浏览器不支持 View Transitions 时）—— */
+#view.ui-page-in {
+  animation: ui-page-in 0.5s var(--ui-ease) both;
+}
+
+@keyframes ui-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+#view > .ui-stagger {
+  animation: ui-item-in 0.55s var(--ui-ease) both;
+  animation-delay: calc(var(--i, 0) * 46ms);
+}
+
+@keyframes ui-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Dock 图标弹跳（切换页面时） */
+.nav-btn.dock-bounce .nav-icon {
+  animation: dock-bounce 0.62s var(--ui-spring) both;
+}
+
+@keyframes dock-bounce {
+  0% { transform: translateY(0) scale(1); }
+  35% { transform: translateY(-7px) scale(1.22); }
+  65% { transform: translateY(1px) scale(0.96); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* 弹窗：背景淡入 + 卡片弹簧入场 */
+.modal-backdrop:not([hidden]) {
+  animation: ui-backdrop-in 0.26s ease both;
+}
+
+.modal-backdrop:not([hidden]) .reset-dialog {
+  animation: ui-modal-in 0.5s var(--ui-spring) both;
+}
+
+.victory-overlay {
+  animation: ui-backdrop-in 0.3s ease both;
+}
+
+.victory-overlay .victory-card {
+  animation: ui-modal-in 0.55s var(--ui-spring) both;
+}
+
+@keyframes ui-backdrop-in {
+  from { opacity: 0; backdrop-filter: blur(0); }
+  to { opacity: 1; }
+}
+
+@keyframes ui-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 通关悬浮条：从下方滑入 */
+.next-bar {
+  animation: ui-bar-in 0.55s var(--ui-spring) both;
+}
+
+@keyframes ui-bar-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 22px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* 卡片按压反馈（无 backdrop-filter 的元素才位移，避免玻璃重采样闪烁） */
+.level-card,
+.course-card,
+.option,
+.btn {
+  will-change: auto;
+}
+
+.level-card:active,
+.option:active {
+  transform: scale(0.985);
+}
+
+/* 减弱动效：全部关闭 */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(ht-view),
+  ::view-transition-new(ht-view),
+  #view.ui-page-in,
+  #view > .ui-stagger,
+  .nav-btn.dock-bounce .nav-icon,
+  .modal-backdrop,
+  .reset-dialog,
+  .victory-overlay,
+  .victory-card,
+  .next-bar {
+    animation: none !important;
+  }
+}
