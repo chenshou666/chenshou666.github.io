@@ -1983,3 +1983,40 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
     animation: none !important;
   }
 }
+
+/* ==========================================================================
+ * 22. Dock 自动隐藏：向下滚动收起（不再挡住内容/导航），向上滚动或靠近底部滑出
+ * ========================================================================== */
+.sidebar {
+  transition:
+    transform 0.5s var(--ui-spring),
+    opacity 0.32s var(--ui-ease),
+    box-shadow 0.3s var(--ui-ease);
+}
+
+.sidebar.dock-hidden {
+  transform: translate(-50%, 150%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 620px) {
+  .sidebar.dock-hidden {
+    transform: translate(-50%, 160%) !important;
+  }
+}
+
+/* ==========================================================================
+ * 23. 页面切换期间不遮挡 Dock / 顶栏：只让 #view 参与 View Transition
+ * ========================================================================== */
+:root {
+  view-transition-name: none;
+}
+
+::view-transition,
+::view-transition-group(*),
+::view-transition-image-pair(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  pointer-events: none !important;
+}

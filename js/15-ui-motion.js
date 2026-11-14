@@ -158,3 +158,57 @@
     }, 1200);
   });
 })();
+
+/* ==========================================================================
+ * Dock 自动隐藏：向下滚动收起，向上滚动 / 靠近屏幕底部 / 回到顶部时滑出
+ * ========================================================================== */
+(function () {
+  var dock = document.querySelector(".sidebar");
+  if (!dock) return;
+  function scrollY() {
+    var el = document.scrollingElement || document.documentElement;
+    return (window.scrollY || 0) || (el && el.scrollTop) || 0;
+  }
+  var lastY = scrollY();
+  var hidden = false;
+  var ticking = false;
+
+  function setHidden(v) {
+    if (hidden === v) return;
+    hidden = v;
+    dock.classList.toggle("dock-hidden", v);
+  }
+
+  function evaluate() {
+    ticking = false;
+    var y = scrollY();
+    var dy = y - lastY;
+    if (y < 90) {
+      setHidden(false);
+    } else if (dy > 8) {
+      setHidden(true);
+    } else if (dy < -8) {
+      setHidden(false);
+    }
+    lastY = y;
+  }
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(evaluate);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  document.addEventListener("scroll", onScroll, { passive: true, capture: true });
+
+  /* 鼠标移到屏幕底部：Dock 立即滑出（避免“找不到导航”） */
+  window.addEventListener("mousemove", function (e) {
+    if (e.clientY > window.innerHeight - 96) setHidden(false);
+  }, { passive: true });
+
+  /* 触屏：手指在底部区域滑动时显示 */
+  window.addEventListener("touchstart", function (e) {
+    var t = e.touches && e.touches[0];
+    if (t && t.clientY > window.innerHeight - 140) setHidden(false);
+  }, { passive: true });
+})();
