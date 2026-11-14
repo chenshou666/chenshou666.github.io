@@ -12,16 +12,10 @@
   CSS 与 JS 的加载顺序 = 功能依赖顺序；调整顺序、拆分或合并文件前请先读文档。
 -->
 <!-- 样式：按编号顺序加载（后面的文件会覆盖前面的规则，顺序有意义） -->
-<link rel="stylesheet" href="./css/01-base.css">
-<link rel="stylesheet" href="./css/02-design-system.css">
-<link rel="stylesheet" href="./css/03-refinements.css">
-<link rel="stylesheet" href="./css/04-effects.css">
-<link rel="stylesheet" href="./css/05-motion.css">
+<!-- 全新 UI：10-ui.css（界面层） + 08-liquid-glass.css（showcase 材质） + 06-fps.css（星空 UI 布局） -->
 <link rel="stylesheet" href="./css/06-fps.css">
-<link rel="stylesheet" href="./css/07-mobile-patch.css">
-<!-- iOS 液态玻璃皮肤：08 = showcase 材质原样，09 = 站点组件映射（不想要可删这两行与 html 上的 data-skin） -->
 <link rel="stylesheet" href="./css/08-liquid-glass.css">
-<link rel="stylesheet" href="./css/09-liquid-site.css">
+<link rel="stylesheet" href="./css/10-ui.css">
 </head>
 <body class="splash-active">
 <div class="splash-screen" id="splash-screen" role="status" aria-label="HT Lab 正在启动">

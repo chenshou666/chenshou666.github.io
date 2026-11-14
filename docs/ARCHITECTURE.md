@@ -14,8 +14,8 @@ HT Lab 是一个**纯静态**的中文学习网站，包含 C 语言（86 关 / 
 - **没有后端**：不发起业务网络请求，不收集、不上传数据；学习进度、代码草稿、录音只存在访问者本机浏览器。
 - **GitHub Pages 托管**：仓库 `chenshou666/chenshou666.github.io` 的 `main` 分支根目录即发布目录，`.nojekyll` 已就位。
 - **必须支持 `file://` 双击打开**：所有资源引用都是相对路径；不能依赖 fetch 本地 JSON、Service Worker 等需要 HTTP 的能力。
-- **经典 `<script>`（不是 ES Module）**：`js/` 下 13 个文件共享同一个全局作用域，靠加载顺序表达依赖；`content/` 下的数据文件也是经典脚本。
-- **CSS 靠层叠顺序**：`css/` 下 7 个文件按数字编号加载，后面的文件覆盖、增强前面的，顺序本身就是设计的一部分。
+- **经典 `<script>`（不是 ES Module）**：`js/` 下 14 个文件共享同一个全局作用域，靠加载顺序表达依赖；`content/` 下的数据文件也是经典脚本。
+- **CSS 靠层叠顺序**：`css/` 下 3 个文件按 06 → 08 → 10 加载，10-ui.css 是全新界面层（最后加载、优先级最高）。
 
 ## 2. 目录树与职责
 
@@ -33,15 +33,11 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 ├─ tools/
 │  └─ verify-site.mjs              本地验证脚本：Node 起本地服务 + 无头 Edge/Chrome 走交互矩阵并出报告
 │                                  （开发辅助，不参与站点运行；用法见 AGENTS.md 或脚本 --help）
-├─ css/                            7 个样式文件，按编号顺序加载（= 原 3 个内联 <style> 块的顺序切分）
-│  ├─ 01-base.css                  基础：CSS 变量、重置、侧栏/顶栏/页头、课程卡、开屏动画底层样式（原第 1 个 style 块前段）
-│  ├─ 02-design-system.css         Liquid Glass 设计系统：天空/云层、玻璃骨架、通用组件、响应式
-│  ├─ 03-refinements.css           视觉修正与 UI 落地：外观面板、玻璃质感、代码块、hover、四级组件、弹窗、胜利页
-│  ├─ 04-effects.css               外观参数联动（--glass-blur、--r-l 等变量驱动卡片）、关卡区玻璃层次、果冻弹簧
-│  ├─ 05-motion.css                指针倾斜、侧栏/顶栏滑入、页面转场、通关悬浮条、进度备份/存档码面板
-│  ├─ 06-fps.css                   FPS 监视器 + 双 UI 切换器/进站门户 + 玻璃 UI 手机端修复 + 星空宇宙/HUD/星轨卡 + 全息工作台（原第 2 个 style 块）
-│  └─ 07-mobile-patch.css          手机端补丁：FPS 防遮挡、星轨坞卡片布局（原第 3 个 style 块，必须最后加载）
-├─ js/                             13 个应用脚本，按编号顺序加载；共享全局作用域
+├─ css/                            3 个样式文件，按顺序加载（全新 UI 架构）
+│  ├─ 06-fps.css                   星空 UI 骨架：FPS 监视器 + 双 UI 切换器/进站门户 + 星空宇宙/HUD/星轨卡 + 全息工作台
+│  ├─ 08-liquid-glass.css          showcase 液态玻璃材质原样：深空极光画布、.liquid-glass / .liquid-pill / .glass-ripple
+│  └─ 10-ui.css                    全新界面层（必须最后加载）：悬浮胶囊顶栏 + 底部 Dock + 玻璃组件 + 深色可读性 + 手机端
+├─ js/                             14 个应用脚本，按编号顺序加载；共享全局作用域
 │  ├─ 01-course-registry.js        课程注册表：汇总 content 数据 → courseLevels / COURSES / 进度存储键
 │  ├─ 02-app-core.js               应用核心：stores/data 状态、localStorage、主题、编辑器工具、密码弹窗、统计
 │  ├─ 03-lesson-format.js          讲义排版（fmtLesson / fmtInline）、switchPage、navTitle
@@ -54,7 +50,8 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 │  ├─ 10-splash.js                 开屏动画：splash 落位、跳过、首屏元素 drop-in
 │  ├─ 11-appearance.js             外观面板：天空预设 + 玻璃模糊/不透明度/圆角/噪点/边缘高光（动态生成 FAB 与面板）
 │  ├─ 12-pointer-tilt.js           指针跟随倾斜（鼠标 3D 倾斜；触屏与 reduced-motion 自动关闭）
-│  └─ 13-dual-ui.js                双 UI 引擎：FPS 监控、星云/18000 粒子、3D 星轨卡片、UI 门户、与主应用的桥接（必须最后加载）
+│  ├─ 13-dual-ui.js                双 UI 引擎：FPS 监控、星云/18000 粒子、3D 星轨卡片、UI 门户、与主应用的桥接（应用逻辑收尾）
+│  └─ 14-liquid-glass.js           液态玻璃视觉引擎（极光画布 / 光标高光 / 点击涟漪；纯视觉，不改业务）
 ├─ content/                        课程数据（经典脚本，先于 js/ 加载；只放数据，不放逻辑）
 │  ├─ c/                           C 语言，每个模块一个文件，按模块号命名
 │  │  ├─ c0-getting-started.js     模块 0 · 起步上路（8 关，id 1–8）
@@ -93,7 +90,7 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 ```
 <html>                                   ← <html data-sky="noon" lang="zh-CN">
   <head>
-    css/01-base.css → 02 → 03 → 04 → 05 → 06 → 07
+    css/06-fps.css → 08-liquid-glass.css → 10-ui.css
                                          ← 顺序 = 层叠顺序，不能随意调换
   <body class="splash-active">
     页面 shell（全部先存在，JS 只负责往 #view 里渲染）：
@@ -124,7 +121,7 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 ```
 浏览器打开 index.html
   │
-  ├─ 解析 <head>，并行请求 7 个 CSS 文件（若启用液态玻璃皮肤则为 9 个：08-liquid-glass + 09-liquid-site）
+  ├─ 解析 <head>，并行请求 3 个 CSS 文件（06-fps 星空骨架 / 08-liquid-glass 液态玻璃材质 / 10-ui 全新界面层）
   ├─ 解析 <body> 骨架（页面壳已存在：splash、sidebar、topbar、#view 空容器、toast、modal、双 UI 节点）
   ├─ 同步执行 content/c/*.js ×11   → window.C_MODULES   （每关 level 数据）
   ├─ 同步执行 content/cet4/*.js ×7 → window.CET4_MODULES（每关 level 数据）

@@ -16,15 +16,10 @@
 ```
 index.html                  唯一页面：head 里的资源引用 + 页面 shell DOM（样式、脚本、课程数据都在外部文件）
 css/                        7 个样式文件，按编号顺序加载（编号 = 层叠顺序，顺序有意义）
-  01-base.css                 基础：变量、重置、侧栏/顶栏、课程卡、开屏底层样式
-  02-design-system.css        Liquid Glass 设计系统、天空/云层、通用组件、响应式
-  03-refinements.css          外观面板、玻璃质感、代码块、hover、四级组件、弹窗、胜利页
-  04-effects.css              外观参数联动、关卡区玻璃层次
-  05-motion.css               指针倾斜、滑入/转场、通关条、进度备份面板
-  06-fps.css                  FPS 监视器 + 双 UI（切换器/门户/星空/星轨卡/全息工作台）
-  07-mobile-patch.css         手机端补丁（FPS 防遮挡、星轨坞布局，必须最后加载）
-  08-liquid-glass.css         【液态玻璃皮肤】showcase 材质原样（深空极光画布 / .liquid-glass / .liquid-pill / 涟漪）
-  09-liquid-site.css          【液态玻璃皮肤】把材质映射到站点组件 + 深色可读性（删掉 08/09 与 html 的 data-skin 即还原）
+  06-fps.css                  星空 UI 骨架（FPS 监视器 + 双 UI + 星云粒子层 + 星轨卡 + 全息工作台）
+  08-liquid-glass.css         「液态玻璃」材质原样（showcase：极光画布 / .liquid-glass / .liquid-pill / 涟漪）
+  10-ui.css                   全新界面层（悬浮胶囊顶栏 + 底部 Dock + 玻璃组件 + 深色可读性 + 手机端）
+js/                         14 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
 js/                         13 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
   01-course-registry.js       课程注册表（COURSES / 关卡汇总 / 进度存储键）
   02-app-core.js              状态与 localStorage、主题、编辑器、密码弹窗、统计
