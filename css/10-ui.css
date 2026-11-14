@@ -1543,188 +1543,6 @@ audio { width: 100%; height: 34px; filter: invert(0.92) hue-rotate(180deg); bord
 .nb-ok { font-size: 12px; font-weight: 700; color: var(--ui-green); }
 .nb-actions { display: flex; gap: 8px; }
 
-/* 外观面板 */
-.ap-fab {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  z-index: 95;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 16px;
-  border-radius: 9999px;
-  background: var(--ui-glass-strong);
-  backdrop-filter: var(--ui-blur);
-  -webkit-backdrop-filter: var(--ui-blur);
-  border: 1px solid var(--ui-border);
-  box-shadow: var(--ui-shadow), var(--ui-rim);
-  color: var(--ui-ink);
-  font-size: 12px;
-  font-weight: 650;
-}
-
-.ap-fab svg { width: 16px; height: 16px; }
-
-.ap-sheet {
-  position: fixed;
-  right: 22px;
-  bottom: 80px;
-  z-index: 96;
-  width: min(300px, 88vw);
-  padding: 18px;
-  border-radius: var(--ui-r-l);
-  background: var(--ui-glass-strong);
-  backdrop-filter: var(--ui-blur);
-  -webkit-backdrop-filter: var(--ui-blur);
-  border: 1px solid var(--ui-border-strong);
-  box-shadow: var(--ui-shadow-lift), var(--ui-rim);
-  display: none;
-}
-
-.ap-sheet.open { display: block; }
-
-.ap-title { font-size: 13px; font-weight: 750; color: var(--ui-ink); margin-bottom: 12px; }
-.ap-row { margin-bottom: 12px; }
-.ap-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--ui-ink-3); margin-bottom: 6px; }
-.ap-sky { display: flex; flex-wrap: wrap; gap: 7px; }
-
-.ap-chip {
-  padding: 6px 12px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--ui-ink-2);
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.ap-chip.on { background: rgba(56, 189, 248, 0.3); border-color: rgba(186, 230, 253, 0.6); color: #fff; }
-
-.ap-range {
-  width: 100%;
-  height: 5px;
-  border-radius: 9999px;
-  appearance: none;
-  -webkit-appearance: none;
-  background: rgba(255, 255, 255, 0.18);
-  outline: none;
-}
-
-.ap-range::-webkit-slider-thumb {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #fff, #dbeafe);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.ap-actions { display: flex; gap: 8px; margin-top: 14px; }
-
-.ap-btn {
-  flex: 1;
-  padding: 8px 12px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--ui-ink);
-  font-size: 11.5px;
-  font-weight: 600;
-}
-
-.ap-note { margin-top: 10px; font-size: 10.5px; color: var(--ui-ink-3); }
-.ap-fab, .ap-sheet, .next-bar { display: none; }
-body[data-ui-mode="glass"] .ap-fab, body[data-ui-mode="glass"] .ap-sheet { display: inline-flex; }
-body[data-ui-mode="glass"] .ap-sheet { display: none; }
-body[data-ui-mode="glass"] .ap-sheet.open { display: block; }
-
-/* ==========================================================================
- * 12. 星空 UI：沿用 06-fps 布局，只统一材质
- * ========================================================================== */
-body[data-ui-mode="cosmos"] .app,
-body[data-ui-mode="cosmos"] .sidebar,
-body[data-ui-mode="cosmos"] .topbar { display: none !important; }
-
-body[data-ui-mode="cosmos"] #cosmosHud { display: flex !important; }
-
-.cosmos-brand-block,
-.cosmos-nav-pills,
-.cosmos-ctrl-bar,
-.orbit-card,
-#htFpsMonitor {
-  background: var(--ui-glass) !important;
-  backdrop-filter: var(--ui-blur) !important;
-  -webkit-backdrop-filter: var(--ui-blur) !important;
-  border: 1px solid var(--ui-border) !important;
-  box-shadow: var(--ui-shadow), var(--ui-rim) !important;
-  color: var(--ui-ink) !important;
-  border-radius: var(--ui-r-xl) !important;
-}
-
-.cosmos-nav-pills, .cosmos-ctrl-bar, #htFpsMonitor { border-radius: 9999px !important; }
-
-.cosmos-pill, .chapter-orb {
-  border-radius: 9999px !important;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.07)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: var(--ui-ink) !important;
-}
-
-.cosmos-pill.highlight {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.45), rgba(129, 140, 248, 0.32)) !important;
-  border-color: rgba(186, 230, 253, 0.55) !important;
-}
-
-.cosmos-title, .orbit-card-title { color: var(--ui-ink) !important; }
-.cosmos-sub, .orbit-card-desc, .orbit-card-foot { color: var(--ui-ink-2) !important; }
-.cosmos-kicker, .orbit-card-tag { color: #7dd3fc !important; }
-
-.ui-mode-card, .ui-chooser-box, .inspect-card {
-  border-radius: var(--ui-r-xl) !important;
-  background: var(--ui-glass) !important;
-  border: 1px solid var(--ui-border) !important;
-  box-shadow: var(--ui-shadow), var(--ui-rim) !important;
-  color: var(--ui-ink) !important;
-}
-
-#uiChooserModal, #cosmosInspectModal {
-  position: fixed;
-  inset: 0;
-  z-index: 220;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: rgba(4, 6, 16, 0.72);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-#uiChooserModal.is-hidden, #cosmosInspectModal:not(.open) { display: none !important; }
-
-.ui-chooser-box { width: min(680px, 94vw); padding: 28px; }
-.ui-chooser-kicker { font-size: 10px; font-weight: 700; letter-spacing: 2.4px; text-transform: uppercase; color: var(--ui-cyan); margin-bottom: 10px; }
-.ui-chooser-box h2 { font-size: 24px; font-weight: 780; letter-spacing: -0.6px; color: var(--ui-ink); margin-bottom: 10px; }
-.ui-chooser-box p { font-size: 12.5px; line-height: 1.8; color: var(--ui-ink-2); }
-
-.ui-mode-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 20px; }
-
-.ui-mode-card {
-  display: block;
-  padding: 22px;
-  text-align: left;
-  cursor: pointer;
-  border-radius: var(--ui-r-l) !important;
-}
-
-.ui-mode-badge { display: inline-block; padding: 4px 10px; border-radius: 9999px; background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.24); font-size: 10px; font-weight: 700; color: var(--ui-ink); margin-bottom: 12px; }
-.ui-mode-card h3 { font-size: 16px; font-weight: 740; color: var(--ui-ink); margin-bottom: 6px; }
-.ui-mode-card small { font-size: 12px; line-height: 1.7; color: var(--ui-ink-2); display: block; }
-.ui-mode-go { display: inline-block; margin-top: 14px; font-size: 12px; font-weight: 700; color: #bae6fd; }
-
-.inspect-card { width: min(460px, 92vw); padding: 26px; }
-
 /* ==========================================================================
  * 13. 手机端
  * ========================================================================== */
@@ -1756,7 +1574,7 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex !important; }
   .lesson-copy { font-size: 13.5px; }
   .btn { padding: 10px 16px; font-size: 12.5px; }
   .next-bar { bottom: 96px; padding: 8px 12px; }
-  .ap-fab { right: 14px; bottom: 96px; }
+  
   .toast { bottom: 100px; }
   .splash-skip { right: 16px; bottom: 16px; }
 }
@@ -1782,13 +1600,7 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex !important; }
       rgba(19, 25, 48, 0.88) 100%);
 }
 
-/* 极光画布压暗，保证白字对比度 */
-#fluid-bg-canvas {
-  opacity: 0.55 !important;
-  filter: saturate(0.95);
-}
-
-/* 内容面板统一深色玻璃 */
+/* 内容面板统一深色玻璃（可读性基础） */
 .panel,
 .hero-progress,
 .track,
@@ -1799,10 +1611,15 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex !important; }
 .proj-card,
 .challenge-card,
 .victory-card,
-.ap-sheet,
 .reset-dialog {
   background: var(--ui-glass-dark) !important;
   border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+/* 极光画布压暗，保证白字对比度 */
+#fluid-bg-canvas {
+  opacity: 0.55 !important;
+  filter: saturate(0.95);
 }
 
 .panel,
@@ -1860,16 +1677,6 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex !important; }
 .level-card.completed {
   background: linear-gradient(145deg, rgba(52, 211, 153, 0.24), rgba(16, 185, 129, 0.1)) !important;
   border-color: rgba(167, 243, 208, 0.45) !important;
-}
-
-/* 顶栏：FPS 移到右下角、隐藏主题按钮、头像缩小 */
-#htFpsMonitor {
-  top: auto !important;
-  bottom: 96px !important;
-  right: 18px !important;
-  left: auto !important;
-  transform: none !important;
-  z-index: 70;
 }
 
 .theme-button { display: none !important; }
@@ -1946,55 +1753,13 @@ body[data-ui-mode="cosmos"] #cosmosHud { display: flex !important; }
 
   #htFpsMonitor { bottom: 148px !important; right: 12px !important; }
 
-  .ap-fab { right: 12px !important; bottom: 148px !important; }
+  
 
   .toast { bottom: 150px; }
 }
 
-/* ==========================================================================
- * 16. 覆盖 06-fps 的旧版「全宽底部导航条」，改为悬浮胶囊 Dock
- * ========================================================================== */
-body:not([data-ui-mode="cosmos"]) .sidebar {
-  position: fixed !important;
-  left: 50% !important;
-  right: auto !important;
-  bottom: 18px !important;
-  width: auto !important;
-  height: auto !important;
-  max-width: calc(100vw - 24px) !important;
-  transform: translateX(-50%) !important;
-  padding: 10px 14px !important;
-  border-radius: 9999px !important;
-  flex-direction: row !important;
-}
-
-body:not([data-ui-mode="cosmos"]) .sidebar .nav {
-  width: auto !important;
-  flex-wrap: nowrap !important;
-}
-
-body:not([data-ui-mode="cosmos"]) .sidebar .nav-btn {
-  width: auto !important;
-  min-width: 64px !important;
-}
-
 @media (max-width: 620px) {
-  body:not([data-ui-mode="cosmos"]) .sidebar {
-    bottom: 10px !important;
-    padding: 7px 7px !important;
-    max-width: calc(100vw - 16px) !important;
-  }
-  body:not([data-ui-mode="cosmos"]) .sidebar .nav-btn {
-    min-width: 0 !important;
-    flex: 1 1 0 !important;
-    padding: 6px 2px 4px !important;
-    font-size: 9px !important;
-  }
-  body:not([data-ui-mode="cosmos"]) .sidebar .nav {
-    width: 100% !important;
-    justify-content: space-between !important;
-    gap: 1px !important;
-  }
+
 }
 
 /* ==========================================================================
@@ -2009,117 +1774,9 @@ body:not(.splash-active) .splash-screen,
 
 body.splash-active { overflow: hidden; }
 
-.ui-chooser-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px;
-  margin-top: 20px;
-}
-
-.ui-mode-card.glass-opt,
-.ui-mode-card.cosmos-opt {
-  background: var(--ui-glass-dark) !important;
-}
-
 @media (max-width: 620px) {
   /* 手机 Dock 只留图标（iOS 风格），点击有 tooltip 导航 */
-  body:not([data-ui-mode="cosmos"]) .sidebar .nav-btn > span:last-child {
-    display: none !important;
-  }
-  body:not([data-ui-mode="cosmos"]) .sidebar .nav-btn {
-    min-height: 44px;
-    padding: 8px 6px !important;
-  }
-  body:not([data-ui-mode="cosmos"]) .sidebar .nav-icon {
-    width: 24px;
-    height: 24px;
-  }
-  body:not([data-ui-mode="cosmos"]) .sidebar .nav-icon svg {
-    width: 22px;
-    height: 22px;
-  }
+
   .top-right { justify-content: center; }
 }
 
-/* ==========================================================================
- * 18. 星空 UI 可读性：星轨卡 / 门户卡 / HUD 用深色玻璃
- * ========================================================================== */
-.orbit-card,
-.orbit-card.portal-card {
-  background: var(--ui-glass-dark-strong) !important;
-  border: 1px solid rgba(255, 255, 255, 0.26) !important;
-  box-shadow:
-    0 24px 54px -16px rgba(0, 0, 0, 0.62),
-    inset 0 1.4px 1.4px rgba(255, 255, 255, 0.5),
-    inset 0 -1.4px 2px rgba(255, 255, 255, 0.16) !important;
-  color: #ffffff !important;
-}
-
-.orbit-card-title { color: #ffffff !important; }
-.orbit-card-desc { color: rgba(232, 240, 255, 0.88) !important; }
-.orbit-card-foot { color: rgba(206, 220, 242, 0.75) !important; }
-.orbit-card-tag { color: #7dd3fc !important; }
-.orbit-card-action { color: #bae6fd !important; }
-.orbit-card-top { color: rgba(206, 220, 242, 0.8) !important; }
-
-/* 星空 HUD 文本提亮 */
-#cosmosHud { color: #ffffff; }
-#cosmosHud .cosmos-sub { color: rgba(232, 240, 255, 0.86) !important; }
-
-/* 星空工作台顶部说明与按钮 */
-.cosmos-brand-block {
-  background: var(--ui-glass-dark) !important;
-}
-
-/* ==========================================================================
- * 19. 单一新 UI：星空宇宙 / 双 UI 门户 / 切换按钮 / FPS 全部下线
- *     （旧的星空节点仍保留在 DOM 里以兼容 13-dual-ui.js，只是永远不显示）
- * ========================================================================== */
-#uiChooserModal,
-#cosmos-stage,
-#cosmosHud,
-#cosmosInspectModal,
-#htFpsMonitor,
-.ui-switch-pill,
-.ui-mode-card,
-.ui-chooser-box {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* 无论 body 上残留什么 data-ui-mode，都只显示新界面 */
-.app {
-  display: block !important;
-  visibility: visible !important;
-}
-
-.sidebar {
-  display: flex !important;
-}
-
-.topbar {
-  display: flex !important;
-}
-
-body {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-}
-
-html, body {
-  height: auto !important;
-}
-
-/* ==========================================================================
- * 20. 下线旧「外观」面板（天空预设 / 玻璃参数属于旧 UI）
- * ========================================================================== */
-#apFab,
-#apSheet,
-.ap-fab,
-.ap-sheet,
-.theme-button {
-  display: none !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}

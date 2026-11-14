@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#111a31">
-<script>/* 单一新 UI：默认液态玻璃，不进入星空/门户（数据键仍为 htlab.uimode.v1，不改逻辑） */try{localStorage.setItem("htlab.uimode.v1","glass")}catch(e){}</script>
 <title>HT Lab</title>
 <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
 <!--
@@ -13,8 +12,7 @@
   CSS 与 JS 的加载顺序 = 功能依赖顺序；调整顺序、拆分或合并文件前请先读文档。
 -->
 <!-- 样式：按编号顺序加载（后面的文件会覆盖前面的规则，顺序有意义） -->
-<!-- 全新 UI：10-ui.css（界面层） + 08-liquid-glass.css（showcase 材质） + 06-fps.css（星空 UI 布局） -->
-<link rel="stylesheet" href="./css/06-fps.css">
+<!-- 全新 UI（唯一界面）：08-liquid-glass.css = 液态玻璃材质；10-ui.css = 界面层（必须最后加载） -->
 <link rel="stylesheet" href="./css/08-liquid-glass.css">
 <link rel="stylesheet" href="./css/10-ui.css">
 </head>
@@ -80,95 +78,7 @@
 <script src="./js/08-c-checker.js"></script>
 <script src="./js/09-events.js"></script>
 <script src="./js/10-splash.js"></script>
-<script src="./js/11-appearance.js"></script>
-<script src="./js/12-pointer-tilt.js"></script>
 
-<!-- ==================== HT LAB 双 UI 终极合并引擎（含 FPS 监控 + 绚丽星云银河 + 18000 粒子跟随） ==================== -->
-<!-- 实时帧率显示器 (FPS + MS + 波形图，点击可折叠波形) -->
-<div id="htFpsMonitor" title="点击切换精简/详细帧率视图">
-  <span class="fps-dot"></span>
-  <span class="fps-val" id="htFpsVal">60 FPS</span>
-  <span class="fps-ms" id="htFpsMs">16.7 ms</span>
-  <canvas id="htFpsCanvas" width="48" height="16"></canvas>
-</div>
-
-<!-- 进站双 UI 选择门户（已去掉 iOS 字样） -->
-<div id="uiChooserModal" class="is-hidden" role="dialog" aria-modal="true" aria-label="选择界面风格">
-  <div class="ui-chooser-box">
-    <div class="ui-chooser-kicker">HT LAB · DUAL ENGINE</div>
-    <h2>选择你喜欢的交互界面</h2>
-    <p>两套 UI 共享完全相同的课程题库、学习点数、通关进度、代码草稿与存档码，进入后可随时在顶栏一键切换。</p>
-    <div class="ui-chooser-grid">
-      <div class="ui-mode-card glass-opt" data-choose-ui="glass">
-        <div>
-          <span class="ui-mode-badge">🪟 Liquid Glass</span>
-          <h3>悬浮透明液态玻璃</h3>
-          <small>晨曦 / 正午 / 黄昏 / 夜空四套云层画布，高透磨砂白玻璃卡片与可调模糊度外观面板，清爽专注。</small>
-        </div>
-        <div class="ui-mode-go"><span>进入液态玻璃界面</span><span>→</span></div>
-      </div>
-      <div class="ui-mode-card cosmos-opt" data-choose-ui="cosmos">
-        <div>
-          <span class="ui-mode-badge">🌌 18,000 粒子星云宇宙</span>
-          <h3>3D 星尘粒子宇宙</h3>
-          <small>璀璨深空星云与银河光带、C 语言与英语四级双星球门户、3D 星轨卡片，鼠标移到哪里星尘粒子就涌向哪里。</small>
-        </div>
-        <div class="ui-mode-go"><span>进入星尘宇宙界面</span><span>→</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 星空宇宙 3D 舞台与双层遮挡画布 -->
-<div id="cosmos-stage">
-  <canvas id="stardust-canvas"></canvas>
-  <canvas id="stardust-fg-canvas"></canvas>
-  <div id="orbit-cards-layer"></div>
-</div>
-
-<!-- 星空宇宙四角 HUD -->
-<div id="cosmosHud">
-  <div class="cosmos-top-row">
-    <div class="cosmos-brand-block">
-      <div class="cosmos-kicker" id="cosmosKicker">BINARY UNIVERSE · 双星门户</div>
-      <h2 class="cosmos-title" id="cosmosTitle">选择一颗知识星球跃迁进入</h2>
-      <p class="cosmos-sub" id="cosmosSub">移动鼠标或手指，成千上万颗星尘将跟随你的轨迹汇聚。点击星球卡直接进入课程。</p>
-      <div class="cosmos-chapters">
-        <button type="button" class="chapter-orb active" data-chapter="binary">🌌 双星门户</button>
-        <button type="button" class="chapter-orb" data-chapter="countdown">5-1 倒计时</button>
-        <button type="button" class="chapter-orb" data-chapter="calligraphy">✦ 新的一阶</button>
-        <button type="button" class="chapter-orb" data-chapter="orbit">🪐 星系环</button>
-        <button type="button" class="chapter-orb" data-chapter="tower">🎂 星尘塔</button>
-      </div>
-    </div>
-    <div class="cosmos-nav-pills">
-      <button type="button" class="cosmos-pill highlight" id="cosmosBackBinaryBtn" style="display:none">🌌 ← 返回双星宇宙</button>
-      <button type="button" class="cosmos-pill" data-cosmos-open="map">🗺 全部关卡路线</button>
-      <button type="button" class="cosmos-pill" data-cosmos-open="practice">▶ 继续下一关</button>
-      <button type="button" class="cosmos-pill" data-cosmos-open="project">🛠 7 天项目</button>
-      <button type="button" class="cosmos-pill" data-cosmos-open="summary">📊 总结与存档</button>
-      <button type="button" class="cosmos-pill" id="cosmosToGlassBtn">🪟 切换至玻璃 UI</button>
-      <button type="button" class="cosmos-pill" id="cosmosChooserBtn">✦ UI 门户</button>
-    </div>
-  </div>
-  <div class="cosmos-bottom-row">
-    <div class="cosmos-ctrl-bar">
-      <span id="cosmosXpBadge" style="color:#38bdf8;font-weight:800">✦ 0 学习点</span>
-      <button type="button" class="chapter-orb active" id="magnetModeBtn" style="height:28px">🧲 指哪跟哪：强磁聚拢</button>
-      <button type="button" class="chapter-orb" id="nebulaThemeBtn" style="height:28px">🌌 星云：极光深空</button>
-      <label>粒子数 <input type="range" id="particleCountRange" min="8000" max="26000" step="2000" value="18000"><b id="particleCountVal">18k</b></label>
-      <label>引力 <input type="range" id="magnetForceRange" min="0" max="100" step="5" value="85"></label>
-    </div>
-  </div>
-</div>
-
-<!-- 3D 卡片居中翻转放大检视框 -->
-<div id="cosmosInspectModal">
-  <div class="inspect-card" id="cosmosInspectCard"></div>
-</div>
-
-<!-- 双 UI 引擎：必须在应用逻辑之后加载（会读取并增强上面的 DOM 与全局函数） -->
-<script src="./js/13-dual-ui.js"></script>
 <!-- 液态玻璃引擎：极光画布 + 光标高光 + 点击涟漪（纯视觉，不改业务） -->
 <script src="./js/14-liquid-glass.js"></script>
 </body>

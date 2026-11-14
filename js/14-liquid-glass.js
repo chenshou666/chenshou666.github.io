@@ -141,14 +141,13 @@
     ".course-card", ".course-entry", ".level-card", ".track",
     ".challenge-card", ".exercise", ".summary-hero", ".side-card",
     ".guide-card", ".skill-row", ".save-box", ".quiz-item",
-    ".feedback-panel", ".proj-card", ".wrong-item", ".inspect-card",
-    ".reset-dialog", ".ui-chooser-box", ".victory-card", ".progress-tools",
+    ".feedback-panel", ".proj-card", ".wrong-item",     ".reset-dialog", ".victory-card", ".progress-tools",
     ".beginner-guide", ".plan-result", ".save-block"
   ];
   var PILL_SELECTORS = [
     ".btn", ".btn-primary", ".btn-soft", ".btn-ghost", ".btn-small",
-    ".chip", ".chip-mini", ".cosmos-pill", ".chapter-orb",
-    ".ui-switch-pill", ".ap-chip", ".ap-btn"
+    ".chip", ".chip-mini",
+    ".ui-mode-go"
   ];
 
   var GLASS_QUERY = GLASS_SELECTORS.join(",");
