@@ -2040,3 +2040,86 @@ body.splash-active { overflow: hidden; }
   }
   .top-right { justify-content: center; }
 }
+
+/* ==========================================================================
+ * 18. 星空 UI 可读性：星轨卡 / 门户卡 / HUD 用深色玻璃
+ * ========================================================================== */
+.orbit-card,
+.orbit-card.portal-card {
+  background: var(--ui-glass-dark-strong) !important;
+  border: 1px solid rgba(255, 255, 255, 0.26) !important;
+  box-shadow:
+    0 24px 54px -16px rgba(0, 0, 0, 0.62),
+    inset 0 1.4px 1.4px rgba(255, 255, 255, 0.5),
+    inset 0 -1.4px 2px rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+}
+
+.orbit-card-title { color: #ffffff !important; }
+.orbit-card-desc { color: rgba(232, 240, 255, 0.88) !important; }
+.orbit-card-foot { color: rgba(206, 220, 242, 0.75) !important; }
+.orbit-card-tag { color: #7dd3fc !important; }
+.orbit-card-action { color: #bae6fd !important; }
+.orbit-card-top { color: rgba(206, 220, 242, 0.8) !important; }
+
+/* 星空 HUD 文本提亮 */
+#cosmosHud { color: #ffffff; }
+#cosmosHud .cosmos-sub { color: rgba(232, 240, 255, 0.86) !important; }
+
+/* 星空工作台顶部说明与按钮 */
+.cosmos-brand-block {
+  background: var(--ui-glass-dark) !important;
+}
+
+/* ==========================================================================
+ * 19. 单一新 UI：星空宇宙 / 双 UI 门户 / 切换按钮 / FPS 全部下线
+ *     （旧的星空节点仍保留在 DOM 里以兼容 13-dual-ui.js，只是永远不显示）
+ * ========================================================================== */
+#uiChooserModal,
+#cosmos-stage,
+#cosmosHud,
+#cosmosInspectModal,
+#htFpsMonitor,
+.ui-switch-pill,
+.ui-mode-card,
+.ui-chooser-box {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* 无论 body 上残留什么 data-ui-mode，都只显示新界面 */
+.app {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.sidebar {
+  display: flex !important;
+}
+
+.topbar {
+  display: flex !important;
+}
+
+body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+html, body {
+  height: auto !important;
+}
+
+/* ==========================================================================
+ * 20. 下线旧「外观」面板（天空预设 / 玻璃参数属于旧 UI）
+ * ========================================================================== */
+#apFab,
+#apSheet,
+.ap-fab,
+.ap-sheet,
+.theme-button {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

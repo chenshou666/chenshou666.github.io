@@ -409,6 +409,8 @@ cQuizOk(level) && codePassed && cOutputOk(level)
 
 ## 11. 双 UI 引擎（`js/13-dual-ui.js`，尾大不掉但功能完整）
 
+> **当前状态（2026-11）**：站点已改为**单一新 UI**（`css/10-ui.css`）。星空宇宙、双 UI 选择门户、FPS 监视器、旧「外观」面板全部由 `10-ui.css` 永久隐藏；`13-dual-ui.js` 仍加载（它包装 `render/save`，保持逻辑兼容），但不再显示任何星空界面。如要恢复星空 UI，需先明确需求再改 `10-ui.css` 第 19 节的隐藏规则。
+
 ### 11.1 结构（IIFE 内的 8 个小节）
 
 | 小节 | 内容 |
