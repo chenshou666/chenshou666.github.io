@@ -71,6 +71,8 @@
       this.effects = [];
       this.texts = [];
       this.ended = false;
+      this.started = false;
+      this.paused = false;
 
       // AI 决策计时器
       this.aiThinkTimer = 0;
@@ -755,6 +757,13 @@
       const dt = Math.min(rawDt, 1 / 20);
       this.lastTime = now;
 
+      if (!this.started || this.paused) {
+        this.lastTime = now;
+        this.draw();
+        requestAnimationFrame((t) => this.loop(t));
+        return;
+      }
+
       this.update(dt);
       this.draw();
       requestAnimationFrame((t) => this.loop(t));
@@ -764,6 +773,11 @@
       this.lastTime = performance.now();
       requestAnimationFrame((t) => this.loop(t));
     }
+
+    setPaused(v) {
+      this.paused = !!v;
+      this.lastTime = performance.now();
+    }
   }
 
   window.addEventListener('DOMContentLoaded', () => {
@@ -772,5 +786,16 @@
     }
     global.Game = new TrainingGame();
     global.Game.start();
+
+    const startBtn = document.getElementById('btn-start');
+    const startScreen = document.getElementById('start-screen');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => {
+        if (startScreen) startScreen.classList.add('hidden');
+        global.Game.started = true;
+        global.Game.restart();
+        global.Game.lastTime = performance.now();
+      });
+    }
   });
 })(window);

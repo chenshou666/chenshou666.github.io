@@ -10,6 +10,7 @@
     s2Pressed: false,
     s3Pressed: false,
     _keys: Object.create(null),
+    capturing: false,
   };
 
   function clamp(v, min, max) {
@@ -127,28 +128,102 @@
     bindSkillButton("btn-s3", "s3Pressed");
   }
 
-  function setupKeyboard() {
-    const map = {
-      KeyA: "left",
-      KeyD: "right",
-      KeyW: "up",
-      KeyS: "down",
-      ArrowLeft: "left",
-      ArrowRight: "right",
-      ArrowUp: "up",
-      ArrowDown: "down",
-      KeyJ: "attack",
-      KeyK: "s1",
-      KeyL: "s2",
-      KeyU: "s3",
-      Digit1: "s1",
-      Digit2: "s2",
-      Digit3: "s3",
-      Space: "attack",
-    };
+  /* ------------------------------------------------
+   * 键位绑定（可调节 + localStorage 持久化）
+   * ------------------------------------------------ */
+  const BIND_STORE = "stickman.keys.v1";
+  const ACTION_LABELS = {
+    left: "左移", right: "右移", up: "上移", down: "下移",
+    attack: "普攻", s1: "瞬步·居合", s2: "旋风升龙", s3: "影袭·燕返"
+  };
+  const ACTIONS = ["left", "right", "up", "down", "attack", "s1", "s2", "s3"];
+  const DEFAULT_BINDINGS = {
+    left: ["KeyA", "ArrowLeft"],
+    right: ["KeyD", "ArrowRight"],
+    up: ["KeyW", "ArrowUp"],
+    down: ["KeyS", "ArrowDown"],
+    attack: ["KeyJ", "Space"],
+    s1: ["KeyK", "Digit1"],
+    s2: ["KeyL", "Digit2"],
+    s3: ["KeyU", "Digit3"]
+  };
 
+  function cloneBindings(src) {
+    const out = {};
+    ACTIONS.forEach((a) => { out[a] = (src[a] || []).slice(); });
+    return out;
+  }
+
+  let bindings = (function loadBindings() {
+    const out = cloneBindings(DEFAULT_BINDINGS);
+    try {
+      const raw = localStorage.getItem(BIND_STORE);
+      if (raw) {
+        const o = JSON.parse(raw) || {};
+        ACTIONS.forEach((a) => {
+          if (Array.isArray(o[a]) && o[a].length) out[a] = o[a].map(String).slice(0, 3);
+        });
+      }
+    } catch (e) {}
+    return out;
+  })();
+
+  function saveBindings() {
+    try { localStorage.setItem(BIND_STORE, JSON.stringify(bindings)); } catch (e) {}
+  }
+
+  function codeToAction(code) {
+    for (let i = 0; i < ACTIONS.length; i++) {
+      if (bindings[ACTIONS[i]].indexOf(code) >= 0) return ACTIONS[i];
+    }
+    return null;
+  }
+
+  function codeLabel(code) {
+    if (!code) return "";
+    if (code === "Space") return "空格";
+    if (code === "ArrowLeft") return "←";
+    if (code === "ArrowRight") return "→";
+    if (code === "ArrowUp") return "↑";
+    if (code === "ArrowDown") return "↓";
+    if (/^Shift/.test(code)) return "Shift";
+    if (/^Control/.test(code)) return "Ctrl";
+    if (/^Alt/.test(code)) return "Alt";
+    if (/^Digit/.test(code)) return code.slice(5);
+    if (/^Key/.test(code)) return code.slice(3);
+    if (/^Numpad/.test(code)) return "小键盘" + code.slice(6);
+    return code;
+  }
+
+  Input.getBindings = function () { return cloneBindings(bindings); };
+  Input.getBindingLabels = function () { return ACTION_LABELS; };
+  Input.codeLabel = codeLabel;
+
+  Input.setBinding = function (action, code) {
+    if (ACTIONS.indexOf(action) < 0 || !code) return false;
+    for (let i = 0; i < ACTIONS.length; i++) {
+      const other = ACTIONS[i];
+      if (other !== action && bindings[other].indexOf(code) >= 0) return false;
+    }
+    const prev = bindings[action][0];
+    bindings[action] = [code];
+    if (prev && prev !== code) {
+      /* 保留旧键作为备用（不重复、最多 3 个） */
+      if (bindings[action].indexOf(prev) < 0) bindings[action].push(prev);
+    }
+    saveBindings();
+    return true;
+  };
+
+  Input.resetBindings = function () {
+    bindings = cloneBindings(DEFAULT_BINDINGS);
+    saveBindings();
+  };
+
+  function setupKeyboard() {
     window.addEventListener("keydown", (e) => {
-      const k = map[e.code];
+      if (Input.capturing) return;
+      const k = codeToAction(e.code);
       if (!k) return;
       e.preventDefault();
       Input._keys[k] = true;
@@ -159,10 +234,106 @@
     });
 
     window.addEventListener("keyup", (e) => {
-      const k = map[e.code];
+      if (Input.capturing) return;
+      const k = codeToAction(e.code);
       if (!k) return;
       Input._keys[k] = false;
     });
+  }
+
+  /* ------------------------------------------------
+   * 键位设置界面（开始页 / 游戏内都能打开）
+   * ------------------------------------------------ */
+  let pendingAction = null;
+
+  function renderKeysList() {
+    const list = document.getElementById("keysList");
+    if (!list) return;
+    list.innerHTML = ACTIONS.map((a) => {
+      const chips = bindings[a].map((c) => '<span class="key-chip">' + codeLabel(c) + "</span>").join("");
+      return (
+        '<div class="keys-row" data-action="' + a + '">' +
+        '<span class="keys-name">' + ACTION_LABELS[a] + "</span>" +
+        '<span class="keys-codes">' + chips + "</span>" +
+        '<button type="button" class="keys-edit" data-edit="' + a + '">修改</button>' +
+        "</div>"
+      );
+    }).join("");
+  }
+
+  function setCapturing(action) {
+    const list = document.getElementById("keysList");
+    if (!list) return;
+    list.querySelectorAll(".keys-row").forEach((row) => {
+      row.classList.toggle("capturing", row.getAttribute("data-action") === action);
+      const btn = row.querySelector(".keys-edit");
+      if (btn) btn.textContent = row.getAttribute("data-action") === action ? "按键…" : "修改";
+    });
+  }
+
+  function cancelCapture() {
+    pendingAction = null;
+    Input.capturing = false;
+    setCapturing(null);
+  }
+
+  function openKeysPanel() {
+    const panel = document.getElementById("keys-panel");
+    if (!panel) return;
+    renderKeysList();
+    panel.classList.remove("hidden");
+    if (global.Game && global.Game.setPaused) global.Game.setPaused(true);
+  }
+
+  function closeKeysPanel() {
+    const panel = document.getElementById("keys-panel");
+    if (!panel) return;
+    cancelCapture();
+    panel.classList.add("hidden");
+    if (global.Game && global.Game.setPaused) global.Game.setPaused(false);
+  }
+
+  function setupKeysUI() {
+    const openBtns = [document.getElementById("btn-keys"), document.getElementById("btn-hud-keys")];
+    openBtns.forEach((b) => { if (b) b.addEventListener("click", openKeysPanel); });
+    const done = document.getElementById("btn-keys-done");
+    const close = document.getElementById("btn-keys-close");
+    if (done) done.addEventListener("click", closeKeysPanel);
+    if (close) close.addEventListener("click", closeKeysPanel);
+    const reset = document.getElementById("btn-keys-reset");
+    if (reset) reset.addEventListener("click", () => {
+      Input.resetBindings();
+      renderKeysList();
+      cancelCapture();
+    });
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target && e.target.closest ? e.target.closest("[data-edit]") : null;
+      if (!btn) return;
+      pendingAction = btn.getAttribute("data-edit");
+      Input.capturing = true;
+      setCapturing(pendingAction);
+    }, true);
+
+    window.addEventListener("keydown", (e) => {
+      if (!Input.capturing || !pendingAction) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.code === "Escape") { cancelCapture(); return; }
+      const action = pendingAction;
+      const ok = Input.setBinding(action, e.code);
+      cancelCapture();
+      if (ok) {
+        renderKeysList();
+      } else {
+        renderKeysList();
+        const row = document.querySelector('.keys-row[data-action="' + action + '"]');
+        if (row) {
+          row.classList.add("conflict");
+          window.setTimeout(() => row.classList.remove("conflict"), 900);
+        }
+      }
+    }, true);
   }
 
   Input.consume = function consume(flag) {
@@ -192,6 +363,7 @@
     setupJoystick();
     setupButtons();
     setupKeyboard();
+    setupKeysUI();
   };
 
   global.GameInput = Input;

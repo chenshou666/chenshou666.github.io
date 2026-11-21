@@ -64,6 +64,38 @@
     </div>
   </div>
 
+  <button id="btn-hud-keys" type="button" class="hud-keys" title="键位设置">⚙</button>
+
+  <div id="start-screen">
+    <div class="start-card">
+      <div class="start-eyebrow">STICKMAN TRAINING · 疾风忍刀</div>
+      <h1>火柴人训练营</h1>
+      <p class="start-sub">纯 Canvas 2D 横刀格斗 · 击败蓝方机器人</p>
+      <div class="start-keys">
+        <span>移动 <b>WASD / ←↑↓→</b></span>
+        <span>普攻 <b>J / 空格</b></span>
+        <span>技能 <b>K L U</b> 或 <b>1 2 3</b></span>
+      </div>
+      <div class="start-actions">
+        <button id="btn-start" type="button" class="start-btn primary">开始游戏</button>
+        <button id="btn-keys" type="button" class="start-btn">键位设置</button>
+      </div>
+      <p class="start-hint">手机横屏：左侧摇杆移动，右侧技能键（键位可在设置里修改）</p>
+    </div>
+  </div>
+
+  <div id="keys-panel" class="hidden" role="dialog" aria-modal="true" aria-label="键位设置">
+    <div class="keys-card">
+      <div class="keys-head"><h2>键位设置</h2><button id="btn-keys-close" type="button" class="keys-close" aria-label="关闭">✕</button></div>
+      <div class="keys-list" id="keysList"></div>
+      <div class="keys-actions">
+        <button id="btn-keys-reset" type="button" class="start-btn">恢复默认</button>
+        <button id="btn-keys-done" type="button" class="start-btn primary">完成</button>
+      </div>
+      <p class="keys-tip">点「修改」后按下新键；Esc 取消。手机上使用右侧技能键与左侧摇杆。</p>
+    </div>
+  </div>
+
   <div id="overlay" class="hidden">
     <div class="panel">
       <h2 id="result-title">胜利</h2>
