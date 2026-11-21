@@ -132,3 +132,13 @@
   height: 0;
   background: transparent;
 }
+
+/* 鼠标高光只在悬停时出现：移开卡片立即淡出，不会「停在卡片上」 */
+@media (hover: hover) and (pointer: fine) {
+  .liquid-glass::after {
+    opacity: 0;
+  }
+  .liquid-glass:hover::after {
+    opacity: 1;
+  }
+}

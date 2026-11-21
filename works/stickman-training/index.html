@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>火柴人训练营 · 疾风忍刀</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="rotate-hint">
+    <div class="rotate-card">
+      <div class="phone-icon">📱</div>
+      <p>请将手机横屏后游玩</p>
+      <p class="sub">Rotate your phone to landscape</p>
+    </div>
+  </div>
+
+  <div id="hud">
+    <div class="hp-wrap left">
+      <div class="name red">红方 · 你</div>
+      <div class="bar"><div id="hp-player" class="fill red"></div></div>
+    </div>
+    <div class="center-info">
+      <div id="weapon-name">武器：疾风忍刀</div>
+      <div id="round-tip">训练营 · 击败蓝方机器人</div>
+    </div>
+    <div class="hp-wrap right">
+      <div class="name blue">蓝方 · 机器人</div>
+      <div class="bar"><div id="hp-enemy" class="fill blue"></div></div>
+    </div>
+  </div>
+
+  <canvas id="game"></canvas>
+
+  <div id="controls">
+    <div id="joystick-zone">
+      <div id="joystick-base">
+        <div id="joystick-knob"></div>
+      </div>
+    </div>
+    <div id="skill-pad">
+      <button class="skill-btn" data-skill="attack" id="btn-attack">
+        <span class="label">普攻</span>
+        <span class="key">4A</span>
+        <span class="cd" id="cd-attack"></span>
+      </button>
+      <button class="skill-btn" data-skill="s1" id="btn-s1">
+        <span class="label">瞬步·居合</span>
+        <span class="key">1</span>
+        <span class="cd" id="cd-s1"></span>
+      </button>
+      <button class="skill-btn" data-skill="s2" id="btn-s2">
+        <span class="label">旋风升龙</span>
+        <span class="key">2</span>
+        <span class="cd" id="cd-s2"></span>
+      </button>
+      <button class="skill-btn" data-skill="s3" id="btn-s3">
+        <span class="label">影袭·燕返</span>
+        <span class="key">3</span>
+        <span class="cd" id="cd-s3"></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="overlay" class="hidden">
+    <div class="panel">
+      <h2 id="result-title">胜利</h2>
+      <p id="result-desc">训练完成</p>
+      <button id="btn-restart">再来一局</button>
+    </div>
+  </div>
+
+  <script src="js/input.js"></script>
+  <script src="js/entities.js"></script>
+  <script src="js/weapons.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

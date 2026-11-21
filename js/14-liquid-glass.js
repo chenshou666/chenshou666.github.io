@@ -60,7 +60,11 @@
   };
 
   var currentPresetKey = "aurora";
-  var fluidSpeedMultiplier = 1.0;
+  var coarsePointer = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+  var baseSpeed = (coarsePointer || window.innerWidth <= 900) ? 2.6 : 1.0;
+  var motionAmp = coarsePointer ? 0.09 : 0.05;
+  var fluidSpeedMultiplier = baseSpeed;
+  var bgAnimEnabled = true;
   var pointerNorm = { x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5 };
   var timeTick = 0;
 
@@ -72,10 +76,12 @@
   resizeBgCanvas();
 
   function renderFluidBackground() {
-    if (document.hidden) {
+    if (document.hidden || !bgAnimEnabled) {
       requestAnimationFrame(renderFluidBackground);
       return;
     }
+    if (typeof window.__fluidSpeed === "number") fluidSpeedMultiplier = window.__fluidSpeed;
+    if (typeof window.__bgAnim === "boolean") bgAnimEnabled = window.__bgAnim;
     var preset = THEME_PRESETS[currentPresetKey];
     var w = bgCanvas.width;
     var h = bgCanvas.height;
@@ -99,8 +105,8 @@
         if (orb.y < 0.08 || orb.y > 0.92) orb.vy *= -1;
       }
 
-      var ox = (orb.x + Math.sin(timeTick + idx * 1.4) * 0.05) * w;
-      var oy = (orb.y + Math.cos(timeTick * 0.9 + idx) * 0.05) * h;
+      var ox = (orb.x + Math.sin(timeTick + idx * 1.4) * motionAmp) * w;
+      var oy = (orb.y + Math.cos(timeTick * 0.9 + idx) * motionAmp) * h;
       var r = orb.radius * minDim * (0.92 + 0.08 * Math.sin(timeTick * 1.3 + idx));
 
       var grad = bgCtx.createRadialGradient(ox, oy, 0, ox, oy, r);
@@ -131,7 +137,8 @@
     requestAnimationFrame(renderFluidBackground);
   }
 
-  if (!reduceMotion) requestAnimationFrame(renderFluidBackground);
+  requestAnimationFrame(renderFluidBackground);
+  window.__bgAnim = bgAnimEnabled;
 
   /* ======================================================================
    * 第 2 步：把 showcase 的类打到站点组件上
@@ -210,6 +217,16 @@
       gPending = { el: el, rect: el.getBoundingClientRect(), x: e.clientX, y: e.clientY };
       if (!glassRaf) glassRaf = requestAnimationFrame(paintGlare);
     }, { passive: true });
+
+    /* 鼠标离开卡片时立刻清掉高光坐标，避免「光停在卡片上」 */
+    window.addEventListener("pointerout", function (e) {
+      if (e.pointerType && e.pointerType !== "mouse") return;
+      var el = e.target && e.target.closest ? e.target.closest(".liquid-glass") : null;
+      if (!el) return;
+      if (e.relatedTarget && el.contains(e.relatedTarget)) return;
+      el.style.removeProperty("--mouse-x");
+      el.style.removeProperty("--mouse-y");
+    }, { passive: true });
   }
 
   /* ======================================================================
@@ -238,6 +255,150 @@
       if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
     }, 750);
   }
+
+
+  /* ======================================================================
+   * 第 5 步：界面外观调节（玻璃模糊 / 饱和度 / 透明度 / 高光 / 背景动画）
+   *          · 存 localStorage: cquest.appearance.v1
+   *          · 通过 CSS 变量即时生效；背景动画速度/开关交给渲染循环读取
+   * ====================================================================== */
+  var STORE_KEY = "cquest.appearance.v1";
+  var APPEARANCE_DEFAULTS = {
+    blur: 28,
+    saturate: 210,
+    opacity: 11,
+    glare: 38,
+    bgSpeed: coarsePointer ? 2.2 : 1.0,
+    bgBright: 55,
+    bgAnim: true
+  };
+  var appearance = (function () {
+    var a = {}, k;
+    for (k in APPEARANCE_DEFAULTS) a[k] = APPEARANCE_DEFAULTS[k];
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (raw) {
+        var o = JSON.parse(raw) || {};
+        for (k in a) if (o[k] !== undefined && o[k] !== null) a[k] = o[k];
+      }
+    } catch (e) {}
+    return a;
+  })();
+
+  var TUNE_FMT = {
+    blur: function (v) { return v + "px"; },
+    saturate: function (v) { return v + "%"; },
+    opacity: function (v) { return (v / 100).toFixed(2); },
+    glare: function (v) { return (v / 100).toFixed(2); },
+    bgSpeed: function (v) { return "×" + Number(v).toFixed(1); },
+    bgBright: function (v) { return v + "%"; },
+    bgAnim: function (v) { return v ? "开" : "关"; }
+  };
+
+  function applyAppearance() {
+    root.style.setProperty("--glass-blur", appearance.blur + "px");
+    root.style.setProperty("--glass-saturate", appearance.saturate + "%");
+    root.style.setProperty("--glass-opacity", (appearance.opacity / 100).toFixed(3));
+    root.style.setProperty("--glare-opacity", (appearance.glare / 100).toFixed(3));
+    root.style.setProperty("--bg-brightness", (appearance.bgBright / 100).toFixed(2));
+    window.__fluidSpeed = Number(appearance.bgSpeed);
+    window.__bgAnim = !!appearance.bgAnim;
+  }
+
+  function saveAppearance() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(appearance)); } catch (e) {}
+  }
+
+  var tunePanel = null;
+
+  function buildTunePanel() {
+    if (tunePanel) return tunePanel;
+    tunePanel = document.createElement("section");
+    tunePanel.id = "uiTunePanel";
+    tunePanel.className = "ui-tune";
+    tunePanel.hidden = true;
+    tunePanel.setAttribute("role", "dialog");
+    tunePanel.setAttribute("aria-label", "界面外观调节");
+    tunePanel.innerHTML = ''
+      + '<div class="ui-tune-head"><h3>界面外观调节</h3><button class="ui-tune-close" type="button" data-tune="close" aria-label="关闭">✕</button></div>'
+      + '<label class="ui-tune-row"><span>玻璃模糊</span><input type="range" min="0" max="48" step="1" data-tune="blur"><output data-out="blur"></output></label>'
+      + '<label class="ui-tune-row"><span>玻璃饱和</span><input type="range" min="60" max="260" step="5" data-tune="saturate"><output data-out="saturate"></output></label>'
+      + '<label class="ui-tune-row"><span>玻璃透明</span><input type="range" min="0" max="30" step="1" data-tune="opacity"><output data-out="opacity"></output></label>'
+      + '<label class="ui-tune-row"><span>镜面高光</span><input type="range" min="0" max="100" step="2" data-tune="glare"><output data-out="glare"></output></label>'
+      + '<label class="ui-tune-row"><span>背景速度</span><input type="range" min="0.2" max="2.5" step="0.1" data-tune="bgSpeed"><output data-out="bgSpeed"></output></label>'
+      + '<label class="ui-tune-row"><span>背景亮度</span><input type="range" min="20" max="100" step="5" data-tune="bgBright"><output data-out="bgBright"></output></label>'
+      + '<label class="ui-tune-row ui-tune-check"><span>背景动画</span><input type="checkbox" data-tune="bgAnim"><output data-out="bgAnim"></output></label>'
+      + '<div class="ui-tune-actions"><button class="btn btn-ghost btn-small" type="button" data-tune="reset">恢复默认</button><button class="btn btn-primary btn-small" type="button" data-tune="close">完成</button></div>';
+    document.body.appendChild(tunePanel);
+    return tunePanel;
+  }
+
+  function syncTunePanel() {
+    var panel = buildTunePanel();
+    var inputs = panel.querySelectorAll("[data-tune]");
+    for (var i = 0; i < inputs.length; i++) {
+      var k = inputs[i].getAttribute("data-tune");
+      if (k === "reset" || k === "close") continue;
+      if (inputs[i].type === "checkbox") {
+        inputs[i].checked = !!appearance[k];
+        var out = inputs[i].parentNode.querySelector('[data-out="' + k + '"]');
+        if (out) out.textContent = TUNE_FMT[k](appearance[k]);
+      } else {
+        inputs[i].value = appearance[k];
+        var out2 = inputs[i].parentNode.querySelector('[data-out="' + k + '"]');
+        if (out2) out2.textContent = TUNE_FMT[k](Number(appearance[k]));
+      }
+    }
+  }
+
+  function openTunePanel(open) {
+    var panel = buildTunePanel();
+    var show = (open === undefined) ? panel.hidden : !!open;
+    panel.hidden = !show;
+    if (show) syncTunePanel();
+  }
+
+  var tuneBtn = document.getElementById("uiTuneBtn");
+  if (tuneBtn) {
+    tuneBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      openTunePanel();
+    });
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    var action = t.closest("[data-tune]");
+    if (!action) return;
+    var k = action.getAttribute("data-tune");
+    if (k === "close") { openTunePanel(false); return; }
+    if (k === "reset") {
+      var kk;
+      for (kk in APPEARANCE_DEFAULTS) appearance[kk] = APPEARANCE_DEFAULTS[kk];
+      applyAppearance(); saveAppearance(); syncTunePanel();
+      return;
+    }
+  });
+
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    if (!t || !t.getAttribute) return;
+    var k = t.getAttribute("data-tune");
+    if (!k || !(k in APPEARANCE_DEFAULTS)) return;
+    if (t.type === "checkbox") appearance[k] = t.checked;
+    else appearance[k] = Number(t.value);
+    applyAppearance();
+    saveAppearance();
+    var out = t.parentNode.querySelector('[data-out="' + k + '"]');
+    if (out) out.textContent = TUNE_FMT[k](appearance[k]);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && tunePanel && !tunePanel.hidden) openTunePanel(false);
+  });
+
+  applyAppearance();
 
   if (!reduceMotion) {
     document.addEventListener("pointerdown", function (e) {

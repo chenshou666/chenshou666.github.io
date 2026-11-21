@@ -1,0 +1,431 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #020617;
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  color: #fff;
+}
+
+/* ===== 统一色板 token（§3.1 全量） ===== */
+:root{
+  /* 背景层 */
+  --bg-void:#020617; --bg-panel:#0F172A;
+  --bg-sky-1:#02050D; --bg-sky-2:#060D1F; --bg-sky-3:#0B1530; --bg-sky-4:#040711;
+  --ground-deck-1:#091326; --ground-deck-2:#050B16; --ground-deck-3:#010308;
+  --ground-edge:#E0F2FE; --ground-grid:rgba(148,163,184,.045); --vignette:rgba(0,0,0,.40);
+  /* 中性 UI 骨架（0 彩度） */
+  --ui-stroke:#E2E8F0; --ui-stroke-dim:rgba(226,232,240,.28); --ui-muted:#94A3B8;
+  --text-primary:#F1F5F9; --text-secondary:#CBD5E1; --text-outline:#020617;
+  /* 红方阵营 */
+  --team-red:#FF4D5E; --team-red-mid:#FF8A99; --team-red-core:#FFF1F2;
+  --team-red-glow:rgba(255,77,94,.55); --on-red:#020617;
+  /* 蓝方阵营 */
+  --team-blue:#2563EB; --team-blue-mid:#60A5FA; --team-blue-core:#EFF6FF;
+  --team-blue-glow:rgba(59,130,246,.45);
+  /* 信号 */
+  --signal-strong:#FFFFFF; --signal-neutral:#E2E8F0;
+  /* 技能语义色（暖色族四级阶梯） */
+  --skill-attack:#FF6B6B; --skill-s1:#FF9F45; --skill-s2:#FFD166; --skill-s3:#FF5D8F;
+  /* 状态 */
+  --state-cool-mask:rgba(2,6,23,.62); --state-cool-text:#94A3B8;
+  --state-cool-filter:saturate(.30) brightness(.72);
+}
+
+#game {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #020617;
+}
+
+#hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 16px;
+  gap: 12px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(2,6,23,.72), transparent);
+}
+
+.hp-wrap {
+  flex: 1;
+  max-width: 280px;
+}
+
+.hp-wrap.right {
+  text-align: right;
+}
+
+.hp-wrap .name {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 1;
+  text-shadow: 0 1px 2px #020617;
+  margin-bottom: 5px;
+}
+
+.hp-wrap .name.red { color: #FF8A99; }
+.hp-wrap .name.blue { color: #8AB4FC; }
+
+.bar {
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  border: 1px solid rgba(226,232,240,.28);
+  box-shadow: none;
+}
+
+.fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  transition: width 0.12s linear;
+}
+
+.fill.red {
+  background: linear-gradient(90deg, #FF4D5E, #FF8A99);
+  transform-origin: left center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+.hp-wrap.right .fill {
+  float: right;
+  transform-origin: right center;
+}
+
+.fill.blue {
+  background: linear-gradient(90deg, #2563EB, #60A5FA);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+.center-info {
+  text-align: center;
+  min-width: 180px;
+  padding-top: 2px;
+}
+
+#weapon-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #F1F5F9;
+  letter-spacing: .02em;
+}
+
+#round-tip {
+  font-size: 12px;
+  font-weight: 500;
+  color: #CBD5E1;
+  opacity: 1;
+  margin-top: 3px;
+  text-shadow: 0 1px 2px #020617;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#controls {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+#joystick-zone {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 46%;
+  height: 55%;
+  pointer-events: auto;
+}
+
+#joystick-base {
+  position: absolute;
+  left: 36px;
+  bottom: 28px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(15,23,42,.55);
+  border: 2px solid rgba(226,232,240,.28);
+  box-shadow: inset 0 0 18px rgba(226,232,240,.06);
+}
+
+#joystick-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 54px;
+  height: 54px;
+  margin-left: -27px;
+  margin-top: -27px;
+  border-radius: 50%;
+  background: rgba(203,213,225,.28);
+  border: 2px solid #CBD5E1;
+  box-shadow: 0 4px 12px rgba(0,0,0,.35);
+}
+
+#skill-pad {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  width: 210px;
+  height: 210px;
+  pointer-events: auto;
+}
+
+.skill-btn {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid rgba(226,232,240,.28);
+  background: rgba(15,23,42,.78);
+  color: #F1F5F9;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: auto;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.skill-btn .label {
+  font-weight: 700;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+  line-height: 1.15;
+}
+.skill-btn .key {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94A3B8;
+  opacity: 1;
+}
+
+.skill-btn .cd {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--state-cool-mask);
+  color: #E2E8F0;
+  font-size: 13px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px #020617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skill-btn.cooling .cd { opacity: 1; }
+
+/* 四键定位与命中区为冻结项，此处保留 right/bottom，仅改视觉属性 */
+#btn-attack {
+  right: 8px;
+  bottom: 8px;
+  width: 78px;
+  height: 78px;
+  font-size: 12px;
+  --skill: var(--skill-attack);
+  --skill-glow: rgba(255,107,107,.25);
+  --skill-glow-hi: rgba(255,107,107,.55);
+}
+#btn-s1 {
+  right: 98px;
+  bottom: 18px;
+  --skill: var(--skill-s1);
+  --skill-glow: rgba(255,159,69,.25);
+  --skill-glow-hi: rgba(255,159,69,.55);
+}
+#btn-s2 {
+  right: 78px;
+  bottom: 98px;
+  --skill: var(--skill-s2);
+  --skill-glow: rgba(255,209,102,.25);
+  --skill-glow-hi: rgba(255,209,102,.55);
+}
+#btn-s3 {
+  right: 8px;
+  bottom: 108px;
+  --skill: var(--skill-s3);
+  --skill-glow: rgba(255,93,143,.25);
+  --skill-glow-hi: rgba(255,93,143,.55);
+}
+#btn-attack, #btn-s1, #btn-s2, #btn-s3 { background: rgba(15,23,42,.78); }
+
+/* 四态：零 JS 改动，复用现有 class */
+.skill-btn:not(.cooling) {
+  border-color: var(--skill);
+  box-shadow: 0 0 12px var(--skill-glow);
+}
+.skill-btn:not(.cooling) .key::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--skill);
+  opacity: .9;
+}
+.skill-btn.cooling {
+  filter: saturate(.30) brightness(.72);
+  border-color: rgba(226,232,240,.28);
+  box-shadow: none;
+}
+.skill-btn:active,
+.skill-btn.pressed {
+  transform: scale(.94);
+  background: rgba(226,232,240,.14);
+  box-shadow: 0 0 18px var(--skill-glow-hi), inset 0 0 12px var(--skill-glow);
+}
+
+#overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0,0,0,0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#overlay.hidden { display: none; }
+
+.panel {
+  background: #0F172A;
+  border: 1px solid rgba(226,232,240,.28);
+  border-radius: 16px;
+  padding: 28px 36px;
+  text-align: center;
+  min-width: 240px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.55);
+}
+
+.panel h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.panel p {
+  font-weight: 500;
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+#btn-restart {
+  pointer-events: auto;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #FF4D5E, #FF8A99);
+  color: #020617;
+  cursor: pointer;
+}
+
+#rotate-hint {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0b1020;
+  align-items: center;
+  justify-content: center;
+}
+
+.rotate-card {
+  text-align: center;
+  padding: 24px;
+}
+
+/* 不改 DOM：原字符由 font-size:0 + line-height:0 隐藏，改纯 CSS 几何手机轮廓 */
+.phone-icon {
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+  width: 56px;
+  height: 88px;
+  margin: 0 auto 18px;
+  position: relative;
+  border: 3px solid #CBD5E1;
+  border-radius: 12px;
+  animation: wobble 2.4s ease-in-out infinite;
+}
+
+.phone-icon::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 3px;
+  border-radius: 3px;
+  background: #CBD5E1;
+}
+
+.rotate-card p {
+  font-size: 15px;
+  font-weight: 500;
+  color: #F1F5F9;
+}
+
+.rotate-card .sub {
+  margin-top: 6px;
+  opacity: 1;
+  font-size: 12px;
+  font-weight: 500;
+  color: #CBD5E1;
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(0deg); }
+  40% { transform: rotate(90deg); }
+  60% { transform: rotate(90deg); }
+}
+
+/* 竖屏时提示旋转（窄且高） */
+@media screen and (orientation: portrait) and (max-width: 900px) {
+  #rotate-hint { display: flex; }
+  #hud, #controls, #game, #overlay { visibility: hidden; }
+}
+
+/* 桌面端也显示控件，方便鼠标试玩 */
+@media (min-width: 901px) {
+  #joystick-base { opacity: 0.85; }
+}
+
+/* 减弱动效 */
+@media (prefers-reduced-motion: reduce) {
+  .phone-icon, .skill-btn { animation: none; transition: none; }
+}
