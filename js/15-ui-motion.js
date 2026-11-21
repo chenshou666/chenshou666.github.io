@@ -21,8 +21,9 @@
 
   var reduceMotion = !!(window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  var isSmallScreen = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
-  var supportsVT = !reduceMotion && !isSmallScreen && typeof document.startViewTransition === "function";
+  /* 统一关闭 View Transitions：它的快照层在顶层，会盖住固定的顶部栏 / 底部 Dock，
+     造成「导航键被挡、点了没反应」。页面切换改用下面的 ui-page-in 入场动画。 */
+  var supportsVT = false;
 
   var PAGE_ORDER = { courses: 0, map: 1, practice: 2, summary: 3, project: 4, about: 5 };
   var lastKey = null;

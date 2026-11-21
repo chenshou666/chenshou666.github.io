@@ -9,7 +9,7 @@ const PORTFOLIO_DATA={
  author:"尘狩",
  role:"贵州师范学院 · 电子信息科学与技术 · 学生",
  tagline:"用 AI 辅助把想法做成打开就能玩的作品：从学习工具到纯代码影像实验。",
- bio:"贵州师范学院电子信息科学与技术专业学生。日常借助 AI 工具协作完成前端与创意编程作品：把抽象的想法做成打开即用、可以交互、可以看完的东西——HT Lab 学习站和「代码影院」系列都是这样诞生的。",
+ bio:"贵州师范学院电子信息科学与技术专业学生。日常借助 AI 工具协作完成前端与创意编程作品：把抽象的想法做成打开即用、可以交互、可以看完的东西——「学习工具」学习站和「代码影院」系列都是这样诞生的。",
  focus:"近期没有特别明确的目标，主要在继续打磨作品集和已有两个作品；如果你有想法、反馈或合作意向，欢迎通过下面的方式联系我。",
  githubUrl:"https://github.com/chenshou666/chenshou666.github.io",
  githubLabel:"github.com/chenshou666/chenshou666.github.io",
@@ -21,9 +21,9 @@ const PORTFOLIO_DATA={
  works:[
   {
    id:"ht-lab",
-   mark:"HT",
+   mark:"学",
    kind:"互动学习站",
-   name:"HT Lab",
+   name:"学习工具",
    subtitle:"纯前端闯关式交互学习站（C 语言 86 关 + 英语四级 62 关）",
    summary:"一款零后端、零构建、双击即可离线运行的静态学习应用。内置 C 语言与英语四级两门完整课程，提供讲义高亮、交互测验、浏览器端 C 代码结构检查、本机运行输出逐行比对、46 段本地听力与示范音频、跟读录音自评、学习点数与跨设备存档码迁移。",
    badge:"可离线使用",
@@ -149,7 +149,7 @@ function renderPortfolio(){
    +'</div>'
    +'<div class="pf-hero-actions">'
     +'<button class="btn btn-primary" type="button" data-action="open-work" data-work="ht-lab">查看代表作品 →</button>'
-    +'<button class="btn btn-soft" type="button" data-action="enter-lab">直接进入 HT Lab</button>'
+    +'<button class="btn btn-soft" type="button" data-action="enter-lab">直接进入学习工具</button>'
     +'<button class="btn btn-ghost" type="button" data-action="open-author">关于作者</button>'
    +'</div>'
   +'</section>'
@@ -166,7 +166,7 @@ function renderPortfolio(){
     +'<a class="btn btn-ghost btn-small" href="'+esc(PORTFOLIO_DATA.githubUrl)+'" target="_blank" rel="noopener">GitHub 仓库</a>'
    +'</div>'
   +'</section>'
-  +'<div class="footer-note">Copyright © 2026 '+esc(PORTFOLIO_DATA.author)+' · 作品集内置 HT Lab 完整学习功能，全部进度仅保存于本设备浏览器。</div>';
+  +'<div class="footer-note">Copyright © 2026 '+esc(PORTFOLIO_DATA.author)+' · 作品集内置「学习工具」完整学习功能，全部进度仅保存于本设备浏览器。</div>';
 }
 
 function renderWorkDetail(){
@@ -236,7 +236,7 @@ function renderWorkDetail(){
      ?'全站不依赖任何打包工具、框架或 CDN，采用固定顺序加载的经典脚本与样式层，在 GitHub Pages 与本地 file:// 协议下均可完整运行。'
      :'四部短片均为独立单文件演示（works/*.html），点开即在新标签页播放，可离线运行；主站本身保持零外部依赖。')+'</p>'
   +'</section>'
-  +'<div class="footer-note">'+(isLab?'进入 HT Lab 后，顶栏左侧随时可点「← 作品集」回到这里。':'「墨韵山河」在新标签页打开独立演示，关闭标签页即可回到作品集。')+'</div>';
+  +'<div class="footer-note">'+(isLab?'进入「学习工具」后，顶栏左侧随时可点「← 作品集」回到这里。':'「墨韵山河」在新标签页打开独立演示，关闭标签页即可回到作品集。')+'</div>';
 }
 
 function renderAuthor(){
@@ -258,7 +258,7 @@ function renderAuthor(){
     +'<p class="lesson-copy">'+esc(PORTFOLIO_DATA.bio||PORTFOLIO_DATA.bioTodo||"")+'</p>'
     +'<p class="lesson-copy" style="margin-top:10px">'+esc(PORTFOLIO_DATA.focus||PORTFOLIO_DATA.focusTodo||"")+'</p>'
     +'<div class="pf-work-actions" style="margin-top:16px">'
-     +'<button class="btn btn-primary btn-small" type="button" data-action="open-work" data-work="ht-lab">查看作品 HT Lab →</button>'
+     +'<button class="btn btn-primary btn-small" type="button" data-action="open-work" data-work="ht-lab">查看作品 学习工具 →</button>'
      +'<button class="btn btn-soft btn-small" type="button" data-action="open-work" data-work="code-cinema">查看作品 代码影院 →</button>'
     +'</div>'
    +'</section>'
@@ -276,7 +276,7 @@ function renderAuthor(){
     +'<button class="btn btn-ghost btn-small" type="button" data-page="about">版权与许可说明</button>'
    +'</div>'
   +'</section>'
-  +'<div class="footer-note">Copyright © 2026 '+esc(PORTFOLIO_DATA.author)+' · 个人作品集与 HT Lab 学习站</div>';
+  +'<div class="footer-note">Copyright © 2026 '+esc(PORTFOLIO_DATA.author)+' · 个人作品集与「学习工具」</div>';
 }
 
 function ensureNextBar(){
@@ -300,7 +300,7 @@ function renderCourses(){
   const groups2=courseGroups[c.id]||[];
   return '<button class="course-card'+(ready?"":" is-soon")+'" type="button" data-action="switch-course" data-course="'+c.id+'"><span class="course-card-icon">'+c.glyph+'</span><span class="course-card-body"><strong>'+esc(c.name)+'</strong><small>'+esc(c.sub)+'</small><span class="course-card-meta">'+(ready?(groups2.length+" 个模块 · "+ls.length+" 关 · 已完成 "+dn+" 关（"+pc+"%）"):"即将上线")+'</span><span class="course-card-bar"><i style="width:'+pc+'%"></i></span></span><span class="course-card-go">进入 →</span></button>';
  }).join("");
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">HT LAB</div><h1>学习课程</h1><p class="subhead">选一门课开始闯关。每门课的进度、学习点与总结各自独立保存，互不影响。</p></div></div><div class="course-cards">'+cards+'</div><div class="footer-note">所有学习数据只保存在这台设备的浏览器里，不上传、不跨设备同步。</div>';
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习工具</div><h1>学习课程</h1><p class="subhead">选一门课开始闯关。每门课的进度、学习点与总结各自独立保存，互不影响。</p></div></div><div class="course-cards">'+cards+'</div><div class="footer-note">所有学习数据只保存在这台设备的浏览器里，不上传、不跨设备同步。</div>';
 }
 function renderMap(){
  const pct=progressPct(), done=completedCount(), next=nextLevel();
@@ -309,7 +309,7 @@ function renderMap(){
  ls.forEach(function(l){const lockedNow=!unlocked(l)&&!isDone(l),number=String(levels.indexOf(l)+1).padStart(2,"0");const state=isDone(l)?"✓":lockedNow?"🔒":"→";groupsHtml+='<article class="level-card '+(isDone(l)?"completed ":"")+(lockedNow?"locked":"")+'" data-level="'+l.id+'"><div class="level-top"><span class="level-num">'+number+'</span><span class="level-state">'+state+'</span></div><h3>'+esc(l.title)+'</h3><p>'+esc(l.gist)+'</p><div class="level-meta">第 '+number+' 关 · 约 '+l.minutes+' 分钟 · '+(isDone(l)?"已通关":lockedNow?"完成前一关后解锁":"可开始")+'</div></article>'});
  groupsHtml+='</div></section>'});
  const cc=currentCourse();
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(cc.name)+'</div><h1>'+esc(cc.name)+'学习路线</h1><p class="subhead">'+esc(cc.sub)+'</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回课程选择</button></div>'+'<section class="hero"><div class="hero-main"><div class="eyebrow">HT LAB&nbsp; · &nbsp;'+esc(cc.name)+'</div><h1>'+cc.heroTitle+'</h1><p>'+esc(cc.heroCopy)+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(done?"继续第 "+(next.id)+" 关":"开始第一关")+' <span>→</span></button><span class="hero-link">学一点，过一关，积累成就感</span></div></div><div class="hero-progress"><div class="progress-top"><div><div class="progress-kicker">'+esc(cc.name)+'进度</div><div class="progress-number">'+done+' <span style="font-size:14px;color:#8d99ab;font-weight:600">/ '+levels.length+' 关</span></div></div><div class="progress-ring" style="--pct:'+pct+'%"><span>'+pct+'%</span></div></div><div><div class="progress-bar"><i style="width:'+pct+'%"></i></div><div class="progress-foot"><span>已完成 '+done+' 关</span><span>'+Math.max(0,levels.length-done)+' 关待挑战</span></div></div></div></section>'+
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">'+esc(cc.name)+'</div><h1>'+esc(cc.name)+'学习路线</h1><p class="subhead">'+esc(cc.sub)+'</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回课程选择</button></div>'+'<section class="hero"><div class="hero-main"><div class="eyebrow">学习工具&nbsp; · &nbsp;'+esc(cc.name)+'</div><h1>'+cc.heroTitle+'</h1><p>'+esc(cc.heroCopy)+'</p><div class="hero-actions"><button class="btn btn-primary" data-action="continue">'+(done?"继续第 "+(next.id)+" 关":"开始第一关")+' <span>→</span></button><span class="hero-link">学一点，过一关，积累成就感</span></div></div><div class="hero-progress"><div class="progress-top"><div><div class="progress-kicker">'+esc(cc.name)+'进度</div><div class="progress-number">'+done+' <span style="font-size:14px;color:#8d99ab;font-weight:600">/ '+levels.length+' 关</span></div></div><div class="progress-ring" style="--pct:'+pct+'%"><span>'+pct+'%</span></div></div><div><div class="progress-bar"><i style="width:'+pct+'%"></i></div><div class="progress-foot"><span>已完成 '+done+' 关</span><span>'+Math.max(0,levels.length-done)+' 关待挑战</span></div></div></div></section>'+
  '<section class="stats"><div class="stat"><div class="stat-icon">✦</div><div><div class="stat-num">'+data.xp+'</div><div class="stat-label">学习点数</div></div></div><div class="stat"><div class="stat-icon">⚑</div><div><div class="stat-num">'+done+'</div><div class="stat-label">完成关卡</div></div></div><div class="stat"><div class="stat-icon">✓</div><div><div class="stat-num">'+data.correct+'</div><div class="stat-label">正确答题</div></div></div><div class="stat"><div class="stat-icon">⌁</div><div><div class="stat-num">'+(data.attempts?Math.round(data.correct/data.attempts*100):0)+'%</div><div class="stat-label">答题正确率</div></div></div></section>'+
  '<div class="section-head"><div><h2>'+esc(cc.name)+' · 通关地图</h2><p>'+esc(cc.mapNote)+'</p></div><button class="btn btn-ghost btn-small" data-page="summary">查看学习总结&nbsp; →</button></div>'+'<section class="course-route" id="course-route"><div class="course-route-heading"><div class="course-route-heading-main"><span class="course-route-icon">'+cc.glyph+'</span><div><h2>'+esc(cc.name)+'学习路线</h2><p>'+esc(cc.routeNote)+' · '+levels.length+' 个知识关卡</p></div></div><span class="chip">'+esc(cc.chip)+'</span></div>'+groupsHtml+'</section><div class="footer-note">'+esc(cc.footNote)+'</div>';
 }
@@ -321,14 +321,14 @@ function renderAbout(){
   ["数据与隐私","本站不收集、不上传任何数据，也不联网同步。学习进度、代码草稿与录音只保存在本机浏览器（localStorage / 内存）。清除浏览器数据、更换浏览器或设备会导致进度丢失，本站不为此承担责任。"],
   ["内容准确性","内容经过脚本校验、真编译真运行与多轮独立复核，但仍可能存在错误、过时或表述不严谨之处；发现后欢迎反馈修正。"],
   ["责任","本站按「现状」提供，不提供任何明示或暗示的担保（包括但不限于适销性与特定用途适用性）。因使用或无法使用本站内容而造成的任何直接或间接损失，作者不承担责任。"],
-  ["版权与名称","Copyright © 2026 HT Lab. 保留所有权利。\u300cHT Lab\u300d名称、HT 字标、站点图标（ht-lab.ico / favicon.svg）与整体视觉设计是作者的标识性资产，不属于免费使用范围；未经事先书面许可，不得把它们用于任何其他项目、产品或服务，也不得以「HT Lab」名义发布或宣传任何内容（包括修改版）。"],
-  ["免费使用的范围","本站免费供**个人学习**使用：你可以访问、在本机运行、按课程练习，也可以把链接分享给他人；在笔记、作业、博客里引用少量内容并注明「HT Lab」出处也可以。除此之外的权利均予保留。"],
-  ["禁止的事项","未经作者事先书面许可，不得：① 复制、修改、演绎本站内容后发布或分发（包括改一改再发布、换个名字再发布）；② 将本站内容用于任何商业目的（售卖、付费课程、付费社群、培训收费、广告变现、随产品捆绑、企业内部培训、印刷出版）；③ 去除或隐藏版权、免责声明、名称与图标后使用；④ 使用「HT Lab」名称/字标/图标或高度相似的视觉设计；⑤ 以「HT Lab」名义发布任何内容；⑥ 将本站内容用于训练机器学习模型或构建面向公众的商业数据集。"],
+  ["版权与名称","Copyright © 2026 学习工具. 保留所有权利。\u300c学习工具\u300d名称、站内标识、站点图标（ht-lab.ico / favicon.svg）与整体视觉设计是作者的标识性资产，不属于免费使用范围；未经事先书面许可，不得把它们用于任何其他项目、产品或服务，也不得以「学习工具」名义发布或宣传任何内容（包括修改版）。"],
+  ["免费使用的范围","本站免费供**个人学习**使用：你可以访问、在本机运行、按课程练习，也可以把链接分享给他人；在笔记、作业、博客里引用少量内容并注明「学习工具」出处也可以。除此之外的权利均予保留。"],
+  ["禁止的事项","未经作者事先书面许可，不得：① 复制、修改、演绎本站内容后发布或分发（包括改一改再发布、换个名字再发布）；② 将本站内容用于任何商业目的（售卖、付费课程、付费社群、培训收费、广告变现、随产品捆绑、企业内部培训、印刷出版）；③ 去除或隐藏版权、免责声明、名称与图标后使用；④ 使用「学习工具」名称/标识/图标或高度相似的视觉设计；⑤ 以「学习工具」名义发布任何内容；⑥ 将本站内容用于训练机器学习模型或构建面向公众的商业数据集。"],
   ["需要单独授权","商业使用、机构或课堂教学、二次开发与再分发、全文转载、贴牌定制、商业合作——请先联系作者取得书面许可。"],
   ["联系方式与授权","授权、合作或内容反馈：优先加文末「反馈与建议」里的交流群；技术用户也可以在 GitHub 仓库提 Issue（github.com/chenshou666/chenshou666.github.io/issues，国内访问可能不稳定）。本站会持续更新，最新许可文本以仓库中的 LICENSE 文件为准。"]
  ];
  const body=items.map(function(x){return '<section class="panel" style="margin-bottom:14px"><div class="challenge-head"><div class="challenge-label">'+esc(x[0])+'</div></div><p class="lesson-copy">'+esc(x[1])+'</p></section>'}).join("");
- document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">HT LAB</div><h1>关于 / 免责 / 版权与许可</h1><p class="subhead">本站免费供个人学习使用；名称、图标与内容版权归作者所有，禁止商用与修改后分发。</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回学习课程</button></div>'+body+'<section class="panel feedback-panel"><div class="challenge-head"><div class="challenge-label">反馈与建议</div><span class="chip">欢迎</span></div>'+'<p class="lesson-copy">内容会按大家的建议继续增加；使用中觉得哪里不好用、哪里有错、想加什么内容，都可以直接告诉作者。</p>'+'<div class="feedback-actions">'+(CONTACT_QQ_GROUP?'<button class="btn btn-primary btn-small" data-action="copy-qq-group">复制交流群号：'+esc(CONTACT_QQ_GROUP)+'</button>':''+'<span class="feedback-soon">交流群正在筹备中，稍后在本页公布</span>')+'<a class="btn btn-ghost btn-small" href="https://github.com/chenshou666/chenshou666.github.io/issues" target="_blank" rel="noopener">在 GitHub 提 Issue（国内可能打不开）</a>'+'</div>'+'<div class="hint feedback-hint">在 QQ 里搜索群号即可加入；加群请说明来意（学习 / 反馈问题）。遇到内容错误，说清楚是哪一关、哪一段，方便快速修正。</div></section>'+'<div class="footer-note">最后更新：2026-10-26 · Copyright © 2026 HT Lab · 免费供个人学习使用，禁止商用与修改后分发 · 完整条款见仓库 LICENSE 文件</div>';
+ document.getElementById("view").innerHTML='<div class="page-header"><div><div class="eyebrow">学习工具</div><h1>关于 / 免责 / 版权与许可</h1><p class="subhead">本站免费供个人学习使用；名称、图标与内容版权归作者所有，禁止商用与修改后分发。</p></div><button class="btn btn-ghost btn-small" data-page="courses">← 返回学习课程</button></div>'+body+'<section class="panel feedback-panel"><div class="challenge-head"><div class="challenge-label">反馈与建议</div><span class="chip">欢迎</span></div>'+'<p class="lesson-copy">内容会按大家的建议继续增加；使用中觉得哪里不好用、哪里有错、想加什么内容，都可以直接告诉作者。</p>'+'<div class="feedback-actions">'+(CONTACT_QQ_GROUP?'<button class="btn btn-primary btn-small" data-action="copy-qq-group">复制交流群号：'+esc(CONTACT_QQ_GROUP)+'</button>':''+'<span class="feedback-soon">交流群正在筹备中，稍后在本页公布</span>')+'<a class="btn btn-ghost btn-small" href="https://github.com/chenshou666/chenshou666.github.io/issues" target="_blank" rel="noopener">在 GitHub 提 Issue（国内可能打不开）</a>'+'</div>'+'<div class="hint feedback-hint">在 QQ 里搜索群号即可加入；加群请说明来意（学习 / 反馈问题）。遇到内容错误，说清楚是哪一关、哪一段，方便快速修正。</div></section>'+'<div class="footer-note">最后更新：2026-10-26 · Copyright © 2026 学习工具 · 免费供个人学习使用，禁止商用与修改后分发 · 完整条款见仓库 LICENSE 文件</div>';
 }
 function renderPractice(){
  const l=nextLevel();

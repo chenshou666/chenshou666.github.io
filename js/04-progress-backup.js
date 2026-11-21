@@ -34,14 +34,14 @@ function ensureProgressTools(){
  v.appendChild(wrap);
 }
 function exportProgress(){
- var out={app:"HT Lab",kind:"progress",version:1,exportedAt:new Date().toISOString(),data:{}};
+ var out={app:"学习工具",kind:"progress",version:1,exportedAt:new Date().toISOString(),data:{}};
  PROGRESS_KEYS.forEach(function(k){var cur=localStorage.getItem(k);if(cur!==null)out.data[k]=cur});
  try{
   var blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json;charset=utf-8"});
   var url=URL.createObjectURL(blob);
   var a=document.createElement("a");
   var d=new Date(),pad=function(n){return String(n).padStart(2,"0")};
-  a.href=url;a.download="htlab-progress-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+".json";
+  a.href=url;a.download="study-tool-progress-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+".json";
   a.style.display="none";document.body.appendChild(a);a.click();
   window.setTimeout(function(){URL.revokeObjectURL(url);if(a.parentNode)a.parentNode.removeChild(a)},600);
   toast("进度文件已导出，去「下载」里找它。");
@@ -54,7 +54,7 @@ function importProgressFile(file){
  reader.onload=function(){
   try{
    var obj=JSON.parse(String(reader.result||""));
-   if(!obj||obj.app!=="HT Lab"||!obj.data||typeof obj.data!=="object")throw new Error("不是 HT Lab 的进度文件");
+   if(!obj||(obj.app!=="学习工具"&&obj.app!=="HT Lab")||!obj.data||typeof obj.data!=="object")throw new Error("不是「学习工具」的进度文件");
    var n=0;
    PROGRESS_KEYS.forEach(function(k){
     var val=obj.data[k];
@@ -78,7 +78,7 @@ var SAVE_PREFIX="HT1";
 function b64urlFromBytes(bytes){var bin="",i;for(i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 function bytesFromB64url(str){var sN=str.replace(/-/g,"+").replace(/_/g,"/");while(sN.length%4)sN+="=";var bin=atob(sN),out=new Uint8Array(bin.length),i;for(i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out}
 function saveProgressPayload(){
- var out={app:"HT Lab",kind:"progress",version:1,exportedAt:new Date().toISOString(),data:{}};
+ var out={app:"学习工具",kind:"progress",version:1,exportedAt:new Date().toISOString(),data:{}};
  PROGRESS_KEYS.forEach(function(k){var v=localStorage.getItem(k);if(v!==null)out.data[k]=v});
  return out;
 }
@@ -115,7 +115,7 @@ async function applySaveCode(raw){
  if(code.indexOf(SAVE_PREFIX)!==0)throw new Error("存档码格式不对（应以 "+SAVE_PREFIX+" 开头）");
  var json=await decompressSaveText(code.slice(SAVE_PREFIX.length));
  var obj=JSON.parse(json);
- if(!obj||obj.app!=="HT Lab"||!obj.data||typeof obj.data!=="object")throw new Error("存档内容无法识别");
+ if(!obj||(obj.app!=="学习工具"&&obj.app!=="HT Lab")||!obj.data||typeof obj.data!=="object")throw new Error("存档内容无法识别");
  var n=0;
  PROGRESS_KEYS.forEach(function(k){var val=obj.data[k];if(typeof val==="string"&&val){localStorage.setItem(k,val);n++}});
  if(!n)throw new Error("存档里没有可用进度");

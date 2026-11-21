@@ -42,18 +42,18 @@ function switchPage(p){
  window.scrollTo({top:0,behavior:small?"auto":"smooth"});
 }
 function navTitle(){
- const n="HT LAB · "+currentCourse().name;
+ const n="学习工具 · "+currentCourse().name;
  const labels={
   home:"尘狩  /  个人作品集",
-  work:"尘狩  /  作品 · "+((typeof currentWork==="function"&&currentWork())?currentWork().name:"HT Lab"),
+  work:"尘狩  /  作品 · "+((typeof currentWork==="function"&&currentWork())?currentWork().name:"学习工具"),
   author:"尘狩  /  关于作者",
-  courses:"HT LAB  /  学习课程",
+  courses:"学习工具  /  学习课程",
   map:n+"  /  学习路线",
   practice:n+"  /  继续挑战",
   summary:n+"  /  我的总结",
   lesson:n+"  /  当前关卡",
-  project:"HT LAB  /  7 天项目",
-  about:"HT LAB  /  关于 / 许可"
+  project:"学习工具  /  7 天项目",
+  about:"学习工具  /  关于 / 许可"
  };
  document.getElementById("topTitle").textContent=labels[page]||labels.home;
 }

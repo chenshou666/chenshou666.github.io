@@ -178,7 +178,7 @@
   </header>
   <nav class="pf-tabs" id="pfTabs" aria-label="切换系列作品"></nav>
   <main class="pf-stage" id="pfNormalStage">
-    <div class="pf-hint" id="pfHint">可切换上方作品 · 点「影院」横屏铺满</div>
+    <div class="pf-hint" id="pfHint">可切换上方作品 · 点「影院」横屏铺满（默认竖屏）</div>
   </main>
 </div>
 
@@ -274,9 +274,8 @@
       btns[i].setAttribute("aria-current", btns[i].dataset.id === current.id ? "true" : "false");
     }
     if (!keepMode) {
-      /* 首次进入 / 切换作品时按屏幕方向决定显示模式 */
-      if (isPortraitPhone() && !manualPortrait) setMode(true);
-      else setMode(false);
+      /* 默认竖屏显示；需要横屏铺满时点顶部「⛶ 影院」 */
+      setMode(false);
     }
   }
 
@@ -307,14 +306,10 @@
 
   window.addEventListener("resize", function () {
     if (body.classList.contains("cinema")) layoutCinema();
-    else if (autoModeDone && !manualPortrait) {
-      if (isPortraitPhone()) setMode(true);
-    }
   });
   window.addEventListener("orientationchange", function () {
     window.setTimeout(function () {
       if (body.classList.contains("cinema")) layoutCinema();
-      else if (!manualPortrait && isPortraitPhone()) setMode(true);
     }, 220);
   });
 

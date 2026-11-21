@@ -1,5 +1,5 @@
 /*!
- * 10-ui.css — HT Lab 唯一界面层（iOS 液态玻璃 App 式界面）
+ * 10-ui.css — 学习工具 唯一界面层（iOS 液态玻璃 App 式界面）
  * ---------------------------------------------------------------------------
  * 结构（按顺序）：
  *   1  设计令牌        2  全局           3  应用外壳（胶囊顶栏 + 底部 Dock）
@@ -2086,7 +2086,7 @@ body[data-zone="portfolio"] .reset-button {
   margin-top: 4px;
 }
 
-/* —— 精选作品大卡（HT Lab） —— */
+/* —— 精选作品大卡（学习工具） —— */
 .pf-work-card {
   display: grid;
   grid-template-columns: 88px minmax(0, 1fr);
@@ -2202,7 +2202,7 @@ body[data-zone="portfolio"] .reset-button {
   margin-bottom: 6px;
 }
 
-/* —— 作品详情页（HT Lab） —— */
+/* —— 作品详情页（学习工具） —— */
 .pf-detail-hero {
   background:
     radial-gradient(120% 100% at 10% -12%, rgba(56, 189, 248, 0.24), transparent 56%),
@@ -2549,7 +2549,7 @@ body[data-zone="portfolio"] .reset-button {
 
 /* ==========================================================================
  * 导航分区：作品集页面只显示「作品集 / 关于作者」，
- *           进入 HT Lab（学习站）后才显示学习课程 / 继续挑战 / 总结 / 项目 / 关于许可
+ *           进入 学习工具（学习站）后才显示学习课程 / 继续挑战 / 总结 / 项目 / 关于许可
  * ========================================================================== */
 .nav-btn[data-page="author"] {
   display: none;
@@ -2565,4 +2565,21 @@ body[data-zone="portfolio"] .nav-btn[data-page="summary"],
 body[data-zone="portfolio"] .nav-btn[data-page="project"],
 body[data-zone="portfolio"] .nav-btn[data-page="about"] {
   display: none !important;
+}
+
+/* ==========================================================================
+ * 全局层级：Dock / 顶栏永远在最上层（内容、动画、装饰层都不能盖住导航）
+ * ========================================================================== */
+.sidebar {
+  z-index: 130 !important;
+}
+.topbar {
+  z-index: 120 !important;
+}
+#view {
+  position: relative;
+  z-index: 1;
+}
+.app {
+  isolation: isolate;
 }

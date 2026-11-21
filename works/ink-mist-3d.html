@@ -2218,6 +2218,7 @@
         if (ts - state.fpsLastTs >= 500) {
           state.fps = Math.round((state.fpsFrames * 1000) / (ts - state.fpsLastTs));
           fpsDisplay.textContent = `${state.fps} FPS`;
+          if (window.__fpsUpdate) window.__fpsUpdate(state.fps);
           state.fpsFrames = 0;
           state.fpsLastTs = ts;
         }
@@ -2497,5 +2498,54 @@
       };
     })();
   </script>
+
+<script id="fps-pill-always">
+/* FPS-PILL: 常驻帧数角标（不随界面自动隐藏），同时显示累计平均帧数 */
+(function () {
+  if (window.__fpsUpdate) return;
+  var pill = null, last = null, sum = 0, count = 0;
+  function ensure() {
+    if (pill) return pill;
+    pill = document.createElement("div");
+    pill.setAttribute("data-fps-pill", "1");
+    pill.style.cssText = "position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:2147483000;font:11px/1.25 ui-monospace,SFMono-Regular,Menlo,monospace;color:#dff3ff;background:rgba(4,8,16,.66);border:1px solid rgba(186,230,253,.3);padding:4px 10px;border-radius:999px;pointer-events:none;letter-spacing:.3px;white-space:nowrap;backdrop-filter:blur(6px)";
+    (document.body || document.documentElement).appendChild(pill);
+    pill.style.display = "none";
+    return pill;
+  }
+  function paint() {
+    ensure();
+    pill.style.display = "block";
+    pill.textContent = "● " + (last == null ? "--" : last) + " FPS · 平均 " + (count ? Math.round(sum / count) : "--");
+  }
+  var warmup = 0;
+  window.__fpsUpdate = function (v) {
+    v = Math.round(Number(v) || 0);
+    if (!v || v > 240) return;
+    warmup++;
+    last = v;
+    if (warmup > 2) { sum += v; count++; }
+    paint();
+  };
+
+  /* 若作品自身尚未上报帧数（未点播放 / 循环未启动），用 rAF 兜底测量，保证角标常驻 */
+  var gotReal = false, fbFrames = 0, fbLast = performance.now(), realUpdate = window.__fpsUpdate;
+  window.__fpsUpdate = function (v) { gotReal = true; realUpdate(v); };
+  (function fbLoop() { fbFrames++; requestAnimationFrame(fbLoop); })();
+  setInterval(function () {
+    if (gotReal) return;
+    var now = performance.now(), dt = now - fbLast;
+    if (dt >= 800) {
+      var f = Math.round((fbFrames * 1000) / dt);
+      if (f > 0) realUpdate(f);
+      fbFrames = 0; fbLast = now;
+    }
+  }, 800);
+
+  if (document.readyState !== "loading") ensure();
+  else document.addEventListener("DOMContentLoaded", ensure, { once: true });
+})();
+</script>
+
 </body>
 </html>

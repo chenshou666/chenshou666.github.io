@@ -1,5 +1,5 @@
 /* ============================================================================
- * 14-liquid-glass.js — 套用 showcase 的液态玻璃引擎到 HT Lab
+ * 14-liquid-glass.js — 套用 showcase 的液态玻璃引擎到学习工具
  * ---------------------------------------------------------------------------
  * 来源：ios_liquid_glass_ui_showcase.html 的内联 JS（截取可复用部分）
  *   · 第 1 节：MULTI-LAYER FLUID AURORA CANVAS ENGINE（原样保留配色与算法）

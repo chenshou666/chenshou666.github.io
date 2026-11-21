@@ -1,11 +1,11 @@
-# HT Lab 架构说明
+# 学习工具 架构说明
 
 > 本文件是站点的完整架构地图。第一次接触代码，请先读根目录 `AGENTS.md`；写课程数据请看 [CONTENT-GUIDE.md](CONTENT-GUIDE.md)。
 > 文中路径均相对于仓库根目录（= 站点根目录 = GitHub Pages 发布根目录）。
 
 ## 1. 项目概览
 
-HT Lab 是一个**纯静态**的中文学习网站，包含 C 语言（86 关 / 11 个模块）与英语四级（62 关 / 7 个模块）两门课。
+学习工具 是一个**纯静态**的中文学习网站，包含 C 语言（86 关 / 11 个模块）与英语四级（62 关 / 7 个模块）两门课。
 
 架构上的"物理定律"：
 
@@ -376,7 +376,7 @@ cQuizOk(level) && codePassed && cOutputOk(level)
 
 三种迁移方式，数据来源相同（`PROGRESS_KEYS` 里的 5 个 localStorage 键的原始字符串）：
 
-1. **导出/导入 JSON 文件**：`exportProgress()` 生成 `{app:"HT Lab",kind:"progress",version:1,exportedAt,data:{key:raw}}` 并下载；`importProgressFile()` 校验 `app` 与 `data` 后逐键写回并刷新。
+1. **导出/导入 JSON 文件**：`exportProgress()` 生成 `{app:"学习工具",kind:"progress",version:1,exportedAt,data:{key:raw}}` 并下载；`importProgressFile()` 校验 `app` 与 `data` 后逐键写回并刷新。
 2. **存档码**：`buildSaveCode()` → 前缀 `HT1` + `G<base64url(gzip(json))>`（浏览器支持 `CompressionStream` 时），否则 `B<base64url(json)>`。
 3. **存档链接**：`<当前页面 URL>#save=<encodeURIComponent(存档码)>`；页面加载时由 `js/04` 的 `load` 监听器检测 `#save=`，确认后导入并刷新。
 
