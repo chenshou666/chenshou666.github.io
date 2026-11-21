@@ -6,7 +6,7 @@
 
 ## 项目是什么
 
-HT Lab 是一个**纯静态**的中文学习网站：C 语言 86 关 + 英语四级 62 关，闯关式学习，进度只存浏览器。
+这是一个「尘狩」的**纯静态个人作品网站**：外层是作品集（首页 / 作品详情 / 关于作者），核心作品 **HT Lab** 是闯关式学习站（C 语言 86 关 + 英语四级 62 关），进度只存浏览器。
 技术栈是 vanilla HTML/CSS/JS——**没有构建步骤、没有依赖、没有后端**。
 仓库根目录就是 GitHub Pages 发布根目录（线上 https://chenshou666.github.io/ ，仓库 `chenshou666/chenshou666.github.io`，`main` 分支）。
 
@@ -44,6 +44,7 @@ AGENTS.md / README.md  维护须知 / 使用者说明
 | 任务 | 主要文件 | 注意 |
 | --- | --- | --- |
 | 改配色 / 圆角 / 间距 / 阴影 | `css/10-ui.css` 的 `:root` 令牌与对应章节 | 用 `--ui-*` 变量统一改，禁止到处写死色值 |
+| 改作品集首页 / 作品详情 / 关于作者内容 | `js/05-views.js` 顶部 `PORTFOLIO_DATA`（作者名、简介 TODO、作品文案、技能、联系方式）+ `css/10-ui.css` 末尾「作品集」章节 | 只改数据与文案，不动学习站逻辑；bio 仍是 TODO 占位 |
 | 改顶栏 / 底部 Dock / 页面壳 | `index.html` 静态 DOM + `css/10-ui.css` 第 3 节 | 保留 `#view`、`#topTitle`、`#xpTop` 等 JS 依赖节点 |
 | 改玻璃材质 / 极光背景 | `css/08-liquid-glass.css` + `js/14-liquid-glass.js` | 材质参数在 08 的 `:root`；10 只做组件映射 |
 | 改页面切换 / 入场动画 | `js/15-ui-motion.js` + `css/10-ui.css` 动画章节 | 不要给 `backdrop-filter` 元素加 transform 位移动画（会闪烁） |

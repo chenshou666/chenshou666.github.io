@@ -1,9 +1,203 @@
 /* ============================================================================
- * 05-views.js — 页面渲染：render 路由、课程页、闯关地图、关于页、继续挑战页、C 语言关卡页
+ * 05-views.js — 页面渲染：render 路由、个人作品集（首页/作品详情/关于作者）、课程页、闯关地图、关于页、继续挑战页、C 语言关卡页
  * 加载顺序 5/13：按编号顺序加载
  * 注意：本站是经典 <script>（非 ES Module），所有 js/ 文件共享同一个全局作用域，
  *       编号即加载顺序；调整顺序或拆合并文件前请先读 docs/ARCHITECTURE.md。
  * ========================================================================== */
+
+const PORTFOLIO_DATA={
+ author:"尘狩",
+ role:"个人作品集 · 独立前端与学习工具制作",
+ tagline:"把复杂知识做成打开就能练的纯前端工具，注重清晰结构、离线可用与打磨细节。",
+ bioTodo:"TODO：这里预留为「尘狩」的个人简介，后续可直接修改 js/05-views.js 顶部的 PORTFOLIO_DATA.bioTodo（例如学校专业、学习方向、近期计划或代表经历）。",
+ focusTodo:"TODO：可补充你正在做或计划中的下一件作品方向。",
+ githubUrl:"https://github.com/chenshou666/chenshou666.github.io",
+ githubLabel:"github.com/chenshou666/chenshou666.github.io",
+ skills:[
+  {group:"前端与界面",items:["HTML5 / CSS3","Vanilla JavaScript","Canvas 2D 动画","响应式与移动端适配","液态玻璃视觉设计"]},
+  {group:"编程与基础",items:["C 语言（C11）","数据结构与算法基础","静态语法与结构校验","离线数据与编码压缩"]},
+  {group:"工程与交付",items:["零构建纯静态架构","file:// 本地离线运行","GitHub Pages 部署","文档与结构化维护"]}
+ ],
+ work:{
+  id:"ht-lab",
+  name:"HT Lab",
+  subtitle:"纯前端闯关式交互学习站（C 语言 86 关 + 英语四级 62 关）",
+  summary:"一款零后端、零构建、双击即可离线运行的静态学习应用。内置 C 语言与英语四级两门完整课程，提供讲义高亮、交互测验、浏览器端 C 代码结构检查、本机运行输出逐行比对、46 段本地听力与示范音频、跟读录音自评、学习点数与跨设备存档码迁移。",
+  features:[
+   {title:"148 关完整学习路线",desc:"C 语言 11 模块 86 关（起步到系统底层与综合项目）+ 英语四级 7 模块 62 关（地基、听力、阅读、写作、翻译、口语与全真模考），两门课进度独立。"},
+   {title:"浏览器端 C 语法与结构检查",desc:"自研轻量词法/语法分析与规格校验引擎，配合带行号与语法着色的代码编辑器，以及本机运行输出逐行比对流程。"},
+   {title:"四级听说读写全任务引擎",desc:"内置 46 段本地离线 mp3 音频、原文展开、写作/翻译要点词数判分、口语录音与跟读自评清单、模考倒计时自动交卷。"},
+   {title:"7 天小作品支线",desc:"以控制台记账本为线索，把输入输出、数组、字符串、函数、指针与文件存储拆成 7 天可编译运行的阶段任务。"},
+   {title:"免登录跨设备存档迁移",desc:"全部进度仅保存于本机 localStorage，支持 JSON 导出导入、Gzip 压缩 HT1 存档码与 #save= 分享链接恢复。"},
+   {title:"液态玻璃单 UI 体验",desc:"深空极光 Canvas 2D 画布、玻璃质感组件、View Transitions 页面切换动画、自动收起底部 Dock 与移动端适配。"}
+  ],
+  stack:["Vanilla HTML/CSS/JS","Canvas 2D","Web Audio / MediaRecorder","View Transitions API","localStorage","CompressionStream (Gzip)","file:// 离线运行","GitHub Pages"]
+ }
+};
+
+function portfolioStats(){
+ var total=0,done=0,xp=0;
+ COURSES.forEach(function(c){
+  var ls=courseLevels[c.id]||[],st=stores[c.id]||{completed:{},xp:0};
+  total+=ls.length;
+  done+=Object.keys(st.completed||{}).length;
+  xp+=Number(st.xp||0);
+ });
+ return {total:total,done:done,xp:xp,pct:total?Math.round(done/total*100):0};
+}
+
+function syncZoneChrome(){
+ var inPortfolio=!activeLevel&&(page==="home"||page==="work"||page==="author");
+ document.body.dataset.zone=inPortfolio?"portfolio":"lab";
+ var backBtn=document.getElementById("backPortfolioBtn");
+ if(backBtn)backBtn.hidden=inPortfolio;
+}
+
+function renderPortfolio(){
+ var st=portfolioStats();
+ var w=PORTFOLIO_DATA.work;
+ var qq=typeof CONTACT_QQ_GROUP!=="undefined"?CONTACT_QQ_GROUP:"";
+ document.getElementById("view").innerHTML=''
+  +'<section class="panel pf-hero">'
+   +'<div class="page-header pf-hero-head">'
+    +'<div>'
+     +'<div class="eyebrow">PERSONAL PORTFOLIO · '+esc(PORTFOLIO_DATA.role)+'</div>'
+     +'<h1>'+esc(PORTFOLIO_DATA.author)+'</h1>'
+     +'<p class="subhead pf-tagline">'+esc(PORTFOLIO_DATA.tagline)+'</p>'
+    +'</div>'
+    +'<span class="chip pf-badge">在线作品集</span>'
+   +'</div>'
+   +'<div class="pf-hero-actions">'
+    +'<button class="btn btn-primary" type="button" data-action="open-work">查看代表作品 →</button>'
+    +'<button class="btn btn-soft" type="button" data-action="enter-lab">直接进入 HT Lab</button>'
+    +'<button class="btn btn-ghost" type="button" data-action="open-author">关于作者</button>'
+   +'</div>'
+  +'</section>'
+  +'<div class="section-head"><div><h2>精选作品</h2><p>目前上线 1 个完整交互作品，点进即可查看详情或直接体验全部功能。</p></div><span class="chip">1 个作品</span></div>'
+  +'<article class="panel pf-work-card">'
+   +'<div class="pf-work-mark" aria-hidden="true">HT</div>'
+   +'<div class="pf-work-main">'
+    +'<div class="pf-work-head">'
+     +'<div><div class="eyebrow">FEATURED WORK · 互动学习站</div><h3>'+esc(w.name)+'</h3></div>'
+     +'<span class="chip">可离线使用</span>'
+    +'</div>'
+    +'<p class="pf-work-desc">'+esc(w.summary)+'</p>'
+    +'<div class="pf-work-metrics">'
+     +'<div class="pf-metric"><strong>'+st.total+' 关</strong><span>完整关卡</span></div>'
+     +'<div class="pf-metric"><strong>'+COURSES.length+' 门课</strong><span>C 语言 · 四级</span></div>'
+     +'<div class="pf-metric"><strong>纯前端</strong><span>无构建零依赖</span></div>'
+     +'<div class="pf-metric"><strong>可离线</strong><span>双击即可运行</span></div>'
+    +'</div>'
+    +'<div class="pf-work-progress">'
+     +'<div class="pf-progress-meta"><span>本设备累计学习进度</span><span>'+st.done+' / '+st.total+' 关（'+st.pct+'%） · '+st.xp+' 学习点</span></div>'
+     +'<div class="progress-bar"><i style="width:'+st.pct+'%"></i></div>'
+    +'</div>'
+    +'<div class="pf-work-actions">'
+     +'<button class="btn btn-primary" type="button" data-action="open-work">查看作品 →</button>'
+     +'<button class="btn btn-ghost" type="button" data-action="enter-lab">进入学习课程</button>'
+    +'</div>'
+   +'</div>'
+  +'</article>'
+  +'<section class="panel pf-about-strip">'
+   +'<div>'
+    +'<div class="challenge-label">关于与联系</div>'
+    +'<p class="challenge-copy">查看作者「'+esc(PORTFOLIO_DATA.author)+'」的简介、技能栈，或通过 GitHub 与学习交流群联系与反馈。</p>'
+   +'</div>'
+   +'<div class="pf-work-actions">'
+    +'<button class="btn btn-soft btn-small" type="button" data-action="open-author">关于作者 →</button>'
+    +(qq?'<button class="btn btn-ghost btn-small" type="button" data-action="copy-qq-group">复制交流群号：'+esc(qq)+'</button>':'')
+    +'<a class="btn btn-ghost btn-small" href="'+esc(PORTFOLIO_DATA.githubUrl)+'" target="_blank" rel="noopener">GitHub 仓库</a>'
+   +'</div>'
+  +'</section>'
+  +'<div class="footer-note">Copyright © 2026 '+esc(PORTFOLIO_DATA.author)+' · 作品集内置 HT Lab 完整学习功能，全部进度仅保存于本设备浏览器。</div>';
+}
+
+function renderWorkDetail(){
+ var st=portfolioStats();
+ var w=PORTFOLIO_DATA.work;
+ var courseSummary=COURSES.map(function(c){
+  var ls=courseLevels[c.id]||[],gs=courseGroups[c.id]||[],cs=stores[c.id]||{completed:{}},dn=Object.keys(cs.completed||{}).length,pc=ls.length?Math.round(dn/ls.length*100):0;
+  return '<div class="pf-course-row">'
+   +'<div class="pf-course-row-top"><strong>'+esc(c.name)+'</strong><span>'+gs.length+' 模块 · '+ls.length+' 关 · 已通 '+dn+' 关（'+pc+'%）</span></div>'
+   +'<div class="progress-bar"><i style="width:'+pc+'%"></i></div>'
+  +'</div>';
+ }).join("");
+ var featuresHtml=w.features.map(function(f){
+  return '<div class="pf-feature-item"><h3>'+esc(f.title)+'</h3><p>'+esc(f.desc)+'</p></div>';
+ }).join("");
+ var tagsHtml=w.stack.map(function(t){
+  return '<span class="pf-tag">'+esc(t)+'</span>';
+ }).join("");
+ document.getElementById("view").innerHTML=''
+  +'<div class="page-header">'
+   +'<div><div class="eyebrow">WORK DETAIL · 作品详情</div><h1>'+esc(w.name)+'</h1><p class="subhead">'+esc(w.subtitle)+'</p></div>'
+   +'<button class="btn btn-ghost btn-small" type="button" data-page="home">← 返回作品集</button>'
+  +'</div>'
+  +'<section class="panel pf-detail-hero">'
+   +'<div class="challenge-head"><div class="challenge-label">项目介绍</div><span class="chip">纯静态 · 可离线</span></div>'
+   +'<p class="lesson-copy">'+esc(w.summary)+'</p>'
+   +'<div class="pf-work-metrics">'
+    +'<div class="pf-metric"><strong>'+st.total+' 关</strong><span>总课程关卡</span></div>'
+    +'<div class="pf-metric"><strong>'+COURSES.length+' 门课</strong><span>作品内含课程</span></div>'
+    +'<div class="pf-metric"><strong>46 段</strong><span>本地离线音频</span></div>'
+    +'<div class="pf-metric"><strong>'+st.pct+'%</strong><span>当前设备总进度</span></div>'
+   +'</div>'
+   +'<div class="pf-course-summary">'+courseSummary+'</div>'
+   +'<div class="pf-work-actions">'
+    +'<button class="btn btn-primary" type="button" data-action="enter-lab">进入作品开始学习 →</button>'
+    +'<button class="btn btn-ghost" type="button" data-page="about">查看许可与免责</button>'
+   +'</div>'
+  +'</section>'
+  +'<section class="panel">'
+   +'<div class="challenge-head"><div class="challenge-label">做了什么</div><span class="chip">核心能力</span></div>'
+   +'<div class="pf-feature-grid">'+featuresHtml+'</div>'
+  +'</section>'
+  +'<section class="panel">'
+   +'<div class="challenge-head"><div class="challenge-label">技术栈与架构约束</div><span class="chip">Zero Build</span></div>'
+   +'<div class="pf-tags">'+tagsHtml+'</div>'
+   +'<p class="challenge-copy" style="margin-top:14px">全站不依赖任何打包工具、框架或 CDN，采用固定顺序加载的经典脚本与样式层，在 GitHub Pages 与本地 file:// 协议下均可完整运行。</p>'
+  +'</section>'
+  +'<div class="footer-note">进入 HT Lab 后，顶栏左侧随时可点「← 作品集」回到这里。</div>';
+}
+
+function renderAuthor(){
+ var qq=typeof CONTACT_QQ_GROUP!=="undefined"?CONTACT_QQ_GROUP:"";
+ var skillsHtml=PORTFOLIO_DATA.skills.map(function(s){
+  return '<div class="pf-skill-group">'
+   +'<div class="pf-skill-title">'+esc(s.group)+'</div>'
+   +'<div class="pf-tags">'+s.items.map(function(i){return '<span class="pf-tag">'+esc(i)+'</span>'}).join("")+'</div>'
+  +'</div>';
+ }).join("");
+ document.getElementById("view").innerHTML=''
+  +'<div class="page-header">'
+   +'<div><div class="eyebrow">ABOUT AUTHOR · 关于作者</div><h1>'+esc(PORTFOLIO_DATA.author)+'</h1><p class="subhead">'+esc(PORTFOLIO_DATA.tagline)+'</p></div>'
+   +'<button class="btn btn-ghost btn-small" type="button" data-page="home">← 返回作品集</button>'
+  +'</div>'
+  +'<div class="pf-author-grid">'
+   +'<section class="panel">'
+    +'<div class="challenge-head"><div class="challenge-label">作者简介</div><span class="chip">待补充</span></div>'
+    +'<div class="pf-todo-note">'+esc(PORTFOLIO_DATA.bioTodo)+'</div>'
+    +'<div class="pf-todo-note" style="margin-top:10px">'+esc(PORTFOLIO_DATA.focusTodo)+'</div>'
+    +'<div class="pf-work-actions" style="margin-top:16px">'
+     +'<button class="btn btn-primary btn-small" type="button" data-action="open-work">查看代表作品 HT Lab →</button>'
+    +'</div>'
+   +'</section>'
+   +'<section class="panel">'
+    +'<div class="challenge-head"><div class="challenge-label">技能与方向</div><span class="chip">Stack</span></div>'
+    +'<div class="pf-skill-list">'+skillsHtml+'</div>'
+   +'</section>'
+  +'</div>'
+  +'<section class="panel">'
+   +'<div class="challenge-head"><div class="challenge-label">联系方式与交流</div><span class="chip">Contact</span></div>'
+   +'<p class="challenge-copy">作品反馈、内容纠错或交流合作，优先加入学习交流 QQ 群，也可以在 GitHub 仓库提交 Issue。</p>'
+   +'<div class="pf-contact-list">'
+    +'<a class="btn btn-soft btn-small" href="'+esc(PORTFOLIO_DATA.githubUrl)+'" target="_blank" rel="noopener">GitHub：'+esc(PORTFOLIO_DATA.githubLabel)+'</a>'
+    +(qq?'<button class="btn btn-primary btn-small" type="button" data-action="copy-qq-group">复制学习交流 QQ 群号：'+esc(qq)+'</button>':'<span class="feedback-soon">交流群筹备中</span>')
+    +'<button class="btn btn-ghost btn-small" type="button" data-page="about">版权与许可说明</button>'
+   +'</div>'
+  +'</section>'
+  +'<div class="footer-note">Copyright © 2026 '+esc(PORTFOLIO_DATA.author)+' · 个人作品集与 HT Lab 学习站</div>';
+}
 
 function ensureNextBar(){
  var v=document.getElementById("view");if(!v)return;
@@ -19,7 +213,7 @@ function render(){
  var __changed=__k!==__lastViewKey;__lastViewKey=__k;
  if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
   var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
- navTitle();document.getElementById("xpTop").textContent=data.xp;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===page)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="project")renderProject();else{renderSummary();ensureProgressTools()}}
+ syncZoneChrome();navTitle();document.getElementById("xpTop").textContent=data.xp;var __navPage=(page==="work"||page==="author")?"home":page;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===__navPage)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="home")renderPortfolio();else if(page==="work")renderWorkDetail();else if(page==="author")renderAuthor();else if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="project")renderProject();else{renderSummary();ensureProgressTools()}}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;

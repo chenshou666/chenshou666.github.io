@@ -1999,3 +1999,446 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
     animation: none !important;
   }
 }
+
+/* ========================================================================== */
+/* 作品集（Gemini 步骤 3） */
+/* ========================================================================== */
+
+/* ==========================================================================
+ * 20. 个人作品集（尘狩）—— 直接追加到 css/10-ui.css 末尾即可生效
+ *     沿用 --ui-* / --r-* 令牌；不给带 backdrop-filter 的元素加 transform 动画
+ * ========================================================================== */
+
+/* —— 顶栏左侧分区与返回作品集入口 —— */
+.top-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.top-back-btn {
+  flex-shrink: 0;
+  height: 38px;
+  padding: 0 14px;
+  font-size: 12px;
+  font-weight: 650;
+  color: #bae6fd;
+  background: linear-gradient(145deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.12));
+  border-color: rgba(186, 230, 253, 0.34);
+  white-space: nowrap;
+}
+.top-back-btn:hover {
+  color: #ffffff;
+  background: linear-gradient(145deg, rgba(56, 189, 248, 0.32), rgba(129, 140, 248, 0.22));
+  border-color: rgba(186, 230, 253, 0.56);
+}
+.top-back-btn:active {
+  transform: none;
+}
+.top-back-btn[hidden] {
+  display: none !important;
+}
+body[data-zone="portfolio"] .reset-button {
+  display: none !important;
+}
+
+/* —— 作品集首页 Hero —— */
+.pf-hero {
+  padding: 32px 34px;
+  border-radius: var(--r-xl, var(--ui-r-xl));
+  background:
+    radial-gradient(110% 120% at 8% -15%, rgba(56, 189, 248, 0.28), transparent 56%),
+    radial-gradient(90% 100% at 96% 110%, rgba(168, 85, 247, 0.2), transparent 58%),
+    var(--ui-glass-dark-strong) !important;
+}
+.pf-hero-head {
+  margin: 0 0 20px;
+  align-items: flex-start;
+}
+.pf-hero-head h1 {
+  font-size: clamp(32px, 4.2vw, 48px);
+  font-weight: 800;
+  letter-spacing: -1.6px;
+  line-height: 1.08;
+  margin: 6px 0 12px;
+}
+.pf-tagline {
+  font-size: 14.5px;
+  line-height: 1.8;
+  max-width: 58ch;
+  color: var(--ui-ink-2);
+}
+.pf-badge {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.26), rgba(129, 140, 248, 0.2));
+  border-color: rgba(186, 230, 253, 0.42);
+  color: #e0f2fe;
+}
+.pf-hero-actions,
+.pf-work-actions,
+.pf-contact-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.pf-hero-actions {
+  margin-top: 4px;
+}
+
+/* —— 精选作品大卡（HT Lab） —— */
+.pf-work-card {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  padding: 28px;
+  border-radius: var(--r-xl, var(--ui-r-xl));
+  transition: background 0.32s var(--ui-ease), border-color 0.32s var(--ui-ease),
+    box-shadow 0.32s var(--ui-ease);
+}
+.pf-work-card:hover {
+  background: var(--ui-glass-dark-strong) !important;
+  border-color: var(--ui-border-strong) !important;
+}
+.pf-work-mark {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: var(--r-l, var(--ui-r-l));
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.68), rgba(129, 140, 248, 0.56) 55%, rgba(168, 85, 247, 0.52));
+  border: 1px solid rgba(255, 255, 255, 0.44);
+  box-shadow:
+    0 14px 30px -12px rgba(56, 189, 248, 0.6),
+    inset 0 1.6px 2px rgba(255, 255, 255, 0.8);
+  font-size: 30px;
+  font-weight: 850;
+  letter-spacing: -1px;
+  color: #ffffff;
+  user-select: none;
+}
+.pf-work-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pf-work-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.pf-work-head h3 {
+  font-size: 24px;
+  font-weight: 780;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+.pf-work-desc {
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--ui-ink-2);
+}
+
+/* 4 项指标条（无 backdrop-filter，避免嵌套模糊掉帧） */
+.pf-work-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.pf-metric {
+  padding: 12px 14px;
+  border-radius: var(--ui-r-m);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+.pf-metric strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 780;
+  letter-spacing: -0.2px;
+  color: var(--ui-ink);
+  font-variant-numeric: tabular-nums;
+}
+.pf-metric span {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--ui-ink-2);
+}
+
+/* 进度汇总 */
+.pf-work-progress {
+  display: grid;
+  gap: 8px;
+  padding: 13px 15px;
+  border-radius: var(--ui-r-m);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.pf-progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ui-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 底部关于与联系条 */
+.pf-about-strip {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.pf-about-strip .challenge-label {
+  margin-bottom: 6px;
+}
+
+/* —— 作品详情页（HT Lab） —— */
+.pf-detail-hero {
+  background:
+    radial-gradient(120% 100% at 10% -12%, rgba(56, 189, 248, 0.24), transparent 56%),
+    var(--ui-glass-dark-strong) !important;
+}
+.pf-detail-hero .lesson-copy {
+  margin: 8px 0 18px;
+}
+.pf-detail-hero .pf-work-actions {
+  margin-top: 18px;
+}
+.pf-course-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+.pf-course-row {
+  display: grid;
+  gap: 9px;
+  padding: 14px 16px;
+  border-radius: var(--ui-r-m);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+.pf-course-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ui-ink-2);
+}
+.pf-course-row-top strong {
+  font-size: 14px;
+  font-weight: 740;
+}
+
+.pf-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+.pf-feature-item {
+  padding: 16px 18px;
+  border-radius: var(--ui-r-m);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+.pf-feature-item h3 {
+  font-size: 14px;
+  font-weight: 730;
+  margin-bottom: 7px;
+  color: var(--ui-ink);
+}
+.pf-feature-item p {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--ui-ink-2);
+}
+
+/* 技术栈 / 技能标签 */
+.pf-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pf-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(186, 230, 253, 0.26);
+  color: #e0f2fe;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* —— 关于作者页 —— */
+.pf-author-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.pf-author-grid .panel + .panel {
+  margin-top: 0;
+}
+.pf-todo-note {
+  padding: 14px 16px;
+  border-radius: var(--ui-r-m);
+  background: rgba(251, 191, 36, 0.09);
+  border: 1px dashed rgba(251, 191, 36, 0.42);
+  color: #fde68a;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.pf-skill-list {
+  display: grid;
+  gap: 14px;
+}
+.pf-skill-group {
+  display: grid;
+  gap: 8px;
+}
+.pf-skill-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--ui-ink-2);
+}
+.pf-contact-list {
+  margin-top: 14px;
+}
+
+/* —— 响应式适配（覆盖前置 @media 中旧的顶栏假设） —— */
+@media (max-width: 900px) {
+  .top-left {
+    gap: 8px;
+  }
+  .top-back-btn {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 11.5px;
+  }
+  .top-right {
+    width: auto;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+  body[data-zone="portfolio"] .top-title {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 1.2px;
+  }
+  .pf-work-card {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .pf-work-mark {
+    width: 68px;
+    height: 68px;
+    border-radius: var(--r-m, var(--ui-r-m));
+    font-size: 24px;
+  }
+  .pf-work-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pf-course-summary,
+  .pf-author-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .topbar {
+    gap: 8px;
+    padding: 0 10px;
+  }
+  .top-back-btn {
+    height: 32px;
+    padding: 0 11px;
+    font-size: 11px;
+  }
+  .top-right {
+    width: auto;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-left: auto;
+  }
+  body[data-zone="portfolio"] .top-left {
+    justify-content: center;
+  }
+  body[data-zone="portfolio"] .top-right {
+    display: none;
+  }
+  .pf-hero {
+    padding: 20px 18px;
+    border-radius: 22px;
+  }
+  .pf-hero-head {
+    margin-bottom: 14px;
+  }
+  .pf-hero-head h1 {
+    font-size: clamp(26px, 8vw, 34px);
+  }
+  .pf-tagline,
+  .pf-work-desc {
+    font-size: 13px;
+  }
+  .pf-work-card {
+    padding: 20px 18px;
+    border-radius: 22px;
+    gap: 14px;
+  }
+  .pf-work-mark {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    font-size: 20px;
+  }
+  .pf-work-head {
+    flex-wrap: wrap;
+  }
+  .pf-work-head h3 {
+    font-size: 20px;
+  }
+  .pf-metric {
+    padding: 10px 12px;
+  }
+  .pf-metric strong {
+    font-size: 14.5px;
+  }
+  .pf-about-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .pf-hero-actions .btn,
+  .pf-work-actions .btn,
+  .pf-contact-list .btn {
+    max-width: 100%;
+  }
+  .pf-tag {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-work-card,
+  .top-back-btn {
+    transition: none !important;
+  }
+}

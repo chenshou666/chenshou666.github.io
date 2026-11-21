@@ -8,7 +8,7 @@ function loadStateFor(key){try{return JSON.parse(localStorage.getItem(key))||{co
 const stores={};
 COURSES.forEach(function(c){const s=loadStateFor(c.store);s.drafts=s.drafts||{};s.quizRewards=s.quizRewards||{};Object.keys(s.completed).forEach(function(id){s.quizRewards[id]=true});stores[c.id]=s});
 let data=stores[activeCourse];
-let page = "courses";
+let page = "home";
 let activeLevel = null;
 let selectedOption = null;
 let quizPassed = false;
@@ -136,4 +136,3 @@ function nextLevel(){return levels.find(function(l){return !isDone(l)})||levels[
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2300)}
 function copyText(text){const done=function(){toast("标准答案已复制到剪贴板。")};const fb=function(){const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta);done()};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fb)}else{fb()}}
 /* 注：内容统一用真实换行（JS 的 \n 转义），不再需要旧的字面量 \\n 还原逻辑 */
-

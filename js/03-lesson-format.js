@@ -5,7 +5,7 @@
  *       编号即加载顺序；调整顺序或拆合并文件前请先读 docs/ARCHITECTURE.md。
  * ========================================================================== */
 /* ==== 知识点重点标记 ==== */
-var LESSON_CODE_RE=/#include\s*&lt;[^&]{1,40}&gt;|#define\b|-std=c\d+|\b(?:printf|scanf|fgets|fputs|fopen|fclose|malloc|free|sizeof|typedef|struct|union|enum|return|while|for|switch|break|continue|goto|strlen|strcpy|strcmp)\b|\b(?:stdio|stdbool|stdint|stdlib|string|math|ctype|time)\.h\b|\b(?:int|char|float|double|long|short|void|unsigned|signed|const|static|extern|volatile)\b|\b(?:main|argc|argv)\b|\b(?:gcc|F11|F9|Dev-C\+\+)\b|%(?:d|s|f|lf|ld|c|u|x|p)|\b[A-Za-z0-9_]+\.(?:c|h|exe)\b|\b0x[0-9a-fA-F]+\b|\\n/g;
+var LESSON_CODE_RE=/#include\s*&lt;[^&]{1,40}&gt;|#define\b|-std=c\d+|\b(?:printf|scanf|fgets|fputs|fopen|fclose|malloc|free|sizeof|typedef|struct|union|enum|return|while|for|switch|break|continue|goto|strlen|strcpy|strcmp) \b|\b(?:stdio|stdbool|stdint|stdlib|string|math|ctype|time)\.h\b|\b(?:int|char|float|double|long|short|void|unsigned|signed|const|static|extern|volatile)\b|\b(?:main|argc|argv)\b|\b(?:gcc|F11|F9|Dev-C\+\+)\b|%(?:d|s|f|lf|ld|c|u|x|p)|\b[A-Za-z0-9_]+\.(?:c|h|exe)\b|\b0x[0-9a-fA-F]+\b|\\n/g;
 function fmtLesson(raw){
  if(raw===undefined||raw===null)return "";
  var out=esc(String(raw));
@@ -34,6 +34,25 @@ function renderBeginnerGuide(l){
  function list(title,items){return '<section class="guide-card"><h3>'+title+'</h3><ol class="guide-list">'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join("")+'</ol></section>'}
  return '<div class="beginner-guide"><div class="guide-heading">零基础拆解 · 不用急着背</div><div class="guide-idea"><div class="challenge-label">先抓住这一件事</div><p>'+esc(g.idea)+'</p></div><div class="guide-columns">'+list("示例逐步读",g.read)+list("挑战按这几步写",g.steps)+'</div><div class="guide-pitfall"><strong>新手易错点</strong><span>'+esc(g.pitfall)+'</span></div></div>';
 }
-function switchPage(p){page=p;activeLevel=null;render()}
-function navTitle(){const n="HT LAB · "+currentCourse().name;const labels={courses:"HT LAB  /  学习课程",map:n+"  /  学习路线",practice:n+"  /  继续挑战",summary:n+"  /  我的总结",lesson:n+"  /  当前关卡",project:"HT LAB  /  7 天项目",about:"HT LAB  /  关于 / 许可"};document.getElementById("topTitle").textContent=labels[page]||labels.courses}
-
+function switchPage(p){
+ page=p||"home";
+ activeLevel=null;
+ render();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function navTitle(){
+ const n="HT LAB · "+currentCourse().name;
+ const labels={
+  home:"尘狩  /  个人作品集",
+  work:"尘狩  /  作品 · HT Lab",
+  author:"尘狩  /  关于作者",
+  courses:"HT LAB  /  学习课程",
+  map:n+"  /  学习路线",
+  practice:n+"  /  继续挑战",
+  summary:n+"  /  我的总结",
+  lesson:n+"  /  当前关卡",
+  project:"HT LAB  /  7 天项目",
+  about:"HT LAB  /  关于 / 许可"
+ };
+ document.getElementById("topTitle").textContent=labels[page]||labels.home;
+}

@@ -10,6 +10,9 @@ function handleClick(e){
  const action=e.target.closest("[data-action]");if(!action)return;
  const a=action.dataset.action;
  if(a==="cycle-theme"){apCycleSky();return}
+ if(a==="open-work"){switchPage("work");return}
+ if(a==="enter-lab"){switchPage("courses");return}
+ if(a==="open-author"){switchPage("author");return}
  if(a==="switch-course"){setCourse(action.dataset.course);return}
  if(a==="toggle-transcript"){const el=document.getElementById(action.dataset.target);if(el){el.hidden=!el.hidden;action.textContent=el.hidden?"显示原文":"隐藏原文"}return}
  if(a==="check-task"){checkWrittenTask();return}
