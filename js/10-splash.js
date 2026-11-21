@@ -7,7 +7,7 @@
 (function(){
  const splash=document.getElementById("splash-screen"),skip=document.getElementById("splash-skip"),app=document.querySelector(".app");if(!splash||!app)return;
  let launched=false;const reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
- const targetSelector=".sidebar,.topbar,.brand,.nav-btn,.side-card,.streak,.avatar,.page-header,.hero-main,.hero-progress,.stat,.course-card,.course-entry,.section-head,.course-route-heading,.track-head,.track,.level-card,.panel,.summary-hero,.footer-note,.lesson-layout,.exercise,.about-panel";
+ const targetSelector=".sidebar,.topbar,.brand,.nav-btn,.side-card,.streak,.page-header,.hero-main,.hero-progress,.stat,.course-card,.course-entry,.section-head,.course-route-heading,.track-head,.track,.level-card,.panel,.summary-hero,.footer-note,.lesson-layout,.exercise,.about-panel";
 
  function revealInterface(){
   if(launched)return;launched=true;window.clearTimeout(revealTimer);window.clearTimeout(skipTimer);

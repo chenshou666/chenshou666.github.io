@@ -15,11 +15,11 @@
 
 ```
 index.html                  唯一页面：head 里的资源引用 + 页面 shell DOM（样式、脚本、课程数据都在外部文件）
-css/                        7 个样式文件，按编号顺序加载（编号 = 层叠顺序，顺序有意义）
-  08-liquid-glass.css         「液态玻璃」材质原样（showcase：极光画布 / .liquid-glass / .liquid-pill / 涟漪）
+css/                        2 个样式文件，按顺序加载（08 材质 → 10 界面层，10 必须最后）
+  08-liquid-glass.css         液态玻璃材质（精简自 showcase：极光画布 / .liquid-glass 材质与色散描边 / 点击涟漪）
   10-ui.css                   全新界面层（唯一 UI）：悬浮胶囊顶栏 + 底部 Dock + 玻璃组件 + 深色可读性 + 手机端
+                              （同上下文重复规则已合并，@media 统一收口到文件末尾）
 js/                         12 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
-js/                         13 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
   01-course-registry.js       课程注册表（COURSES / 关卡汇总 / 进度存储键）
   02-app-core.js              状态与 localStorage、主题、编辑器、密码弹窗、统计
   03-lesson-format.js         讲义排版、页面切换
@@ -63,11 +63,9 @@ assets/
 docs/
   ARCHITECTURE.md           架构说明：加载顺序、子系统、存储键、全局符号、约束
   CONTENT-GUIDE.md          内容编写指南：关卡数据格式、加关卡/模块/音频、数量同步
-tools/
-  verify-site.mjs           本地验证脚本：Node 起本地服务 + 无头 Edge/Chrome 走交互矩阵（不参与站点运行）
 AGENTS.md                   给维护者 / AI 编码代理的仓库须知（先读这个）
 README.md                   本文件
-.gitignore                  忽略验证报告/截图（.verify/）与系统垃圾文件
+.gitignore                  忽略本地验证输出（.verify/）与系统垃圾文件
 .nojekyll                   GitHub Pages 配置（关闭 Jekyll 处理，保留）
 LICENSE                     版权与使用许可
 ```
@@ -90,13 +88,6 @@ python -m http.server 8000
 - **`AGENTS.md`**——维护者/AI 编码代理必读：加载顺序与全局作用域约定、常见任务对应文件、验证与部署流程。
 - **`docs/ARCHITECTURE.md`**——架构地图：页面生命周期、加载顺序、各子系统、localStorage 键、数据流、已知约束。
 - **`docs/CONTENT-GUIDE.md`**——课程内容编写指南：C / 四级关卡的数据格式、`check` 检查规格、如何加关卡/模块/音频、需要同步的数量文案。
-- **`tools/verify-site.mjs`**——本地验证脚本（开发辅助，不随站点发布）：需要 Node.js ≥ 20 和本机 Edge/Chrome，示例：
-
-  ```bash
-  node tools/verify-site.mjs --root . --label after --out ../.verify
-  ```
-
-  报告（`report.md` / `report.json` / `screenshots/`）写到 `--out` 指定的目录，不要提交进仓库；与上一次基线对比可加 `--compare baseline`。
 
 ## 音频与作者素材
 

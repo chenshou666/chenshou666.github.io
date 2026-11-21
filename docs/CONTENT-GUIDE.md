@@ -314,7 +314,7 @@ points: [
 3. 填全所有必填字段；`expectedOutput` 建议提供（没有就只能做结构检查）。
 4. 作者自测：真编译真运行示例与标准答案；确认 `check` 能拦住错误写法、放行正确写法。
 5. 同步计数与文案（见第 7 节）：`js/01-course-registry.js` 的 `COURSES` 文案、`README.md` 的课程表与目录树、该内容文件头部注释里的关卡数。
-6. 用 `tools/verify-site.mjs` 或手动打开页面验证（见第 8 节）。
+6. 手动打开页面逐页验证（见第 8 节）。
 
 ### 5.3 新增一个 C 模块
 
@@ -403,7 +403,7 @@ assets/audio/cet4/
 - [ ] 新关卡可解锁、可答题、可通关；通关后学习点/进度条/总结页数字正确。
 - [ ] 玻璃 UI 与星空 UI 两种模式都能正常显示/进入关卡。
 - [ ] 手机宽度（约 390×844）下不重叠、不遮挡。
-- [ ] 若仓库中有 `tools/verify-site.mjs`：在仓库根目录运行 `node tools/verify-site.mjs --root . --label after --out ../.verify`（或按 `--help` 的参数），报告为 clean / known-issues 且没有新增差异；完整命令与参数见 `AGENTS.md` 的"验证"一节。
+
 
 **收尾**
 

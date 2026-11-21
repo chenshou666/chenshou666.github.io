@@ -8,10 +8,10 @@
  *
  * 站点适配（不碰任何业务逻辑）：
  *   · 注入 <canvas id="fluid-bg-canvas"> 与 <div class="optical-grain">
- *   · 把 .liquid-glass / .liquid-pill 类动态打到站点组件上（材质来自 08 css）
+ *   · 把 .liquid-glass 类动态打到站点组件上（材质来自 08 css）
  *   · 每次页面重渲染后重新打标（包一层 window.render + MutationObserver）
  *
- * 加载顺序 14：必须在 13-dual-ui.js 之后
+ * 加载顺序 14：在 10-splash.js 之后加载
  * 关闭皮肤（去掉 html[data-skin="liquid-glass"]）后本脚本自动不工作
  * ========================================================================== */
 (function () {
@@ -138,20 +138,13 @@
    * ====================================================================== */
   var GLASS_SELECTORS = [
     ".sidebar", ".topbar", ".panel", ".stat", ".hero-main", ".hero-progress",
-    ".course-card", ".course-entry", ".level-card", ".track",
+    ".course-card", ".level-card", ".track",
     ".challenge-card", ".exercise", ".summary-hero", ".side-card",
     ".guide-card", ".skill-row", ".save-box", ".quiz-item",
-    ".feedback-panel", ".proj-card", ".wrong-item",     ".reset-dialog", ".victory-card", ".progress-tools",
-    ".beginner-guide", ".plan-result", ".save-block"
+    ".feedback-panel", ".proj-card", ".reset-dialog", ".victory-card", ".progress-tools",
+    ".beginner-guide", ".save-block"
   ];
-  var PILL_SELECTORS = [
-    ".btn", ".btn-primary", ".btn-soft", ".btn-ghost", ".btn-small",
-    ".chip", ".chip-mini",
-    ".ui-mode-go"
-  ];
-
   var GLASS_QUERY = GLASS_SELECTORS.join(",");
-  var PILL_QUERY = PILL_SELECTORS.join(",");
 
   function tag() {
     var i;
@@ -161,16 +154,10 @@
         glassEls[i].classList.add("liquid-glass");
       }
     }
-    var pillEls = document.querySelectorAll(PILL_QUERY);
-    for (i = 0; i < pillEls.length; i++) {
-      if (!pillEls[i].classList.contains("liquid-pill")) {
-        pillEls[i].classList.add("liquid-pill");
-      }
-    }
   }
   tag();
 
-  /* 页面重渲染后重新打标：包一层 render（13-dual-ui 也包过，继续串联） */
+  /* 页面重渲染后重新打标：包一层 render，串联后续包装 */
   if (typeof window.render === "function" && !window.render.__liquidWrapped) {
     var origRender = window.render;
     window.render = function () {
@@ -229,9 +216,10 @@
    * 第 4 步：createGlassRipple（取自 showcase，原样实现）
    * ====================================================================== */
   function createGlassRipple(e) {
+    var RIPPLE_HOST = ".liquid-glass, .btn, .nav-btn, .option, .chip, .course-card, .level-card";
     var target = (e.currentTarget && e.currentTarget.closest)
-      ? e.currentTarget.closest(".liquid-glass, .liquid-pill")
-      : (e.target && e.target.closest ? e.target.closest(".liquid-glass, .liquid-pill") : null);
+      ? e.currentTarget.closest(RIPPLE_HOST)
+      : (e.target && e.target.closest ? e.target.closest(RIPPLE_HOST) : null);
     if (!target) return;
 
     var rect = target.getBoundingClientRect();

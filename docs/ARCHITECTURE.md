@@ -26,12 +26,10 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 ├─ LICENSE                         版权与使用许可（不要改）
 ├─ README.md                       面向访客/使用者的说明（课程表、本地使用、许可摘要、部署）
 ├─ AGENTS.md                       面向 AI 编码代理的维护须知（结构或规则变了要同步更新）
-├─ .gitignore                      忽略 .verify/（验证报告/截图）与系统垃圾文件
+├─ .gitignore                      忽略 .verify/（本地验证输出）与系统垃圾文件
 ├─ docs/
 │  ├─ ARCHITECTURE.md              本文件：架构、加载顺序、子系统、全局符号、约束
 │  └─ CONTENT-GUIDE.md             内容作者指南：C / 四级关卡数据 schema、加关卡、加音频
-├─ tools/
-│  └─ verify-site.mjs              本地验证脚本：Node 起本地服务 + 无头 Edge/Chrome 走交互矩阵并出报告
 │                                  （开发辅助，不参与站点运行；用法见 AGENTS.md 或脚本 --help）
 ├─ css/                            2 个样式文件，按顺序加载（唯一 UI）
 │  ├─ 08-liquid-glass.css          showcase 液态玻璃材质原样：深空极光画布、.liquid-glass / .liquid-pill / .glass-ripple
@@ -575,7 +573,7 @@ js/05 render() → #view.innerHTML = ...（纯字符串模板，esc() 转义）
 7. **数据位置**：进度只写 localStorage，且键名固定；不要新增后端、不要发请求、不要用 cookie/IndexedDB 存学习进度。
 8. **内容与 UI**：不要在重构/样式任务中顺手改可见文案、课程数据、版权声明；改内容请走 docs/CONTENT-GUIDE.md 的流程。
 9. **`render()` 会重建 `#view`**：页面内交互一律走全局事件委托；不要给渲染出的节点绑持久监听（会随 innerHTML 丢失）。
-10. **验证后再提交**：`tools/verify-site.mjs` + 手动双击，确保零 console 报错、零失败请求。
+10. **验证后再提交**：本地打开 `index.html` 逐页检查（课程页 / 路线 / 关卡 / 总结 / 项目 / 关于），确保零 console 报错。
 
 ### 14.2 容易踩的坑 / 历史遗留
 
@@ -598,4 +596,4 @@ js/05 render() → #view.innerHTML = ...（纯字符串模板，esc() 转义）
 - 根目录 `AGENTS.md`：AI 编码代理的第一入口（硬规则、常见任务、验证、部署）。
 - `docs/CONTENT-GUIDE.md`：C / 四级关卡数据 schema、加关卡/模块/音频、数量同步清单。
 - `README.md`：面向使用者的课程表、本地使用与许可摘要。
-- `tools/verify-site.mjs`：本地验证脚本（已冻结），`--help` 查看参数；20 个状态 / 25 个交互的矩阵覆盖玻璃与星空两种 UI、两门课、关卡页、外观/重置弹窗、手机视口与 `file://`；报告写到 `--out` 下（`report.md` + `report.json` + `screenshots/`）。`--compare <label>` 需要先有 `<out>/<label>/report.json`，比对文本/DOM/布局（±2px）/计算样式/计数，请求数量与资源路径不参与、截图不参与像素比对；基线已知问题不会让对比失败。
+

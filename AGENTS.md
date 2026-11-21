@@ -30,11 +30,10 @@ content/c/*.js         C 课程数据（11 模块 86 关；只放数据）
 content/cet4/*.js      四级课程数据（7 模块 62 关；脚本加载顺序 = 路线顺序）
 assets/                图标 + audio/cet4（46 个 mp3 + 作者元数据 JSON，元数据运行时不被加载）
 docs/                  架构说明 + 内容编写指南
-tools/verify-site.mjs  本地验证脚本（无头 Edge/Chrome，不属于站点运行时）
 AGENTS.md / README.md  维护须知 / 使用者说明
 ```
 
-一级目录职责速记：`css/` 表现，`js/` 行为，`content/` 数据，`assets/` 媒体，`docs/` 文档，`tools/` 开发工具。
+一级目录职责速记：`css/` 表现，`js/` 行为，`content/` 数据，`assets/` 媒体，`docs/` 文档。
 
 ## 常见任务 → 改哪些文件
 
@@ -78,9 +77,9 @@ AGENTS.md / README.md  维护须知 / 使用者说明
 仓库带一个不依赖 npm 的验证脚本（在仓库根目录运行）：
 
 ```bash
-node tools/verify-site.mjs --root . --label after --out ../.verify
+# 手动验证：本地打开 index.html，检查课程页 / 路线 / 关卡 / 总结 / 项目 / 关于 六页零报错
 # 与上一次（例如重构前）的基线对比：
-node tools/verify-site.mjs --root . --label after --compare baseline --out ../.verify
+# 与上一次对比：刷新页面后逐页目视检查布局与交互
 ```
 
 - 环境：**Node.js ≥ 20**（脚本头部声明；使用全局 fetch/WebSocket），本机需装 Edge 或 Chrome（自动探测；也可 `--browser <path>` 或环境变量 `BROWSER_PATH`）。

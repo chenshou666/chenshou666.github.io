@@ -1,4 +1,4 @@
-# 验证脚本输出（tools/verify-site.mjs 默认输出目录：截图、report.json、report.md）
+# 本地验证输出（截图 / report.json / report.md）
 .verify/
 
 # 系统 / 编辑器垃圾文件
