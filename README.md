@@ -61,6 +61,11 @@ content/
     m2-speaking.js          模块 2 · 口语（10 关）
     m6-mock.js              模块 6 · 全真模考（2 关）
     （index.html 中的 script 顺序 = 学习路线顺序：地基 → 听力 → 阅读 → 写作 → 翻译 → 口语 → 模考）
+works/                       作品「代码影院」的 4 部独立演示（单文件、双击即播；不在主站零依赖范围内）
+  ink-mist-3d.html           墨韵山河 · INK & MIST（3D 水墨微电影；自带 Tailwind/字体 CDN）
+  pure-code-cinema.html      PURE CODE CINEMA（生成式电影引擎，零外部依赖）
+  isomorphism.html           万物同构 · ISOMORPHISM（1080p60 光学视觉诗，零外部依赖）
+  zero-pixels.html           纯代码视界 · ZERO PIXELS（实时生成影院，零外部依赖）
 assets/
   favicon.svg               站点图标（SVG）
   ht-lab.ico                站点图标（ICO）

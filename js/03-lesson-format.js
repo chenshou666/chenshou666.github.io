@@ -44,7 +44,7 @@ function navTitle(){
  const n="HT LAB · "+currentCourse().name;
  const labels={
   home:"尘狩  /  个人作品集",
-  work:"尘狩  /  作品 · HT Lab",
+  work:"尘狩  /  作品 · "+((typeof currentWork==="function"&&currentWork())?currentWork().name:"HT Lab"),
   author:"尘狩  /  关于作者",
   courses:"HT LAB  /  学习课程",
   map:n+"  /  学习路线",

@@ -1,0 +1,3432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GEMINI // PURE CODE CINEMA</title>
+  <style>
+    /* =========================================================================
+       GEMINI // PURE CODE CINEMA — Zero-Dependency Cinema UI Stylesheet
+       Ultra-modern dark cinema aesthetic, glassmorphic floating director dock
+       ========================================================================= */
+    :root {
+      --bg-void: #030408;
+      --glass-bg: rgba(10, 14, 24, 0.72);
+      --glass-border: rgba(140, 190, 255, 0.16);
+      --glass-highlight: rgba(255, 255, 255, 0.08);
+      --text-primary: #f4f7ff;
+      --text-secondary: rgba(208, 222, 255, 0.68);
+      --accent-cyan: #00f0ff;
+      --accent-sapphire: #3b82f6;
+      --accent-violet: #9b5cff;
+      --accent-rose: #ff2e88;
+      --accent-gold: #ffca63;
+      --font-sans: "SF Pro Display", "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", "Consolas", ui-monospace, monospace;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Fullscreen responsive 16:9 Cinema Stage */
+    #stageWrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 50%, #090d1a 0%, #020307 100%);
+      overflow: hidden;
+    }
+
+    #masterCanvas {
+      display: block;
+      max-width: 100vw;
+      max-height: 100vh;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      box-shadow: 0 24px 90px rgba(0, 0, 0, 0.85), 0 0 1px rgba(130, 180, 255, 0.25);
+      cursor: pointer;
+    }
+
+    @media (min-aspect-ratio: 16/9) {
+      #masterCanvas {
+        width: auto;
+        height: 100vh;
+      }
+    }
+
+    /* =========================================================================
+       CINEMATIC SPLASH OVERLAY
+       ========================================================================= */
+    #splashOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 45%, rgba(7, 11, 24, 0.42) 0%, rgba(2, 4, 10, 0.82) 100%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.7s ease;
+    }
+
+    #splashOverlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-card {
+      position: relative;
+      width: min(680px, 94vw);
+      padding: clamp(28px, 4.5vw, 48px);
+      border-radius: 26px;
+      background: linear-gradient(155deg, rgba(14, 20, 38, 0.82) 0%, rgba(7, 10, 20, 0.88) 100%);
+      border: 1px solid rgba(140, 200, 255, 0.2);
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.75),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 0 80px rgba(59, 130, 246, 0.16);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .splash-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 26px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.45), rgba(155, 92, 255, 0.2), rgba(255, 46, 136, 0.3));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .splash-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.26);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-bottom: 18px;
+    }
+
+    .splash-kicker .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+      animation: pulseGlow 1.8s infinite ease-in-out;
+    }
+
+    .splash-title {
+      font-size: clamp(28px, 4.6vw, 46px);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      line-height: 1.15;
+      background: linear-gradient(95deg, #ffffff 0%, #c8e7ff 45%, #b594ff 78%, #ff99cc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .splash-subtitle {
+      font-size: clamp(13px, 1.5vw, 15px);
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+      max-width: 540px;
+      margin: 0 auto 24px;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 560px) {
+      .spec-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .spec-pill {
+      padding: 10px 8px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .spec-val {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .spec-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(190, 210, 255, 0.56);
+    }
+
+    .splash-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn-primary,
+    .btn-export-hero {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 26px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .btn-primary {
+      color: #030712;
+      background: linear-gradient(110deg, #00f0ff 0%, #66a6ff 52%, #b57bff 100%);
+      box-shadow: 0 10px 34px rgba(0, 224, 255, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 42px rgba(0, 224, 255, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .btn-export-hero {
+      color: #fff;
+      background: rgba(255, 46, 136, 0.14);
+      border: 1px solid rgba(255, 86, 158, 0.52);
+      box-shadow: 0 10px 30px rgba(255, 46, 136, 0.16);
+    }
+
+    .btn-export-hero:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 46, 136, 0.26);
+      box-shadow: 0 14px 36px rgba(255, 46, 136, 0.34);
+    }
+
+    .btn-primary:active,
+    .btn-export-hero:active {
+      transform: translateY(0px) scale(0.98);
+    }
+
+    .splash-note {
+      margin-top: 18px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(190, 210, 255, 0.48);
+      letter-spacing: 0.05em;
+    }
+
+    /* =========================================================================
+       RECORDING STATUS PILL (Non-intrusive, outside master canvas)
+       ========================================================================= */
+    #recPill {
+      position: fixed;
+      top: 18px;
+      right: 20px;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      border-radius: var(--radius-pill);
+      background: rgba(16, 10, 20, 0.86);
+      border: 1px solid rgba(255, 62, 118, 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 46, 106, 0.25);
+      opacity: 0;
+      transform: translateY(-12px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #recPill.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .rec-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff2e63;
+      box-shadow: 0 0 12px #ff2e63;
+      animation: recBlink 1s infinite ease-in-out;
+    }
+
+    .rec-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 150px;
+    }
+
+    .rec-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      color: #ff9ab7;
+    }
+
+    .rec-bar-bg {
+      width: 100%;
+      height: 4px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.14);
+      overflow: hidden;
+    }
+
+    .rec-bar-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #ff2e63, #ff9966);
+      transition: width 0.1s linear;
+    }
+
+    #btnStopRec {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    #btnStopRec:hover {
+      background: rgba(255, 46, 99, 0.35);
+    }
+
+    /* =========================================================================
+       TOAST MESSAGE BOX (Replaces alert() cleanly)
+       ========================================================================= */
+    #toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translate(-50%, -18px);
+      z-index: 60;
+      padding: 10px 20px;
+      border-radius: var(--radius-pill);
+      background: rgba(10, 16, 30, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #eaf6ff;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      max-width: 90vw;
+      text-align: center;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* =========================================================================
+       FLOATING DIRECTOR'S CONSOLE (Auto-hides during playback)
+       ========================================================================= */
+    #controlsBar {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 30;
+      width: min(1040px, 95vw);
+      padding: 12px 16px 14px;
+      border-radius: 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 var(--glass-highlight);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #controlsBar.autohide {
+      opacity: 0;
+      transform: translate(-50%, 24px);
+      pointer-events: none;
+    }
+
+    /* Timeline Scrubber Row */
+    .timeline-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timecode {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-primary);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      min-width: 112px;
+    }
+
+    .timecode span {
+      color: var(--text-secondary);
+    }
+
+    .scrubber-wrap {
+      position: relative;
+      flex: 1;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    .scrubber-track {
+      position: relative;
+      width: 100%;
+      height: 6px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: visible;
+    }
+
+    .scrubber-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-sapphire), var(--accent-violet), var(--accent-rose));
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.45);
+    }
+
+    .scrubber-thumb {
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid var(--accent-cyan);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease;
+    }
+
+    .scrubber-wrap:hover .scrubber-thumb {
+      transform: translate(-50%, -50%) scale(1.25);
+    }
+
+    .act-divider {
+      position: absolute;
+      top: -3px;
+      width: 2px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 2px;
+      pointer-events: none;
+    }
+
+    /* Controls Bottom Row */
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 13px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(140, 210, 255, 0.4);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.96);
+    }
+
+    .icon-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .icon-btn.play-btn {
+      min-width: 96px;
+      background: rgba(0, 240, 255, 0.16);
+      border-color: rgba(0, 240, 255, 0.45);
+      color: #d6fbff;
+    }
+
+    .icon-btn.play-btn:hover {
+      background: rgba(0, 240, 255, 0.28);
+    }
+
+    /* Clickable Act Markers */
+    .act-pills {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 3px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .act-btn {
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .act-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .act-btn.active {
+      background: linear-gradient(120deg, rgba(0, 240, 255, 0.28), rgba(155, 92, 255, 0.32));
+      color: #fff;
+      box-shadow: inset 0 0 0 1px rgba(0, 240, 255, 0.4);
+    }
+
+    @media (max-width: 780px) {
+      .act-btn span.act-name {
+        display: none;
+      }
+    }
+
+    .res-select {
+      height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(12, 18, 34, 0.9);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .fps-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 240, 255, 0.07);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      min-width: 74px;
+      justify-content: center;
+    }
+
+    .export-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 72, 138, 0.6);
+      background: linear-gradient(120deg, rgba(255, 46, 136, 0.26), rgba(155, 92, 255, 0.28));
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.25s ease, background 0.2s ease;
+    }
+
+    .export-btn:hover {
+      background: linear-gradient(120deg, rgba(255, 46, 136, 0.42), rgba(155, 92, 255, 0.44));
+      box-shadow: 0 0 22px rgba(255, 46, 136, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .export-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.55; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    @keyframes recBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.28; }
+    }
+  </style>
+</head>
+<body>
+  <!-- =========================================================================
+       UNIFIED MASTER STAGE (Single Master 2D Canvas composites ALL visual layers)
+       ========================================================================= -->
+  <div id="stageWrapper">
+    <canvas id="masterCanvas" width="1920" height="1080"></canvas>
+  </div>
+
+  <!-- =========================================================================
+       CINEMATIC SPLASH OVERLAY
+       ========================================================================= -->
+  <div id="splashOverlay">
+    <div class="splash-card">
+      <div class="splash-kicker">
+        <span class="dot"></span>
+        <span>Zero-Dependency Generative Film Engine</span>
+      </div>
+      <h1 class="splash-title">GEMINI // PURE CODE CINEMA</h1>
+      <p class="splash-subtitle">
+        A 36-second real-time generative showreel synthesized live from raw GLSL raymarching,
+        1,400+ 3D-projected additive particles, and procedural 128 BPM Web Audio — zero external assets.
+      </p>
+
+      <div class="spec-grid">
+        <div class="spec-pill">
+          <div class="spec-val">36.0 SEC</div>
+          <div class="spec-label">5 Choreo Acts</div>
+        </div>
+        <div class="spec-pill">
+          <div class="spec-val">128 BPM</div>
+          <div class="spec-label">Web Audio Synth</div>
+        </div>
+        <div class="spec-pill">
+          <div class="spec-val">GLSL 3D</div>
+          <div class="spec-label">Raymarching</div>
+        </div>
+        <div class="spec-pill">
+          <div class="spec-val">0 BYTES</div>
+          <div class="spec-label">External Assets</div>
+        </div>
+      </div>
+
+      <div class="splash-actions">
+        <button id="btnSplashPlay" class="btn-primary">▶ PLAY SHOWREEL (SOUND ON)</button>
+        <button id="btnSplashExport" class="btn-export-hero">⏺ RENDER &amp; EXPORT VIDEO</button>
+      </div>
+      <div class="splash-note">
+        Space: Play/Pause &nbsp;·&nbsp; 1–5: Jump Act &nbsp;·&nbsp; R: Replay &nbsp;·&nbsp; M: Mute
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       RECORDING STATUS PILL (Outside Master Canvas)
+       ========================================================================= -->
+  <div id="recPill" role="status" aria-live="polite">
+    <span class="rec-dot"></span>
+    <div class="rec-info">
+      <div class="rec-label" id="recLabel">REC 00:00.0 / 36.0s (0%)</div>
+      <div class="rec-bar-bg"><div class="rec-bar-fill" id="recBarFill"></div></div>
+    </div>
+    <button id="btnStopRec" title="Stop recording early and download">STOP &amp; SAVE</button>
+  </div>
+
+  <!-- =========================================================================
+       NON-BLOCKING TOAST NOTIFICATION
+       ========================================================================= -->
+  <div id="toast"></div>
+
+  <!-- =========================================================================
+       FLOATING DIRECTOR'S CONSOLE (Outside Master Canvas, Auto-hides)
+       ========================================================================= -->
+  <div id="controlsBar">
+    <div class="timeline-row">
+      <div class="timecode" id="timecodeDisplay">00:00.0 <span>/ 00:36.0</span></div>
+      <div class="scrubber-wrap" id="scrubberWrap" title="Click or drag to scrub timeline">
+        <div class="scrubber-track" id="scrubberTrack">
+          <div class="scrubber-fill" id="scrubberFill"></div>
+          <!-- Act boundary ticks at 7.5s, 15.0s, 22.5s, 30.0s -->
+          <div class="act-divider" style="left: 20.833%"></div>
+          <div class="act-divider" style="left: 41.667%"></div>
+          <div class="act-divider" style="left: 62.500%"></div>
+          <div class="act-divider" style="left: 83.333%"></div>
+          <div class="scrubber-thumb" id="scrubberThumb"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-row">
+      <div class="ctrl-group">
+        <button id="btnPlayPause" class="icon-btn play-btn">▶ PLAY</button>
+        <button id="btnReplay" class="icon-btn" title="Restart from 00:00">↺ REPLAY</button>
+        <div class="act-pills" id="actPills">
+          <button class="act-btn active" data-act="0">I <span class="act-name">SINGULARITY</span></button>
+          <button class="act-btn" data-act="1">II <span class="act-name">MORPH</span></button>
+          <button class="act-btn" data-act="2">III <span class="act-name">HYPERDRIVE</span></button>
+          <button class="act-btn" data-act="3">IV <span class="act-name">SUPERNOVA</span></button>
+          <button class="act-btn" data-act="4">V <span class="act-name">GEMINI</span></button>
+        </div>
+      </div>
+
+      <div class="ctrl-group">
+        <select id="resSelect" class="res-select" title="Master Export & Render Resolution">
+          <option value="1080p" selected>1080p HD</option>
+          <option value="720p">720p FAST</option>
+        </select>
+        <button id="btnMute" class="icon-btn" title="Toggle Audio Mute">🔊 SOUND</button>
+        <div class="fps-badge" id="fpsBadge">60 FPS</div>
+        <button id="btnExport" class="export-btn">⏺ Export Video (.webm)</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      /* =======================================================================
+         1. TIMELINE CONSTANTS & CHOREOGRAPHY CONFIGURATION
+         ======================================================================= */
+      const DURATION = 36.0;
+      const BPM = 128.0;
+      const BEAT_DUR = 60.0 / BPM;       // 0.46875s per beat
+      const STEP_DUR = BEAT_DUR / 4.0;   // 0.1171875s per 16th-note step
+
+      const ACTS = [
+        {
+          index: 0,
+          roman: "I",
+          start: 0.0,
+          end: 7.5,
+          title: "ACT I // SINGULARITY",
+          subtitle: "ZERO ASSETS · 100% PROCEDURAL CODE",
+          accent: "#00f0ff"
+        },
+        {
+          index: 1,
+          roman: "II",
+          start: 7.5,
+          end: 15.0,
+          title: "ACT II // MORPHOGENESIS",
+          subtitle: "REAL-TIME GLSL RAYMARCHING",
+          accent: "#9b5cff"
+        },
+        {
+          index: 2,
+          roman: "III",
+          start: 15.0,
+          end: 22.5,
+          title: "ACT III // HYPERDRIVE",
+          subtitle: "SYNTHESIZED AUDIO · 60 FPS LIVE",
+          accent: "#3b82f6"
+        },
+        {
+          index: 3,
+          roman: "IV",
+          start: 22.5,
+          end: 30.0,
+          title: "ACT IV // SUPERNOVA",
+          subtitle: "MATH BECOMES CINEMA",
+          accent: "#ff2e88"
+        },
+        {
+          index: 4,
+          roman: "V",
+          start: 30.0,
+          end: 36.0,
+          title: "GEMINI",
+          subtitle: "PURE CODE CINEMA",
+          accent: "#c8e7ff"
+        }
+      ];
+
+      /* Math utilities */
+      const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const smoothstep = (e0, e1, x) => {
+        const t = clamp((x - e0) / (e1 - e0), 0, 1);
+        return t * t * (3 - 2 * t);
+      };
+      const easeOutCubic = (t) => 1 - Math.pow(1 - clamp(t, 0, 1), 3);
+      const easeInOutQuart = (t) => {
+        const x = clamp(t, 0, 1);
+        return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
+      };
+
+      /* Compute smooth crossfade weights for all 5 acts at time t */
+      function getActWeights(t) {
+        const fade = 0.72; // half-window overlap for seamless cinema crossfades
+        const w0 = 1.0 - smoothstep(7.5 - fade, 7.5 + fade, t);
+        const w1 = smoothstep(7.5 - fade, 7.5 + fade, t) * (1.0 - smoothstep(15.0 - fade, 15.0 + fade, t));
+        const w2 = smoothstep(15.0 - fade, 15.0 + fade, t) * (1.0 - smoothstep(22.5 - fade, 22.5 + fade, t));
+        const w3 = smoothstep(22.5 - fade, 22.5 + fade, t) * (1.0 - smoothstep(30.0 - fade, 30.0 + fade, t));
+        const w4 = smoothstep(30.0 - fade, 30.0 + fade, t);
+        return [w0, w1, w2, w3, w4];
+      }
+
+      function getActiveActIndex(t) {
+        if (t < 7.5) return 0;
+        if (t < 15.0) return 1;
+        if (t < 22.5) return 2;
+        if (t < 30.0) return 3;
+        return 4;
+      }
+
+      /* =======================================================================
+         2. DOM REFERENCES & APPLICATION STATE
+         ======================================================================= */
+      const masterCanvas = document.getElementById("masterCanvas");
+      const ctx = masterCanvas.getContext("2d", { alpha: false });
+
+      const splashOverlay = document.getElementById("splashOverlay");
+      const btnSplashPlay = document.getElementById("btnSplashPlay");
+      const btnSplashExport = document.getElementById("btnSplashExport");
+      const controlsBar = document.getElementById("controlsBar");
+      const btnPlayPause = document.getElementById("btnPlayPause");
+      const btnReplay = document.getElementById("btnReplay");
+      const btnMute = document.getElementById("btnMute");
+      const btnExport = document.getElementById("btnExport");
+      const resSelect = document.getElementById("resSelect");
+      const fpsBadge = document.getElementById("fpsBadge");
+      const timecodeDisplay = document.getElementById("timecodeDisplay");
+      const scrubberWrap = document.getElementById("scrubberWrap");
+      const scrubberFill = document.getElementById("scrubberFill");
+      const scrubberThumb = document.getElementById("scrubberThumb");
+      const actButtons = Array.from(document.querySelectorAll(".act-btn"));
+      const recPill = document.getElementById("recPill");
+      const recLabel = document.getElementById("recLabel");
+      const recBarFill = document.getElementById("recBarFill");
+      const btnStopRec = document.getElementById("btnStopRec");
+      const toastEl = document.getElementById("toast");
+
+      const state = {
+        splashOpen: true,
+        isPlaying: false,
+        isRecording: false,
+        isMuted: false,
+        isScrubbing: false,
+        wasPlayingBeforeScrub: false,
+        currentTime: 0.0,
+        previewTime: 3.8,       // Live ambient clock for splash screen background
+        resolution: "1080p",
+        masterW: 1920,
+        masterH: 1080,
+        glScale: 0.667,         // 1280x720 offscreen GL for crisp 1080p master @ locked 60 FPS
+        lastRafTime: 0,
+        fpsFrames: 0,
+        fpsAccum: 0,
+        fpsValue: 60,
+        lastMouseMove: performance.now(),
+        webglAvailable: false
+      };
+
+      let toastTimer = null;
+      function showToast(msg, duration = 3400) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), duration);
+      }
+
+      /* =======================================================================
+         3. LAYER 1 — RAW WEBGL GLSL RAYMARCHING SHADER ENGINE (WebGL1 & WebGL2)
+         ======================================================================= */
+      const glCanvas = document.createElement("canvas");
+      let gl = null;
+      let glProgram = null;
+      let glUniforms = {};
+
+      const VERTEX_SHADER_SRC = `
+        attribute vec2 a_pos;
+        void main() {
+          gl_Position = vec4(a_pos, 0.0, 1.0);
+        }
+      `;
+
+      /* Cinema-Grade 5-Act Raymarching Fragment Shader (100% WebGL1/GLSL ES 1.00 safe) */
+      const FRAGMENT_SHADER_SRC = `
+        precision highp float;
+
+        uniform vec2 u_res;
+        uniform float u_time;
+        uniform float u_beat;
+        uniform float u_bass;
+        uniform float u_mid;
+        uniform float u_treble;
+        uniform float u_energy;
+        uniform vec2 u_shake;
+        uniform float u_preview;
+
+        const float PI = 3.14159265359;
+        const float TAU = 6.28318530718;
+
+        mat2 rot2(float a) {
+          float c = cos(a);
+          float s = sin(a);
+          return mat2(c, -s, s, c);
+        }
+
+        /* Cosine spectral iridescence palette */
+        vec3 palette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
+          return a + b * cos(TAU * (c * t + d));
+        }
+
+        /* Fast procedural hashes & value noise */
+        float hash21(vec2 p) {
+          p = fract(p * vec2(123.34, 456.21));
+          p += dot(p, p + 45.32);
+          return fract(p.x * p.y);
+        }
+
+        float noise2D(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          float a = hash21(i);
+          float b = hash21(i + vec2(1.0, 0.0));
+          float c = hash21(i + vec2(0.0, 1.0));
+          float d = hash21(i + vec2(1.0, 1.0));
+          return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+        }
+
+        float fbm2(vec2 p) {
+          float v = 0.0;
+          float amp = 0.5;
+          mat2 m = mat2(0.8, 0.6, -0.6, 0.8);
+          for (int i = 0; i < 4; i++) {
+            v += amp * noise2D(p);
+            p = m * p * 2.04;
+            amp *= 0.5;
+          }
+          return v;
+        }
+
+        float sdTorus(vec3 p, vec2 t) {
+          vec2 q = vec2(length(p.xz) - t.x, p.y);
+          return length(q) - t.y;
+        }
+
+        float smin(float a, float b, float k) {
+          float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+          return mix(b, a, h) - k * h * (1.0 - h);
+        }
+
+        /* ---------------------------------------------------------------------
+           ACT I: SINGULARITY (0.0s - 7.5s)
+           Luminous horizon rift + pulsating quantum SDF sphere & orbital rings
+           --------------------------------------------------------------------- */
+        vec2 mapAct1(vec3 p, float lt) {
+          float pulse = 1.0 + u_bass * 0.16 + 0.04 * sin(lt * 4.2);
+          vec3 sp = p;
+          sp.xz = rot2(lt * 0.45) * sp.xz;
+          sp.yz = rot2(lt * 0.31) * sp.yz;
+          float disp = sin(sp.x * 5.0 + lt * 2.4) * sin(sp.y * 5.0 - lt * 2.1) * sin(sp.z * 5.0 + lt * 1.9);
+          float sphereD = length(p) - (0.78 * pulse) + disp * (0.08 + u_mid * 0.08);
+
+          /* Three glowing tilted orbital rings */
+          vec3 r1 = p;
+          r1.xy = rot2(0.52 + lt * 0.35) * r1.xy;
+          r1.yz = rot2(0.4 + lt * 0.2) * r1.yz;
+          float dR1 = sdTorus(r1, vec2(1.38 + u_bass * 0.08, 0.018));
+
+          vec3 r2 = p;
+          r2.xz = rot2(-0.85 - lt * 0.42) * r2.xz;
+          r2.xy = rot2(1.15) * r2.xy;
+          float dR2 = sdTorus(r2, vec2(1.72 + u_mid * 0.1, 0.014));
+
+          vec3 r3 = p;
+          r3.yz = rot2(1.25 + lt * 0.28) * r3.yz;
+          r3.xz = rot2(0.6) * r3.xz;
+          float dR3 = sdTorus(r3, vec2(2.08, 0.011));
+
+          float rings = min(dR1, min(dR2, dR3));
+          float d = min(sphereD, rings);
+          float matId = (sphereD < rings) ? 1.0 : 2.0;
+          return vec2(d, matId);
+        }
+
+        vec3 calcNormalAct1(vec3 p, float lt) {
+          vec2 e = vec2(0.0025, -0.0025);
+          return normalize(
+            e.xyy * mapAct1(p + e.xyy, lt).x +
+            e.yyx * mapAct1(p + e.yyx, lt).x +
+            e.yxy * mapAct1(p + e.yxy, lt).x +
+            e.xxx * mapAct1(p + e.xxx, lt).x
+          );
+        }
+
+        vec3 renderAct1(vec2 uv, float lt) {
+          float openRift = smoothstep(0.15, 2.3, lt);
+          float coreReveal = smoothstep(0.9, 3.0, lt);
+
+          /* Luminous horizon beam splitting open the black void */
+          float beamSpread = mix(0.003, 0.045 + u_bass * 0.03, openRift);
+          float horizonBeam = exp(-abs(uv.y) / beamSpread) * exp(-abs(uv.x) * (1.2 - 0.65 * openRift));
+          float coreFlare = exp(-length(uv * vec2(0.85, 1.35)) * (3.2 - u_bass * 0.7)) * openRift;
+
+          vec3 col = vec3(0.0);
+          col += vec3(0.12, 0.58, 1.0) * horizonBeam * (1.55 - 0.55 * coreReveal);
+          col += vec3(0.62, 0.35, 1.0) * coreFlare * 0.95;
+
+          if (coreReveal > 0.01) {
+            float camZ = mix(6.2, 3.65, smoothstep(0.5, 7.5, lt));
+            vec3 ro = vec3(sin(lt * 0.32) * 0.45, cos(lt * 0.25) * 0.22, camZ);
+            vec3 ta = vec3(0.0);
+            vec3 fw = normalize(ta - ro);
+            vec3 rt = normalize(cross(vec3(0.0, 1.0, 0.0), fw));
+            vec3 up = cross(fw, rt);
+            vec3 rd = normalize(uv.x * rt + uv.y * up + 1.55 * fw);
+
+            float t = 0.0;
+            float glow = 0.0;
+            float ringGlow = 0.0;
+            float hitMat = 0.0;
+
+            for (int i = 0; i < 48; i++) {
+              vec3 p = ro + rd * t;
+              vec2 res = mapAct1(p, lt);
+              float d = res.x;
+              if (res.y > 1.5) {
+                ringGlow += 0.009 / (0.025 + abs(d));
+              } else {
+                glow += 0.012 / (0.08 + abs(d));
+              }
+              if (d < 0.0025) {
+                hitMat = res.y;
+                break;
+              }
+              if (t > 12.0) break;
+              t += d * 0.85;
+            }
+
+            vec3 sceneCol = vec3(0.0);
+            if (hitMat > 0.5) {
+              vec3 p = ro + rd * t;
+              vec3 n = calcNormalAct1(p, lt);
+              float fres = pow(1.0 - max(dot(-rd, n), 0.0), 3.2);
+              vec3 l1 = normalize(vec3(2.5, 2.0, 3.0));
+              vec3 l2 = normalize(vec3(-2.5, -1.2, 1.5));
+              float diff = max(dot(n, l1), 0.0);
+              float spec = pow(max(dot(reflect(-l1, n), -rd), 0.0), 32.0);
+              float rim = pow(max(dot(n, l2), 0.0), 2.0);
+
+              vec3 irid = palette(
+                fres * 0.85 + dot(n, vec3(0.3, 0.6, 0.2)) * 0.4 + lt * 0.12,
+                vec3(0.35, 0.42, 0.65),
+                vec3(0.45, 0.42, 0.5),
+                vec3(1.0, 1.0, 1.0),
+                vec3(0.55, 0.22, 0.85)
+              );
+
+              if (hitMat < 1.5) {
+                sceneCol = irid * (0.18 + diff * 0.75) + vec3(0.55, 0.9, 1.0) * spec * 1.4;
+                sceneCol += vec3(0.35, 0.72, 1.0) * fres * (1.8 + u_bass * 1.2);
+                sceneCol += vec3(0.65, 0.25, 1.0) * rim * 0.55;
+              } else {
+                sceneCol = vec3(0.65, 0.92, 1.0) * (1.8 + u_treble * 1.5);
+              }
+            }
+
+            sceneCol += vec3(0.14, 0.48, 1.0) * glow * (0.28 + u_bass * 0.25);
+            sceneCol += vec3(0.58, 0.35, 1.0) * ringGlow * (0.16 + u_mid * 0.2);
+            col += sceneCol * coreReveal;
+          }
+
+          /* Initial emergence from absolute void */
+          col *= smoothstep(0.0, 0.65, lt);
+          return col;
+        }
+
+        /* ---------------------------------------------------------------------
+           ACT II: MORPHOGENESIS (7.5s - 15.0s)
+           Liquid-metal Torus Knot morphing into KIFS folded geometric fractal
+           --------------------------------------------------------------------- */
+        float mapAct2(vec3 p, float lt) {
+          float beatPump = 1.0 + u_bass * 0.14;
+          vec3 q = p / beatPump;
+          q.xz = rot2(lt * 0.48) * q.xz;
+          q.xy = rot2(lt * 0.29) * q.xy;
+
+          /* Shape A: Twisted Liquid-Metal Torus Knot */
+          float a = atan(q.z, q.x);
+          vec2 tq = vec2(length(q.xz) - 1.18, q.y);
+          tq = rot2(a * 1.5 + lt * 1.35) * tq;
+          tq.y = abs(tq.y) - 0.34;
+          float dKnot = length(tq) - (0.18 + 0.04 * sin(a * 6.0 - lt * 3.0));
+          float dCore = length(q) - 0.52;
+          float shapeA = smin(dKnot, dCore, 0.32);
+
+          /* Shape B: KIFS Folded Geometric Fractal Lattice */
+          vec3 fp = q;
+          float s = 1.0;
+          float foldAngle = 0.58 + 0.14 * sin(lt * 0.75);
+          for (int i = 0; i < 4; i++) {
+            fp = abs(fp) - vec3(0.52, 0.46, 0.54);
+            fp.xy = rot2(foldAngle) * fp.xy;
+            fp.yz = rot2(0.42 + u_mid * 0.12) * fp.yz;
+            fp *= 1.38;
+            s *= 1.38;
+          }
+          vec3 boxD = abs(fp) - vec3(0.32, 0.14, 0.32);
+          float dFractal = (length(max(boxD, 0.0)) + min(max(boxD.x, max(boxD.y, boxD.z)), 0.0)) / s;
+          float bound = length(q) - 1.75;
+          float shapeB = max(dFractal, bound * 0.55);
+
+          float morph = smoothstep(1.2, 5.8, lt);
+          return mix(shapeA, shapeB, morph) * beatPump;
+        }
+
+        vec3 calcNormalAct2(vec3 p, float lt) {
+          vec2 e = vec2(0.0028, -0.0028);
+          return normalize(
+            e.xyy * mapAct2(p + e.xyy, lt) +
+            e.yyx * mapAct2(p + e.yyx, lt) +
+            e.yxy * mapAct2(p + e.yxy, lt) +
+            e.xxx * mapAct2(p + e.xxx, lt)
+          );
+        }
+
+        vec3 renderAct2(vec2 uv, float lt) {
+          float camAng = lt * 0.35;
+          float camDist = 3.95 - 0.35 * sin(lt * 0.65) - u_bass * 0.18;
+          vec3 ro = vec3(sin(camAng) * camDist, sin(lt * 0.42) * 0.65, cos(camAng) * camDist);
+          vec3 ta = vec3(0.0);
+          vec3 fw = normalize(ta - ro);
+          vec3 rt = normalize(cross(vec3(0.0, 1.0, 0.0), fw));
+          vec3 up = cross(fw, rt);
+          vec3 rd = normalize(uv.x * rt + uv.y * up + 1.5 * fw);
+
+          /* Subtle dark studio gradient backdrop */
+          vec3 bg = mix(vec3(0.015, 0.02, 0.055), vec3(0.055, 0.02, 0.11), clamp(uv.y * 0.5 + 0.5, 0.0, 1.0));
+          bg += vec3(0.06, 0.22, 0.45) * exp(-length(uv) * 2.2) * (0.55 + u_bass * 0.5);
+
+          float t = 0.0;
+          float glow = 0.0;
+          bool hit = false;
+
+          for (int i = 0; i < 52; i++) {
+            vec3 p = ro + rd * t;
+            float d = mapAct2(p, lt);
+            glow += 0.011 / (0.045 + abs(d));
+            if (d < 0.0025) {
+              hit = true;
+              break;
+            }
+            if (t > 12.0) break;
+            t += d * 0.82;
+          }
+
+          vec3 col = bg;
+          if (hit) {
+            vec3 p = ro + rd * t;
+            vec3 n = calcNormalAct2(p, lt);
+            vec3 refl = reflect(rd, n);
+            float fres = pow(1.0 - max(dot(-rd, n), 0.0), 3.0);
+
+            vec3 l1 = normalize(vec3(2.2, 2.6, 2.0));
+            vec3 l2 = normalize(vec3(-2.6, 0.6, -1.8));
+            vec3 l3 = normalize(vec3(0.0, -2.5, 1.4));
+
+            float spec1 = pow(max(dot(refl, l1), 0.0), 40.0);
+            float spec2 = pow(max(dot(refl, l2), 0.0), 22.0);
+            float diff1 = max(dot(n, l1), 0.0);
+            float diff2 = max(dot(n, l2), 0.0);
+            float diff3 = max(dot(n, l3), 0.0);
+
+            /* Iridescent liquid-metal shading: sapphire, electric violet, cyan, gold */
+            vec3 irid = palette(
+              fres * 0.9 + refl.y * 0.35 + lt * 0.16,
+              vec3(0.28, 0.32, 0.48),
+              vec3(0.48, 0.44, 0.52),
+              vec3(1.0, 0.85, 1.0),
+              vec3(0.08, 0.35, 0.72)
+            );
+
+            col = irid * (0.16 + diff1 * 0.65);
+            col += vec3(0.08, 0.72, 1.0) * diff2 * 0.55;
+            col += vec3(1.0, 0.72, 0.28) * diff3 * 0.42;
+            col += vec3(0.75, 0.94, 1.0) * spec1 * 1.65;
+            col += vec3(0.78, 0.35, 1.0) * spec2 * 1.1;
+            col += mix(vec3(0.0, 0.92, 1.0), vec3(1.0, 0.75, 0.3), fres) * fres * (1.45 + u_bass * 1.25);
+
+            float fog = exp(-t * t * 0.018);
+            col = mix(bg, col, fog);
+          }
+
+          vec3 glowTint = mix(vec3(0.12, 0.55, 1.0), vec3(0.68, 0.25, 1.0), 0.5 + 0.5 * sin(lt * 0.9));
+          col += glowTint * glow * (0.18 + u_bass * 0.28);
+          return col;
+        }
+
+        /* ---------------------------------------------------------------------
+           ACT III: HYPERDRIVE (15.0s - 22.5s)
+           Infinite twisted raymarched neon plasma wormhole tunnel
+           --------------------------------------------------------------------- */
+        vec2 tunnelPath(float z) {
+          return vec2(sin(z * 0.19) * 1.25 + cos(z * 0.08) * 0.45, cos(z * 0.16) * 0.92);
+        }
+
+        float mapAct3(vec3 p, float lt) {
+          vec2 path = tunnelPath(p.z);
+          vec2 q = p.xy - path;
+          float ang = atan(q.y, q.x);
+          float twist = sin(ang * 6.0 + p.z * 0.72 - lt * 3.8) * 0.16;
+          float ribs = sin(p.z * 2.4) * 0.08;
+          float radius = 1.62 + twist + ribs - u_bass * 0.14;
+          return radius - length(q);
+        }
+
+        vec3 renderAct3(vec2 uv, float lt) {
+          float speed = 11.5 + lt * 0.95;
+          float zPos = lt * speed;
+          vec2 camXY = tunnelPath(zPos);
+          vec2 lookXY = tunnelPath(zPos + 3.2);
+
+          vec3 ro = vec3(camXY, zPos);
+          vec3 ta = vec3(lookXY, zPos + 3.2);
+          vec3 fw = normalize(ta - ro);
+          vec3 rt = normalize(cross(vec3(0.0, 1.0, 0.0), fw));
+          vec3 up = cross(fw, rt);
+
+          /* Beat-synced camera roll and dynamic FOV punch */
+          float roll = sin(lt * 1.15) * 0.35 + (camXY.x - lookXY.x) * 0.35 + u_beat * 0.09;
+          vec2 ruv = rot2(roll) * uv;
+          float fov = 1.22 - u_bass * 0.18 - smoothstep(5.5, 7.5, lt) * 0.22;
+          vec3 rd = normalize(ruv.x * rt + ruv.y * up + fov * fw);
+
+          float t = 0.0;
+          vec3 accum = vec3(0.0);
+
+          for (int i = 0; i < 46; i++) {
+            vec3 p = ro + rd * t;
+            float d = mapAct3(p, lt);
+            vec2 q = p.xy - tunnelPath(p.z);
+            float ang = atan(q.y, q.x);
+
+            /* Luminous twisted plasma energy ribbons */
+            float ribbon1 = pow(0.5 + 0.5 * sin(ang * 6.0 + p.z * 0.72 - lt * 4.5), 6.0);
+            float ribbon2 = pow(0.5 + 0.5 * cos(ang * 3.0 - p.z * 0.45 + lt * 3.2), 8.0);
+            float pulseRing = pow(0.5 + 0.5 * sin(p.z * 1.35 - lt * 12.0), 10.0);
+
+            vec3 ribCol = mix(vec3(0.0, 0.92, 1.0), vec3(0.62, 0.2, 1.0), ribbon2);
+            ribCol += vec3(1.0, 0.22, 0.62) * pulseRing * (0.9 + u_bass * 1.4);
+
+            float stepGlow = 0.015 / (0.045 + abs(d));
+            float atten = exp(-t * 0.055);
+            accum += ribCol * stepGlow * (0.35 + ribbon1 * 1.35 + pulseRing * 0.85) * atten;
+
+            if (d < 0.01 || t > 38.0) break;
+            t += max(abs(d) * 0.55, 0.14);
+          }
+
+          /* Intense vanishing core singularity light at end of wormhole */
+          vec2 centerOff = (lookXY - camXY) * 0.08;
+          float core = exp(-length(uv - centerOff) * (2.6 - u_bass * 0.6));
+          vec3 coreCol = mix(vec3(0.18, 0.65, 1.0), vec3(1.0, 0.55, 0.85), smoothstep(5.0, 7.5, lt));
+          accum += coreCol * core * (0.85 + smoothstep(5.5, 7.5, lt) * 1.9);
+
+          return accum;
+        }
+
+        /* ---------------------------------------------------------------------
+           ACT IV: SUPERNOVA (22.5s - 30.0s)
+           Gravitational-lensing Black Hole + Swirling Relativistic Accretion Disk
+           --------------------------------------------------------------------- */
+        vec3 renderAct4(vec2 uv, float lt) {
+          float camAng = lt * 0.36 + 0.5;
+          float elev = 0.32 + 0.18 * sin(lt * 0.55);
+          float camR = 5.4 - smoothstep(0.0, 6.5, lt) * 0.9 - u_bass * 0.22;
+          vec3 ro = vec3(cos(camAng) * camR, elev * camR, sin(camAng) * camR);
+          vec3 ta = vec3(0.0);
+          vec3 fw = normalize(ta - ro);
+          vec3 rt = normalize(cross(vec3(0.0, 1.0, 0.0), fw));
+          vec3 up = cross(fw, rt);
+          vec3 rd = normalize(uv.x * rt + uv.y * up + 1.48 * fw);
+
+          /* Tilt disk slightly for dynamic cinema framing */
+          mat2 diskTilt = rot2(0.26);
+
+          vec3 p = ro;
+          vec3 dir = rd;
+          vec3 accum = vec3(0.0);
+          float horizonHit = 0.0;
+          float minR = 100.0;
+
+          for (int i = 0; i < 54; i++) {
+            float r = length(p);
+            minR = min(minR, r);
+
+            if (r < 0.92) {
+              horizonHit = 1.0;
+              break;
+            }
+            if (r > 13.0) break;
+
+            /* Relativistic gravitational lensing ray bend */
+            float dt = clamp(r * 0.075, 0.055, 0.28);
+            vec3 grav = -p / (r * r * r + 0.02);
+            dir = normalize(dir + grav * (0.48 * dt));
+            p += dir * dt;
+
+            /* Accretion disk sampling in tilted plane */
+            vec3 dp = p;
+            dp.xy = diskTilt * dp.xy;
+            float diskR = length(dp.xz);
+            float diskThick = 0.075 + 0.035 * smoothstep(1.2, 4.5, diskR);
+            float planeMask = exp(-abs(dp.y) / diskThick);
+
+            if (diskR > 1.02 && diskR < 4.95 && planeMask > 0.02) {
+              float ang = atan(dp.z, dp.x);
+              float swirl = ang + 3.2 / (diskR + 0.35) - lt * (1.85 + 1.2 / diskR);
+              float n1 = fbm2(vec2(diskR * 2.2 - lt * 0.65, swirl * 1.4));
+              float n2 = fbm2(vec2(diskR * 4.5, swirl * 2.8 + 1.7));
+              float bands = 0.45 + 0.55 * sin(diskR * 7.5 - lt * 3.5 + n1 * 4.0);
+
+              float radialEnv = smoothstep(1.02, 1.42, diskR) * (1.0 - smoothstep(2.6, 4.95, diskR));
+              float density = planeMask * radialEnv * (0.35 + n1 * 0.85 + n2 * 0.45) * bands;
+
+              /* Doppler beaming + temperature gradient: white-hot -> gold/rose -> violet/sapphire */
+              float doppler = 0.72 + 0.55 * clamp(dot(normalize(vec3(-dp.z, 0.0, dp.x)), -rd), -0.5, 1.0);
+              float heat = clamp(1.0 - (diskR - 1.02) / 3.5, 0.0, 1.0);
+              vec3 innerCol = vec3(1.0, 0.95, 0.9);
+              vec3 midCol = mix(vec3(1.0, 0.25, 0.62), vec3(1.0, 0.68, 0.28), heat);
+              vec3 outerCol = mix(vec3(0.18, 0.48, 1.0), vec3(0.62, 0.22, 1.0), n2);
+              vec3 diskCol = mix(outerCol, midCol, smoothstep(0.15, 0.68, heat));
+              diskCol = mix(diskCol, innerCol, smoothstep(0.68, 0.98, heat));
+
+              accum += diskCol * density * doppler * (0.22 + u_bass * 0.16) * dt * 5.2;
+            }
+          }
+
+          /* Luminous photon ring right outside the Schwarzschild event horizon */
+          float photonRing = exp(-abs(minR - 0.97) * 14.0);
+          accum += vec3(0.75, 0.88, 1.0) * photonRing * (1.25 + u_bass * 0.9);
+          accum += vec3(0.42, 0.22, 1.0) * exp(-abs(minR - 1.25) * 4.5) * 0.45;
+
+          /* Deep cosmic nebula background behind black hole */
+          if (horizonHit < 0.5) {
+            float neb = fbm2(dir.xy * 3.2 + vec2(lt * 0.08, -lt * 0.05));
+            vec3 spaceBg = mix(vec3(0.01, 0.015, 0.045), vec3(0.16, 0.06, 0.26), neb * neb);
+            spaceBg += vec3(0.05, 0.22, 0.48) * pow(neb, 3.0) * 0.7;
+            accum += spaceBg;
+          }
+
+          /* Supernova shockwave impact flash at Act IV drop (lt = 0.0) */
+          float shockR = lt * 1.45;
+          float shockRing = exp(-abs(length(uv) - shockR) * 18.0) * exp(-lt * 1.25);
+          float dropFlash = exp(-lt * 4.2);
+          accum += vec3(0.85, 0.92, 1.0) * dropFlash * 1.85;
+          accum += mix(vec3(0.0, 0.9, 1.0), vec3(1.0, 0.3, 0.75), 0.5) * shockRing * 1.6;
+
+          return accum;
+        }
+
+        /* ---------------------------------------------------------------------
+           ACT V: GEMINI (30.0s - 36.0s)
+           Serene deep cosmic aurora & harmonic light rings framing star emblem
+           --------------------------------------------------------------------- */
+        vec3 renderAct5(vec2 uv, float lt) {
+          float r = length(uv);
+          vec2 p = uv * 1.8;
+          float n1 = fbm2(p + vec2(lt * 0.08, -lt * 0.06));
+          float n2 = fbm2(p * 1.6 - vec2(n1 * 1.1, lt * 0.1));
+
+          vec3 col = mix(vec3(0.01, 0.018, 0.055), vec3(0.06, 0.14, 0.36), n1);
+          col += vec3(0.28, 0.12, 0.48) * pow(n2, 2.2) * 0.65;
+          col += vec3(0.0, 0.58, 0.85) * pow(n1 * n2, 1.8) * 0.55;
+
+          /* Subtle central radial aura behind the particle Gemini star emblem */
+          float breathe = 0.85 + 0.15 * sin(lt * 2.4) + u_energy * 0.35;
+          float coreGlow = exp(-r * 3.1) * breathe;
+          col += vec3(0.32, 0.66, 1.0) * coreGlow * 0.85;
+          col += vec3(0.75, 0.48, 1.0) * exp(-r * 5.8) * 0.55;
+
+          /* Soft pulsing concentric harmonic light rings */
+          float ringWave1 = exp(-abs(r - (0.38 + 0.03 * sin(lt * 1.8))) * 42.0);
+          float ringWave2 = exp(-abs(r - (0.58 + 0.04 * cos(lt * 1.3))) * 34.0);
+          float expandRing = exp(-abs(r - fract(lt * 0.28) * 1.35) * 28.0) * (1.0 - fract(lt * 0.28));
+          col += vec3(0.35, 0.85, 1.0) * (ringWave1 * 0.55 + ringWave2 * 0.32 + expandRing * 0.42);
+
+          /* Subtle cross starlight lens flare */
+          float crossFlare = exp(-abs(uv.x) * 32.0) * exp(-abs(uv.y) * 3.5)
+                           + exp(-abs(uv.y) * 32.0) * exp(-abs(uv.x) * 3.5);
+          col += vec3(0.65, 0.88, 1.0) * crossFlare * 0.38 * smoothstep(0.5, 2.6, lt);
+
+          /* Final cinema fade to black */
+          col *= 1.0 - smoothstep(4.5, 5.95, lt);
+          return col;
+        }
+
+        /* ACES Filmic Tone Mapping (WebGL1 safe, no tanh) */
+        vec3 acesToneMap(vec3 x) {
+          const float a = 2.51;
+          const float b = 0.03;
+          const float c = 2.43;
+          const float d = 0.59;
+          const float e = 0.14;
+          return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+        }
+
+        void main() {
+          vec2 uv = (gl_FragCoord.xy - 0.5 * u_res) / u_res.y;
+          uv += u_shake;
+
+          float t = u_time;
+          vec3 col = vec3(0.0);
+
+          if (u_preview > 0.5) {
+            /* Ambient live preview mode for Splash Screen */
+            float pt = mod(t, 12.0);
+            float blend = smoothstep(5.0, 7.0, pt) * (1.0 - smoothstep(10.5, 12.0, pt));
+            col = renderAct1(uv, 3.8 + sin(t * 0.35) * 1.4) * (1.0 - blend)
+                + renderAct4(uv, 2.5 + t * 0.35) * blend;
+          } else {
+            /* Compute smooth crossfade weights (only raymarch active acts!) */
+            float fade = 0.72;
+            float w1 = 1.0 - smoothstep(7.5 - fade, 7.5 + fade, t);
+            float w2 = smoothstep(7.5 - fade, 7.5 + fade, t) * (1.0 - smoothstep(15.0 - fade, 15.0 + fade, t));
+            float w3 = smoothstep(15.0 - fade, 15.0 + fade, t) * (1.0 - smoothstep(22.5 - fade, 22.5 + fade, t));
+            float w4 = smoothstep(22.5 - fade, 22.5 + fade, t) * (1.0 - smoothstep(30.0 - fade, 30.0 + fade, t));
+            float w5 = smoothstep(30.0 - fade, 30.0 + fade, t);
+
+            if (w1 > 0.002) col += renderAct1(uv, max(0.0, t)) * w1;
+            if (w2 > 0.002) col += renderAct2(uv, max(0.0, t - 7.5)) * w2;
+            if (w3 > 0.002) col += renderAct3(uv, max(0.0, t - 15.0)) * w3;
+            if (w4 > 0.002) col += renderAct4(uv, max(0.0, t - 22.5)) * w4;
+            if (w5 > 0.002) col += renderAct5(uv, max(0.0, t - 30.0)) * w5;
+          }
+
+          /* Subtle chromatic lift on heavy beats */
+          col.r *= 1.0 + u_bass * 0.07;
+          col.b *= 1.0 + u_treble * 0.08;
+
+          /* Filmic tone mapping + gamma */
+          col = acesToneMap(col * 1.15);
+          col = pow(col, vec3(1.0 / 2.2));
+
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `;
+
+      function compileShader(context, type, src) {
+        const shader = context.createShader(type);
+        context.shaderSource(shader, src);
+        context.compileShader(shader);
+        if (!context.getShaderParameter(shader, context.COMPILE_STATUS)) {
+          const log = context.getShaderInfoLog(shader);
+          context.deleteShader(shader);
+          throw new Error("GLSL Compile Error: " + log);
+        }
+        return shader;
+      }
+
+      function initWebGL() {
+        try {
+          const opts = {
+            alpha: false,
+            antialias: false,
+            depth: false,
+            stencil: false,
+            preserveDrawingBuffer: false,
+            powerPreference: "high-performance"
+          };
+          gl = glCanvas.getContext("webgl2", opts) || glCanvas.getContext("webgl", opts) || glCanvas.getContext("experimental-webgl", opts);
+          if (!gl) throw new Error("WebGL context unavailable");
+
+          const vs = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SRC);
+          const fs = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER_SRC);
+
+          glProgram = gl.createProgram();
+          gl.attachShader(glProgram, vs);
+          gl.attachShader(glProgram, fs);
+          gl.linkProgram(glProgram);
+          if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS)) {
+            throw new Error("GLSL Link Error: " + gl.getProgramInfoLog(glProgram));
+          }
+
+          gl.useProgram(glProgram);
+
+          const quadBuf = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+          gl.bufferData(
+            gl.ARRAY_BUFFER,
+            new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+            gl.STATIC_DRAW
+          );
+
+          const aPos = gl.getAttribLocation(glProgram, "a_pos");
+          gl.enableVertexAttribArray(aPos);
+          gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+          glUniforms = {
+            res: gl.getUniformLocation(glProgram, "u_res"),
+            time: gl.getUniformLocation(glProgram, "u_time"),
+            beat: gl.getUniformLocation(glProgram, "u_beat"),
+            bass: gl.getUniformLocation(glProgram, "u_bass"),
+            mid: gl.getUniformLocation(glProgram, "u_mid"),
+            treble: gl.getUniformLocation(glProgram, "u_treble"),
+            energy: gl.getUniformLocation(glProgram, "u_energy"),
+            shake: gl.getUniformLocation(glProgram, "u_shake"),
+            preview: gl.getUniformLocation(glProgram, "u_preview")
+          };
+
+          state.webglAvailable = true;
+        } catch (err) {
+          console.warn("[GEMINI CINEMA] WebGL unavailable, activating 2D fallback renderer:", err);
+          state.webglAvailable = false;
+          showToast("WebGL unavailable — running 2D Procedural Cinema fallback");
+        }
+      }
+
+      /* Graceful 2D Procedural Fallback if WebGL context is disabled */
+      function render2DFallbackBackground(c, w, h, t, audio) {
+        const actIdx = getActiveActIndex(t);
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        c.fillStyle = "#03050c";
+        c.fillRect(0, 0, w, h);
+
+        const palettes = [
+          ["#00f0ff", "#3b82f6", "#6d28d9"],
+          ["#3b82f6", "#9b5cff", "#ffca63"],
+          ["#00f0ff", "#8b5cf6", "#ff2e88"],
+          ["#ffffff", "#ff2e88", "#3b82f6"],
+          ["#c8e7ff", "#3b82f6", "#7c3aed"]
+        ];
+        const p = palettes[actIdx];
+        const rad = Math.min(w, h) * (0.42 + audio.bass * 0.14);
+        const grad = c.createRadialGradient(cx, cy, rad * 0.05, cx, cy, rad);
+        grad.addColorStop(0, p[0] + "aa");
+        grad.addColorStop(0.45, p[1] + "55");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        c.fillStyle = grad;
+        c.fillRect(0, 0, w, h);
+
+        c.save();
+        c.translate(cx, cy);
+        c.globalCompositeOperation = "lighter";
+        for (let i = 0; i < 6; i++) {
+          c.rotate(t * 0.25 + i * 0.52);
+          c.strokeStyle = p[i % 3];
+          c.globalAlpha = 0.25 + audio.mid * 0.25;
+          c.lineWidth = 2;
+          c.beginPath();
+          c.ellipse(0, 0, rad * (0.4 + i * 0.1), rad * (0.15 + i * 0.05), 0, 0, Math.PI * 2);
+          c.stroke();
+        }
+        c.restore();
+      }
+
+      /* =======================================================================
+         4. LAYER 2 — 3D-PROJECTED CANVAS 2D PARTICLE ENGINE (1,400 PARTICLES)
+         ======================================================================= */
+      const PARTICLE_COUNT = 1400;
+      const particles = [];
+
+      /* Pre-rendered additive glowing sprite cache (blazing fast 60 FPS @ 1080p) */
+      const spriteCache = [];
+      function buildParticleSprites() {
+        const colors = [
+          { core: "#ffffff", mid: "rgba(0, 240, 255, 0.85)", edge: "rgba(0, 120, 255, 0)" },   // Cyan
+          { core: "#ffffff", mid: "rgba(96, 165, 250, 0.85)", edge: "rgba(59, 130, 246, 0)" },  // Sapphire
+          { core: "#ffffff", mid: "rgba(182, 118, 255, 0.85)", edge: "rgba(139, 92, 246, 0)" }, // Violet
+          { core: "#ffffff", mid: "rgba(255, 92, 168, 0.85)", edge: "rgba(255, 46, 136, 0)" },  // Rose
+          { core: "#ffffff", mid: "rgba(255, 224, 150, 0.85)", edge: "rgba(255, 190, 85, 0)" }  // White-Gold
+        ];
+        for (let i = 0; i < colors.length; i++) {
+          const sc = document.createElement("canvas");
+          sc.width = 48;
+          sc.height = 48;
+          const sctx = sc.getContext("2d");
+          const g = sctx.createRadialGradient(24, 24, 0.5, 24, 24, 24);
+          g.addColorStop(0.0, colors[i].core);
+          g.addColorStop(0.24, colors[i].mid);
+          g.addColorStop(1.0, colors[i].edge);
+          sctx.fillStyle = g;
+          sctx.fillRect(0, 0, 48, 48);
+          spriteCache.push(sc);
+        }
+      }
+
+      /* Deterministic PRNG so particle choreography stays art-directed & reproducible */
+      function seededRand(seed) {
+        let s = seed % 2147483647;
+        if (s <= 0) s += 2147483646;
+        return () => {
+          s = (s * 16807) % 2147483647;
+          return (s - 1) / 2147483646;
+        };
+      }
+
+      /* Generate 1,400 particles with precomputed 4-pointed Gemini Star Emblem targets */
+      function initParticles() {
+        const rand = seededRand(2026128);
+        particles.length = 0;
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const frac = i / PARTICLE_COUNT;
+
+          /* Compute target point on radiant 4-pointed Gemini Star Emblem (Act V) */
+          let tx = 0;
+          let ty = 0;
+          let tz = (rand() - 0.5) * 0.14;
+
+          if (frac < 0.62) {
+            /* Crisp 4-pointed astroid / concave star contour + radiant inner fill */
+            const theta = rand() * Math.PI * 2;
+            const c = Math.cos(theta);
+            const s = Math.sin(theta);
+            const shell = frac < 0.44 ? (0.94 + rand() * 0.08) : (0.18 + Math.pow(rand(), 0.72) * 0.76);
+            const scale = 1.48 * shell;
+            /* Astroid curve: x = cos^3(t), y = sin^3(t) produces iconic 4-pointed star! */
+            tx = Math.sign(c) * Math.pow(Math.abs(c), 2.55) * scale;
+            ty = Math.sign(s) * Math.pow(Math.abs(s), 2.55) * scale;
+          } else if (frac < 0.80) {
+            /* Luminous harmonic outer orbital ring around the star */
+            const ang = rand() * Math.PI * 2;
+            const r = 1.62 + (rand() - 0.5) * 0.08;
+            tx = Math.cos(ang) * r;
+            ty = Math.sin(ang) * r;
+          } else {
+            /* Delicate surrounding stardust field */
+            const ang = rand() * Math.PI * 2;
+            const r = 1.85 + rand() * 2.4;
+            tx = Math.cos(ang) * r;
+            ty = Math.sin(ang) * r * 0.62;
+            tz = (rand() - 0.5) * 1.6;
+          }
+
+          /* Spherical coordinates for Supernova shockwave eruption (Act IV) */
+          const phi = Math.acos(2 * rand() - 1);
+          const theta3 = rand() * Math.PI * 2;
+          const burstSpeed = 0.65 + Math.pow(rand(), 1.4) * 3.8;
+
+          particles.push({
+            id: i,
+            seed: rand(),
+            orbitR: 0.9 + rand() * 2.7,
+            orbitAng: rand() * Math.PI * 2,
+            orbitTilt: (rand() - 0.5) * 2.4,
+            orbitSpeed: (0.25 + rand() * 0.85) * (rand() > 0.5 ? 1 : -1),
+            /* Warp tunnel lane coordinates */
+            warpX: (rand() - 0.5) * 6.8,
+            warpY: (rand() - 0.5) * 4.4,
+            warpZOffset: rand() * 14.0,
+            warpSpeed: 7.5 + rand() * 12.0,
+            /* Supernova burst vector */
+            bx: Math.sin(phi) * Math.cos(theta3) * burstSpeed,
+            by: Math.sin(phi) * Math.sin(theta3) * burstSpeed * 0.72,
+            bz: Math.cos(phi) * burstSpeed,
+            /* Final Gemini star emblem target */
+            tx, ty, tz,
+            isEmblem: frac < 0.80,
+            size: 0.7 + Math.pow(rand(), 2.2) * 2.8,
+            spriteIdx: i % spriteCache.length,
+            alphaBase: 0.35 + rand() * 0.65
+          });
+        }
+      }
+
+      /* Evaluate exact analytical 3D position for a particle at time t (scrub-friendly!) */
+      function computeParticlePos(p, t, audio, weights, out) {
+        const [w0, w1, w2, w3, w4] = weights;
+        let x = 0, y = 0, z = 0;
+
+        /* Act I: Orbiting quantum stardust drawn into luminous rings */
+        if (w0 > 0.001) {
+          const lt = t;
+          const ang = p.orbitAng + lt * p.orbitSpeed * 0.75;
+          const r = p.orbitR * (1.25 - 0.25 * smoothstep(0.0, 4.0, lt)) + audio.bass * 0.14;
+          const ax = Math.cos(ang) * r;
+          const ay = Math.sin(ang * 1.0) * r * Math.sin(p.orbitTilt) * 0.45;
+          const az = Math.sin(ang) * r * Math.cos(p.orbitTilt);
+          x += ax * w0;
+          y += ay * w0;
+          z += az * w0;
+        }
+
+        /* Act II: Curl-like geometric orbits pulsing with kicks */
+        if (w1 > 0.001) {
+          const lt = Math.max(0, t - 7.5);
+          const ang = p.orbitAng + lt * p.orbitSpeed * 1.15;
+          const curl = Math.sin(ang * 3.0 + lt * 2.1 + p.seed * 6.28) * 0.48;
+          const r = p.orbitR * (0.85 + audio.bass * 0.24) + curl;
+          const ax = Math.cos(ang) * r;
+          const ay = Math.sin(ang * 2.0 + p.orbitTilt) * (0.9 + audio.mid * 0.5);
+          const az = Math.sin(ang) * r;
+          x += ax * w1;
+          y += ay * w1;
+          z += az * w1;
+        }
+
+        /* Act III: High-velocity 3D starlight warp streaks flying past camera */
+        if (w2 > 0.001) {
+          const lt = Math.max(0, t - 15.0);
+          const zSpan = 14.0;
+          const zMod = ((p.warpZOffset - lt * p.warpSpeed * (1.0 + audio.bass * 0.25)) % zSpan + zSpan) % zSpan;
+          const az = zMod - 4.2; // flies right past camera at z = -4.2
+          /* Keep center tunnel lane slightly clear for dramatic perspective */
+          const radial = Math.hypot(p.warpX, p.warpY) + 0.001;
+          const push = radial < 0.85 ? 0.85 / radial : 1.0;
+          const roll = lt * 0.35;
+          const cr = Math.cos(roll), sr = Math.sin(roll);
+          const wx = p.warpX * push;
+          const wy = p.warpY * push;
+          x += (wx * cr - wy * sr) * w2;
+          y += (wx * sr + wy * cr) * w2;
+          z += az * w2;
+        }
+
+        /* Act IV: Explosive Supernova shockwave bloom + swirling accretion arms */
+        if (w3 > 0.001) {
+          const lt = Math.max(0, t - 22.5);
+          const expand = Math.pow(lt, 0.72) * (1.15 + audio.bass * 0.12);
+          const swirlAng = lt * (0.65 / (0.4 + p.seed)) + expand * 0.25;
+          const cs = Math.cos(swirlAng), sn = Math.sin(swirlAng);
+          const sx = p.bx * expand;
+          const sz = p.bz * expand;
+          const ax = sx * cs - sz * sn;
+          const ay = p.by * expand * (0.85 + 0.15 * Math.sin(lt * 2.0 + p.seed * 6.0));
+          const az = sx * sn + sz * cs;
+          x += ax * w3;
+          y += ay * w3;
+          z += az * w3;
+        }
+
+        /* Act V: Graceful spiral lock-in into crisp 4-pointed Gemini Star Emblem */
+        if (w4 > 0.001) {
+          const lt = Math.max(0, t - 30.0);
+          const lock = easeInOutQuart(smoothstep(0.0, 2.8, lt));
+          const spiralAng = (1.0 - lock) * (3.4 + p.seed * 2.2);
+          const spread = 1.0 + (1.0 - lock) * 2.3;
+          const cs = Math.cos(spiralAng), sn = Math.sin(spiralAng);
+          const pulse = 1.0 + 0.035 * Math.sin(lt * 3.1 + p.seed * 2.0) + audio.energy * 0.08;
+          const ex = (p.tx * cs - p.ty * sn) * spread * pulse;
+          const ey = (p.tx * sn + p.ty * cs) * spread * pulse;
+          const ez = p.tz * spread;
+          x += ex * w4;
+          y += ey * w4;
+          z += ez * w4;
+        }
+
+        out.x = x;
+        out.y = y;
+        out.z = z;
+      }
+
+      const _posNow = { x: 0, y: 0, z: 0 };
+      const _posPrev = { x: 0, y: 0, z: 0 };
+
+      function renderParticlesLayer(c, w, h, t, audio, weights, isPreview) {
+        c.save();
+        c.globalCompositeOperation = "lighter";
+
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        const fov = h * 0.82;
+        const camZ = 4.6;
+        const scaleUnit = h / 1080;
+
+        /* Fade particles in at start and out at end */
+        const globalFade = isPreview
+          ? 0.72
+          : smoothstep(0.35, 1.8, t) * (1.0 - smoothstep(34.5, 35.95, t));
+
+        const warpWeight = isPreview ? 0.0 : weights[2];
+        const supernovaWeight = isPreview ? 0.0 : weights[3];
+        const geminiWeight = isPreview ? 0.0 : weights[4];
+        const prevDt = warpWeight > 0.15 ? 0.055 : (supernovaWeight > 0.2 ? 0.032 : 0.0);
+
+        const activeWeights = isPreview ? [1, 0, 0, 0, 0] : weights;
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const p = particles[i];
+          computeParticlePos(p, t, audio, activeWeights, _posNow);
+
+          const dz = _posNow.z + camZ;
+          if (dz <= 0.18) continue;
+
+          const invZ = fov / dz;
+          const sx = cx + _posNow.x * invZ;
+          const sy = cy - _posNow.y * invZ;
+
+          if (sx < -80 || sx > w + 80 || sy < -80 || sy > h + 80) continue;
+
+          /* Depth-of-field alpha & size scaling */
+          const dof = clamp(1.15 - Math.abs(dz - 4.4) * 0.12, 0.18, 1.0);
+          const twinkle = 0.75 + 0.25 * Math.sin(t * 5.2 + p.id * 1.7);
+          let alpha = p.alphaBase * dof * twinkle * globalFade;
+
+          if (geminiWeight > 0.3 && p.isEmblem) {
+            alpha = Math.min(1.0, alpha * 1.35);
+          }
+          if (alpha < 0.015) continue;
+
+          const radius = clamp(p.size * invZ * 0.013 * (1.0 + audio.bass * 0.32), 1.4 * scaleUnit, 30 * scaleUnit);
+
+          /* High-velocity motion streaks during Hyperdrive & Supernova */
+          if (prevDt > 0.001) {
+            computeParticlePos(p, Math.max(0, t - prevDt), audio, activeWeights, _posPrev);
+            const pdz = _posPrev.z + camZ;
+            if (pdz > 0.18) {
+              const pInvZ = fov / pdz;
+              const psx = cx + _posPrev.x * pInvZ;
+              const psy = cy - _posPrev.y * pInvZ;
+              const dist = Math.hypot(sx - psx, sy - psy);
+              if (dist > 2.0 && dist < w * 0.45) {
+                c.globalAlpha = clamp(alpha * (0.45 + warpWeight * 0.45), 0, 0.92);
+                c.strokeStyle = p.spriteIdx === 0 ? "#7ef9ff"
+                              : p.spriteIdx === 3 ? "#ff77b7"
+                              : p.spriteIdx === 4 ? "#ffe29a" : "#93c5fd";
+                c.lineWidth = Math.max(1.0 * scaleUnit, radius * 0.24);
+                c.beginPath();
+                c.moveTo(psx, psy);
+                c.lineTo(sx, sy);
+                c.stroke();
+              }
+            }
+          }
+
+          /* Draw pre-rendered additive glow sprite */
+          c.globalAlpha = clamp(alpha, 0, 1);
+          const sprite = spriteCache[p.spriteIdx];
+          const drawSize = radius * 2.4;
+          c.drawImage(sprite, sx - drawSize * 0.5, sy - drawSize * 0.5, drawSize, drawSize);
+        }
+
+        /* Crisp radiant 4-pointed star core vector highlight in Act V */
+        if (!isPreview && geminiWeight > 0.15) {
+          const lt = Math.max(0, t - 30.0);
+          const emblemAlpha = smoothstep(1.2, 3.0, lt) * (1.0 - smoothstep(4.55, 5.95, lt)) * geminiWeight;
+          if (emblemAlpha > 0.01) {
+            const rStar = h * 0.245 * (1.0 + 0.025 * Math.sin(lt * 2.8) + audio.energy * 0.06);
+            c.save();
+            c.translate(cx, cy);
+
+            /* Outer harmonic light rings */
+            for (let k = 0; k < 2; k++) {
+              const ringR = rStar * (1.18 + k * 0.24 + 0.03 * Math.sin(lt * 2.0 + k));
+              c.strokeStyle = k === 0 ? "rgba(0, 240, 255, 0.42)" : "rgba(165, 110, 255, 0.28)";
+              c.lineWidth = (2.0 - k * 0.6) * scaleUnit;
+              c.globalAlpha = emblemAlpha * 0.75;
+              c.beginPath();
+              c.arc(0, 0, ringR, 0, Math.PI * 2);
+              c.stroke();
+            }
+
+            /* Crisp four-pointed Gemini star outline */
+            c.beginPath();
+            c.moveTo(0, -rStar);
+            c.quadraticCurveTo(0, 0, rStar, 0);
+            c.quadraticCurveTo(0, 0, 0, rStar);
+            c.quadraticCurveTo(0, 0, -rStar, 0);
+            c.quadraticCurveTo(0, 0, 0, -rStar);
+            c.closePath();
+
+            const starGrad = c.createRadialGradient(0, 0, 0, 0, 0, rStar);
+            starGrad.addColorStop(0, "rgba(255, 255, 255, 0.92)");
+            starGrad.addColorStop(0.32, "rgba(130, 220, 255, 0.45)");
+            starGrad.addColorStop(0.7, "rgba(155, 92, 255, 0.18)");
+            starGrad.addColorStop(1, "rgba(0, 240, 255, 0.0)");
+
+            c.globalAlpha = emblemAlpha;
+            c.fillStyle = starGrad;
+            c.fill();
+            c.strokeStyle = "rgba(220, 245, 255, 0.85)";
+            c.lineWidth = 2.2 * scaleUnit;
+            c.stroke();
+
+            c.restore();
+          }
+        }
+
+        c.restore();
+      }
+
+      /* =======================================================================
+         5. LAYER 3 — CINEMATIC TYPOGRAPHY, TELEMETRY HUD, VISUALIZER & LETTERBOX
+         ======================================================================= */
+      function drawTrackedText(c, text, x, y, tracking) {
+        if (!tracking) {
+          c.fillText(text, x, y);
+          return;
+        }
+        const chars = Array.from(text);
+        let totalW = 0;
+        const widths = chars.map((ch) => {
+          const mw = c.measureText(ch).width;
+          totalW += mw;
+          return mw;
+        });
+        totalW += tracking * Math.max(0, chars.length - 1);
+
+        let curX = x;
+        if (c.textAlign === "center") curX = x - totalW * 0.5;
+        else if (c.textAlign === "right") curX = x - totalW;
+
+        const prevAlign = c.textAlign;
+        c.textAlign = "left";
+        for (let i = 0; i < chars.length; i++) {
+          c.fillText(chars[i], curX, y);
+          curX += widths[i] + tracking;
+        }
+        c.textAlign = prevAlign;
+      }
+
+      function renderCinemaOverlay(c, w, h, t, audio, isPreview) {
+        const s = h / 1080; // scale factor relative to 1080p reference
+        const barTargetH = h * 0.112; // Authentic 2.39:1 widescreen letterbox bars
+        const barOpen = isPreview ? 1.0 : smoothstep(0.0, 1.4, t);
+        const barH = barTargetH * (1.8 - 0.8 * barOpen);
+
+        /* 1. Beat-reactive subtle edge chromatic flash on heavy drops */
+        if (!isPreview && audio.bass > 0.58 && t > 7.4 && t < 30.2) {
+          const flashAlpha = (audio.bass - 0.58) * 0.34;
+          c.save();
+          c.globalCompositeOperation = "screen";
+          const edgeGrad = c.createRadialGradient(w * 0.5, h * 0.5, h * 0.25, w * 0.5, h * 0.5, w * 0.68);
+          edgeGrad.addColorStop(0, "rgba(0,0,0,0)");
+          edgeGrad.addColorStop(0.75, `rgba(0, 220, 255, ${flashAlpha * 0.55})`);
+          edgeGrad.addColorStop(1, `rgba(255, 46, 136, ${flashAlpha})`);
+          c.fillStyle = edgeGrad;
+          c.fillRect(0, 0, w, h);
+          c.restore();
+        }
+
+        /* 2. Soft Cinema Vignette */
+        const vig = c.createRadialGradient(w * 0.5, h * 0.5, h * 0.32, w * 0.5, h * 0.5, w * 0.68);
+        vig.addColorStop(0, "rgba(0,0,0,0)");
+        vig.addColorStop(1, "rgba(2, 4, 10, 0.58)");
+        c.fillStyle = vig;
+        c.fillRect(0, 0, w, h);
+
+        /* 3. Audio-Reactive Spectrum Visualizer along lower frame edge */
+        if (!isPreview) {
+          const visFade = smoothstep(0.6, 1.8, t) * (1.0 - smoothstep(34.6, 35.9, t));
+          if (visFade > 0.01) {
+            const bars = 56;
+            const totalW = w * 0.64;
+            const halfW = totalW * 0.5;
+            const barW = (halfW / bars) * 0.62;
+            const stepX = halfW / bars;
+            const baseY = h - barH - 12 * s;
+            const maxBarH = 54 * s;
+
+            c.save();
+            c.globalCompositeOperation = "lighter";
+            c.globalAlpha = 0.72 * visFade;
+            for (let i = 0; i < bars; i++) {
+              const binIdx = Math.floor((i / bars) * 48);
+              const mag = audio.spectrum[binIdx] || 0;
+              const bh = Math.max(2 * s, Math.pow(mag, 1.25) * maxBarH);
+              const hueMix = i / bars;
+              const rCol = Math.round(lerp(0, 210, hueMix));
+              const gCol = Math.round(lerp(240, 90, hueMix));
+              const bCol = 255;
+              c.fillStyle = `rgba(${rCol}, ${gCol}, ${bCol}, ${0.35 + mag * 0.65})`;
+
+              const dx = i * stepX + stepX * 0.25;
+              /* Mirrored left & right from center */
+              c.fillRect(w * 0.5 + dx, baseY - bh, barW, bh);
+              c.fillRect(w * 0.5 - dx - barW, baseY - bh, barW, bh);
+            }
+            c.restore();
+          }
+        }
+
+        /* 4. Kinetic Cinematic Typography for each Act */
+        if (!isPreview) {
+          for (let i = 0; i < ACTS.length; i++) {
+            const act = ACTS[i];
+            const actDur = act.end - act.start;
+            const lt = t - act.start;
+            if (lt < 0 || lt > actDur) continue;
+
+            const isFinalAct = i === 4;
+            const inStart = isFinalAct ? 0.9 : 0.35;
+            const inEnd = isFinalAct ? 2.2 : 1.35;
+            const outStart = isFinalAct ? 4.45 : actDur - 1.05;
+            const outEnd = isFinalAct ? 5.85 : actDur - 0.15;
+
+            const fadeIn = easeOutCubic(smoothstep(inStart, inEnd, lt));
+            const fadeOut = 1.0 - smoothstep(outStart, outEnd, lt);
+            const alpha = fadeIn * fadeOut;
+            if (alpha <= 0.005) continue;
+
+            const slideY = (1.0 - fadeIn) * 26 * s;
+            const tracking = (isFinalAct ? 22 : 11) * s + (1.0 - fadeIn) * 14 * s;
+
+            c.save();
+            c.globalAlpha = alpha;
+            c.textAlign = "center";
+            c.textBaseline = "middle";
+
+            if (isFinalAct) {
+              /* Act V Finale: Large glowing GEMINI below/centered over emblem */
+              const titleY = h * 0.72 + slideY;
+              c.font = `700 ${Math.round(74 * s)}px "SF Pro Display", "Segoe UI", system-ui, sans-serif`;
+              c.shadowColor = "rgba(0, 224, 255, 0.72)";
+              c.shadowBlur = 28 * s;
+              c.fillStyle = "#ffffff";
+              drawTrackedText(c, act.title, w * 0.5, titleY, tracking);
+
+              c.shadowBlur = 12 * s;
+              c.font = `600 ${Math.round(18 * s)}px "SF Mono", "Consolas", monospace`;
+              c.fillStyle = "rgba(186, 224, 255, 0.9)";
+              drawTrackedText(c, act.subtitle, w * 0.5, titleY + 54 * s, 9 * s);
+            } else {
+              /* Acts I - IV: Crisp upper-lower third editorial typography */
+              const baseY = h - barH - 118 * s + slideY;
+
+              /* Accent rule above title */
+              const ruleW = 72 * s * fadeIn;
+              c.fillStyle = act.accent;
+              c.shadowColor = act.accent;
+              c.shadowBlur = 14 * s;
+              c.fillRect(w * 0.5 - ruleW * 0.5, baseY - 38 * s, ruleW, 2.5 * s);
+
+              /* Primary Act Title */
+              c.font = `700 ${Math.round(42 * s)}px "SF Pro Display", "Segoe UI", system-ui, sans-serif`;
+              c.shadowColor = "rgba(0, 0, 0, 0.85)";
+              c.shadowBlur = 18 * s;
+              c.fillStyle = "#ffffff";
+              drawTrackedText(c, act.title, w * 0.5, baseY, tracking);
+
+              /* Technical Subtitle */
+              c.font = `600 ${Math.round(15 * s)}px "SF Mono", "Consolas", monospace`;
+              c.fillStyle = "rgba(205, 228, 255, 0.82)";
+              c.shadowBlur = 10 * s;
+              drawTrackedText(c, act.subtitle, w * 0.5, baseY + 38 * s, 5.5 * s);
+            }
+            c.restore();
+          }
+        }
+
+        /* 5. Smooth 2.39:1 Cinematic Letterbox Bars */
+        c.fillStyle = "#020307";
+        c.fillRect(0, 0, w, barH);
+        c.fillRect(0, h - barH, w, barH);
+
+        /* Hairline metallic frame borders inside letterbox edges */
+        c.fillStyle = "rgba(140, 200, 255, 0.14)";
+        c.fillRect(0, barH, w, Math.max(1, 1.2 * s));
+        c.fillRect(0, h - barH - Math.max(1, 1.2 * s), w, Math.max(1, 1.2 * s));
+
+        /* 6. Minimal Technical Telemetry HUD (drawn neatly inside safe cinema frame) */
+        if (!isPreview) {
+          const hudFade = smoothstep(0.7, 1.6, t) * (1.0 - smoothstep(34.6, 35.9, t));
+          if (hudFade > 0.01) {
+            const actIdx = getActiveActIndex(t);
+            const padX = 48 * s;
+            const topY = barH + 30 * s;
+            const beatPhase = (t / BEAT_DUR) % 1.0;
+            const beatPulse = Math.pow(1.0 - beatPhase, 3.0);
+
+            c.save();
+            c.globalAlpha = 0.72 * hudFade;
+            c.font = `600 ${Math.round(13 * s)}px "SF Mono", "Consolas", monospace`;
+            c.textBaseline = "middle";
+
+            /* Top-Left Telemetry: Act Index & Timecode */
+            c.textAlign = "left";
+            c.fillStyle = "rgba(216, 234, 255, 0.88)";
+            const tc = formatTimecodeDetailed(t);
+            c.fillText(`ACT 0${actIdx + 1} / 05   ·   ${tc}   ·   128 BPM`, padX + 18 * s, topY);
+
+            /* Pulsing BPM sync dot */
+            c.beginPath();
+            c.arc(padX + 4 * s, topY, (4.2 + beatPulse * 2.5) * s, 0, Math.PI * 2);
+            c.fillStyle = ACTS[actIdx].accent;
+            c.shadowColor = ACTS[actIdx].accent;
+            c.shadowBlur = (8 + beatPulse * 12) * s;
+            c.fill();
+
+            /* Top-Right Telemetry: Live Shader & Audio Meter */
+            c.shadowBlur = 0;
+            c.textAlign = "right";
+            c.fillStyle = "rgba(186, 214, 255, 0.78)";
+            const rendererTag = state.webglAvailable ? "GLSL RAYMARCH" : "2D PROCEDURAL";
+            c.fillText(`${rendererTag} · WEB AUDIO LIVE`, w - padX - 64 * s, topY);
+
+            /* Micro 3-band live audio indicator (BASS / MID / HIGH) */
+            const meterX = w - padX - 48 * s;
+            const bands = [audio.bass, audio.mid, audio.treble];
+            const bCols = ["#00f0ff", "#9b5cff", "#ff2e88"];
+            for (let b = 0; b < 3; b++) {
+              const bh = (4 + bands[b] * 14) * s;
+              c.fillStyle = bCols[b];
+              c.fillRect(meterX + b * 14 * s, topY + 9 * s - bh, 8 * s, bh);
+            }
+            c.restore();
+          }
+        }
+      }
+
+      /* =======================================================================
+         6. REAL-TIME PROCEDURAL 128 BPM WEB AUDIO SYNTHESIZER ENGINE
+         ======================================================================= */
+      class ProceduralAudioEngine {
+        constructor() {
+          this.ctx = null;
+          this.masterGain = null;
+          this.speakerGain = null;
+          this.analyser = null;
+          this.mediaStreamDest = null;
+          this.reverbSend = null;
+          this.delaySend = null;
+          this.noiseBuffer = null;
+
+          this.freqData = new Uint8Array(128);
+          this.smoothSpectrum = new Float32Array(64);
+          this.audioMetrics = {
+            bass: 0,
+            mid: 0,
+            treble: 0,
+            energy: 0,
+            spectrum: this.smoothSpectrum
+          };
+
+          this.nextStep = 0;
+          this.activeLongNodes = [];
+          this.isReady = false;
+        }
+
+        ensureInitialized() {
+          if (this.isReady) {
+            if (this.ctx && this.ctx.state === "suspended") {
+              this.ctx.resume().catch(() => {});
+            }
+            return;
+          }
+          try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) throw new Error("Web Audio API not supported");
+
+            this.ctx = new AudioCtx();
+
+            /* Master Compressor -> Master Gain -> Analyser -> (Speakers + MediaStreamDest) */
+            const comp = this.ctx.createDynamicsCompressor();
+            comp.threshold.value = -10;
+            comp.knee.value = 14;
+            comp.ratio.value = 4.5;
+            comp.attack.value = 0.004;
+            comp.release.value = 0.14;
+
+            this.masterGain = this.ctx.createGain();
+            this.masterGain.gain.value = 0.88;
+
+            this.analyser = this.ctx.createAnalyser();
+            this.analyser.fftSize = 256;
+            this.analyser.smoothingTimeConstant = 0.76;
+            this.freqData = new Uint8Array(this.analyser.frequencyBinCount);
+
+            this.speakerGain = this.ctx.createGain();
+            this.speakerGain.gain.value = state.isMuted ? 0.0 : 1.0;
+
+            this.mediaStreamDest = this.ctx.createMediaStreamDestination();
+
+            comp.connect(this.masterGain);
+            this.masterGain.connect(this.analyser);
+            this.analyser.connect(this.speakerGain);
+            this.speakerGain.connect(this.ctx.destination);
+            /* Always feed clean audio to recorder MediaStreamDestination */
+            this.analyser.connect(this.mediaStreamDest);
+
+            this.masterBus = comp;
+
+            /* Procedural Stereo Feedback Delay (128 BPM Dotted 8th & 8th) */
+            this.delaySend = this.ctx.createGain();
+            this.delaySend.gain.value = 0.34;
+            const delayL = this.ctx.createDelay(1.0);
+            const delayR = this.ctx.createDelay(1.0);
+            delayL.delayTime.value = BEAT_DUR * 0.75; // dotted 8th
+            delayR.delayTime.value = BEAT_DUR * 0.5;  // 8th
+            const fbL = this.ctx.createGain();
+            const fbR = this.ctx.createGain();
+            fbL.gain.value = 0.36;
+            fbR.gain.value = 0.32;
+            const dlFilter = this.ctx.createBiquadFilter();
+            dlFilter.type = "lowpass";
+            dlFilter.frequency.value = 2800;
+
+            const merger = this.ctx.createChannelMerger(2);
+            this.delaySend.connect(dlFilter);
+            dlFilter.connect(delayL);
+            dlFilter.connect(delayR);
+            delayL.connect(fbR);
+            fbR.connect(delayR);
+            delayR.connect(fbL);
+            fbL.connect(delayL);
+            delayL.connect(merger, 0, 0);
+            delayR.connect(merger, 0, 1);
+            merger.connect(this.masterBus);
+
+            /* Procedural Cinema Reverb via Generated Impulse Response */
+            this.reverbSend = this.ctx.createGain();
+            this.reverbSend.gain.value = 0.36;
+            const convolver = this.ctx.createConvolver();
+            convolver.buffer = this.createReverbImpulse(2.4, 2.8);
+            this.reverbSend.connect(convolver);
+            convolver.connect(this.masterBus);
+
+            /* Pre-build White Noise Buffer for Snares, Hats, Risers, Impacts */
+            this.noiseBuffer = this.createNoiseBuffer(2.0);
+
+            this.isReady = true;
+          } catch (err) {
+            console.warn("[GEMINI AUDIO] Init error:", err);
+          }
+        }
+
+        createNoiseBuffer(seconds) {
+          const len = Math.floor(this.ctx.sampleRate * seconds);
+          const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+          const data = buf.getChannelData(0);
+          for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+          return buf;
+        }
+
+        createReverbImpulse(duration, decay) {
+          const rate = this.ctx.sampleRate;
+          const len = Math.floor(rate * duration);
+          const impulse = this.ctx.createBuffer(2, len, rate);
+          for (let ch = 0; ch < 2; ch++) {
+            const data = impulse.getChannelData(ch);
+            for (let i = 0; i < len; i++) {
+              const env = Math.pow(1 - i / len, decay);
+              data[i] = (Math.random() * 2 - 1) * env * 0.5;
+            }
+          }
+          return impulse;
+        }
+
+        setMuted(muted) {
+          if (this.speakerGain && this.ctx) {
+            this.speakerGain.gain.setTargetAtTime(muted ? 0.0 : 1.0, this.ctx.currentTime, 0.03);
+          }
+        }
+
+        midiToFreq(m) {
+          return 440 * Math.pow(2, (m - 69) / 12);
+        }
+
+        stopAllScheduled() {
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          for (let i = 0; i < this.activeLongNodes.length; i++) {
+            const item = this.activeLongNodes[i];
+            try {
+              item.gain.gain.cancelScheduledValues(now);
+              item.gain.gain.setTargetAtTime(0.0001, now, 0.025);
+              item.stoppers.forEach((n) => {
+                try { n.stop(now + 0.08); } catch (_) {}
+              });
+            } catch (_) {}
+          }
+          this.activeLongNodes = [];
+        }
+
+        syncToTime(timelineTime) {
+          this.stopAllScheduled();
+          this.nextStep = Math.floor(timelineTime / STEP_DUR);
+        }
+
+        /* Lookahead scheduler called continuously during playback */
+        updateScheduler(timelineTime) {
+          if (!this.isReady || !state.isPlaying) return;
+          if (this.ctx.state === "suspended") this.ctx.resume().catch(() => {});
+
+          const lookahead = 0.14;
+          const maxStep = Math.floor(DURATION / STEP_DUR);
+          const nowAudio = this.ctx.currentTime;
+
+          while (this.nextStep < maxStep && this.nextStep * STEP_DUR <= timelineTime + lookahead) {
+            const stepTime = this.nextStep * STEP_DUR;
+            const offset = stepTime - timelineTime;
+            if (offset >= -0.05) {
+              const when = Math.max(nowAudio + 0.004, nowAudio + offset);
+              this.triggerStep(this.nextStep, when);
+            }
+            this.nextStep++;
+          }
+        }
+
+        /* =====================================================================
+           MUSICAL COMPOSITION ACROSS 5 ACTS (Key of A minor, 128 BPM)
+           Act I:   Steps 0..63    (0.0s - 7.5s)   Sub-drone, warm pads, crystal ticks
+           Act II:  Steps 64..127  (7.5s - 15.0s)  4x4 Kick, snare, FM bass, shimmer arp
+           Act III: Steps 128..191 (15.0s - 22.5s) Driving hats, acid seq, Am-F-C-G, riser
+           Act IV:  Steps 192..255 (22.5s - 30.0s) Climactic supersaw drop, bell harmonics
+           Act V:   Steps 256..307 (30.0s - 36.0s) Drums out, ethereal bell chord & chime tail
+           ===================================================================== */
+        triggerStep(step, when) {
+          const stepInBar = step % 16;
+          const bar = Math.floor(step / 16);
+
+          /* --- ACT I (Bars 0..3 | Steps 0..63) --- */
+          if (step < 64) {
+            if (step === 0) {
+              this.playSubDrone(when, 55.0, 7.6, 0.28);
+            }
+            if (step === 0) {
+              this.playWarmPad(when, [57, 64, 67, 71, 72], 3.9, 0.14); // Am9
+            } else if (step === 32) {
+              this.playWarmPad(when, [53, 60, 64, 69, 72], 3.9, 0.16); // Fmaj7
+            }
+            /* Delicate crystalline high arpeggio ticks */
+            if (step >= 12 && step % 2 === 0) {
+              const arpNotes = [81, 84, 88, 91, 88, 84, 79, 84]; // A5 C6 E6 G6 ...
+              const note = arpNotes[(step >> 1) % arpNotes.length];
+              const vel = 0.055 + smoothstep(12, 60, step) * 0.055;
+              this.playCrystalPluck(when, this.midiToFreq(note), vel, 0.45);
+            }
+            /* Tension riser entering Act II */
+            if (step === 48) {
+              this.playNoiseSweep(when, 1.875, 220, 3200, 0.11);
+            }
+            return;
+          }
+
+          /* --- ACT II (Bars 4..7 | Steps 64..127) --- */
+          if (step < 128) {
+            const localBar = bar - 4;
+            /* 4-on-the-floor punchy synthesized kick */
+            if (stepInBar % 4 === 0) {
+              this.playKick(when, 0.72);
+            }
+            /* Crisp synthesized snare on beats 2 & 4 */
+            if (stepInBar === 4 || stepInBar === 12) {
+              this.playSnare(when, 0.32);
+            }
+            /* Subtle offbeat closed hat */
+            if (stepInBar % 4 === 2) {
+              this.playHat(when, false, 0.11);
+            }
+            /* Syncopated 16th-note FM bassline */
+            const bassRoots = [33, 33, 29, 31]; // A1, A1, F1, G1
+            const root = bassRoots[localBar % 4];
+            const bassPattern = [0, -1, 0, 12, -1, 0, 7, -1, 0, -1, 3, 0, -1, 7, 10, 12];
+            const semi = bassPattern[stepInBar];
+            if (semi >= 0) {
+              this.playFMBass(when, this.midiToFreq(root + semi), 0.11, 0.34);
+            }
+            /* Shimmering lead arpeggio */
+            const leadArp = [69, 72, 76, 79, 81, 79, 76, 72];
+            if (step % 2 === 0) {
+              const transpose = localBar === 2 ? -4 : localBar === 3 ? -2 : 0;
+              this.playCrystalPluck(when, this.midiToFreq(leadArp[(step >> 1) % 8] + transpose), 0.11, 0.32);
+            }
+            /* Supporting pad pulse */
+            if (stepInBar === 0 && localBar % 2 === 0) {
+              const chord = localBar === 0 ? [57, 60, 64, 67] : [53, 57, 60, 64];
+              this.playWarmPad(when, chord, 3.6, 0.11);
+            }
+            return;
+          }
+
+          /* --- ACT III (Bars 8..11 | Steps 128..191) --- */
+          if (step < 192) {
+            const localBar = bar - 8;
+            const isBuildBar = localBar === 3; // Final bar before Supernova drop!
+
+            /* Kick (drops out last 2 beats for dramatic anticipation) */
+            if (!isBuildBar) {
+              if (stepInBar % 4 === 0) this.playKick(when, 0.78);
+            } else {
+              if (stepInBar < 8 && stepInBar % 2 === 0) this.playKick(when, 0.65);
+              /* Accelerating snare roll into Act IV */
+              if (stepInBar < 8 && stepInBar % 2 === 0) this.playSnare(when, 0.24 + stepInBar * 0.02);
+              else if (stepInBar >= 8 && stepInBar < 14) this.playSnare(when, 0.34 + (stepInBar - 8) * 0.03);
+            }
+
+            /* Driving 16th-note hi-hats */
+            if (!isBuildBar) {
+              const isOpen = stepInBar % 4 === 2;
+              this.playHat(when, isOpen, isOpen ? 0.17 : 0.075);
+              if (stepInBar === 4 || stepInBar === 12) this.playSnare(when, 0.36);
+            }
+
+            /* Energetic Chord Modulation: Am -> F -> C -> G */
+            const prog = [
+              { root: 33, chord: [57, 60, 64, 69] }, // Am
+              { root: 29, chord: [53, 57, 60, 65] }, // F
+              { root: 36, chord: [60, 64, 67, 72] }, // C
+              { root: 31, chord: [55, 59, 62, 67] }  // G
+            ][localBar % 4];
+
+            /* Rising filtered synth sequence */
+            const seqIdx = stepInBar % 4;
+            const seqNote = prog.chord[seqIdx] + (stepInBar >= 8 ? 12 : 0);
+            const cutoff = 700 + ((step - 128) / 64) * 4200;
+            this.playAcidSeq(when, this.midiToFreq(seqNote), cutoff, 0.13);
+
+            /* Pumping octave bass */
+            if (!isBuildBar || stepInBar < 12) {
+              const oct = stepInBar % 2 === 0 ? 0 : 12;
+              this.playFMBass(when, this.midiToFreq(prog.root + oct), 0.10, 0.32);
+            }
+
+            /* Dramatic pitch riser & noise sweep across final bar into Act IV */
+            if (step === 176) {
+              this.playPitchRiser(when, 1.85, 220, 1760, 0.22);
+              this.playNoiseSweep(when, 1.85, 350, 7500, 0.22);
+            }
+            return;
+          }
+
+          /* --- ACT IV (Bars 12..15 | Steps 192..255) --- */
+          if (step < 256) {
+            const localBar = bar - 12;
+            const dropProg = [
+              { root: 29, chord: [53, 60, 64, 69, 72] }, // Fmaj7
+              { root: 31, chord: [55, 62, 64, 67, 71] }, // G6
+              { root: 33, chord: [57, 64, 67, 71, 76] }, // Am9
+              { root: 28, chord: [52, 59, 62, 67, 74] }  // Em7
+            ][localBar % 4];
+
+            /* Massive impact crash on bar 12 drop */
+            if (step === 192) {
+              this.playCrashImpact(when, 0.42);
+            }
+
+            /* Heavy sub-kick + punchy snare + driving percussion */
+            if (stepInBar % 4 === 0) {
+              this.playKick(when, 0.92);
+            }
+            if (stepInBar === 4 || stepInBar === 12) {
+              this.playSnare(when, 0.44);
+            }
+            const isOpen = stepInBar % 4 === 2;
+            this.playHat(when, isOpen, isOpen ? 0.19 : 0.085);
+
+            /* Wide detuned supersaw chord stabs (sidechain-pumped rhythm) */
+            if (stepInBar === 0 || stepInBar === 6 || stepInBar === 10) {
+              const dur = stepInBar === 0 ? 0.62 : 0.42;
+              this.playSuperSawChord(when, dropProg.chord, dur, 0.22);
+            }
+
+            /* Heavy octave sub/FM bass */
+            const bassOct = stepInBar % 2 === 1 ? 12 : 0;
+            this.playFMBass(when, this.midiToFreq(dropProg.root + bassOct), 0.11, 0.38);
+
+            /* Bright sparkling bell harmonics on top */
+            if (stepInBar % 2 === 0) {
+              const bellScale = [81, 84, 88, 91, 93, 91, 88, 84];
+              const bellNote = bellScale[(stepInBar >> 1) % bellScale.length];
+              this.playBellTone(when, this.midiToFreq(bellNote), 0.10, 0.65);
+            }
+            return;
+          }
+
+          /* --- ACT V: GEMINI FINALE (Bars 16..19 | Steps 256..307) --- */
+          if (step === 256) {
+            /* Percussion cuts out; resonant deep impact + lush Am9 decaying pad */
+            this.playCrashImpact(when, 0.34);
+            this.playSubDrone(when, 55.0, 5.2, 0.24);
+            this.playWarmPad(when, [57, 64, 67, 71, 76], 5.4, 0.22);
+            /* Ethereal resonant bell chord */
+            [69, 76, 83, 84].forEach((m, idx) => {
+              this.playBellTone(when + idx * 0.04, this.midiToFreq(m), 0.13, 3.6);
+            });
+          } else if (step === 268) {
+            this.playBellTone(when, this.midiToFreq(81), 0.11, 2.6); // A5
+          } else if (step === 274) {
+            this.playBellTone(when, this.midiToFreq(83), 0.11, 2.4); // B5
+          } else if (step === 280) {
+            this.playBellTone(when, this.midiToFreq(84), 0.12, 2.4); // C6
+          } else if (step === 288) {
+            this.playBellTone(when, this.midiToFreq(88), 0.14, 2.8); // E6 crystalline resolution
+            this.playBellTone(when + 0.06, this.midiToFreq(93), 0.09, 2.8); // A6 overtone
+          }
+        }
+
+        /* --- Synthesized Instrument Voice Builders --- */
+
+        playKick(when, vol) {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(155, when);
+          osc.frequency.exponentialRampToValueAtTime(44, when + 0.075);
+          osc.frequency.exponentialRampToValueAtTime(32, when + 0.24);
+
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + 0.004);
+          gain.gain.exponentialRampToValueAtTime(0.0008, when + 0.26);
+
+          osc.connect(gain);
+          gain.connect(this.masterBus);
+          osc.start(when);
+          osc.stop(when + 0.28);
+
+          /* Subtle click transient */
+          const click = this.ctx.createOscillator();
+          const cGain = this.ctx.createGain();
+          click.type = "triangle";
+          click.frequency.setValueAtTime(1400, when);
+          click.frequency.exponentialRampToValueAtTime(180, when + 0.018);
+          cGain.gain.setValueAtTime(vol * 0.25, when);
+          cGain.gain.exponentialRampToValueAtTime(0.0008, when + 0.02);
+          click.connect(cGain);
+          cGain.connect(this.masterBus);
+          click.start(when);
+          click.stop(when + 0.025);
+        }
+
+        playSnare(when, vol) {
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuffer;
+          const hp = this.ctx.createBiquadFilter();
+          hp.type = "bandpass";
+          hp.frequency.setValueAtTime(1950, when);
+          hp.Q.value = 0.85;
+          const nGain = this.ctx.createGain();
+          nGain.gain.setValueAtTime(vol, when);
+          nGain.gain.exponentialRampToValueAtTime(0.001, when + 0.17);
+          src.connect(hp);
+          hp.connect(nGain);
+          nGain.connect(this.masterBus);
+          nGain.connect(this.reverbSend);
+          src.start(when);
+          src.stop(when + 0.19);
+
+          const body = this.ctx.createOscillator();
+          const bGain = this.ctx.createGain();
+          body.type = "triangle";
+          body.frequency.setValueAtTime(215, when);
+          body.frequency.exponentialRampToValueAtTime(115, when + 0.08);
+          bGain.gain.setValueAtTime(vol * 0.55, when);
+          bGain.gain.exponentialRampToValueAtTime(0.001, when + 0.1);
+          body.connect(bGain);
+          bGain.connect(this.masterBus);
+          body.start(when);
+          body.stop(when + 0.11);
+        }
+
+        playHat(when, open, vol) {
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuffer;
+          const hp = this.ctx.createBiquadFilter();
+          hp.type = "highpass";
+          hp.frequency.value = 7400;
+          const gain = this.ctx.createGain();
+          const dur = open ? 0.18 : 0.045;
+          gain.gain.setValueAtTime(vol, when);
+          gain.gain.exponentialRampToValueAtTime(0.001, when + dur);
+          src.connect(hp);
+          hp.connect(gain);
+          gain.connect(this.masterBus);
+          src.start(when);
+          src.stop(when + dur + 0.01);
+        }
+
+        playFMBass(when, freq, dur, vol) {
+          const car = this.ctx.createOscillator();
+          const mod = this.ctx.createOscillator();
+          const modGain = this.ctx.createGain();
+          const filter = this.ctx.createBiquadFilter();
+          const outGain = this.ctx.createGain();
+
+          car.type = "sawtooth";
+          car.frequency.setValueAtTime(freq, when);
+          mod.type = "sine";
+          mod.frequency.setValueAtTime(freq * 2.0, when);
+          modGain.gain.setValueAtTime(freq * 1.4, when);
+          modGain.gain.exponentialRampToValueAtTime(freq * 0.15, when + dur);
+
+          filter.type = "lowpass";
+          filter.frequency.setValueAtTime(1250, when);
+          filter.frequency.exponentialRampToValueAtTime(240, when + dur);
+          filter.Q.value = 3.2;
+
+          outGain.gain.setValueAtTime(0.001, when);
+          outGain.gain.linearRampToValueAtTime(vol, when + 0.006);
+          outGain.gain.exponentialRampToValueAtTime(0.001, when + dur + 0.03);
+
+          mod.connect(modGain);
+          modGain.connect(car.frequency);
+          car.connect(filter);
+          filter.connect(outGain);
+          outGain.connect(this.masterBus);
+
+          car.start(when);
+          mod.start(when);
+          car.stop(when + dur + 0.04);
+          mod.stop(when + dur + 0.04);
+        }
+
+        playAcidSeq(when, freq, cutoff, vol) {
+          const osc = this.ctx.createOscillator();
+          const flt = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(freq, when);
+
+          flt.type = "lowpass";
+          flt.frequency.setValueAtTime(cutoff, when);
+          flt.frequency.exponentialRampToValueAtTime(Math.max(260, cutoff * 0.25), when + 0.11);
+          flt.Q.value = 5.5;
+
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + 0.005);
+          gain.gain.exponentialRampToValueAtTime(0.001, when + 0.12);
+
+          osc.connect(flt);
+          flt.connect(gain);
+          gain.connect(this.masterBus);
+          gain.connect(this.delaySend);
+
+          osc.start(when);
+          osc.stop(when + 0.13);
+        }
+
+        playCrystalPluck(when, freq, vol, dur) {
+          const osc = this.ctx.createOscillator();
+          const over = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, when);
+          over.type = "triangle";
+          over.frequency.setValueAtTime(freq * 2.0, when);
+
+          const overGain = this.ctx.createGain();
+          overGain.gain.value = 0.22;
+
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + 0.008);
+          gain.gain.exponentialRampToValueAtTime(0.0008, when + dur);
+
+          osc.connect(gain);
+          over.connect(overGain);
+          overGain.connect(gain);
+          gain.connect(this.masterBus);
+          gain.connect(this.delaySend);
+          gain.connect(this.reverbSend);
+
+          osc.start(when);
+          over.start(when);
+          osc.stop(when + dur + 0.02);
+          over.stop(when + dur + 0.02);
+        }
+
+        playBellTone(when, freq, vol, dur) {
+          const car = this.ctx.createOscillator();
+          const mod = this.ctx.createOscillator();
+          const modG = this.ctx.createGain();
+          const gain = this.ctx.createGain();
+
+          car.type = "sine";
+          car.frequency.setValueAtTime(freq, when);
+          mod.type = "sine";
+          mod.frequency.setValueAtTime(freq * 2.756, when); // harmonic bell ratio
+          modG.gain.setValueAtTime(freq * 0.85, when);
+          modG.gain.exponentialRampToValueAtTime(0.5, when + dur * 0.45);
+
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0006, when + dur);
+
+          mod.connect(modG);
+          modG.connect(car.frequency);
+          car.connect(gain);
+          gain.connect(this.masterBus);
+          gain.connect(this.reverbSend);
+          gain.connect(this.delaySend);
+
+          car.start(when);
+          mod.start(when);
+          car.stop(when + dur + 0.05);
+          mod.stop(when + dur + 0.05);
+          this.activeLongNodes.push({ gain, stoppers: [car, mod] });
+        }
+
+        playSubDrone(when, freq, dur, vol) {
+          const osc = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          const flt = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(freq, when);
+          osc2.type = "sine";
+          osc2.frequency.setValueAtTime(freq, when);
+
+          flt.type = "lowpass";
+          flt.frequency.setValueAtTime(95, when);
+          flt.frequency.linearRampToValueAtTime(240, when + dur * 0.7);
+          flt.frequency.linearRampToValueAtTime(80, when + dur);
+
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + 0.9);
+          gain.gain.setValueAtTime(vol, when + dur - 1.1);
+          gain.gain.exponentialRampToValueAtTime(0.0008, when + dur);
+
+          osc.connect(flt);
+          osc2.connect(flt);
+          flt.connect(gain);
+          gain.connect(this.masterBus);
+
+          osc.start(when);
+          osc2.start(when);
+          osc.stop(when + dur + 0.06);
+          osc2.stop(when + dur + 0.06);
+          this.activeLongNodes.push({ gain, stoppers: [osc, osc2] });
+        }
+
+        playWarmPad(when, midiNotes, dur, vol) {
+          const flt = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+          flt.type = "lowpass";
+          flt.frequency.setValueAtTime(420, when);
+          flt.frequency.linearRampToValueAtTime(1650, when + dur * 0.55);
+          flt.frequency.linearRampToValueAtTime(520, when + dur);
+          flt.Q.value = 1.2;
+
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + 0.75);
+          gain.gain.setValueAtTime(vol * 0.9, when + Math.max(0.8, dur - 1.2));
+          gain.gain.exponentialRampToValueAtTime(0.0006, when + dur);
+
+          const stoppers = [];
+          const perVoice = 1.0 / (midiNotes.length * 1.6);
+          midiNotes.forEach((m) => {
+            const f = this.midiToFreq(m);
+            [-5, 5].forEach((det) => {
+              const o = this.ctx.createOscillator();
+              o.type = "sawtooth";
+              o.frequency.setValueAtTime(f, when);
+              o.detune.value = det;
+              const vg = this.ctx.createGain();
+              vg.gain.value = perVoice;
+              o.connect(vg);
+              vg.connect(flt);
+              o.start(when);
+              o.stop(when + dur + 0.06);
+              stoppers.push(o);
+            });
+          });
+
+          flt.connect(gain);
+          gain.connect(this.masterBus);
+          gain.connect(this.reverbSend);
+          this.activeLongNodes.push({ gain, stoppers });
+        }
+
+        playSuperSawChord(when, midiNotes, dur, vol) {
+          const flt = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+          flt.type = "lowpass";
+          flt.frequency.setValueAtTime(4800, when);
+          flt.frequency.exponentialRampToValueAtTime(950, when + dur);
+          flt.Q.value = 1.5;
+
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + 0.016);
+          gain.gain.exponentialRampToValueAtTime(0.001, when + dur + 0.08);
+
+          const stoppers = [];
+          const detunes = [-14, 0, 14];
+          const perVoice = 1.0 / (midiNotes.length * detunes.length);
+
+          midiNotes.forEach((m) => {
+            const f = this.midiToFreq(m);
+            detunes.forEach((d) => {
+              const o = this.ctx.createOscillator();
+              o.type = "sawtooth";
+              o.frequency.setValueAtTime(f, when);
+              o.detune.value = d;
+              const vg = this.ctx.createGain();
+              vg.gain.value = perVoice;
+              o.connect(vg);
+              vg.connect(flt);
+              o.start(when);
+              o.stop(when + dur + 0.1);
+              stoppers.push(o);
+            });
+          });
+
+          flt.connect(gain);
+          gain.connect(this.masterBus);
+          gain.connect(this.reverbSend);
+          this.activeLongNodes.push({ gain, stoppers });
+        }
+
+        playPitchRiser(when, dur, startFreq, endFreq, vol) {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(startFreq, when);
+          osc.frequency.exponentialRampToValueAtTime(endFreq, when + dur);
+
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = "bandpass";
+          flt.frequency.setValueAtTime(startFreq * 1.5, when);
+          flt.frequency.exponentialRampToValueAtTime(endFreq * 1.8, when + dur);
+          flt.Q.value = 2.4;
+
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + dur * 0.92);
+          gain.gain.exponentialRampToValueAtTime(0.001, when + dur + 0.04);
+
+          osc.connect(flt);
+          flt.connect(gain);
+          gain.connect(this.masterBus);
+          gain.connect(this.reverbSend);
+          osc.start(when);
+          osc.stop(when + dur + 0.06);
+          this.activeLongNodes.push({ gain, stoppers: [osc] });
+        }
+
+        playNoiseSweep(when, dur, startF, endF, vol) {
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuffer;
+          src.loop = true;
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = "bandpass";
+          flt.frequency.setValueAtTime(startF, when);
+          flt.frequency.exponentialRampToValueAtTime(endF, when + dur);
+          flt.Q.value = 2.0;
+
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(0.001, when);
+          gain.gain.linearRampToValueAtTime(vol, when + dur * 0.9);
+          gain.gain.exponentialRampToValueAtTime(0.001, when + dur + 0.05);
+
+          src.connect(flt);
+          flt.connect(gain);
+          gain.connect(this.masterBus);
+          gain.connect(this.reverbSend);
+          src.start(when);
+          src.stop(when + dur + 0.06);
+          this.activeLongNodes.push({ gain, stoppers: [src] });
+        }
+
+        playCrashImpact(when, vol) {
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuffer;
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = "highpass";
+          flt.frequency.setValueAtTime(2400, when);
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(vol, when);
+          gain.gain.exponentialRampToValueAtTime(0.0008, when + 1.85);
+          src.connect(flt);
+          flt.connect(gain);
+          gain.connect(this.masterBus);
+          gain.connect(this.reverbSend);
+          src.start(when);
+          src.stop(when + 1.9);
+
+          /* Deep cinematic boom sub drop */
+          const boom = this.ctx.createOscillator();
+          const bGain = this.ctx.createGain();
+          boom.type = "sine";
+          boom.frequency.setValueAtTime(92, when);
+          boom.frequency.exponentialRampToValueAtTime(28, when + 0.9);
+          bGain.gain.setValueAtTime(vol * 1.4, when);
+          bGain.gain.exponentialRampToValueAtTime(0.0008, when + 1.2);
+          boom.connect(bGain);
+          bGain.connect(this.masterBus);
+          boom.start(when);
+          boom.stop(when + 1.25);
+        }
+
+        /* Sample real-time FFT bands for visuals (with graceful synthetic fallback if silent) */
+        updateMetrics(t, isLive) {
+          if (this.isReady && this.analyser && isLive) {
+            this.analyser.getByteFrequencyData(this.freqData);
+
+            let bassSum = 0, midSum = 0, trebSum = 0;
+            for (let i = 0; i < 6; i++) bassSum += this.freqData[i];
+            for (let i = 6; i < 30; i++) midSum += this.freqData[i];
+            for (let i = 30; i < 80; i++) trebSum += this.freqData[i];
+
+            const rawBass = clamp(bassSum / (6 * 255), 0, 1);
+            const rawMid = clamp(midSum / (24 * 255), 0, 1);
+            const rawTreb = clamp(trebSum / (50 * 255), 0, 1);
+
+            this.audioMetrics.bass = lerp(this.audioMetrics.bass, rawBass, 0.34);
+            this.audioMetrics.mid = lerp(this.audioMetrics.mid, rawMid, 0.28);
+            this.audioMetrics.treble = lerp(this.audioMetrics.treble, rawTreb, 0.28);
+            this.audioMetrics.energy = (this.audioMetrics.bass * 0.5 + this.audioMetrics.mid * 0.32 + this.audioMetrics.treble * 0.18);
+
+            for (let i = 0; i < 64; i++) {
+              const v = this.freqData[i] / 255;
+              this.smoothSpectrum[i] = lerp(this.smoothSpectrum[i], v, 0.35);
+            }
+          } else {
+            /* Gentle deterministic beat breathing when paused or in splash preview */
+            const beatEnv = Math.pow(1.0 - ((t / BEAT_DUR) % 1.0), 3.0);
+            const targetBass = state.splashOpen ? 0.18 + 0.12 * Math.sin(t * 1.4) : beatEnv * 0.25;
+            this.audioMetrics.bass = lerp(this.audioMetrics.bass, targetBass, 0.12);
+            this.audioMetrics.mid = lerp(this.audioMetrics.mid, 0.14 + 0.08 * Math.sin(t * 2.1), 0.12);
+            this.audioMetrics.treble = lerp(this.audioMetrics.treble, 0.12 + 0.06 * Math.cos(t * 3.0), 0.12);
+            this.audioMetrics.energy = this.audioMetrics.bass * 0.6 + this.audioMetrics.mid * 0.4;
+            for (let i = 0; i < 64; i++) {
+              const target = (0.08 + 0.12 * Math.sin(t * 2.5 + i * 0.35) ** 2) * (1 - i / 70);
+              this.smoothSpectrum[i] = lerp(this.smoothSpectrum[i], target, 0.12);
+            }
+          }
+          return this.audioMetrics;
+        }
+      }
+
+      const audioEngine = new ProceduralAudioEngine();
+
+      /* =======================================================================
+         7. ONE-CLICK VIDEO EXPORTER (MediaRecorder + Unified Master Canvas)
+         ======================================================================= */
+      let mediaRecorder = null;
+      let recordedChunks = [];
+
+      function getBestVideoMimeType() {
+        const candidates = [
+          "video/webm;codecs=vp9,opus",
+          "video/webm;codecs=vp8,opus",
+          "video/webm;codecs=vp9",
+          "video/webm;codecs=vp8",
+          "video/webm"
+        ];
+        if (typeof MediaRecorder === "undefined") return "";
+        for (const mime of candidates) {
+          if (MediaRecorder.isTypeSupported(mime)) return mime;
+        }
+        return "";
+      }
+
+      function startVideoExport() {
+        if (state.isRecording) return;
+
+        try {
+          if (typeof MediaRecorder === "undefined" || typeof masterCanvas.captureStream !== "function") {
+            showToast("Your browser does not support MediaRecorder canvas export. Try Chrome or Edge on desktop.", 5000);
+            return;
+          }
+
+          audioEngine.ensureInitialized();
+          hideSplash();
+
+          /* Reset timeline cleanly to 0:00 and lock resolution selector during export */
+          state.currentTime = 0.0;
+          state.isPlaying = true;
+          audioEngine.syncToTime(0.0);
+
+          const canvasStream = masterCanvas.captureStream(60);
+          const tracks = [...canvasStream.getVideoTracks()];
+          if (audioEngine.mediaStreamDest && audioEngine.mediaStreamDest.stream) {
+            tracks.push(...audioEngine.mediaStreamDest.stream.getAudioTracks());
+          }
+          const combinedStream = new MediaStream(tracks);
+
+          const mimeType = getBestVideoMimeType();
+          const options = {
+            videoBitsPerSecond: 8000000,
+            audioBitsPerSecond: 192000
+          };
+          if (mimeType) options.mimeType = mimeType;
+
+          recordedChunks = [];
+          mediaRecorder = new MediaRecorder(combinedStream, options);
+
+          mediaRecorder.ondataavailable = (ev) => {
+            if (ev.data && ev.data.size > 0) recordedChunks.push(ev.data);
+          };
+
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, { type: mimeType || "video/webm" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = "gemini-pure-code-cinema.webm";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }, 1500);
+
+            state.isRecording = false;
+            recPill.classList.remove("active");
+            btnExport.disabled = false;
+            resSelect.disabled = false;
+            showToast("Export complete! Saved gemini-pure-code-cinema.webm", 4500);
+          };
+
+          mediaRecorder.onerror = (err) => {
+            console.error("[GEMINI EXPORT] MediaRecorder error:", err);
+            stopVideoExport();
+            showToast("Recording error occurred — see console for details.", 4000);
+          };
+
+          mediaRecorder.start(250);
+          state.isRecording = true;
+          recPill.classList.add("active");
+          btnExport.disabled = true;
+          resSelect.disabled = true;
+          updatePlayButtonUI();
+          showToast(`Recording ${state.resolution} 60 FPS showreel...`, 3000);
+        } catch (err) {
+          console.error("[GEMINI EXPORT] Failed to start export:", err);
+          state.isRecording = false;
+          recPill.classList.remove("active");
+          btnExport.disabled = false;
+          resSelect.disabled = false;
+          showToast("Export initialization failed: " + err.message, 4500);
+        }
+      }
+
+      function stopVideoExport() {
+        if (!state.isRecording || !mediaRecorder) return;
+        try {
+          if (mediaRecorder.state !== "inactive") {
+            mediaRecorder.stop();
+          }
+        } catch (err) {
+          console.error("[GEMINI EXPORT] Stop error:", err);
+        }
+      }
+
+      /* =======================================================================
+         8. RESOLUTION MANAGEMENT & UNIFIED FRAME COMPOSITOR
+         ======================================================================= */
+      function applyResolution(mode) {
+        state.resolution = mode;
+        if (mode === "720p") {
+          state.masterW = 1280;
+          state.masterH = 720;
+          state.glScale = 0.72; // ~922x518 offscreen GL
+        } else {
+          state.masterW = 1920;
+          state.masterH = 1080;
+          state.glScale = 0.667; // 1280x720 offscreen GL upscaled into crisp 1080p master
+        }
+
+        masterCanvas.width = state.masterW;
+        masterCanvas.height = state.masterH;
+        glCanvas.width = Math.round(state.masterW * state.glScale);
+        glCanvas.height = Math.round(state.masterH * state.glScale);
+
+        if (gl) {
+          gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+        }
+      }
+
+      function formatTimecodeShort(t) {
+        const clamped = clamp(t, 0, DURATION);
+        const secs = Math.floor(clamped);
+        const tenths = Math.floor((clamped - secs) * 10);
+        return `00:${String(secs).padStart(2, "0")}.${tenths}`;
+      }
+
+      function formatTimecodeDetailed(t) {
+        const clamped = clamp(t, 0, DURATION);
+        const secs = Math.floor(clamped);
+        const hundredths = Math.floor((clamped - secs) * 100);
+        return `00:${String(secs).padStart(2, "0")}.${String(hundredths).padStart(2, "0")}`;
+      }
+
+      /* Master Frame Compositor: Layer 1 (WebGL) -> Layer 2 (Particles) -> Layer 3 (Overlays) */
+      function renderFrame(t, isPreview) {
+        const w = state.masterW;
+        const h = state.masterH;
+        const audio = audioEngine.updateMetrics(t, state.isPlaying && !isPreview);
+        const weights = getActWeights(t);
+        const beatPhase = (t / BEAT_DUR) % 1.0;
+        const beatPulse = Math.pow(1.0 - beatPhase, 3.0);
+
+        /* Audio-reactive micro camera shake on heavy beats (Acts II–IV) */
+        const shakeAmt = (!isPreview && t > 7.4 && t < 30.0)
+          ? Math.max(0, audio.bass - 0.5) * 0.016
+          : 0.0;
+        const shakeX = Math.sin(t * 67.3) * shakeAmt;
+        const shakeY = Math.cos(t * 53.7) * shakeAmt;
+
+        /* --- LAYER 1: WebGL GLSL Raymarching Shader --- */
+        if (state.webglAvailable && gl && glProgram) {
+          gl.useProgram(glProgram);
+          gl.uniform2f(glUniforms.res, glCanvas.width, glCanvas.height);
+          gl.uniform1f(glUniforms.time, t);
+          gl.uniform1f(glUniforms.beat, beatPulse);
+          gl.uniform1f(glUniforms.bass, audio.bass);
+          gl.uniform1f(glUniforms.mid, audio.mid);
+          gl.uniform1f(glUniforms.treble, audio.treble);
+          gl.uniform1f(glUniforms.energy, audio.energy);
+          gl.uniform2f(glUniforms.shake, shakeX, shakeY);
+          gl.uniform1f(glUniforms.preview, isPreview ? 1.0 : 0.0);
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(glCanvas, 0, 0, w, h);
+        } else {
+          render2DFallbackBackground(ctx, w, h, t, audio);
+        }
+
+        /* --- LAYER 2: 3D-Projected Canvas 2D Particle Engine --- */
+        renderParticlesLayer(ctx, w, h, t, audio, weights, isPreview);
+
+        /* --- LAYER 3: Visualizer, Kinetic Typography, Telemetry HUD, Vignette & Letterbox --- */
+        renderCinemaOverlay(ctx, w, h, t, audio, isPreview);
+      }
+
+      /* =======================================================================
+         9. MAIN ANIMATION LOOP, UI SYNCHRONIZATION & CONTROLS
+         ======================================================================= */
+      function updateUI() {
+        const pct = clamp((state.currentTime / DURATION) * 100, 0, 100);
+        scrubberFill.style.width = `${pct}%`;
+        scrubberThumb.style.left = `${pct}%`;
+        timecodeDisplay.innerHTML = `${formatTimecodeShort(state.currentTime)} <span>/ 00:36.0</span>`;
+
+        const activeAct = getActiveActIndex(state.currentTime);
+        for (let i = 0; i < actButtons.length; i++) {
+          actButtons[i].classList.toggle("active", i === activeAct);
+        }
+
+        if (state.isRecording) {
+          recLabel.textContent = `REC ${formatTimecodeShort(state.currentTime)} / 36.0s (${Math.round(pct)}%)`;
+          recBarFill.style.width = `${pct}%`;
+        }
+
+        /* Auto-hide floating director dock after 3 seconds of mouse inactivity during playback */
+        const idleMs = performance.now() - state.lastMouseMove;
+        const shouldHide = !state.splashOpen && state.isPlaying && !state.isScrubbing && idleMs > 3000;
+        controlsBar.classList.toggle("autohide", shouldHide);
+      }
+
+      function updatePlayButtonUI() {
+        btnPlayPause.textContent = state.isPlaying ? "❚❚ PAUSE" : "▶ PLAY";
+      }
+
+      function hideSplash() {
+        if (!state.splashOpen) return;
+        state.splashOpen = false;
+        splashOverlay.classList.add("hidden");
+        state.lastMouseMove = performance.now();
+      }
+
+      function startPlayback(fromStart = false) {
+        audioEngine.ensureInitialized();
+        hideSplash();
+        if (fromStart || state.currentTime >= DURATION - 0.05) {
+          state.currentTime = 0.0;
+        }
+        state.isPlaying = true;
+        audioEngine.syncToTime(state.currentTime);
+        updatePlayButtonUI();
+      }
+
+      function togglePlayPause() {
+        if (state.splashOpen) {
+          startPlayback(true);
+          return;
+        }
+        audioEngine.ensureInitialized();
+        if (state.isPlaying) {
+          state.isPlaying = false;
+          audioEngine.stopAllScheduled();
+        } else {
+          if (state.currentTime >= DURATION - 0.05) state.currentTime = 0.0;
+          state.isPlaying = true;
+          audioEngine.syncToTime(state.currentTime);
+        }
+        updatePlayButtonUI();
+      }
+
+      function seekTo(targetTime) {
+        audioEngine.ensureInitialized();
+        hideSplash();
+        state.currentTime = clamp(targetTime, 0, DURATION);
+        audioEngine.syncToTime(state.currentTime);
+        updateUI();
+        renderFrame(state.currentTime, false);
+      }
+
+      /* Main 60 FPS Animation Loop */
+      function animate(now) {
+        requestAnimationFrame(animate);
+
+        if (!state.lastRafTime) state.lastRafTime = now;
+        const dt = Math.min(0.05, Math.max(0.0, (now - state.lastRafTime) / 1000));
+        state.lastRafTime = now;
+
+        /* FPS counter update every 0.4s */
+        state.fpsFrames++;
+        state.fpsAccum += dt;
+        if (state.fpsAccum >= 0.4) {
+          state.fpsValue = Math.round(state.fpsFrames / state.fpsAccum);
+          fpsBadge.textContent = `${state.fpsValue} FPS`;
+          state.fpsFrames = 0;
+          state.fpsAccum = 0;
+        }
+
+        if (state.splashOpen) {
+          state.previewTime += dt;
+          renderFrame(state.previewTime, true);
+          return;
+        }
+
+        if (state.isPlaying && !state.isScrubbing) {
+          state.currentTime += dt;
+          audioEngine.updateScheduler(state.currentTime);
+
+          if (state.currentTime >= DURATION) {
+            state.currentTime = DURATION;
+            state.isPlaying = false;
+            audioEngine.stopAllScheduled();
+            updatePlayButtonUI();
+            if (state.isRecording) {
+              stopVideoExport();
+            }
+          }
+        }
+
+        renderFrame(state.currentTime, false);
+        updateUI();
+      }
+
+      /* =======================================================================
+         10. EVENT LISTENERS (Mouse, Touch, Keyboard, Scrubber)
+         ======================================================================= */
+      function registerInteractions() {
+        /* Keep controls visible on mouse or touch activity */
+        const wakeControls = () => {
+          state.lastMouseMove = performance.now();
+          controlsBar.classList.remove("autohide");
+        };
+        window.addEventListener("mousemove", wakeControls, { passive: true });
+        window.addEventListener("touchstart", wakeControls, { passive: true });
+
+        /* Splash Buttons */
+        btnSplashPlay.addEventListener("click", () => startPlayback(true));
+        btnSplashExport.addEventListener("click", () => startVideoExport());
+
+        /* Transport Buttons */
+        btnPlayPause.addEventListener("click", togglePlayPause);
+        btnReplay.addEventListener("click", () => startPlayback(true));
+        masterCanvas.addEventListener("click", () => {
+          if (!state.splashOpen) togglePlayPause();
+        });
+
+        /* Act Jump Markers */
+        actButtons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const idx = parseInt(btn.dataset.act, 10);
+            if (!Number.isNaN(idx) && ACTS[idx]) {
+              seekTo(ACTS[idx].start);
+              if (!state.isPlaying) startPlayback(false);
+            }
+          });
+        });
+
+        /* Resolution Selector */
+        resSelect.addEventListener("change", () => {
+          if (state.isRecording) return;
+          applyResolution(resSelect.value);
+          renderFrame(state.splashOpen ? state.previewTime : state.currentTime, state.splashOpen);
+          showToast(`Render pipeline switched to ${resSelect.value.toUpperCase()}`);
+        });
+
+        /* Mute Toggle */
+        btnMute.addEventListener("click", () => {
+          audioEngine.ensureInitialized();
+          state.isMuted = !state.isMuted;
+          audioEngine.setMuted(state.isMuted);
+          btnMute.textContent = state.isMuted ? "🔇 MUTED" : "🔊 SOUND";
+        });
+
+        /* Export & Stop Recording */
+        btnExport.addEventListener("click", startVideoExport);
+        btnStopRec.addEventListener("click", () => {
+          stopVideoExport();
+          state.isPlaying = false;
+          audioEngine.stopAllScheduled();
+          updatePlayButtonUI();
+        });
+
+        /* Interactive Scrubber (Mouse + Touch) */
+        const scrubFromClientX = (clientX) => {
+          const rect = scrubberWrap.getBoundingClientRect();
+          const ratio = clamp((clientX - rect.left) / rect.width, 0, 1);
+          seekTo(ratio * DURATION);
+        };
+
+        const beginScrub = (clientX) => {
+          if (state.isRecording) {
+            showToast("Cannot scrub timeline while recording video.");
+            return;
+          }
+          state.isScrubbing = true;
+          state.wasPlayingBeforeScrub = state.isPlaying;
+          state.isPlaying = false;
+          audioEngine.stopAllScheduled();
+          scrubFromClientX(clientX);
+        };
+
+        const endScrub = () => {
+          if (!state.isScrubbing) return;
+          state.isScrubbing = false;
+          if (state.wasPlayingBeforeScrub && state.currentTime < DURATION - 0.05) {
+            state.isPlaying = true;
+            audioEngine.syncToTime(state.currentTime);
+          }
+          updatePlayButtonUI();
+        };
+
+        scrubberWrap.addEventListener("mousedown", (e) => {
+          beginScrub(e.clientX);
+        });
+        window.addEventListener("mousemove", (e) => {
+          if (state.isScrubbing) scrubFromClientX(e.clientX);
+        });
+        window.addEventListener("mouseup", endScrub);
+
+        scrubberWrap.addEventListener("touchstart", (e) => {
+          if (e.touches.length > 0) beginScrub(e.touches[0].clientX);
+        }, { passive: true });
+        window.addEventListener("touchmove", (e) => {
+          if (state.isScrubbing && e.touches.length > 0) scrubFromClientX(e.touches[0].clientX);
+        }, { passive: true });
+        window.addEventListener("touchend", endScrub);
+
+        /* Keyboard Shortcuts */
+        window.addEventListener("keydown", (e) => {
+          if (e.target && (e.target.tagName === "SELECT" || e.target.tagName === "INPUT")) return;
+          if (e.code === "Space") {
+            e.preventDefault();
+            togglePlayPause();
+          } else if (e.key === "r" || e.key === "R") {
+            if (!state.isRecording) startPlayback(true);
+          } else if (e.key === "m" || e.key === "M") {
+            btnMute.click();
+          } else if (e.key >= "1" && e.key <= "5" && !state.isRecording) {
+            const idx = parseInt(e.key, 10) - 1;
+            seekTo(ACTS[idx].start);
+            if (!state.isPlaying) startPlayback(false);
+          }
+        });
+      }
+
+      /* =======================================================================
+         11. BOOTSTRAP ON WINDOW LOAD
+         ======================================================================= */
+      window.onload = function () {
+        buildParticleSprites();
+        initParticles();
+        initWebGL();
+        applyResolution("1080p");
+        registerInteractions();
+        requestAnimationFrame(animate);
+      };
+    })();
+  </script>
+</body>
+</html>

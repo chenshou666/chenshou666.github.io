@@ -18,22 +18,65 @@ const PORTFOLIO_DATA={
   {group:"编程与基础",items:["C 语言（C11）","数据结构与算法基础","静态语法与结构校验","离线数据与编码压缩"]},
   {group:"工程与交付",items:["零构建纯静态架构","file:// 本地离线运行","GitHub Pages 部署","文档与结构化维护"]}
  ],
- work:{
-  id:"ht-lab",
-  name:"HT Lab",
-  subtitle:"纯前端闯关式交互学习站（C 语言 86 关 + 英语四级 62 关）",
-  summary:"一款零后端、零构建、双击即可离线运行的静态学习应用。内置 C 语言与英语四级两门完整课程，提供讲义高亮、交互测验、浏览器端 C 代码结构检查、本机运行输出逐行比对、46 段本地听力与示范音频、跟读录音自评、学习点数与跨设备存档码迁移。",
-  features:[
-   {title:"148 关完整学习路线",desc:"C 语言 11 模块 86 关（起步到系统底层与综合项目）+ 英语四级 7 模块 62 关（地基、听力、阅读、写作、翻译、口语与全真模考），两门课进度独立。"},
-   {title:"浏览器端 C 语法与结构检查",desc:"自研轻量词法/语法分析与规格校验引擎，配合带行号与语法着色的代码编辑器，以及本机运行输出逐行比对流程。"},
-   {title:"四级听说读写全任务引擎",desc:"内置 46 段本地离线 mp3 音频、原文展开、写作/翻译要点词数判分、口语录音与跟读自评清单、模考倒计时自动交卷。"},
-   {title:"7 天小作品支线",desc:"以控制台记账本为线索，把输入输出、数组、字符串、函数、指针与文件存储拆成 7 天可编译运行的阶段任务。"},
-   {title:"免登录跨设备存档迁移",desc:"全部进度仅保存于本机 localStorage，支持 JSON 导出导入、Gzip 压缩 HT1 存档码与 #save= 分享链接恢复。"},
-   {title:"液态玻璃单 UI 体验",desc:"深空极光 Canvas 2D 画布、玻璃质感组件、View Transitions 页面切换动画、自动收起底部 Dock 与移动端适配。"}
-  ],
-  stack:["Vanilla HTML/CSS/JS","Canvas 2D","Web Audio / MediaRecorder","View Transitions API","localStorage","CompressionStream (Gzip)","file:// 离线运行","GitHub Pages"]
- }
+ works:[
+  {
+   id:"ht-lab",
+   mark:"HT",
+   kind:"互动学习站",
+   name:"HT Lab",
+   subtitle:"纯前端闯关式交互学习站（C 语言 86 关 + 英语四级 62 关）",
+   summary:"一款零后端、零构建、双击即可离线运行的静态学习应用。内置 C 语言与英语四级两门完整课程，提供讲义高亮、交互测验、浏览器端 C 代码结构检查、本机运行输出逐行比对、46 段本地听力与示范音频、跟读录音自评、学习点数与跨设备存档码迁移。",
+   badge:"可离线使用",
+   ctaLabel:"进入学习课程",
+   ctaAction:"enter-lab",
+   features:[
+    {title:"148 关完整学习路线",desc:"C 语言 11 模块 86 关（起步到系统底层与综合项目）+ 英语四级 7 模块 62 关（地基、听力、阅读、写作、翻译、口语与全真模考），两门课进度独立。"},
+    {title:"浏览器端 C 语法与结构检查",desc:"自研轻量词法/语法分析与规格校验引擎，配合带行号与语法着色的代码编辑器，以及本机运行输出逐行比对流程。"},
+    {title:"四级听说读写全任务引擎",desc:"内置 46 段本地离线 mp3 音频、原文展开、写作/翻译要点词数判分、口语录音与跟读自评清单、模考倒计时自动交卷。"},
+    {title:"7 天小作品支线",desc:"以控制台记账本为线索，把输入输出、数组、字符串、函数、指针与文件存储拆成 7 天可编译运行的阶段任务。"},
+    {title:"免登录跨设备存档迁移",desc:"全部进度仅保存于本机 localStorage，支持 JSON 导出导入、Gzip 压缩 HT1 存档码与 #save= 分享链接恢复。"},
+    {title:"液态玻璃单 UI 体验",desc:"深空极光 Canvas 2D 画布、玻璃质感组件、View Transitions 页面切换动画、自动收起底部 Dock 与移动端适配。"}
+   ],
+   stack:["Vanilla HTML/CSS/JS","Canvas 2D","Web Audio / MediaRecorder","View Transitions API","localStorage","CompressionStream (Gzip)","file:// 离线运行","GitHub Pages"]
+  },
+  {
+   id:"code-cinema",
+   mark:"影",
+   kind:"代码生成影像",
+   name:"代码影院 · Code Cinema",
+   subtitle:"4 部纯代码实时生成的短片与视觉诗（WebGL / GLSL + Web Audio）",
+   summary:"同一个创作思路的四个实验：不用任何图片、模型或音频素材，画面与配乐全部由代码实时生成。包括水墨微电影《墨韵山河》、生成式电影引擎 PURE CODE CINEMA、1080p60 光学视觉诗《万物同构》，以及实时生成影院《纯代码视界》。每部都是可离线运行的单文件演示，支持自定义片头与录制导出视频。",
+   badge:"4 部作品",
+   metrics:[
+    {v:"4 部",l:"短片 / 视觉诗"},
+    {v:"100% 实时",l:"代码生成画面"},
+    {v:"0 素材",l:"无图片/音频文件"},
+    {v:"WebGL",l:"GLSL + Web Audio"}
+   ],
+   demos:[
+    {name:"墨韵山河 · INK & MIST",subtitle:"3D 写实水墨微电影（GLSL 光线步进）",desc:"40 秒水墨正片：山川、云雾与光影全部由 GLSL 光线步进实时计算，配合 Web Audio 合成配乐；可自定义开场提示词与结尾朱砂篆印，一键录制导出。",href:"works/ink-mist-3d.html",tags:["水墨","GLSL 光线步进","40 秒","录屏导出"]},
+    {name:"PURE CODE CINEMA",subtitle:"零依赖生成式电影引擎",desc:"36 秒五幕编舞（奇点 → 形变 → 超空间 → 超新星 → GEMINI），Web Audio 实时合成 128 BPM 配乐，0 字节外部素材，支持 1080p / 720p WebM 导出。",href:"works/pure-code-cinema.html",tags:["生成式电影","五幕","128 BPM","0 素材"]},
+    {name:"万物同构 · ISOMORPHISM",subtitle:"1080p60 电影感视觉诗（WebGL2 多通道）",desc:"六章同构视觉诗：虹膜⇄星云、蛛网⇄神经、闪电⇄脉络⇄江河、飓风⇄鹦鹉螺⇄星系、玄武岩⇄蜂巢⇄石墨烯、水波⇄时空⇄归瞳；多通道光学渲染 + 电影原声。",href:"works/isomorphism.html",tags:["WebGL2 多通道","六章","1080p60"]},
+    {name:"纯代码视界 · ZERO PIXELS",subtitle:"100% 实时代码生成影院",desc:"六大乐章（创世 / 四维 / 物理 / 律动 / 光追 …）全部实时生成，把傅里叶、四维、引力、声谱与光追等抽象主题变成可看可听的画面；支持停止并保存导出。",href:"works/zero-pixels.html",tags:["傅里叶","四维","光追","六乐章"]}
+   ],
+   features:[
+    {title:"画面 100% 由代码生成",desc:"不加载任何图片、贴图、3D 模型或音频文件：山峦、云雾、光线、粒子与节奏全部是 GLSL/WebGL 的实时计算结果。"},
+    {title:"声音也由代码合成",desc:"四部作品都用 Web Audio 在浏览器里实时合成配乐、音效与节拍，画面与声音同源，天然同步。"},
+    {title:"单文件、离线可运行",desc:"每部都是一个独立 HTML 文件，双击即可播放，不依赖框架、构建工具或后端，方便分享与二次创作。"},
+    {title:"可定制 + 录制导出",desc:"支持自定义片头提示词 / 落款、9:16 与 16:9 画幅、画质档位，并可用 MediaRecorder 一键导出视频。"}
+   ],
+   stack:["Vanilla JavaScript","WebGL2 / GLSL 光线步进","Web Audio 合成","MediaRecorder 录屏","requestAnimationFrame","零素材单文件"]
+  }
+ ],
 };
+
+var selectedWorkId="ht-lab";
+
+function currentWork(){
+ var list=PORTFOLIO_DATA.works||[];
+ for(var i=0;i<list.length;i++){if(list[i].id===selectedWorkId)return list[i]}
+ return list[0];
+}
 
 function portfolioStats(){
  var total=0,done=0,xp=0;
@@ -55,8 +98,45 @@ function syncZoneChrome(){
 
 function renderPortfolio(){
  var st=portfolioStats();
- var w=PORTFOLIO_DATA.work;
  var qq=typeof CONTACT_QQ_GROUP!=="undefined"?CONTACT_QQ_GROUP:"";
+ var works=PORTFOLIO_DATA.works||[];
+ var cards=works.map(function(w){
+  var metrics;
+  if(w.id==="ht-lab"){
+   metrics=''
+    +'<div class="pf-metric"><strong>'+st.total+' 关</strong><span>完整关卡</span></div>'
+    +'<div class="pf-metric"><strong>'+COURSES.length+' 门课</strong><span>C 语言 · 四级</span></div>'
+    +'<div class="pf-metric"><strong>纯前端</strong><span>无构建零依赖</span></div>'
+    +'<div class="pf-metric"><strong>可离线</strong><span>双击即可运行</span></div>';
+  }else{
+   metrics=(w.metrics||[]).map(function(m){return '<div class="pf-metric"><strong>'+esc(m.v)+'</strong><span>'+esc(m.l)+'</span></div>'}).join("");
+  }
+  var extraActions='';
+  if(w.ctaHref){
+   extraActions+='<a class="btn btn-soft" href="'+esc(w.ctaHref)+'" target="_blank" rel="noopener">'+esc(w.ctaLabel)+'</a>';
+  }else if(w.ctaAction){
+   extraActions+='<button class="btn btn-ghost" type="button" data-action="'+esc(w.ctaAction)+'">'+esc(w.ctaLabel)+'</button>';
+  }
+  return ''
+   +'<article class="panel pf-work-card">'
+    +'<div class="pf-work-mark" aria-hidden="true">'+esc(w.mark)+'</div>'
+    +'<div class="pf-work-main">'
+     +'<div class="pf-work-head">'
+      +'<div><div class="eyebrow">FEATURED WORK · '+esc(w.kind)+'</div><h3>'+esc(w.name)+'</h3></div>'
+      +'<span class="chip">'+esc(w.badge)+'</span>'
+     +'</div>'
+     +'<p class="pf-work-desc">'+esc(w.summary)+'</p>'
+     +'<div class="pf-work-metrics">'+metrics+'</div>'
+     +(w.id==="ht-lab"
+       ?'<div class="pf-work-progress"><div class="pf-progress-meta"><span>本设备累计学习进度</span><span>'+st.done+' / '+st.total+' 关（'+st.pct+'%） · '+st.xp+' 学习点</span></div><div class="progress-bar"><i style="width:'+st.pct+'%"></i></div></div>'
+       :'')
+     +'<div class="pf-work-actions">'
+      +'<button class="btn btn-primary" type="button" data-action="open-work" data-work="'+esc(w.id)+'">查看作品 →</button>'
+      +extraActions
+     +'</div>'
+    +'</div>'
+   +'</article>';
+ }).join("");
  document.getElementById("view").innerHTML=''
   +'<section class="panel pf-hero">'
    +'<div class="page-header pf-hero-head">'
@@ -68,36 +148,13 @@ function renderPortfolio(){
     +'<span class="chip pf-badge">在线作品集</span>'
    +'</div>'
    +'<div class="pf-hero-actions">'
-    +'<button class="btn btn-primary" type="button" data-action="open-work">查看代表作品 →</button>'
+    +'<button class="btn btn-primary" type="button" data-action="open-work" data-work="ht-lab">查看代表作品 →</button>'
     +'<button class="btn btn-soft" type="button" data-action="enter-lab">直接进入 HT Lab</button>'
     +'<button class="btn btn-ghost" type="button" data-action="open-author">关于作者</button>'
    +'</div>'
   +'</section>'
-  +'<div class="section-head"><div><h2>精选作品</h2><p>目前上线 1 个完整交互作品，点进即可查看详情或直接体验全部功能。</p></div><span class="chip">1 个作品</span></div>'
-  +'<article class="panel pf-work-card">'
-   +'<div class="pf-work-mark" aria-hidden="true">HT</div>'
-   +'<div class="pf-work-main">'
-    +'<div class="pf-work-head">'
-     +'<div><div class="eyebrow">FEATURED WORK · 互动学习站</div><h3>'+esc(w.name)+'</h3></div>'
-     +'<span class="chip">可离线使用</span>'
-    +'</div>'
-    +'<p class="pf-work-desc">'+esc(w.summary)+'</p>'
-    +'<div class="pf-work-metrics">'
-     +'<div class="pf-metric"><strong>'+st.total+' 关</strong><span>完整关卡</span></div>'
-     +'<div class="pf-metric"><strong>'+COURSES.length+' 门课</strong><span>C 语言 · 四级</span></div>'
-     +'<div class="pf-metric"><strong>纯前端</strong><span>无构建零依赖</span></div>'
-     +'<div class="pf-metric"><strong>可离线</strong><span>双击即可运行</span></div>'
-    +'</div>'
-    +'<div class="pf-work-progress">'
-     +'<div class="pf-progress-meta"><span>本设备累计学习进度</span><span>'+st.done+' / '+st.total+' 关（'+st.pct+'%） · '+st.xp+' 学习点</span></div>'
-     +'<div class="progress-bar"><i style="width:'+st.pct+'%"></i></div>'
-    +'</div>'
-    +'<div class="pf-work-actions">'
-     +'<button class="btn btn-primary" type="button" data-action="open-work">查看作品 →</button>'
-     +'<button class="btn btn-ghost" type="button" data-action="enter-lab">进入学习课程</button>'
-    +'</div>'
-   +'</div>'
-  +'</article>'
+  +'<div class="section-head"><div><h2>精选作品</h2><p>目前上线 '+works.length+' 个完整交互作品，点进即可查看详情或直接体验全部功能。</p></div><span class="chip">'+works.length+' 个作品</span></div>'
+  +cards
   +'<section class="panel pf-about-strip">'
    +'<div>'
     +'<div class="challenge-label">关于与联系</div>'
@@ -114,50 +171,72 @@ function renderPortfolio(){
 
 function renderWorkDetail(){
  var st=portfolioStats();
- var w=PORTFOLIO_DATA.work;
- var courseSummary=COURSES.map(function(c){
+ var w=currentWork();
+ var isLab=(w.id==="ht-lab");
+ var courseSummary=isLab?COURSES.map(function(c){
   var ls=courseLevels[c.id]||[],gs=courseGroups[c.id]||[],cs=stores[c.id]||{completed:{}},dn=Object.keys(cs.completed||{}).length,pc=ls.length?Math.round(dn/ls.length*100):0;
   return '<div class="pf-course-row">'
    +'<div class="pf-course-row-top"><strong>'+esc(c.name)+'</strong><span>'+gs.length+' 模块 · '+ls.length+' 关 · 已通 '+dn+' 关（'+pc+'%）</span></div>'
    +'<div class="progress-bar"><i style="width:'+pc+'%"></i></div>'
   +'</div>';
- }).join("");
- var featuresHtml=w.features.map(function(f){
+ }).join(""):"";
+ var metrics=isLab
+  ?'<div class="pf-metric"><strong>'+st.total+' 关</strong><span>总课程关卡</span></div>'
+    +'<div class="pf-metric"><strong>'+COURSES.length+' 门课</strong><span>作品内含课程</span></div>'
+    +'<div class="pf-metric"><strong>46 段</strong><span>本地离线音频</span></div>'
+    +'<div class="pf-metric"><strong>'+st.pct+'%</strong><span>当前设备总进度</span></div>'
+  :(w.metrics||[]).map(function(m){return '<div class="pf-metric"><strong>'+esc(m.v)+'</strong><span>'+esc(m.l)+'</span></div>'}).join("");
+ var featuresHtml=(w.features||[]).map(function(f){
   return '<div class="pf-feature-item"><h3>'+esc(f.title)+'</h3><p>'+esc(f.desc)+'</p></div>';
  }).join("");
- var tagsHtml=w.stack.map(function(t){
+ var tagsHtml=(w.stack||[]).map(function(t){
   return '<span class="pf-tag">'+esc(t)+'</span>';
  }).join("");
+ var demosHtml=(w.demos||[]).map(function(d,i){
+  return '<article class="pf-demo-item">'
+   +'<div class="pf-demo-index">'+String(i+1).padStart(2,"0")+'</div>'
+   +'<div class="pf-demo-body">'
+    +'<div class="pf-demo-head"><h3>'+esc(d.name)+'</h3><span class="pf-demo-sub">'+esc(d.subtitle)+'</span></div>'
+    +'<p class="pf-demo-desc">'+esc(d.desc)+'</p>'
+    +'<div class="pf-demo-foot">'
+     +'<div class="pf-tags">'+(d.tags||[]).map(function(t){return '<span class="pf-tag">'+esc(t)+'</span>'}).join("")+'</div>'
+     +'<a class="btn btn-primary btn-small" href="'+esc(d.href)+'" target="_blank" rel="noopener">在线体验 ↗</a>'
+    +'</div>'
+   +'</div>'
+  +'</article>';
+ }).join("");
+ var actions=isLab
+  ?'<button class="btn btn-primary" type="button" data-action="enter-lab">进入作品开始学习 →</button><button class="btn btn-ghost" type="button" data-page="about">查看许可与免责</button>'
+  :(w.ctaHref? '<a class="btn btn-primary" href="'+esc(w.ctaHref)+'" target="_blank" rel="noopener">'+esc(w.ctaLabel)+'</a>':'')
+   +'<button class="btn btn-ghost" type="button" data-page="home">← 返回作品集</button>';
  document.getElementById("view").innerHTML=''
   +'<div class="page-header">'
    +'<div><div class="eyebrow">WORK DETAIL · 作品详情</div><h1>'+esc(w.name)+'</h1><p class="subhead">'+esc(w.subtitle)+'</p></div>'
    +'<button class="btn btn-ghost btn-small" type="button" data-page="home">← 返回作品集</button>'
   +'</div>'
   +'<section class="panel pf-detail-hero">'
-   +'<div class="challenge-head"><div class="challenge-label">项目介绍</div><span class="chip">纯静态 · 可离线</span></div>'
+   +'<div class="challenge-head"><div class="challenge-label">项目介绍</div><span class="chip">'+esc(w.badge||"作品")+'</span></div>'
    +'<p class="lesson-copy">'+esc(w.summary)+'</p>'
-   +'<div class="pf-work-metrics">'
-    +'<div class="pf-metric"><strong>'+st.total+' 关</strong><span>总课程关卡</span></div>'
-    +'<div class="pf-metric"><strong>'+COURSES.length+' 门课</strong><span>作品内含课程</span></div>'
-    +'<div class="pf-metric"><strong>46 段</strong><span>本地离线音频</span></div>'
-    +'<div class="pf-metric"><strong>'+st.pct+'%</strong><span>当前设备总进度</span></div>'
-   +'</div>'
-   +'<div class="pf-course-summary">'+courseSummary+'</div>'
-   +'<div class="pf-work-actions">'
-    +'<button class="btn btn-primary" type="button" data-action="enter-lab">进入作品开始学习 →</button>'
-    +'<button class="btn btn-ghost" type="button" data-page="about">查看许可与免责</button>'
-   +'</div>'
+   +'<div class="pf-work-metrics">'+metrics+'</div>'
+   +(courseSummary?'<div class="pf-course-summary">'+courseSummary+'</div>':'')
+   +'<div class="pf-work-actions">'+actions+'</div>'
   +'</section>'
   +'<section class="panel">'
    +'<div class="challenge-head"><div class="challenge-label">做了什么</div><span class="chip">核心能力</span></div>'
    +'<div class="pf-feature-grid">'+featuresHtml+'</div>'
   +'</section>'
+  +(demosHtml?'<section class="panel">'
+   +'<div class="challenge-head"><div class="challenge-label">系列作品 · 逐部体验</div><span class="chip">'+w.demos.length+' 部</span></div>'
+   +'<div class="pf-demo-list">'+demosHtml+'</div>'
+  +'</section>':'')
   +'<section class="panel">'
-   +'<div class="challenge-head"><div class="challenge-label">技术栈与架构约束</div><span class="chip">Zero Build</span></div>'
+   +'<div class="challenge-head"><div class="challenge-label">技术栈与约束</div><span class="chip">'+(isLab?"Zero Build":"Single File")+'</span></div>'
    +'<div class="pf-tags">'+tagsHtml+'</div>'
-   +'<p class="challenge-copy" style="margin-top:14px">全站不依赖任何打包工具、框架或 CDN，采用固定顺序加载的经典脚本与样式层，在 GitHub Pages 与本地 file:// 协议下均可完整运行。</p>'
+   +'<p class="challenge-copy" style="margin-top:14px">'+(isLab
+     ?'全站不依赖任何打包工具、框架或 CDN，采用固定顺序加载的经典脚本与样式层，在 GitHub Pages 与本地 file:// 协议下均可完整运行。'
+     :'四部短片均为独立单文件演示（works/*.html），点开即在新标签页播放，可离线运行；主站本身保持零外部依赖。')+'</p>'
   +'</section>'
-  +'<div class="footer-note">进入 HT Lab 后，顶栏左侧随时可点「← 作品集」回到这里。</div>';
+  +'<div class="footer-note">'+(isLab?'进入 HT Lab 后，顶栏左侧随时可点「← 作品集」回到这里。':'「墨韵山河」在新标签页打开独立演示，关闭标签页即可回到作品集。')+'</div>';
 }
 
 function renderAuthor(){

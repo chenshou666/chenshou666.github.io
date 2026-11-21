@@ -2442,3 +2442,88 @@ body[data-zone="portfolio"] .reset-button {
     transition: none !important;
   }
 }
+
+/* ==========================================================================
+ * 多作品：作品卡之间的间距（作品集新增第二个作品时有序列出）
+ * ========================================================================== */
+.pf-work-card + .pf-work-card {
+  margin-top: 16px;
+}
+
+/* ==========================================================================
+ * 系列作品（代码影院）：详情页的逐部体验列表
+ * ========================================================================== */
+.pf-demo-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.pf-demo-item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.pf-demo-index {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #bae6fd;
+  line-height: 1.1;
+}
+
+.pf-demo-body {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.pf-demo-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pf-demo-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--ui-ink);
+}
+
+.pf-demo-sub {
+  font-size: 12px;
+  color: var(--ui-ink-3);
+}
+
+.pf-demo-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.75;
+  color: rgba(232, 240, 255, 0.86);
+}
+
+.pf-demo-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 620px) {
+  .pf-demo-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 16px;
+  }
+  .pf-demo-index {
+    font-size: 16px;
+  }
+}

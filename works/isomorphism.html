@@ -1,0 +1,3361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>万物同构 · ISOMORPHISM — 1080p 60Hz Cinema Visual Poem</title>
+  <style>
+    /* =========================================================================
+       CORE CINEMA RESET & DESIGN TOKENS (Zero External Dependencies)
+    ========================================================================= */
+    :root {
+      --bg-void: #020305;
+      --glass-bg: rgba(10, 14, 22, 0.54);
+      --glass-border: rgba(255, 255, 255, 0.13);
+      --glass-highlight: rgba(255, 255, 255, 0.06);
+      --text-primary: rgba(246, 248, 252, 0.94);
+      --text-secondary: rgba(196, 206, 224, 0.72);
+      --text-muted: rgba(154, 168, 192, 0.50);
+      --accent-gold: #e7be78;
+      --accent-cyan: #6ed6f0;
+      --accent-rec: #ff4757;
+      --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-serif: "Songti SC", "STSong", "Noto Serif SC", Georgia, serif;
+      --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Monaco, monospace;
+      --ease-cinema: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Full-bleed theater stage preserving crisp 16:9 presentation */
+    #theater {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #080b12 0%, #010204 100%);
+      overflow: hidden;
+    }
+
+    #glCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: calc(100vh * 16 / 9);
+      max-height: calc(100vw * 9 / 16);
+      aspect-ratio: 16 / 9;
+      background: #000;
+      box-shadow: 0 0 120px rgba(0, 0, 0, 0.95);
+      cursor: pointer;
+    }
+
+    /* =========================================================================
+       LIVE PERFORMANCE MONITOR (DOM-Only, Excluded from Video Export)
+    ========================================================================= */
+    #perfBadge {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(8, 11, 18, 0.42);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: rgba(215, 226, 245, 0.72);
+      transition: opacity 0.55s var(--ease-cinema), transform 0.55s var(--ease-cinema);
+      pointer-events: none;
+    }
+
+    #perfBadge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    #perfBadge.hidden-hud {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+
+    /* =========================================================================
+       INTRO LAUNCH OVERLAY (Frosted Minimalist Cinema Card)
+    ========================================================================= */
+    #introOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 45%, rgba(4, 7, 13, 0.38) 0%, rgba(2, 4, 8, 0.80) 100%);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      transition: opacity 0.9s var(--ease-cinema), visibility 0.9s var(--ease-cinema);
+    }
+
+    #introOverlay.dismissed {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .intro-card {
+      position: relative;
+      width: min(640px, 94vw);
+      padding: clamp(28px, 5vw, 52px) clamp(24px, 4.5vw, 48px);
+      border-radius: 26px;
+      background: linear-gradient(155deg, rgba(16, 22, 34, 0.64) 0%, rgba(7, 10, 17, 0.76) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow:
+        0 32px 90px rgba(0, 0, 0, 0.72),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(26px) saturate(135%);
+      -webkit-backdrop-filter: blur(26px) saturate(135%);
+      text-align: center;
+    }
+
+    .intro-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      opacity: 0.88;
+      margin-bottom: 16px;
+    }
+
+    .intro-title {
+      font-family: var(--font-serif);
+      font-size: clamp(38px, 6.2vw, 60px);
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-indent: 0.24em;
+      line-height: 1.15;
+      background: linear-gradient(180deg, #ffffff 0%, #dce6f7 68%, #b7c8e6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .intro-subtitle {
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1.5vw, 12px);
+      letter-spacing: 0.22em;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .intro-desc {
+      font-size: clamp(13px, 1.7vw, 14.5px);
+      line-height: 1.85;
+      color: rgba(215, 224, 240, 0.78);
+      max-width: 490px;
+      margin: 0 auto 28px;
+      font-weight: 300;
+    }
+
+    .intro-specs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 30px;
+    }
+
+    .spec-pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      color: rgba(226, 234, 248, 0.82);
+    }
+
+    .btn-launch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 15px 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(231, 190, 120, 0.55);
+      background: linear-gradient(135deg, rgba(231, 190, 120, 0.24) 0%, rgba(110, 214, 240, 0.18) 100%);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      box-shadow:
+        0 12px 36px rgba(0, 0, 0, 0.45),
+        0 0 28px rgba(231, 190, 120, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.30);
+      transition: transform 0.28s var(--ease-cinema), box-shadow 0.28s var(--ease-cinema), background 0.28s ease;
+    }
+
+    .btn-launch:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: linear-gradient(135deg, rgba(231, 190, 120, 0.34) 0%, rgba(110, 214, 240, 0.26) 100%);
+      box-shadow:
+        0 18px 46px rgba(0, 0, 0, 0.55),
+        0 0 42px rgba(231, 190, 120, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.42);
+    }
+
+    .btn-launch:active {
+      transform: translateY(0) scale(0.99);
+    }
+
+    .intro-hint {
+      margin-top: 18px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* =========================================================================
+       RECORDING STATUS PILL (Top-Center Non-Intrusive Bar)
+    ========================================================================= */
+    #recBanner {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-18px);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 14px 8px 16px;
+      border-radius: 999px;
+      background: rgba(18, 10, 14, 0.82);
+      border: 1px solid rgba(255, 71, 87, 0.48);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), 0 0 24px rgba(255, 71, 87, 0.16);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #fff;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.35s var(--ease-cinema);
+    }
+
+    #recBanner.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .rec-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent-rec);
+      box-shadow: 0 0 12px var(--accent-rec);
+      animation: recPulse 1.1s ease-in-out infinite;
+    }
+
+    @keyframes recPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.82); }
+    }
+
+    .rec-progress-track {
+      width: 110px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+    }
+
+    .rec-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-rec), var(--accent-gold));
+      transition: width 0.12s linear;
+    }
+
+    #btnCancelRec {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    #btnCancelRec:hover {
+      background: rgba(255, 71, 87, 0.32);
+    }
+
+    /* =========================================================================
+       AUTO-HIDING TRANSLUCENT CINEMA CONTROL BAR
+    ========================================================================= */
+    #cinemaHud {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      z-index: 40;
+      width: min(1040px, calc(100vw - 28px));
+      padding: 12px 16px 13px;
+      border-radius: 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      box-shadow:
+        0 20px 56px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10);
+      transition: opacity 0.55s var(--ease-cinema), transform 0.55s var(--ease-cinema);
+    }
+
+    #cinemaHud.hidden-hud {
+      opacity: 0;
+      transform: translateX(-50%) translateY(18px);
+      pointer-events: none;
+    }
+
+    /* Chapter pills row */
+    .chapters-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin-bottom: 9px;
+    }
+
+    .chapter-btn {
+      position: relative;
+      padding: 5px 6px;
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-size: 10.5px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+      transition: all 0.25s var(--ease-cinema);
+      text-align: center;
+    }
+
+    .chapter-btn:hover {
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--text-primary);
+    }
+
+    .chapter-btn.active {
+      background: linear-gradient(135deg, rgba(231, 190, 120, 0.18), rgba(110, 214, 240, 0.14));
+      border-color: rgba(231, 190, 120, 0.42);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* Timeline scrubber */
+    .scrubber-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .time-readout {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      min-width: 42px;
+      text-align: center;
+    }
+
+    #timelineTrack {
+      position: relative;
+      flex: 1;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .track-bg {
+      position: relative;
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      overflow: visible;
+    }
+
+    .track-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold));
+      box-shadow: 0 0 12px rgba(231, 190, 120, 0.45);
+    }
+
+    .track-thumb {
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.85);
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease;
+    }
+
+    #timelineTrack:hover .track-thumb {
+      transform: translate(-50%, -50%) scale(1.25);
+    }
+
+    .track-tick {
+      position: absolute;
+      top: -2px;
+      width: 1px;
+      height: 9px;
+      background: rgba(255, 255, 255, 0.28);
+      pointer-events: none;
+    }
+
+    /* Controls bottom row */
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 34px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: all 0.2s var(--ease-cinema);
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.13);
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+
+    .ctrl-btn.active {
+      background: rgba(110, 214, 240, 0.16);
+      border-color: rgba(110, 214, 240, 0.45);
+      color: #dff8ff;
+    }
+
+    .ctrl-btn.primary {
+      background: rgba(231, 190, 120, 0.18);
+      border-color: rgba(231, 190, 120, 0.46);
+      color: #fff7e6;
+      padding: 0 14px;
+    }
+
+    .ctrl-btn.primary:hover {
+      background: rgba(231, 190, 120, 0.30);
+    }
+
+    .ctrl-btn.export-btn {
+      background: linear-gradient(135deg, rgba(231, 190, 120, 0.20), rgba(110, 214, 240, 0.16));
+      border-color: rgba(231, 190, 120, 0.45);
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .ctrl-btn.export-btn:hover {
+      background: linear-gradient(135deg, rgba(231, 190, 120, 0.34), rgba(110, 214, 240, 0.26));
+      box-shadow: 0 0 18px rgba(231, 190, 120, 0.22);
+    }
+
+    .ctrl-btn svg {
+      width: 15px;
+      height: 15px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    .vol-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px 0 4px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .vol-wrap .ctrl-btn {
+      height: 28px;
+      padding: 0 8px;
+      border: none;
+      background: transparent;
+    }
+
+    #volSlider {
+      width: 66px;
+      accent-color: var(--accent-gold);
+      cursor: pointer;
+    }
+
+    #resSelect {
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(16, 20, 30, 0.85);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* =========================================================================
+       TOAST MESSAGE BOX (Replaces alert/confirm cleanly)
+    ========================================================================= */
+    #toastBox {
+      position: fixed;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      z-index: 80;
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: rgba(12, 16, 26, 0.88);
+      border: 1px solid rgba(231, 190, 120, 0.4);
+      backdrop-filter: blur(18px);
+      color: #fff;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.35s var(--ease-cinema);
+      pointer-events: none;
+    }
+
+    #toastBox.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Fallback Error Panel */
+    #errorPanel {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #05070c;
+    }
+
+    .error-card {
+      max-width: 560px;
+      padding: 28px;
+      border-radius: 18px;
+      background: rgba(255, 60, 80, 0.08);
+      border: 1px solid rgba(255, 80, 100, 0.35);
+      color: #ffdce0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+
+    /* Responsive adjustments for smaller viewports */
+    @media (max-width: 820px) {
+      .chapters-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      #volSlider {
+        width: 48px;
+      }
+      .hide-sm {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="theater">
+    <!-- Main 1920x1080 WebGL2 Cinema Canvas -->
+    <canvas id="glCanvas" width="1920" height="1080" aria-label="万物同构 1080p 60Hz 实时视觉大片"></canvas>
+
+    <!-- Live Performance Indicator (DOM-only, never burned into recorded video) -->
+    <div id="perfBadge">
+      <span class="dot"></span>
+      <span id="perfText">1920×1080 · 60 FPS · WebGL2 HDR</span>
+    </div>
+
+    <!-- Recording Status Indicator -->
+    <div id="recBanner" role="status" aria-live="polite">
+      <span class="rec-dot"></span>
+      <span id="recLabel">正在导出 1080p·60fps  00:00 / 01:00</span>
+      <div class="rec-progress-track">
+        <div id="recProgressFill" class="rec-progress-fill"></div>
+      </div>
+      <button id="btnCancelRec" type="button">取消</button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastBox" role="status"></div>
+
+    <!-- Intro Launch Overlay -->
+    <div id="introOverlay">
+      <div class="intro-card">
+        <div class="intro-eyebrow">A PURE-CODE PROCEDURAL VISUAL POEM</div>
+        <h1 class="intro-title">万物同构</h1>
+        <div class="intro-subtitle">ISOMORPHISM · 10⁻¹⁰ m ⇄ 10²⁵ m · 60 SECONDS</div>
+        <p class="intro-desc">
+          宇宙在不同的尺度上，反复书写着同一套几何诗篇。<br />
+          从凝视之瞳到螺旋星云，从暗物质蛛网到神经突触，从闪电分形、血管脉络、冰川三角洲，到飓风、鹦鹉螺、旋涡星系、玄武岩、蜂巢与石墨烯——六幕无缝拓扑匹配剪辑，实时演算呈现。
+        </p>
+        <div class="intro-specs">
+          <span class="spec-pill">1920×1080 · 60Hz</span>
+          <span class="spec-pill">WebGL2 多通道光学渲染</span>
+          <span class="spec-pill">Web Audio 电影原声</span>
+          <span class="spec-pill">支持 1080p60 WebM 导出</span>
+        </div>
+        <button id="btnLaunch" class="btn-launch" type="button">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5.14v14l11-7-11-7z"/></svg>
+          <span>开启 1080p·60Hz 沉浸放映</span>
+        </button>
+        <div class="intro-hint">建议佩戴耳机并开启全屏 · 快捷键：Space 播放 / 1-6 切幕 / H 标尺 / F 全屏</div>
+      </div>
+    </div>
+
+    <!-- Auto-Hiding Glassmorphic Cinema Control HUD -->
+    <div id="cinemaHud" class="hidden-hud">
+      <div class="chapters-row" id="chaptersRow">
+        <button class="chapter-btn active" data-act="0" type="button">01 虹膜⇄星云</button>
+        <button class="chapter-btn" data-act="1" type="button">02 蛛网⇄神经</button>
+        <button class="chapter-btn" data-act="2" type="button">03 闪电⇄脉络⇄江河</button>
+        <button class="chapter-btn" data-act="3" type="button">04 飓风⇄鹦鹉螺⇄星系</button>
+        <button class="chapter-btn" data-act="4" type="button">05 玄武岩⇄蜂巢⇄石墨烯</button>
+        <button class="chapter-btn" data-act="5" type="button">06 水波⇄时空⇄归瞳</button>
+      </div>
+
+      <div class="scrubber-wrap">
+        <span class="time-readout" id="curTimeText">00:00</span>
+        <div id="timelineTrack" role="slider" aria-label="影片时间轴" aria-valuemin="0" aria-valuemax="60" aria-valuenow="0">
+          <div class="track-bg">
+            <div class="track-fill" id="trackFill"></div>
+            <div class="track-thumb" id="trackThumb"></div>
+            <div class="track-tick" style="left: 16.666%"></div>
+            <div class="track-tick" style="left: 33.333%"></div>
+            <div class="track-tick" style="left: 50.000%"></div>
+            <div class="track-tick" style="left: 66.666%"></div>
+            <div class="track-tick" style="left: 83.333%"></div>
+          </div>
+        </div>
+        <span class="time-readout">01:00</span>
+      </div>
+
+      <div class="controls-row">
+        <div class="ctrl-group">
+          <button id="btnPlayPause" class="ctrl-btn primary" type="button" title="播放 / 暂停 (Space)">
+            <svg id="iconPlayPause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            <span id="txtPlayPause">暂停</span>
+          </button>
+
+          <button id="btnRestart" class="ctrl-btn" type="button" title="重播 (00:00)">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          </button>
+
+          <div class="vol-wrap">
+            <button id="btnMute" class="ctrl-btn" type="button" title="静音 (M)">
+              <svg id="iconVol" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            </button>
+            <input id="volSlider" type="range" min="0" max="1" step="0.01" value="0.82" aria-label="音量" />
+          </div>
+
+          <button id="btnLoop" class="ctrl-btn active" type="button" title="无缝循环开关">
+            <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+            <span class="hide-sm">循环</span>
+          </button>
+
+          <button id="btnHudToggle" class="ctrl-btn active" type="button" title="科学标尺与字幕 HUD (H)">
+            <span>标尺</span>
+          </button>
+        </div>
+
+        <div class="ctrl-group">
+          <select id="resSelect" aria-label="渲染分辨率">
+            <option value="1080" selected>1080p 原生</option>
+            <option value="720">720p 高帧</option>
+            <option value="auto">自适应</option>
+          </select>
+
+          <button id="btnExport" class="ctrl-btn export-btn" type="button" title="录制完整 60 秒 1080p 60fps 音画视频">
+            <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+            <span>导出 1080p 60fps 视频</span>
+          </button>
+
+          <button id="btnFullscreen" class="ctrl-btn" type="button" title="全屏 (F)">
+            <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WebGL2 Error Fallback Panel -->
+    <div id="errorPanel">
+      <div class="error-card" id="errorText"></div>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    'use strict';
+
+    /* =========================================================================
+       1. FILM METADATA, CHAPTERS & SCIENTIFIC TELEMETRY TIMELINE (60.0s)
+    ========================================================================= */
+    const TOTAL_DURATION = 60.0;
+
+    const CHAPTERS = [
+      {
+        index: '01 / 06',
+        title: '凝视之瞳 ⇄ 宇宙深渊',
+        enTitle: 'HUMAN IRIS ⇄ HELIX NEBULA',
+        invariant: 'Radial Fibrous Field · 径向纤维场',
+        scaleStart: -2.0,
+        scaleEnd: 16.0,
+        subStart: 1.0,
+        subEnd: 8.6,
+        zhSub: '凝视深渊之时，星云正以同样的纤维结构回望人类。',
+        enSub: 'When we gaze into the abyss, the cosmos gazes back through the same radial geometry.'
+      },
+      {
+        index: '02 / 06',
+        title: '宇宙蛛网 ⇄ 神经突触',
+        enTitle: 'COSMIC WEB ⇄ CORTICAL NEURONS',
+        invariant: '3D Voronoi Filament Topology · 丝状网络拓扑',
+        scaleStart: 25.0,
+        scaleEnd: -5.0,
+        subStart: 11.0,
+        subEnd: 18.8,
+        zhSub: '百亿光年的暗物质丝网，与方寸脑海中的一次闪念同构共振。',
+        enSub: 'Across billions of light-years or a single spark of thought, matter weaves the same web.'
+      },
+      {
+        index: '03 / 06',
+        title: '闪电分形 ⇄ 血管脉络 ⇄ 江河三角洲',
+        enTitle: 'LIGHTNING ⇄ CAPILLARIES ⇄ RIVER DELTA',
+        invariant: 'Dendritic Branching Fractal · 树状分形脉络',
+        scaleStart: 3.0,
+        scaleEnd: 5.0,
+        subStart: 21.0,
+        subEnd: 29.0,
+        zhSub: '电流、鲜血与冰川融水，皆循阻力最小的分形路径奔涌不息。',
+        enSub: 'Voltage, blood, and glacial meltwater carve the exact same path of least resistance.'
+      },
+      {
+        index: '04 / 06',
+        title: '飓风涡旋 ⇄ 鹦鹉螺 ⇄ 旋涡星系',
+        enTitle: 'SUPER TYPHOON ⇄ NAUTILUS ⇄ SPIRAL GALAXY',
+        invariant: 'Logarithmic Spiral r = a·e^(bθ) · 黄金对数螺旋',
+        scaleStart: 6.0,
+        scaleEnd: 21.0,
+        subStart: 31.0,
+        subEnd: 39.0,
+        zhSub: '云团、贝壳与千亿星辰，都恪守着同一枚无声旋转的黄金螺线。',
+        enSub: 'Storms, shells, and galaxies obey one silent, eternal logarithmic spiral.'
+      },
+      {
+        index: '05 / 06',
+        title: '玄武岩柱 ⇄ 黄金蜂巢 ⇄ 石墨烯晶格',
+        enTitle: 'BASALT COLUMNS ⇄ HONEYCOMB ⇄ GRAPHENE',
+        invariant: 'Hexagonal Minimum-Energy Tessellation · 六方密堆积',
+        scaleStart: 1.0,
+        scaleEnd: -10.0,
+        subStart: 41.0,
+        subEnd: 49.0,
+        zhSub: '熔岩冷却、蜜蜂筑巢与碳原子键合，不约而同收敛于最优六边形。',
+        enSub: 'Cooling basalt, beeswax, and carbon lattices converge on nature’s most frugal geometry.'
+      },
+      {
+        index: '06 / 06',
+        title: '水波干涉 ⇄ 引力波纹 ⇄ 回归之瞳',
+        enTitle: 'CAUSTICS ⇄ SPACETIME RIPPLES → THE EYE',
+        invariant: 'Wave Interference & Eternal Return · 波纹干涉与闭环',
+        scaleStart: 0.0,
+        scaleEnd: -2.0,
+        subStart: 50.8,
+        subEnd: 55.2,
+        zhSub: '微澜起于水镜，涟漪震荡时空，万物终归于最初的凝视。',
+        enSub: 'Ripples on water echo through spacetime, returning at last to the observing eye.'
+      }
+    ];
+
+    /* Smooth piecewise scale exponent lookup (log10 meters) across all 12 visual subjects */
+    function getLiveScaleExponent(t) {
+      const pts = [
+        [0.0,  -2.0],  // Human Iris (1 cm)
+        [6.5,  -2.0],
+        [10.2, 16.0],  // Helix Nebula (~10^16 m)
+        [16.2, 25.0],  // Cosmic Web (~10^25 m)
+        [19.8, -5.0],  // Cortical Neurons (~10 um)
+        [23.5,  3.0],  // Lightning (~1 km)
+        [26.6, -4.0],  // Capillaries (~100 um)
+        [29.8,  5.0],  // River Delta (~100 km)
+        [33.6,  6.0],  // Super Typhoon (~1000 km)
+        [36.6, -1.0],  // Nautilus Shell (~10 cm)
+        [39.8, 21.0],  // Spiral Galaxy (~10^21 m)
+        [43.6,  1.0],  // Basalt Columns (~10 m)
+        [46.6, -2.0],  // Honeycomb (~1 cm)
+        [49.8, -10.0], // Graphene Atomic Lattice (~1 Angstrom)
+        [53.0,  0.0],  // Water Caustics (~1 m)
+        [55.6, 12.0],  // Gravitational Spacetime Ripples
+        [59.5, -2.0],  // Return to Iris
+        [60.0, -2.0]
+      ];
+      const ct = ((t % TOTAL_DURATION) + TOTAL_DURATION) % TOTAL_DURATION;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [t0, v0] = pts[i];
+        const [t1, v1] = pts[i + 1];
+        if (ct >= t0 && ct <= t1) {
+          const u = (ct - t0) / Math.max(0.0001, t1 - t0);
+          const s = u * u * (3.0 - 2.0 * u);
+          return v0 + (v1 - v0) * s;
+        }
+      }
+      return -2.0;
+    }
+
+    function toSuperscript(numInt) {
+      const map = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+      return String(numInt).split('').map(c => map[c] || c).join('');
+    }
+
+    /* =========================================================================
+       2. GLSL ES 3.00 SHADERS (MULTI-PASS PHOTOREALISTIC CINEMA PIPELINE)
+    ========================================================================= */
+
+    /* Shared Fullscreen Triangle Vertex Shader */
+    const VERT_QUAD = `#version 300 es
+precision highp float;
+out vec2 vUv;
+void main() {
+  vec2 pos = vec2(
+    float((gl_VertexID & 1) << 2) - 1.0,
+    float((gl_VertexID & 2) << 1) - 1.0
+  );
+  vUv = pos * 0.5 + 0.5;
+  gl_Position = vec4(pos, 0.0, 1.0);
+}
+`;
+
+    /* PASS 1: Main 6-Act Photorealistic Isomorphic World Shader */
+    const FRAG_SCENE = `#version 300 es
+precision highp float;
+
+in vec2 vUv;
+out vec4 fragColor;
+
+uniform vec2 uRes;
+uniform float uTime;
+uniform float uAudioBass;
+uniform float uAudioHigh;
+
+const float PI  = 3.14159265359;
+const float TAU = 6.28318530718;
+
+/* -------------------------------------------------------------------------
+   ULTRA-FAST ARTIFACT-FREE HASH & PROCEDURAL NOISE TOOLKIT
+------------------------------------------------------------------------- */
+float hash12(vec2 p) {
+  vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+vec2 hash22(vec2 p) {
+  vec3 p3 = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.xx + p3.yz) * p3.zy);
+}
+
+vec3 hash33(vec3 p3) {
+  p3 = fract(p3 * vec3(0.1031, 0.1030, 0.0973));
+  p3 += dot(p3, p3.yxz + 33.33);
+  return fract((p3.xxy + p3.yxx) * p3.zyx);
+}
+
+mat2 rot2(float a) {
+  float c = cos(a), s = sin(a);
+  return mat2(c, -s, s, c);
+}
+
+const mat2 FBM_ROT = mat2(0.80, -0.60, 0.60, 0.80);
+
+float noise2(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  float a = hash12(i);
+  float b = hash12(i + vec2(1.0, 0.0));
+  float c = hash12(i + vec2(0.0, 1.0));
+  float d = hash12(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+float noise3(vec3 p) {
+  vec3 i = floor(p);
+  vec3 f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  float n000 = hash33(i + vec3(0.0, 0.0, 0.0)).x;
+  float n100 = hash33(i + vec3(1.0, 0.0, 0.0)).x;
+  float n010 = hash33(i + vec3(0.0, 1.0, 0.0)).x;
+  float n110 = hash33(i + vec3(1.0, 1.0, 0.0)).x;
+  float n001 = hash33(i + vec3(0.0, 0.0, 1.0)).x;
+  float n101 = hash33(i + vec3(1.0, 0.0, 1.0)).x;
+  float n011 = hash33(i + vec3(0.0, 1.0, 1.0)).x;
+  float n111 = hash33(i + vec3(1.0, 1.0, 1.0)).x;
+  float nx00 = mix(n000, n100, f.x);
+  float nx10 = mix(n010, n110, f.x);
+  float nx01 = mix(n001, n101, f.x);
+  float nx11 = mix(n011, n111, f.x);
+  return mix(mix(nx00, nx10, f.y), mix(nx01, nx11, f.y), f.z);
+}
+
+float fbm2(vec2 p) {
+  float v = 0.0;
+  float a = 0.5;
+  for (int i = 0; i < 5; i++) {
+    v += a * noise2(p);
+    p = FBM_ROT * p * 2.02 + vec2(17.1, 31.7);
+    a *= 0.5;
+  }
+  return v;
+}
+
+float fbm2Fast(vec2 p) {
+  float v = 0.0;
+  float a = 0.5;
+  for (int i = 0; i < 3; i++) {
+    v += a * noise2(p);
+    p = FBM_ROT * p * 2.04 + vec2(11.3, 23.9);
+    a *= 0.5;
+  }
+  return v;
+}
+
+float ridgedFbm(vec2 p) {
+  float v = 0.0;
+  float a = 0.52;
+  float w = 1.0;
+  for (int i = 0; i < 5; i++) {
+    float n = 1.0 - abs(noise2(p) * 2.0 - 1.0);
+    n = n * n * w;
+    w = clamp(n * 1.65, 0.0, 1.0);
+    v += n * a;
+    p = FBM_ROT * p * 2.07 + vec2(9.4, 19.2);
+    a *= 0.5;
+  }
+  return v;
+}
+
+/* Smooth blackbody star tint (t in 0..1: warm red-orange -> white -> hot blue) */
+vec3 blackbody(float t) {
+  vec3 c1 = vec3(1.00, 0.52, 0.24);
+  vec3 c2 = vec3(1.00, 0.94, 0.86);
+  vec3 c3 = vec3(0.62, 0.82, 1.00);
+  return t < 0.5 ? mix(c1, c2, t * 2.0) : mix(c2, c3, (t - 0.5) * 2.0);
+}
+
+/* Crisp multi-temperature starfield */
+vec3 starField(vec2 p, float scale, float density, float twinkleTime) {
+  vec2 uv = p * scale;
+  vec2 id = floor(uv);
+  vec2 gv = fract(uv) - 0.5;
+  vec3 col = vec3(0.0);
+  for (int y = -1; y <= 1; y++) {
+    for (int x = -1; x <= 1; x++) {
+      vec2 offs = vec2(float(x), float(y));
+      vec2 cid = id + offs;
+      vec2 rnd = hash22(cid);
+      float prob = hash12(cid + 71.3);
+      if (prob > density) {
+        vec2 pos = offs + (rnd - 0.5) * 0.78;
+        float d = length(gv - pos);
+        float size = mix(0.004, 0.026, pow(fract(prob * 43.1), 3.0));
+        float core = exp(-d * d / (size * size + 0.00004));
+        float halo = exp(-d * 18.0) * 0.16;
+        float tw = 0.78 + 0.22 * sin(twinkleTime * (1.8 + rnd.x * 4.5) + rnd.y * TAU);
+        float bright = pow((prob - density) / (1.0 - density), 2.4) * 2.6 + 0.25;
+        col += blackbody(rnd.y) * (core + halo) * bright * tw;
+      }
+    }
+  }
+  return col;
+}
+
+/* 3D Voronoi returning (F1, F2 - F1 edge distance, cell hash) */
+vec3 voronoi3D(vec3 x) {
+  vec3 n = floor(x);
+  vec3 f = fract(x);
+  float f1 = 8.0;
+  float f2 = 8.0;
+  float cid = 0.0;
+  for (int k = -1; k <= 1; k++) {
+    for (int j = -1; j <= 1; j++) {
+      for (int i = -1; i <= 1; i++) {
+        vec3 g = vec3(float(i), float(j), float(k));
+        vec3 o = hash33(n + g);
+        vec3 r = g + (0.14 + 0.72 * o) - f;
+        float d = dot(r, r);
+        if (d < f1) {
+          f2 = f1;
+          f1 = d;
+          cid = o.x;
+        } else if (d < f2) {
+          f2 = d;
+        }
+      }
+    }
+  }
+  return vec3(sqrt(f1), sqrt(f2) - sqrt(f1), cid);
+}
+
+/* Seamless Hexagonal Grid returning xy = local centered coords, zw = cell ID */
+vec4 hexCoords(vec2 uv) {
+  vec2 r = vec2(1.0, 1.7320508);
+  vec2 h = r * 0.5;
+  vec2 a = mod(uv, r) - h;
+  vec2 b = mod(uv - h, r) - h;
+  vec2 gv = dot(a, a) < dot(b, b) ? a : b;
+  vec2 id = uv - gv;
+  return vec4(gv, id);
+}
+
+float hexDist(vec2 p) {
+  p = abs(p);
+  float c = dot(p, normalize(vec2(1.0, 1.7320508)));
+  return max(c, p.x);
+}
+
+/* Smooth transition helper */
+float smoothWindow(float t, float a, float b) {
+  return smoothstep(a, b, t);
+}
+
+/* =========================================================================
+   ACT I (00:00 - 00:10): HUMAN IRIS <-> HELIX NEBULA ("EYE OF GOD")
+   Shared Invariant: Radial Fibrous Field (r, theta)
+========================================================================= */
+float radialFiberField(float r, float ang, float twist, float timeShift) {
+  /* Seamless angular periodicity using sin/cos embedding */
+  vec2 aVec = vec2(cos(ang), sin(ang));
+  vec2 warp = vec2(
+    fbm2Fast(aVec * 2.4 + vec2(r * 2.2, timeShift * 0.08)),
+    fbm2Fast(aVec * 2.4 + vec2(4.2 - r * 2.0, -timeShift * 0.06))
+  ) - 0.5;
+  vec2 p1 = aVec * (3.6 + r * 2.2) + warp * 0.65;
+  vec2 p2 = rot2(twist * r) * aVec * (9.5 + r * 3.0) + warp * 0.85;
+  float fCoarse = fbm2(p1 + vec2(r * 1.45, 0.0));
+  float fFine   = fbm2(p2 + vec2(r * 3.8, 2.3));
+  float fStreaks = fbm2Fast(vec2(atan(aVec.y, aVec.x) * 1.0, r * 1.1) * 0.0 + aVec * 19.0 + vec2(r * 2.4));
+  return fCoarse * 0.42 + fFine * 0.38 + fStreaks * 0.20;
+}
+
+vec3 renderAct1(vec2 p, float t, float morphNebula, float bass, float high) {
+  /* Subtle living micro-drift */
+  vec2 drift = vec2(sin(t * 0.628) * 0.006, cos(t * 0.628 * 0.5) * 0.004) * (1.0 - morphNebula);
+  vec2 q = p + drift;
+
+  /* Camera dive into pupil/nebula core during morph */
+  float diveZoom = mix(1.0, 0.72, smoothstep(0.0, 1.0, morphNebula));
+  float twistRot = morphNebula * 0.22;
+  q = rot2(twistRot) * (q * diveZoom);
+
+  float r = length(q);
+  float ang = atan(q.y, q.x);
+
+  /* Heartbeat breathing pupil (60 BPM lub-dub) */
+  float beatPhase = fract(t * 1.0);
+  float heartbeat = exp(-pow((beatPhase - 0.12) * 14.0, 2.0)) * 0.7
+                  + exp(-pow((beatPhase - 0.28) * 16.0, 2.0)) * 0.45;
+  float pupilR = 0.168 + heartbeat * 0.008 + bass * 0.010;
+  float irisR = 0.575;
+
+  /* Shared radial fiber topology used by BOTH iris stroma AND Helix Nebula gas */
+  float fibers = radialFiberField(r, ang, 0.45, t);
+  float fibersDx = radialFiberField(r + 0.006, ang + 0.008, 0.45, t);
+  float fiberSlope = (fibersDx - fibers) * 26.0;
+
+  /* ---------------- PART A: PHOTOREALISTIC HUMAN EYE ---------------- */
+  vec3 eyeCol = vec3(0.0);
+  if (morphNebula < 0.995) {
+    /* Collarette wavy boundary */
+    float collaretteWave = 0.285 + 0.038 * (fbm2Fast(vec2(cos(ang), sin(ang)) * 3.4 + 1.5) - 0.5);
+    float collaretteMask = smoothstep(collaretteWave - 0.06, collaretteWave + 0.07, r);
+    float collaretteRidge = exp(-pow((r - collaretteWave) * 24.0, 2.0));
+
+    /* Dark Fuchs' crypts & radial trabeculae */
+    float cryptNoise = fbm2Fast(vec2(cos(ang), sin(ang)) * 5.2 + vec2(r * 5.8, 3.1));
+    float crypts = smoothstep(0.32, 0.68, cryptNoise);
+
+    /* Authentic hazel-amber to deep slate-cerulean stroma palette */
+    vec3 innerAmber = vec3(0.84, 0.44, 0.11);
+    vec3 midGold    = vec3(0.68, 0.48, 0.20);
+    vec3 outerTeal  = vec3(0.11, 0.34, 0.44);
+    vec3 deepSlate  = vec3(0.04, 0.14, 0.22);
+
+    vec3 stroma = mix(innerAmber, midGold, smoothstep(pupilR, collaretteWave + 0.04, r));
+    stroma = mix(stroma, outerTeal, collaretteMask);
+    stroma = mix(stroma, deepSlate, smoothstep(0.45, irisR, r));
+
+    /* Modulate by fibrous height, crypt shadows, and micro-relief lighting */
+    float strandBright = 0.45 + 1.25 * pow(fibers, 1.35);
+    float lightShade = clamp(0.82 + fiberSlope * 0.35 + collaretteRidge * 0.35, 0.25, 1.65);
+    stroma *= strandBright * lightShade * mix(0.42, 1.0, crypts);
+
+    /* Subtle warm sunlit inner iris scatter from lower-right */
+    float sunScatter = smoothstep(0.55, 0.0, length(q - vec2(0.18, -0.14)));
+    stroma += vec3(0.36, 0.20, 0.06) * sunScatter * (0.4 + 0.6 * fibers) * smoothstep(pupilR, pupilR + 0.08, r);
+
+    /* Dark pigmented limbal ring */
+    float limbal = smoothstep(irisR - 0.085, irisR - 0.005, r);
+    stroma = mix(stroma, vec3(0.018, 0.032, 0.048), limbal * 0.88);
+
+    /* Deep obsidian pupil with subtle reddish-brown retinal depth rim */
+    float pupilEdge = smoothstep(pupilR - 0.010, pupilR + 0.016, r);
+    vec3 pupilCol = vec3(0.004, 0.005, 0.008) + vec3(0.06, 0.02, 0.008) * exp(-r * 9.0);
+    vec3 irisFinal = mix(pupilCol, stroma, pupilEdge);
+
+    /* Surrounding moist sclera with subtle organic shading & deep orbital vignette */
+    float scleraMask = smoothstep(irisR - 0.018, irisR + 0.025, r);
+    float veinHint = pow(1.0 - abs(noise2(q * 7.0 + fbm2Fast(q * 4.0) * 0.7) * 2.0 - 1.0), 6.0);
+    vec3 scleraCol = vec3(0.26, 0.24, 0.23) * (0.72 + 0.28 * fbm2Fast(q * 3.5));
+    scleraCol = mix(scleraCol, vec3(0.34, 0.13, 0.11), veinHint * 0.22 * smoothstep(irisR, 0.95, r));
+    /* Orbital shadow falloff */
+    float orbitShadow = exp(-pow(max(0.0, r - 0.42) * 1.85, 2.2));
+    scleraCol *= orbitShadow * 0.62;
+
+    eyeCol = mix(irisFinal, scleraCol, scleraMask);
+
+    /* Physical Wet Corneal Dome: Fresnel + Studio Window Softbox + Starlight Catchlight */
+    float domeR = min(r / 0.62, 0.99);
+    vec3 N = normalize(vec3(q * 1.48, sqrt(max(0.04, 1.0 - domeR * domeR * 0.86))));
+    vec3 V = vec3(0.0, 0.0, 1.0);
+    float fresnel = pow(1.0 - max(dot(N, V), 0.0), 4.0);
+
+    /* Soft curved rectangular skylight reflection on upper-left cornea */
+    vec2 refP = q - vec2(-0.19, 0.17);
+    refP = rot2(-0.35) * refP;
+    vec2 boxD = abs(refP) - vec2(0.075, 0.046);
+    float winDist = length(max(boxD, 0.0)) + min(max(boxD.x, boxD.y), 0.0);
+    float winMask = smoothstep(0.018, -0.006, winDist);
+    /* Subtle window mullion bar */
+    float mullion = smoothstep(0.004, 0.011, abs(refP.x - 0.005)) * smoothstep(0.004, 0.011, abs(refP.y + 0.003));
+    float cornealSpec = winMask * (0.35 + 0.65 * mullion) * 1.45;
+
+    /* Crisp secondary catchlight */
+    float catch2 = exp(-pow(length(q - vec2(0.24, -0.18)) * 28.0, 2.0)) * 0.55;
+    float wetRim = fresnel * 0.24 * smoothstep(0.88, 0.42, r);
+
+    eyeCol += vec3(0.92, 0.96, 1.00) * cornealSpec * smoothstep(0.75, 0.25, r);
+    eyeCol += vec3(0.85, 0.92, 1.00) * (catch2 + wetRim);
+  }
+
+  /* ---------------- PART B: VOLUMETRIC HELIX NEBULA ("EYE OF GOD") ---------------- */
+  vec3 nebCol = vec3(0.0);
+  if (morphNebula > 0.005) {
+    /* Subtle elliptical tilt like NGC 7293 Helix Nebula */
+    vec2 np = rot2(0.24) * q;
+    np.y *= 1.09;
+    float nr = length(np);
+    float nang = atan(np.y, np.x);
+
+    /* Multi-slice volumetric radial emission using shared fiber field */
+    float gasFiber = radialFiberField(nr * 0.95, nang, 0.35, t * 0.6);
+    float gasClump = fbm2(np * 3.8 + vec2(cos(nang), sin(nang)) * 0.8 + t * 0.03);
+    float fineKnots = fbm2(vec2(cos(nang), sin(nang)) * 18.0 + vec2(nr * 7.5, -t * 0.05));
+
+    /* O-III Ionized Cyan-Blue Inner Cavity */
+    float innerRing = exp(-pow((nr - 0.25) / 0.16, 2.0)) * (0.55 + 0.85 * gasFiber);
+    float coreGlow  = exp(-nr * 3.4) * (0.45 + 0.45 * gasClump);
+
+    /* H-Alpha Crimson / Vermilion / Amber Outer Torus Shell */
+    float outerShell = exp(-pow((nr - 0.49) / 0.15, 2.0)) * (0.45 + 1.15 * gasFiber * gasClump);
+    float outerHalo  = exp(-pow((nr - 0.66) / 0.26, 2.0)) * (0.35 + 0.75 * gasClump);
+
+    /* Cometary globule streaks pointing radially toward central white dwarf */
+    float globules = pow(smoothstep(0.46, 0.84, fineKnots), 2.2) * exp(-pow((nr - 0.36) / 0.13, 2.0));
+
+    /* Volumetric emission colors */
+    vec3 o3Cyan    = vec3(0.08, 0.64, 0.92);
+    vec3 o3Deep    = vec3(0.06, 0.26, 0.68);
+    vec3 haGold    = vec3(1.00, 0.56, 0.14);
+    vec3 haCrimson = vec3(0.92, 0.16, 0.10);
+    vec3 dustDark  = vec3(0.14, 0.05, 0.08);
+
+    nebCol += mix(o3Deep, o3Cyan, gasFiber) * (innerRing * 1.15 + coreGlow * 0.85);
+    nebCol += mix(haCrimson, haGold, pow(gasFiber, 1.2)) * outerShell * 1.35;
+    nebCol += mix(dustDark, haCrimson * 0.65, gasClump) * outerHalo * 0.85;
+    nebCol += vec3(1.0, 0.78, 0.42) * globules * 0.95;
+
+    /* Dust absorption lanes for photographic depth */
+    float darkDust = smoothstep(0.48, 0.76, fbm2(np * 5.2 + vec2(3.1, -1.9)));
+    nebCol *= 1.0 - darkDust * 0.38 * smoothstep(0.18, 0.68, nr);
+
+    /* Blazing Central White Dwarf Star + diffraction glow */
+    float wdCore = exp(-nr * 58.0) * 3.8 + exp(-nr * 14.0) * 0.65;
+    float wdCross = exp(-abs(np.x) * 85.0) * exp(-abs(np.y) * 9.0)
+                  + exp(-abs(np.y) * 85.0) * exp(-abs(np.x) * 9.0);
+    nebCol += vec3(0.86, 0.94, 1.0) * (wdCore + wdCross * 0.45);
+
+    /* Deep space backdrop & multi-temperature starfield */
+    nebCol += vec3(0.006, 0.009, 0.018);
+    nebCol += starField(q * 1.15, 7.0, 0.86, t) * 0.85;
+    nebCol += starField(q * 1.85 + 1.7, 13.0, 0.90, t * 1.2) * 0.55;
+    nebCol *= (1.0 + bass * 0.12 + high * 0.08);
+  }
+
+  /* Luminous energetic flash at the exact morph crest */
+  float crest = sin(morphNebula * PI);
+  vec3 col = mix(eyeCol, nebCol, morphNebula);
+  col += vec3(0.22, 0.52, 0.85) * crest * exp(-pow((r - 0.36) * 5.5, 2.0)) * 0.45 * fibers;
+  return col;
+}
+
+/* =========================================================================
+   ACT II (00:10 - 00:20): COSMIC WEB <-> CORTICAL NEURAL NETWORK
+   Shared Invariant: Multi-Layer 3D Voronoi Filament Topology (F2 - F1)
+========================================================================= */
+vec3 renderAct2(vec2 p, float t, float morphNeuron, float bass, float high) {
+  float localT = t - 10.0;
+  /* Gentle gliding camera travel through the 3D filament volume */
+  vec3 camVel = vec3(sin(localT * 0.22) * 0.25, cos(localT * 0.18) * 0.18, -localT * 0.22);
+
+  /* Action potential wave surging outward from center during Cosmic -> Neuron morph */
+  float pulseWave = 0.0;
+  if (morphNeuron > 0.01) {
+    float waveFront = (localT - 6.3) * 0.85;
+    pulseWave = exp(-pow((length(p) - waveFront) * 4.5, 2.0)) * smoothstep(0.0, 0.3, morphNeuron);
+  }
+
+  /* Background shifts from cold deep space violet-black to luminous translucent cerebral fluid */
+  vec3 spaceBg  = mix(vec3(0.007, 0.008, 0.022), vec3(0.026, 0.014, 0.045), fbm2Fast(p * 1.6 + 2.0));
+  vec3 neuralBg = mix(vec3(0.008, 0.026, 0.042), vec3(0.045, 0.018, 0.052), fbm2Fast(p * 1.8 - 1.5));
+  vec3 col = mix(spaceBg, neuralBg, morphNeuron);
+
+  /* Faint background stars fading out as we enter biological microscopy */
+  if (morphNeuron < 0.9) {
+    col += starField(p + camVel.xy * 0.12, 11.0, 0.88, t) * (1.0 - morphNeuron) * 0.55;
+  }
+
+  /* 4 Parallax Depth Layers of Shared 3D Voronoi Filaments */
+  for (int i = 0; i < 4; i++) {
+    float fi = float(i);
+    float depth = 1.0 + fi * 0.62;
+    /* Smooth parallax zoom-out during Cosmic Web, stabilizing on microscopy focus */
+    float scale = (2.15 + fi * 0.92) * mix(0.85 + localT * 0.032, 1.05, morphNeuron);
+
+    vec2 lp = rot2(fi * 0.42 + localT * 0.025 * (1.0 - fi * 0.15)) * p;
+    /* Organic sinuous domain warp so filaments look natural & biological */
+    vec2 warp = vec2(
+      fbm2Fast(lp * 1.9 + vec2(fi * 3.1, localT * 0.06)),
+      fbm2Fast(lp * 1.9 + vec2(-fi * 2.7, -localT * 0.05 + 4.3))
+    ) - 0.5;
+
+    vec3 pos3 = vec3(lp * scale + warp * 0.68, fi * 2.75) + camVel * (1.25 / depth);
+    vec3 vor = voronoi3D(pos3);
+    float f1 = vor.x;
+    float edge = vor.y;
+    float cid = vor.z;
+
+    /* Depth-of-field blur simulation: layer 0 & 1 crisp, layer 2 & 3 softer bokeh */
+    float focusSharp = mix(22.0, 7.5, fi / 3.0);
+    float filament = exp(-edge * focusSharp);
+    float broadGlow = exp(-edge * (focusSharp * 0.28)) * 0.45;
+
+    /* Supercluster Nodes (Cosmic) / Pyramidal Neuron Somas (Brain) at cell centers */
+    float nodeMask = exp(-f1 * mix(9.5, 4.8, fi / 3.0));
+    float nodeCore = exp(-f1 * 24.0);
+
+    /* Traveling bio-electric impulses racing along the exact Voronoi filaments */
+    float impulsePhase = sin(pos3.x * 3.4 - pos3.y * 2.8 - t * 5.2 + cid * 12.0);
+    float firing = pow(max(0.0, impulsePhase), 5.0) * (0.45 + 0.55 * high);
+    float somaFire = pow(max(0.0, sin(t * 3.8 + cid * 24.0)), 6.0);
+
+    /* Cosmic Web Colors: Golden-violet dark matter filaments & blazing galaxy clusters */
+    vec3 cosmicFilCol  = mix(vec3(0.32, 0.16, 0.72), vec3(0.95, 0.62, 0.28), smoothstep(0.18, 0.85, filament));
+    vec3 cosmicNodeCol = vec3(1.00, 0.84, 0.58) * (0.85 + 0.4 * cid);
+
+    /* Fluorescence Microscopy Neuron Colors: Translucent cyan-teal dendrites + gold-white synapses */
+    vec3 neuronFilCol  = mix(vec3(0.04, 0.46, 0.68), vec3(0.28, 0.92, 0.98), filament);
+    vec3 neuronSpark   = vec3(1.00, 0.82, 0.34) * (firing * 1.9 + pulseWave * 2.4);
+    vec3 neuronSomaCol = mix(vec3(0.16, 0.88, 1.00), vec3(1.00, 0.86, 0.45), somaFire);
+
+    vec3 layerFilCol  = mix(cosmicFilCol, neuronFilCol, morphNeuron);
+    vec3 layerNodeCol = mix(cosmicNodeCol, neuronSomaCol, morphNeuron);
+
+    float depthFade = 1.0 / (0.68 + fi * 0.55);
+    col += layerFilCol * (filament * 0.85 + broadGlow * 0.38) * depthFade;
+    col += neuronSpark * (filament * 0.95 + broadGlow * 0.25) * morphNeuron * depthFade;
+    col += layerNodeCol * (nodeMask * 0.62 + nodeCore * 1.15) * depthFade * (1.0 + bass * 0.25);
+  }
+
+  /* Subtle microscopic bokeh discs in neural phase */
+  if (morphNeuron > 0.15) {
+    float bokeh = pow(max(0.0, fbm2Fast(p * 3.2 - vec2(localT * 0.08, 0.0)) - 0.58) * 2.4, 2.0);
+    col += vec3(0.10, 0.42, 0.58) * bokeh * morphNeuron * 0.45;
+  }
+
+  return col;
+}
+
+/* =========================================================================
+   ACT III (00:20 - 00:30): LIGHTNING <-> BLOOD VESSELS <-> BRAIDED RIVER DELTA
+   Shared Invariant: Hierarchical Dendritic Branching Fractal
+========================================================================= */
+/* Unified branching height/distance field (returns vec3(mainTrunk, fineBranches, terrainNoise)) */
+vec3 dendriticField(vec2 p, float t) {
+  /* Flow vertically/diagonally across the cinema frame */
+  vec2 q = rot2(-0.18) * p;
+  /* Domain warp creates natural meandering forks */
+  vec2 w1 = vec2(
+    fbm2(q * 2.2 + vec2(1.4, 0.8)),
+    fbm2(q * 2.2 + vec2(5.2, -2.7))
+  ) - 0.5;
+  vec2 w2 = vec2(
+    fbm2Fast(q * 5.2 + w1 * 1.4 + vec2(2.1, 4.4)),
+    fbm2Fast(q * 5.2 + w1 * 1.4 + vec2(-3.3, 1.9))
+  ) - 0.5;
+
+  /* Primary dramatic trunk + bifurcating tributaries */
+  vec2 qp = q + w1 * 0.42 + w2 * 0.11;
+  float trunk1 = abs(qp.x - 0.14 * sin(qp.y * 3.6 + 0.5));
+  float forkL  = abs((qp.x + 0.26 * smoothstep(-0.1, 0.55, -qp.y + 0.25)) + 0.06 * sin(qp.y * 5.8));
+  float forkR  = abs((qp.x - 0.30 * smoothstep(-0.25, 0.55, -qp.y + 0.1)) - 0.08 * cos(qp.y * 5.2));
+  float mainDist = min(trunk1, min(forkL * 1.25 + 0.008, forkR * 1.22 + 0.008));
+
+  /* Multi-scale ridged network forming capillary / delta braids */
+  float rNet1 = ridgedFbm(q * 2.6 + w1 * 0.95);
+  float rNet2 = ridgedFbm(q * 5.8 + w1 * 1.35 + w2 * 0.55);
+
+  /* Convert trunk distance into crisp channel intensity */
+  float mainBranch = exp(-mainDist * 24.0) * 0.95 + exp(-mainDist * 7.5) * 0.35;
+  /* Secondary & tertiary branches concentrated near the main arterial axis */
+  float axisEnv = exp(-abs(qp.x) * 1.35);
+  float secBranch = pow(clamp(rNet1, 0.0, 1.0), 4.2) * (0.45 + 0.65 * axisEnv);
+  float terBranch = pow(clamp(rNet2, 0.0, 1.0), 5.5) * 0.75;
+
+  float combined = clamp(mainBranch * 0.85 + secBranch * 0.92 + terBranch * 0.55, 0.0, 1.4);
+  float terrain = fbm2(q * 4.5 + w1 * 0.85);
+  return vec3(combined, mainBranch, terrain);
+}
+
+vec3 renderAct3(vec2 p, float t, float morphBlood, float morphDelta, float bass, float high) {
+  float localT = t - 20.0;
+
+  /* Subtle camera pull-back as lightning -> microscopic vessels -> orbital river delta */
+  float zoom = mix(1.05, 0.92, morphBlood);
+  zoom = mix(zoom, 1.22, morphDelta);
+  vec2 pan = vec2(0.0, -localT * 0.025 * morphDelta);
+  vec2 q = p * zoom + pan;
+
+  vec3 dend = dendriticField(q, t);
+  float branch = dend.x;
+  float mainTrunk = dend.y;
+  float terrain = dend.z;
+
+  /* Directional finite-difference for photorealistic 3D relief shading (vessels & river banks) */
+  vec2 lightDir = normalize(vec2(0.75, 0.65));
+  vec3 dendL = dendriticField(q + lightDir * 0.007, t);
+  float slope = (dendL.x - branch) * 18.0;
+  float terrSlope = (dendL.z - terrain) * 16.0;
+
+  /* ---------------- PHASE 3A: PHOTOREALISTIC LIGHTNING IN STORM CLOUDS ---------------- */
+  vec3 colLightning = vec3(0.0);
+  if (morphBlood < 0.995) {
+    /* Volumetric backlit storm clouds */
+    float cloud1 = fbm2(q * 2.4 + vec2(localT * 0.06, -0.3));
+    float cloud2 = fbm2(q * 5.2 - vec2(localT * 0.09, 0.6));
+    float cloudDensity = cloud1 * 0.65 + cloud2 * 0.35;
+
+    /* Natural multi-stroke electrical flicker */
+    float flash = 0.62 + 0.38 * sin(localT * 26.0) * sin(localT * 11.3 + 0.7);
+    flash = clamp(flash + bass * 0.35 + high * 0.25, 0.38, 1.35);
+
+    /* Storm sky illuminated from behind by the bolt */
+    vec3 stormCloud = mix(vec3(0.015, 0.020, 0.042), vec3(0.14, 0.18, 0.34), cloudDensity);
+    float cloudScatter = exp(-length(q * vec2(1.4, 0.75)) * 1.4) * (0.45 + 0.85 * cloudDensity);
+    stormCloud += vec3(0.28, 0.36, 0.78) * cloudScatter * flash * 0.72;
+
+    /* High-voltage plasma core + violet-blue ionized corona */
+    float boltCore = smoothstep(0.58, 0.96, branch);
+    float boltGlow = pow(clamp(branch, 0.0, 1.0), 2.1);
+    vec3 plasma = vec3(0.45, 0.56, 1.00) * boltGlow * 1.35
+                + vec3(0.95, 0.97, 1.00) * boltCore * 2.65;
+
+    colLightning = stormCloud + plasma * flash;
+  }
+
+  /* ---------------- PHASE 3B: MICROSCOPIC CAPILLARY BLOOD VESSELS ---------------- */
+  vec3 colBlood = vec3(0.0);
+  if (morphBlood > 0.005 && morphDelta < 0.995) {
+    /* Rhythmic arterial pulse propagating down the vessels */
+    float pulse = 0.5 + 0.5 * sin(q.y * 7.5 + localT * 5.5);
+    float sssBacklight = exp(-length(q) * 1.05);
+
+    /* Warm translucent backlit living tissue */
+    vec3 tissue = mix(vec3(0.16, 0.025, 0.028), vec3(0.54, 0.12, 0.07), terrain * 0.75 + sssBacklight * 0.45);
+
+    /* Cylindrical 3D crimson blood vessels with wet specular ridge */
+    float vesselMask = smoothstep(0.28, 0.78, branch);
+    vec3 vesselDeep = vec3(0.26, 0.012, 0.018);
+    vec3 vesselBright = vec3(0.84, 0.075, 0.055);
+    vec3 vesselCol = mix(vesselDeep, vesselBright, clamp(0.42 + slope * 0.45 + pulse * 0.28, 0.0, 1.0));
+
+    /* Specular highlight along wet vascular walls */
+    float wetSpec = pow(clamp(slope * 0.55, 0.0, 1.0), 3.0) * vesselMask * 0.65;
+    /* Tiny luminous micro-corpuscles drifting through main trunk */
+    float corpNoise = smoothstep(0.74, 0.92, noise2(q * 36.0 + vec2(0.0, localT * 4.2)));
+    vec3 corpuscles = vec3(1.0, 0.62, 0.26) * corpNoise * smoothstep(0.45, 0.85, mainTrunk) * 0.95;
+
+    colBlood = mix(tissue, vesselCol, vesselMask) + vec3(1.0, 0.55, 0.42) * wetSpec + corpuscles;
+    colBlood *= (0.94 + bass * 0.14);
+  }
+
+  /* ---------------- PHASE 3C: SATELLITE GLACIAL BRAIDED RIVER DELTA ---------------- */
+  vec3 colDelta = vec3(0.0);
+  if (morphDelta > 0.005) {
+    /* Volcanic basalt dark sand + mossy green-ochre alluvial bars */
+    float mossMask = smoothstep(0.42, 0.74, terrain);
+    vec3 basaltBank = mix(vec3(0.045, 0.048, 0.056), vec3(0.12, 0.11, 0.10), terrain);
+    vec3 mossBank   = mix(vec3(0.14, 0.18, 0.09), vec3(0.26, 0.22, 0.12), fbm2Fast(q * 8.0));
+    vec3 land = mix(basaltBank, mossBank, mossMask * 0.68);
+
+    /* Low-angle golden-hour directional relief shading on terrain */
+    float sunLight = clamp(0.68 + terrSlope * 0.52 - slope * 0.22, 0.25, 1.45);
+    land *= sunLight;
+    land += vec3(0.22, 0.14, 0.06) * max(0.0, terrSlope) * 0.35;
+
+    /* Glacial turquoise-silver braided river channels */
+    float waterMask = smoothstep(0.32, 0.72, branch);
+    float siltMix = fbm2Fast(q * 11.0 + vec2(0.0, localT * 0.18));
+    vec3 glacialWater = mix(vec3(0.06, 0.24, 0.32), vec3(0.32, 0.68, 0.74), siltMix * 0.65 + mainTrunk * 0.35);
+
+    /* Shimmering golden sunlight specular glints on flowing water */
+    float glintNoise = noise2(q * 48.0 + vec2(localT * 0.6, -localT * 1.4));
+    float waterSun = pow(clamp(0.55 + slope * 0.45 + glintNoise * 0.32, 0.0, 1.0), 5.0);
+    glacialWater += vec3(1.0, 0.84, 0.56) * waterSun * 0.95;
+
+    colDelta = mix(land, glacialWater, waterMask);
+    /* Subtle golden atmospheric haze toward top of frame */
+    colDelta += vec3(0.12, 0.09, 0.06) * smoothstep(-0.2, 0.75, q.y) * 0.35;
+  }
+
+  vec3 col = mix(colLightning, colBlood, morphBlood);
+  col = mix(col, colDelta, morphDelta);
+  return col;
+}
+
+/* =========================================================================
+   ACT IV (00:30 - 00:40): SUPER TYPHOON <-> NAUTILUS SHELL <-> SPIRAL GALAXY
+   Shared Invariant: Logarithmic Golden Spiral (theta - b * ln(r))
+========================================================================= */
+vec3 renderAct4(vec2 p, float t, float morphNautilus, float morphGalaxy, float bass, float high) {
+  float localT = t - 30.0;
+  float spin = localT * 0.24;
+
+  /* Smooth slight orbital perspective tilt in Galaxy phase */
+  vec2 gp = p;
+  float tilt = mix(1.0, 1.42, morphGalaxy);
+  gp = rot2(-0.26 * morphGalaxy) * gp;
+  vec2 sp = vec2(gp.x, gp.y * tilt);
+
+  float r = length(sp);
+  float ang = atan(sp.y, sp.x);
+  /* Exact Logarithmic Spiral Coordinate (shared by Typhoon, Nautilus, and Galaxy!) */
+  const float SPIRAL_B = 3.18;
+  float logR = log(max(r, 0.0025));
+  float spiralPhase = ang - SPIRAL_B * logR - spin;
+
+  /* ---------------- PHASE 4A: ORBITAL ISS SUPER TYPHOON ---------------- */
+  vec3 colTyphoon = vec3(0.0);
+  if (morphNautilus < 0.995) {
+    /* Deep cobalt ocean visible through eye & outer breaks */
+    vec3 ocean = mix(vec3(0.012, 0.045, 0.13), vec3(0.03, 0.12, 0.28), exp(-r * 1.4));
+
+    /* Multi-band swirling cumulus heightfield */
+    float arms2 = 0.5 + 0.5 * cos(spiralPhase * 2.0);
+    float arms3 = 0.5 + 0.5 * cos(spiralPhase * 3.0 + 1.1);
+    vec2 cloudUv = vec2(cos(spiralPhase), sin(spiralPhase)) * (1.8 + r * 3.2) + sp * 2.6;
+    float turb = fbm2(cloudUv + vec2(localT * 0.04, -localT * 0.03));
+    float fineCloud = fbm2Fast(sp * 9.5 + rot2(r * 4.0) * sp * 3.0);
+
+    /* Deep eye cavity at center + towering eyewall */
+    float eyeWall = smoothstep(0.055, 0.145, r);
+    float stormEnv = exp(-r * 1.08) * eyeWall;
+    float cloudH = clamp((arms2 * 0.55 + arms3 * 0.25 + turb * 0.72) * stormEnv + fineCloud * 0.22 * stormEnv, 0.0, 1.25);
+
+    /* Analytical directional orbital sunrise lighting (warm top-right sun, cool blue shadow) */
+    vec2 sunDir = normalize(vec2(0.78, 0.55));
+    vec2 spL = sp + sunDir * 0.012;
+    float rL = length(spL);
+    float phaseL = atan(spL.y, spL.x) - SPIRAL_B * log(max(rL, 0.0025)) - spin;
+    float cloudHL = clamp(((0.5 + 0.5 * cos(phaseL * 2.0)) * 0.55 + (0.5 + 0.5 * cos(phaseL * 3.0 + 1.1)) * 0.25
+                  + fbm2Fast(vec2(cos(phaseL), sin(phaseL)) * (1.8 + rL * 3.2) + spL * 2.6) * 0.72) * exp(-rL * 1.08) * smoothstep(0.055, 0.145, rL), 0.0, 1.25);
+    float cSlope = (cloudHL - cloudH) * 14.0;
+
+    /* Shadowed eyewall + warm orbital sunrise cloud tops */
+    vec3 cloudShadow = vec3(0.14, 0.22, 0.36);
+    vec3 cloudLit    = vec3(0.96, 0.94, 0.91);
+    vec3 cloudSun    = vec3(1.00, 0.76, 0.52);
+    float litFactor  = clamp(0.52 + cSlope * 0.55 + smoothstep(0.2, 0.9, cloudH) * 0.35, 0.0, 1.0);
+    vec3 cloudCol    = mix(cloudShadow, cloudLit, litFactor);
+    cloudCol = mix(cloudCol, cloudSun, pow(max(0.0, cSlope), 1.6) * 0.45);
+
+    float cloudAlpha = smoothstep(0.16, 0.58, cloudH);
+    colTyphoon = mix(ocean, cloudCol, cloudAlpha);
+    /* Crisp atmospheric azure rim glow */
+    colTyphoon += vec3(0.12, 0.42, 0.85) * exp(-pow((r - 0.82) * 3.2, 2.0)) * 0.25;
+  }
+
+  /* ---------------- PHASE 4B: MACRO NAUTILUS SHELL CROSS-SECTION ---------------- */
+  vec3 colNautilus = vec3(0.0);
+  if (morphNautilus > 0.005 && morphGalaxy < 0.995) {
+    /* Exact logarithmic spiral wall & curved chamber septa */
+    float wallWave = fract(spiralPhase / TAU);
+    float wallDist = min(wallWave, 1.0 - wallWave);
+    float shellWall = smoothstep(0.065, 0.014, wallDist);
+
+    /* Curved chamber septa walls spaced evenly in logarithmic radius */
+    float septaPhase = fract((ang - spin) * (15.0 / TAU) - wallWave * 0.85);
+    float septaDist = min(septaPhase, 1.0 - septaPhase);
+    float septaWall = smoothstep(0.058, 0.012, septaDist);
+
+    /* Outer shell boundary & inner umbilical core */
+    float shellBounds = smoothstep(0.74, 0.69, r) * smoothstep(0.022, 0.055, r);
+    float wallMask = max(shellWall, septaWall) * shellBounds;
+
+    /* Deep concave chamber shading (warm caramel-amber calcite hollow) */
+    float chamberDepth = smoothstep(0.02, 0.35, wallDist) * smoothstep(0.02, 0.35, septaDist);
+    float microNacre = fbm2Fast(sp * 14.0 + vec2(wallWave * 4.0, 0.0));
+    vec3 chamberDeep  = vec3(0.16, 0.075, 0.028);
+    vec3 chamberWarm  = vec3(0.66, 0.42, 0.20);
+    vec3 chamberCol   = mix(chamberWarm, chamberDeep, pow(chamberDepth, 0.65) * 0.78);
+    chamberCol *= (0.85 + 0.30 * microNacre);
+
+    /* Pearlescent ivory calcite walls + thin-film mother-of-pearl iridescence */
+    vec3 pearlBase = vec3(0.94, 0.88, 0.76);
+    vec3 iridescence = 0.5 + 0.5 * cos(vec3(0.0, 2.1, 4.2) + r * 9.0 + ang * 2.0 + microNacre * 3.0);
+    vec3 wallCol = mix(pearlBase, pearlBase * (0.75 + 0.45 * iridescence), 0.32);
+
+    /* Studio macro specular light across the glossy sliced chambers */
+    float specAng = cos(ang - 0.85) * 0.5 + 0.5;
+    float glossySpec = pow(specAng, 5.0) * (wallMask * 0.85 + (1.0 - chamberDepth) * 0.35) * shellBounds;
+
+    /* Dark velvet museum background outside shell */
+    vec3 bgMuseum = vec3(0.014, 0.012, 0.016) * (0.7 + 0.3 * exp(-r * 1.5));
+    vec3 shellInterior = mix(chamberCol, wallCol, wallMask);
+    shellInterior += vec3(1.0, 0.95, 0.86) * glossySpec * 0.58;
+
+    colNautilus = mix(bgMuseum, shellInterior, shellBounds);
+    /* Warm golden rim along the outer shell contour */
+    colNautilus += vec3(0.85, 0.62, 0.32) * exp(-pow((r - 0.71) * 32.0, 2.0)) * 0.42;
+  }
+
+  /* ---------------- PHASE 4C: GRAND-DESIGN SPIRAL GALAXY ---------------- */
+  vec3 colGalaxy = vec3(0.0);
+  if (morphGalaxy > 0.005) {
+    /* Two grand-design logarithmic spiral arms locked to exact same SPIRAL_B */
+    float arm1 = 0.5 + 0.5 * cos(spiralPhase * 2.0);
+    float arm2 = 0.5 + 0.5 * cos(spiralPhase * 2.0 + 0.55);
+    float armShape = pow(arm1, 2.6) * 0.85 + pow(arm2, 5.0) * 0.35;
+
+    /* Turbulent star clouds & silhouetted cosmic dust lanes */
+    vec2 gUv = vec2(cos(spiralPhase), sin(spiralPhase)) * (2.2 + r * 3.5) + sp * 3.4;
+    float starCloud = fbm2(gUv);
+    float dustLane  = smoothstep(0.45, 0.76, fbm2(gUv * 1.65 + vec2(3.7, -2.1)));
+
+    float diskEnv = exp(-r * 2.15);
+    float bulge   = exp(-r * 6.8);
+    float core    = exp(-r * 22.0);
+
+    /* Star-forming pink H-II emission knots nestled along spiral arms */
+    float h2Knots = pow(smoothstep(0.62, 0.90, fbm2Fast(sp * 16.0 + starCloud * 1.2)), 2.0) * armShape * diskEnv;
+
+    vec3 bulgeCol = vec3(1.00, 0.84, 0.56);
+    vec3 armBlue  = vec3(0.32, 0.62, 1.00);
+    vec3 armCyan  = vec3(0.68, 0.86, 1.00);
+    vec3 h2Pink   = vec3(1.00, 0.28, 0.52);
+
+    vec3 gal = vec3(0.0);
+    gal += bulgeCol * (bulge * 1.45 + core * 2.4);
+    gal += mix(armBlue, armCyan, starCloud) * armShape * diskEnv * (0.65 + 1.35 * starCloud) * 1.45;
+    gal += vec3(0.24, 0.28, 0.45) * diskEnv * starCloud * 0.35;
+    gal += h2Pink * h2Knots * 2.1;
+
+    /* Sculpt dark absorption dust lanes against the bright arms */
+    gal *= 1.0 - dustLane * 0.58 * smoothstep(0.08, 0.45, r) * exp(-r * 1.3);
+
+    /* Deep cosmos + rich starfield */
+    colGalaxy = vec3(0.004, 0.006, 0.014) + gal * (1.0 + bass * 0.14 + high * 0.10);
+    colGalaxy += starField(p * 1.1, 8.5, 0.85, t) * 0.85;
+    colGalaxy += starField(p * 1.9 + 2.3, 15.0, 0.91, t * 1.15) * 0.48;
+  }
+
+  vec3 col = mix(colTyphoon, colNautilus, morphNautilus);
+  col = mix(col, colGalaxy, morphGalaxy);
+  return col;
+}
+
+/* =========================================================================
+   ACT V (00:40 - 00:50): BASALT COLUMNS <-> HONEYCOMB <-> GRAPHENE LATTICE
+   Shared Invariant: Hexagonal Minimum-Energy Tessellation
+========================================================================= */
+vec3 renderAct5(vec2 p, float t, float morphHoney, float morphGraphene, float bass, float high) {
+  float localT = t - 40.0;
+
+  /* Smooth camera glide & gentle rotation locked cleanly to the hex lattice */
+  float latticeScale = mix(6.4, 7.2, morphHoney);
+  latticeScale = mix(latticeScale, 8.0, morphGraphene);
+  vec2 q = rot2(0.08 - localT * 0.018) * p * latticeScale + vec2(localT * 0.16, -localT * 0.09);
+
+  /* Shared Exact Hexagonal Coordinate System */
+  vec4 hc = hexCoords(q);
+  vec2 gv = hc.xy;
+  vec2 id = hc.zw;
+  float hd = hexDist(gv);
+  float cellRnd = hash12(id);
+  float cellRnd2 = hash12(id + 37.2);
+
+  /* ---------------- PHASE 5A: VOLCANIC HEXAGONAL BASALT COLUMNS ---------------- */
+  vec3 colBasalt = vec3(0.0);
+  if (morphHoney < 0.995) {
+    /* Subtle 3D parallax extrusion offset per column height */
+    float colH = 0.25 + 0.75 * cellRnd;
+    vec2 parUv = q - p * (colH * 0.24);
+    vec4 phc = hexCoords(parUv);
+    float phd = hexDist(phc.xy);
+    float pRnd = hash12(phc.zw);
+
+    /* Crisp beveled stone top face & deep dark fissures */
+    float topFace = smoothstep(0.495, 0.445, phd);
+    float bevelEdge = smoothstep(0.485, 0.445, phd) - smoothstep(0.445, 0.405, phd);
+    float fissure = smoothstep(0.455, 0.498, phd);
+
+    /* Rough wet volcanic mineral texture */
+    float rockGrain = fbm2Fast(phc.xy * 11.0 + phc.zw * 3.1);
+    vec3 darkSlate = mix(vec3(0.045, 0.052, 0.064), vec3(0.11, 0.125, 0.145), pRnd * 0.65 + rockGrain * 0.45);
+
+    /* Directional golden rim lighting grazing the hexagonal bevels */
+    vec2 facetDir = normalize(phc.xy + vec2(0.0001));
+    float rimLit = max(0.0, dot(facetDir, normalize(vec2(0.75, 0.66))));
+    float wetSpec = pow(rimLit, 4.0) * (0.3 + 0.7 * rockGrain);
+
+    colBasalt = darkSlate * topFace * (0.68 + 0.45 * pRnd);
+    colBasalt += vec3(0.55, 0.44, 0.30) * bevelEdge * (0.28 + 0.95 * rimLit);
+    colBasalt += vec3(0.28, 0.36, 0.48) * wetSpec * topFace * 0.32;
+
+    /* Dying glowing volcanic magma embers pulsing gently inside deep fissures */
+    float emberFade = (1.0 - smoothstep(0.0, 3.8, localT)) * 0.75 + 0.25;
+    float emberNoise = smoothstep(0.35, 0.85, fbm2Fast(q * 0.55 + vec2(localT * 0.12, 0.0)));
+    vec3 magma = vec3(1.25, 0.26, 0.04) * fissure * emberNoise * emberFade * (0.85 + 0.35 * bass);
+    colBasalt += magma;
+  }
+
+  /* ---------------- PHASE 5B: MACRO GOLDEN HONEYCOMB ---------------- */
+  vec3 colHoney = vec3(0.0);
+  if (morphHoney > 0.005 && morphGraphene < 0.995) {
+    /* Rounded translucent beeswax hexagonal walls */
+    float waxWall = smoothstep(0.39, 0.465, hd);
+    float waxCrest = exp(-pow((hd - 0.475) * 32.0, 2.0));
+    float cellCavity = 1.0 - waxWall;
+
+    /* Backlit golden subsurface scattering */
+    float sss = exp(-length(p) * 0.85) * 0.65 + 0.45;
+    float honeyFill = 0.45 + 0.55 * cellRnd2;
+
+    /* Deep viscous amber honey pooling inside each cell */
+    vec3 honeyDeep  = vec3(0.38, 0.13, 0.01);
+    vec3 honeyGlow  = vec3(1.05, 0.54, 0.05);
+    vec3 honeyPool  = mix(honeyDeep, honeyGlow, smoothstep(0.42, 0.04, hd) * honeyFill * sss);
+
+    /* Curved liquid meniscus specular reflection inside each cell */
+    vec2 menP = gv - vec2(-0.11, 0.11);
+    float meniscus = exp(-dot(menP, menP) * 58.0) * cellCavity * honeyFill;
+    float meniscusArc = exp(-pow((hd - 0.32) * 28.0, 2.0)) * max(0.0, dot(normalize(gv + 0.0001), normalize(vec2(-0.7, 0.7))));
+
+    /* Translucent warm beeswax walls */
+    vec3 waxCol = mix(vec3(0.86, 0.56, 0.12), vec3(1.00, 0.82, 0.36), waxCrest) * (0.8 + 0.3 * sss);
+    colHoney = mix(honeyPool, waxCol, waxWall);
+    colHoney += vec3(1.0, 0.92, 0.68) * (meniscus * 0.95 + meniscusArc * 0.48);
+  }
+
+  /* ---------------- PHASE 5C: QUANTUM GRAPHENE ATOMIC LATTICE ---------------- */
+  vec3 colGraphene = vec3(0.0);
+  if (morphGraphene > 0.005) {
+    /* Crisp covalent bond edges along hexagonal perimeter */
+    float bondDist = abs(hd - 0.495);
+    float bondCore = exp(-bondDist * 58.0);
+    float bondGlow = exp(-bondDist * 14.0);
+
+    /* Locate exact 6 carbon atom vertices of the hexagon */
+    float minAtomD = 10.0;
+    const float R_VERT = 0.57735027; /* 1 / sqrt(3) */
+    for (int k = 0; k < 6; k++) {
+      float a = float(k) * (PI / 3.0) + (PI / 6.0);
+      vec2 vPos = vec2(cos(a), sin(a)) * R_VERT;
+      minAtomD = min(minAtomD, length(gv - vPos));
+    }
+    float atomCore = exp(-minAtomD * 22.0);
+    float atomOrbital = exp(-minAtomD * 7.5);
+
+    /* Quantum electron probability ripple sweeping across the lattice */
+    float qWave = 0.5 + 0.5 * sin(length(p) * 14.0 - localT * 5.2);
+    float qWave2 = 0.5 + 0.5 * sin(dot(id, vec2(0.8, 0.6)) - localT * 3.6);
+    float resonance = 0.62 + 0.55 * qWave * qWave2 + high * 0.35;
+
+    /* Deep electron-microscope dark sapphire void */
+    vec3 bgQuantum = vec3(0.006, 0.014, 0.032) + vec3(0.02, 0.08, 0.16) * exp(-length(p) * 1.4);
+
+    /* Luminous cyan-azure covalent bonds & glowing white-cyan carbon nuclei */
+    vec3 bondCol = mix(vec3(0.06, 0.42, 0.92), vec3(0.32, 0.92, 1.00), bondCore);
+    vec3 atomCol = mix(vec3(0.18, 0.78, 1.00), vec3(0.95, 0.98, 1.00), atomCore);
+
+    /* Subtle depth-of-field edge softening */
+    float dof = exp(-length(p) * 0.52);
+    colGraphene = bgQuantum;
+    colGraphene += bondCol * (bondCore * 1.05 + bondGlow * 0.36) * resonance * (0.45 + 0.55 * dof);
+    colGraphene += atomCol * (atomCore * 1.65 + atomOrbital * 0.52) * (0.8 + 0.4 * qWave + bass * 0.25);
+  }
+
+  vec3 col = mix(colBasalt, colHoney, morphHoney);
+  col = mix(col, colGraphene, morphGraphene);
+  return col;
+}
+
+/* =========================================================================
+   ACT VI (00:50 - 01:00): WATER CAUSTICS & CYMATICS <-> SPACETIME RIPPLES -> IRIS
+   Shared Invariant: Concentric Wave Interference & Seamless Eternal Loop
+========================================================================= */
+float waveSurface(vec2 p, float t, float morphSpacetime) {
+  float r = length(p);
+  float ang = atan(p.y, p.x);
+
+  /* Concentric primary waves */
+  float wCenter = sin(r * 26.0 - t * 3.8) * exp(-r * 0.85);
+  /* Multi-source harmonic interference */
+  float w1 = sin(length(p - vec2(0.38, 0.22)) * 22.0 - t * 3.1) * 0.45;
+  float w2 = sin(length(p + vec2(0.35, -0.26)) * 20.0 - t * 2.9) * 0.45;
+  /* Delicate geometric Chladni cymatic standing-wave pattern */
+  float cymatic = cos(r * 18.0 - t * 1.4) * cos(ang * 6.0) * exp(-r * 1.1) * 0.48;
+
+  /* Transition smoothly into pure concentric gravitational wave ripples */
+  float waterH = (wCenter * 0.75 + w1 + w2 + cymatic) * 0.45;
+  float gravH  = sin(r * 22.0 - t * 4.4) * exp(-abs(r - 0.38) * 2.4) * 0.85
+               + cos(r * 12.0 - ang * 2.0 - t * 2.6) * exp(-r * 1.2) * 0.32;
+  return mix(waterH, gravH, morphSpacetime);
+}
+
+vec3 renderAct6(vec2 p, float t, float morphSpacetime, float bass, float high) {
+  float r = length(p);
+  float eps = 0.0055;
+  float h0 = waveSurface(p, t, morphSpacetime);
+  float hx = waveSurface(p + vec2(eps, 0.0), t, morphSpacetime);
+  float hy = waveSurface(p + vec2(0.0, eps), t, morphSpacetime);
+  vec2 grad = vec2(hx - h0, hy - h0) / eps;
+
+  /* Surface normal for physically-inspired reflection & refractive caustics */
+  vec3 N = normalize(vec3(-grad * 0.055, 1.0));
+  vec3 V = vec3(0.0, 0.0, 1.0);
+  vec3 L1 = normalize(vec3(0.45, 0.55, 0.70));
+  vec3 L2 = normalize(vec3(-0.62, -0.35, 0.68));
+
+  float fresnel = pow(1.0 - max(dot(N, V), 0.0), 3.6);
+  vec3 H1 = normalize(L1 + V);
+  vec3 H2 = normalize(L2 + V);
+  float spec1 = pow(max(dot(N, H1), 0.0), 64.0);
+  float spec2 = pow(max(dot(N, H2), 0.0), 36.0);
+
+  /* Crisp Refractive Caustics via Laplacian curvature / sharpened wave crests */
+  float lap = (waveSurface(p + vec2(eps, 0.0), t, morphSpacetime)
+             + waveSurface(p - vec2(eps, 0.0), t, morphSpacetime)
+             + waveSurface(p + vec2(0.0, eps), t, morphSpacetime)
+             + waveSurface(p - vec2(0.0, eps), t, morphSpacetime) - 4.0 * h0) / (eps * eps);
+  float caustic = pow(clamp(-lap * 0.0042, 0.0, 1.0), 1.85);
+  /* Subtle optical prism dispersion on caustics */
+  float causticR = pow(clamp(-lap * 0.0044 + grad.x * 0.006, 0.0, 1.0), 1.9);
+  float causticB = pow(clamp(-lap * 0.0040 - grad.x * 0.006, 0.0, 1.0), 1.9);
+  vec3 causticCol = vec3(causticR * 0.92, caustic * 0.98, causticB * 1.12);
+
+  /* ---------------- PHASE 6A: OBSIDIAN WATER & CHLADNI CYMATICS ---------------- */
+  vec3 waterCol = mix(vec3(0.006, 0.014, 0.024), vec3(0.02, 0.08, 0.13), fresnel);
+  waterCol += vec3(0.18, 0.62, 0.86) * causticCol * (0.72 + 0.45 * high);
+  waterCol += vec3(1.00, 0.90, 0.72) * spec1 * 1.55;
+  waterCol += vec3(0.42, 0.82, 1.00) * spec2 * 0.85;
+
+  /* ---------------- PHASE 6B: GRAVITATIONAL SPACETIME RIPPLES & EINSTEIN RING ---------------- */
+  vec3 spaceCol = vec3(0.0);
+  if (morphSpacetime > 0.005) {
+    /* Gravitational lensing warp bending starlight around central singularity */
+    float ringR = 0.38;
+    vec2 lensedP = p * (1.0 - 0.16 / (r * r + 0.12)) + grad * 0.0025;
+    vec3 lensedStars = starField(lensedP * 1.25, 9.0, 0.84, t) * 0.95;
+
+    /* Luminous golden-cyan Einstein ring matching the exact iris limbal geometry */
+    float eRing = exp(-pow((r - ringR) * 16.0, 2.0));
+    float eRingSharp = exp(-pow((r - ringR) * 48.0, 2.0));
+    float rippleRing = pow(max(0.0, sin(r * 24.0 - t * 4.2)), 4.0) * exp(-abs(r - 0.44) * 2.5);
+
+    /* Subtle black-hole shadow core preparing to lock into the human pupil */
+    float coreShadow = smoothstep(0.14, 0.24, r);
+
+    spaceCol = vec3(0.004, 0.007, 0.015) + lensedStars * coreShadow;
+    spaceCol += mix(vec3(0.24, 0.72, 1.00), vec3(1.00, 0.76, 0.38), eRingSharp) * (eRing * 0.95 + eRingSharp * 1.35);
+    spaceCol += vec3(0.32, 0.68, 0.95) * rippleRing * 0.55 * (1.0 + bass * 0.35);
+    spaceCol += causticCol * vec3(0.35, 0.62, 0.92) * 0.35 * coreShadow;
+  }
+
+  return mix(waterCol, spaceCol, morphSpacetime);
+}
+
+/* =========================================================================
+   MAIN CINEMA CHOREOGRAPHY & SEAMLESS 60.0s ISOMORPHIC MATCH-CUT ENGINE
+========================================================================= */
+void main() {
+  /* Centered aspect-corrected coordinates (16:9 -> x in [-0.888, 0.888], y in [-0.5, 0.5]) */
+  vec2 p = (vUv - 0.5) * vec2(uRes.x / uRes.y, 1.0) * 1.38;
+  float t = mod(uTime, 60.0);
+
+  /* Act envelope weights (At most 2 acts active at any millisecond for crisp 60fps!) */
+  float w1 = 1.0 - smoothstep(9.2, 11.2, t);
+  float w2 = smoothstep(9.2, 11.2, t) * (1.0 - smoothstep(19.2, 21.0, t));
+  float w3 = smoothstep(19.2, 21.0, t) * (1.0 - smoothstep(29.2, 31.0, t));
+  float w4 = smoothstep(29.2, 31.0, t) * (1.0 - smoothstep(39.2, 41.0, t));
+  float w5 = smoothstep(39.2, 41.0, t) * (1.0 - smoothstep(49.2, 51.0, t));
+  float w6 = smoothstep(49.2, 51.0, t) * (1.0 - smoothstep(55.6, 59.0, t));
+  /* Seamless eternal loop return to Act I (00:55.6 -> 01:00.0 locks identically to 00:00.0!) */
+  float wReturn = smoothstep(55.6, 59.0, t);
+
+  /* Smooth exponential zoom-pulse warping across major act boundaries */
+  float tCut1 = sin(smoothstep(9.2, 11.2, t) * PI);
+  float tCut2 = sin(smoothstep(19.2, 21.0, t) * PI);
+  float tCut3 = sin(smoothstep(29.2, 31.0, t) * PI);
+  float tCut4 = sin(smoothstep(39.2, 41.0, t) * PI);
+  float tCut5 = sin(smoothstep(49.2, 51.0, t) * PI);
+  float tCut6 = sin(smoothstep(55.6, 59.0, t) * PI);
+  float cutEnergy = max(max(tCut1, tCut2), max(max(tCut3, tCut4), max(tCut5, tCut6)));
+
+  /* Subtle gravitational radial warp during match-cut acceleration */
+  float r = length(p);
+  vec2 warpedP = p * (1.0 - cutEnergy * 0.065 * exp(-r * 1.2));
+
+  vec3 col = vec3(0.0);
+
+  if (w1 > 0.001) {
+    float morphNebula = smoothstep(6.2, 9.8, t);
+    col += renderAct1(warpedP, t, morphNebula, uAudioBass, uAudioHigh) * w1;
+  }
+
+  if (w2 > 0.001) {
+    float morphNeuron = smoothstep(16.2, 19.6, t);
+    col += renderAct2(warpedP, t, morphNeuron, uAudioBass, uAudioHigh) * w2;
+  }
+
+  if (w3 > 0.001) {
+    float morphBlood = smoothstep(23.6, 25.4, t);
+    float morphDelta = smoothstep(26.8, 28.8, t);
+    col += renderAct3(warpedP, t, morphBlood, morphDelta, uAudioBass, uAudioHigh) * w3;
+  }
+
+  if (w4 > 0.001) {
+    float morphNautilus = smoothstep(33.5, 35.4, t);
+    float morphGalaxy   = smoothstep(36.8, 38.8, t);
+    col += renderAct4(warpedP, t, morphNautilus, morphGalaxy, uAudioBass, uAudioHigh) * w4;
+  }
+
+  if (w5 > 0.001) {
+    float morphHoney    = smoothstep(43.5, 45.4, t);
+    float morphGraphene = smoothstep(46.8, 48.8, t);
+    col += renderAct5(warpedP, t, morphHoney, morphGraphene, uAudioBass, uAudioHigh) * w5;
+  }
+
+  if (w6 > 0.001) {
+    float morphSpacetime = smoothstep(52.6, 55.4, t);
+    col += renderAct6(warpedP, t, morphSpacetime, uAudioBass, uAudioHigh) * w6;
+  }
+
+  if (wReturn > 0.001) {
+    /* Seamless return into exact t=0.0 Human Iris (contracts gently from wide to 1.0) */
+    float contract = mix(0.86, 1.0, smoothstep(55.6, 59.4, t));
+    /* Periodic time t-60.0 smoothly aligns heartbeat & micro-drift at 60.0 -> 0.0 */
+    col += renderAct1(p * contract, t - 60.0, 0.0, uAudioBass, uAudioHigh) * wReturn;
+  }
+
+  /* Output HDR linear radiance; alpha channel carries transition velocity for Pass 3 radial blur */
+  fragColor = vec4(max(col, vec3(0.0)), cutEnergy);
+}
+`;
+
+    /* PASS 2A: HDR Bloom & Warm Halation Threshold Extraction */
+    const FRAG_BLOOM_EXTRACT = `#version 300 es
+precision highp float;
+in vec2 vUv;
+out vec4 fragColor;
+uniform sampler2D uTex;
+
+void main() {
+  vec3 c = texture(uTex, vUv).rgb;
+  float lum = dot(c, vec3(0.2126, 0.7152, 0.0722));
+  /* Soft knee HDR highlight extraction for creamy cinema bloom */
+  float knee = smoothstep(0.62, 1.48, lum);
+  vec3 bloom = c * knee * 0.92;
+  fragColor = vec4(bloom, 1.0);
+}
+`;
+
+    /* PASS 2B / 2C: Separable Anamorphic Gaussian Blur */
+    const FRAG_BLUR = `#version 300 es
+precision highp float;
+in vec2 vUv;
+out vec4 fragColor;
+uniform sampler2D uTex;
+uniform vec2 uDir;
+
+void main() {
+  vec3 sum = texture(uTex, vUv).rgb * 0.227027;
+  sum += texture(uTex, vUv + uDir * 1.384615).rgb * 0.316216;
+  sum += texture(uTex, vUv - uDir * 1.384615).rgb * 0.316216;
+  sum += texture(uTex, vUv + uDir * 3.230769).rgb * 0.070270;
+  sum += texture(uTex, vUv - uDir * 3.230769).rgb * 0.070270;
+  fragColor = vec4(sum, 1.0);
+}
+`;
+
+    /* PASS 3: Final IMAX Cinema Composite (Radial Zoom Blur, Chromatic Dispersion,
+       Anamorphic Halation, ACES Filmic Tone Mapping, 35mm Grain, Vignette & Crisp Overlay) */
+    const FRAG_COMPOSITE = `#version 300 es
+precision highp float;
+in vec2 vUv;
+out vec4 fragColor;
+
+uniform sampler2D uSceneTex;
+uniform sampler2D uBloomTex;
+uniform sampler2D uTextTex;
+uniform vec2 uRes;
+uniform float uTime;
+
+/* ACES Filmic Tone Mapping (Narkowicz fit) */
+vec3 acesFilm(vec3 x) {
+  const float a = 2.51;
+  const float b = 0.03;
+  const float c = 2.43;
+  const float d = 0.59;
+  const float e = 0.14;
+  return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+}
+
+/* Fast organic film grain hash */
+float grainHash(vec2 p) {
+  vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+void main() {
+  vec2 centered = vUv - 0.5;
+  float r = length(centered);
+
+  vec4 baseSample = texture(uSceneTex, vUv);
+  float transVel = baseSample.a;
+
+  /* Transition-coupled subtle radial zoom blur & edge chromatic dispersion */
+  vec3 col = baseSample.rgb;
+  float caAmt = (0.0011 + transVel * 0.0055) * r;
+  if (transVel > 0.02) {
+    vec3 radialSum = col * 0.40;
+    vec2 dir = centered * (0.016 * transVel);
+    radialSum += texture(uSceneTex, vUv - dir * 0.5).rgb * 0.25;
+    radialSum += texture(uSceneTex, vUv - dir * 1.1).rgb * 0.20;
+    radialSum += texture(uSceneTex, vUv - dir * 1.8).rgb * 0.15;
+    col = radialSum;
+  }
+
+  /* Subtle optical lens chromatic aberration toward screen edges */
+  float rCh = texture(uSceneTex, vUv + centered * caAmt).r;
+  float bCh = texture(uSceneTex, vUv - centered * caAmt).b;
+  col.r = mix(col.r, rCh, 0.55);
+  col.b = mix(col.b, bCh, 0.55);
+
+  /* Dual-tone optical bloom + warm 35mm film halation */
+  vec3 bloom = texture(uBloomTex, vUv).rgb;
+  col += bloom * vec3(1.04, 0.98, 0.94) * 0.58;
+  /* Subtle anamorphic streak halo */
+  vec3 streak = (texture(uBloomTex, vUv + vec2(0.018, 0.0)).rgb
+               + texture(uBloomTex, vUv - vec2(0.018, 0.0)).rgb) * 0.5;
+  col += streak * vec3(0.75, 0.88, 1.05) * 0.16;
+
+  /* ACES Filmic Tone Mapping + Cinema S-Curve Contrast & Gamma */
+  col = acesFilm(col * 1.06);
+  col = pow(col, vec3(1.0 / 2.2));
+  /* Subtle filmic S-curve for rich cinema blacks without crushing shadow detail */
+  col = mix(col, col * col * (3.0 - 2.0 * col), 0.16);
+
+  /* Organic luminance-weighted 35mm film grain */
+  float lum = dot(col, vec3(0.299, 0.587, 0.114));
+  float g = grainHash(vUv * uRes + fract(uTime * 17.31) * 913.7) - 0.5;
+  float grainWeight = (1.0 - lum * 0.65) * 0.022;
+  col += vec3(g * grainWeight);
+
+  /* Soft optical cinema lens vignette */
+  float vig = smoothstep(0.92, 0.28, r * 1.12);
+  col *= mix(0.68, 1.0, vig);
+
+  /* Crisp premultiplied-alpha compositing of Poetic Subtitles / Museum Telemetry / Finale Title */
+  vec4 txt = texture(uTextTex, vec2(vUv.x, 1.0 - vUv.y));
+  col = col * (1.0 - txt.a) + txt.rgb;
+
+  fragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+}
+`;
+
+    /* =========================================================================
+       3. WEBGL2 ENGINE & MULTI-PASS FBO MANAGER
+    ========================================================================= */
+    const canvas = document.getElementById('glCanvas');
+    const errorPanel = document.getElementById('errorPanel');
+    const errorText = document.getElementById('errorText');
+
+    function showFatalError(msg) {
+      errorText.textContent = 'WebGL2 渲染初始化失败：\n\n' + msg;
+      errorPanel.style.display = 'flex';
+    }
+
+    const gl = canvas.getContext('webgl2', {
+      antialias: false,
+      alpha: false,
+      depth: false,
+      stencil: false,
+      powerPreference: 'high-performance',
+      preserveDrawingBuffer: false
+    });
+
+    if (!gl) {
+      showFatalError('当前浏览器或显卡环境不支持 WebGL2，请使用最新版 Edge / Chrome / Safari 打开。');
+      return;
+    }
+
+    function compileShader(type, src, label) {
+      const sh = gl.createShader(type);
+      gl.shaderSource(sh, src);
+      gl.compileShader(sh);
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+        const log = gl.getShaderInfoLog(sh) || 'Unknown shader compile error';
+        throw new Error(`[${label}] Shader Compile Error:\n${log}`);
+      }
+      return sh;
+    }
+
+    function createProgram(vsSrc, fsSrc, label) {
+      const vs = compileShader(gl.VERTEX_SHADER, vsSrc, label + ' VS');
+      const fs = compileShader(gl.FRAGMENT_SHADER, fsSrc, label + ' FS');
+      const prog = gl.createProgram();
+      gl.attachShader(prog, vs);
+      gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+        const log = gl.getProgramInfoLog(prog) || 'Unknown link error';
+        throw new Error(`[${label}] Program Link Error:\n${log}`);
+      }
+      gl.deleteShader(vs);
+      gl.deleteShader(fs);
+      return prog;
+    }
+
+    let sceneProg, bloomExtractProg, blurProg, compositeProg;
+    try {
+      sceneProg        = createProgram(VERT_QUAD, FRAG_SCENE, 'Scene6Act');
+      bloomExtractProg = createProgram(VERT_QUAD, FRAG_BLOOM_EXTRACT, 'BloomExtract');
+      blurProg         = createProgram(VERT_QUAD, FRAG_BLUR, 'AnamorphicBlur');
+      compositeProg    = createProgram(VERT_QUAD, FRAG_COMPOSITE, 'CinemaComposite');
+    } catch (err) {
+      showFatalError(err.message);
+      return;
+    }
+
+    /* Uniform locations */
+    const uScene = {
+      res: gl.getUniformLocation(sceneProg, 'uRes'),
+      time: gl.getUniformLocation(sceneProg, 'uTime'),
+      bass: gl.getUniformLocation(sceneProg, 'uAudioBass'),
+      high: gl.getUniformLocation(sceneProg, 'uAudioHigh')
+    };
+    const uBloomExtract = {
+      tex: gl.getUniformLocation(bloomExtractProg, 'uTex')
+    };
+    const uBlur = {
+      tex: gl.getUniformLocation(blurProg, 'uTex'),
+      dir: gl.getUniformLocation(blurProg, 'uDir')
+    };
+    const uComp = {
+      sceneTex: gl.getUniformLocation(compositeProg, 'uSceneTex'),
+      bloomTex: gl.getUniformLocation(compositeProg, 'uBloomTex'),
+      textTex: gl.getUniformLocation(compositeProg, 'uTextTex'),
+      res: gl.getUniformLocation(compositeProg, 'uRes'),
+      time: gl.getUniformLocation(compositeProg, 'uTime')
+    };
+
+    /* Detect float render target support with automatic RGBA8 safe fallback */
+    const hasFloatFBO = Boolean(
+      gl.getExtension('EXT_color_buffer_float') ||
+      gl.getExtension('EXT_color_buffer_half_float')
+    );
+
+    function createRenderTarget(w, h, tryFloat) {
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+      let isFloat = false;
+      if (tryFloat) {
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, w, h, 0, gl.RGBA, gl.HALF_FLOAT, null);
+        isFloat = true;
+      } else {
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      }
+
+      const fbo = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE && isFloat) {
+        /* Safe fallback to RGBA8 if hardware rejects RGBA16F attachment */
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        isFloat = false;
+      }
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      return { fbo, tex, w, h, isFloat };
+    }
+
+    function destroyRenderTarget(rt) {
+      if (!rt) return;
+      gl.deleteFramebuffer(rt.fbo);
+      gl.deleteTexture(rt.tex);
+    }
+
+    let rtScene = null;
+    let rtBloomA = null;
+    let rtBloomB = null;
+    let renderW = 1920;
+    let renderH = 1080;
+    let isHdrActive = hasFloatFBO;
+
+    function setupPipelineSize(w, h) {
+      renderW = w;
+      renderH = h;
+      canvas.width = w;
+      canvas.height = h;
+      destroyRenderTarget(rtScene);
+      destroyRenderTarget(rtBloomA);
+      destroyRenderTarget(rtBloomB);
+
+      rtScene  = createRenderTarget(w, h, hasFloatFBO);
+      const bw = Math.max(240, Math.floor(w / 4));
+      const bh = Math.max(135, Math.floor(h / 4));
+      rtBloomA = createRenderTarget(bw, bh, hasFloatFBO);
+      rtBloomB = createRenderTarget(bw, bh, hasFloatFBO);
+      isHdrActive = rtScene.isFloat;
+    }
+
+    setupPipelineSize(1920, 1080);
+
+    /* =========================================================================
+       4. CRISP CINEMA TYPOGRAPHY & MUSEUM TELEMETRY OVERLAY (COMPOSITED IN PASS 3)
+       Ensures poetic subtitles, finale title, and optional telemetry burn cleanly
+       into exported 1080p60 WebM video without bloom distortion.
+    ========================================================================= */
+    const textCanvas = document.createElement('canvas');
+    textCanvas.width = 1920;
+    textCanvas.height = 1080;
+    const tctx = textCanvas.getContext('2d');
+
+    const textGlTex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, textGlTex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+
+    let showTelemetry = true;
+    let lastOverlayDrawMs = -1000;
+
+    function updateCinemaOverlay(t, isPreviewMode, forceRedraw) {
+      const now = performance.now();
+      /* Throttle 2D overlay redraw & texture upload to ~20Hz for effortless 60fps WebGL */
+      if (!forceRedraw && now - lastOverlayDrawMs < 48) return;
+      lastOverlayDrawMs = now;
+
+      const W = 1920, H = 1080;
+      tctx.clearRect(0, 0, W, H);
+      if (isPreviewMode) {
+        gl.bindTexture(gl.TEXTURE_2D, textGlTex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+        return;
+      }
+
+      const ct = ((t % TOTAL_DURATION) + TOTAL_DURATION) % TOTAL_DURATION;
+      const actIdx = Math.min(5, Math.floor(ct / 10.0));
+      const ch = CHAPTERS[actIdx];
+
+      /* Subtle opening title whisper (00:00.2 - 00:03.2) */
+      if (ct >= 0.2 && ct <= 3.4) {
+        const aIn  = Math.min(1, (ct - 0.2) / 0.9);
+        const aOut = Math.min(1, (3.4 - ct) / 0.9);
+        const alpha = Math.max(0, Math.min(aIn, aOut));
+        tctx.save();
+        tctx.globalAlpha = alpha * 0.92;
+        tctx.textAlign = 'center';
+        tctx.shadowColor = 'rgba(0,0,0,0.65)';
+        tctx.shadowBlur = 24;
+        tctx.fillStyle = '#f6f8fc';
+        tctx.font = '400 72px "Songti SC", "STSong", Georgia, serif';
+        tctx.fillText('万 物 同 构', W * 0.5, H * 0.485);
+        tctx.fillStyle = 'rgba(231, 190, 120, 0.88)';
+        tctx.font = '400 18px ui-monospace, "SF Mono", Consolas, monospace';
+        tctx.fillText('I S O M O R P H I S M   ·   A   V I S U A L   P O E M   A C R O S S   S C A L E S', W * 0.5, H * 0.542);
+        tctx.restore();
+      }
+
+      /* Refined closing cinema title (00:56.0 - 00:59.6) without obscuring the iris center */
+      if (ct >= 55.9 && ct <= 59.6) {
+        const aIn  = Math.min(1, (ct - 55.9) / 1.1);
+        const aOut = Math.min(1, (59.6 - ct) / 0.9);
+        const alpha = Math.max(0, Math.min(aIn, aOut));
+        tctx.save();
+        tctx.globalAlpha = alpha;
+        tctx.textAlign = 'center';
+        tctx.shadowColor = 'rgba(0,0,0,0.75)';
+        tctx.shadowBlur = 28;
+        tctx.fillStyle = 'rgba(250, 252, 255, 0.95)';
+        tctx.font = '400 62px "Songti SC", "STSong", Georgia, serif';
+        tctx.fillText('万 物 同 构', W * 0.5, H * 0.805);
+        tctx.fillStyle = 'rgba(220, 232, 248, 0.72)';
+        tctx.font = '400 16px ui-monospace, "SF Mono", Consolas, monospace';
+        tctx.fillText('I S O M O R P H I S M   ·   1 0 ⁻¹⁰ m  ⇄  1 0 ²⁵ m', W * 0.5, H * 0.850);
+        tctx.restore();
+      }
+
+      /* Museum-grade Top-Left Chapter & Mathematical Invariant + Top-Right Live Scale Meter */
+      if (showTelemetry) {
+        const actLocal = ct - actIdx * 10.0;
+        const telFade = Math.min(1, actLocal / 0.65) * Math.min(1, (10.0 - actLocal) / 0.55);
+        const endMask = ct > 56.2 ? Math.max(0, 1 - (ct - 56.2) / 1.4) : 1.0;
+        const alpha = Math.max(0.25, telFade) * endMask;
+
+        tctx.save();
+        tctx.globalAlpha = alpha * 0.92;
+        tctx.shadowColor = 'rgba(0,0,0,0.78)';
+        tctx.shadowBlur = 14;
+
+        /* Top-Left Metadata */
+        tctx.textAlign = 'left';
+        tctx.fillStyle = 'rgba(231, 190, 120, 0.88)';
+        tctx.font = '500 15px ui-monospace, "SF Mono", Consolas, monospace';
+        tctx.fillText(`${ch.index}  ·  ${ch.enTitle}`, 64, 68);
+
+        tctx.fillStyle = 'rgba(248, 250, 255, 0.94)';
+        tctx.font = '500 26px "PingFang SC", "Microsoft YaHei", sans-serif';
+        tctx.fillText(ch.title, 64, 102);
+
+        tctx.fillStyle = 'rgba(182, 206, 232, 0.72)';
+        tctx.font = '400 15px ui-monospace, "SF Mono", Consolas, monospace';
+        tctx.fillText(`INVARIANT  /  ${ch.invariant}`, 64, 130);
+
+        /* Subtle vertical accent bar */
+        tctx.fillStyle = 'rgba(231, 190, 120, 0.65)';
+        tctx.fillRect(46, 54, 3, 78);
+
+        /* Top-Right Live Interpolating Scale Meter (positioned slightly below DOM FPS pill) */
+        const scaleExp = Math.round(getLiveScaleExponent(ct));
+        tctx.textAlign = 'right';
+        tctx.fillStyle = 'rgba(182, 206, 232, 0.62)';
+        tctx.font = '400 13px ui-monospace, "SF Mono", Consolas, monospace';
+        tctx.fillText('SPATIAL SCALE', W - 64, 96);
+
+        tctx.fillStyle = 'rgba(246, 250, 255, 0.92)';
+        tctx.font = '500 30px ui-monospace, "SF Mono", Consolas, monospace';
+        tctx.fillText(`10${toSuperscript(scaleExp)} m`, W - 64, 132);
+
+        /* Minimalist logarithmic scale bar (-10 to +25) */
+        const barW = 160;
+        const barX = W - 64 - barW;
+        const barY = 146;
+        const norm = Math.max(0, Math.min(1, (getLiveScaleExponent(ct) + 10.0) / 35.0));
+        tctx.fillStyle = 'rgba(255,255,255,0.18)';
+        tctx.fillRect(barX, barY, barW, 2);
+        tctx.fillStyle = '#6ed6f0';
+        tctx.fillRect(barX, barY, barW * norm, 2);
+        tctx.beginPath();
+        tctx.arc(barX + barW * norm, barY + 1, 4, 0, Math.PI * 2);
+        tctx.fill();
+
+        tctx.restore();
+      }
+
+      /* Ultra-restrained Poetic Subtitles (Bottom-Center) */
+      if (ct >= ch.subStart && ct <= ch.subEnd) {
+        const sIn  = Math.min(1, (ct - ch.subStart) / 0.85);
+        const sOut = Math.min(1, (ch.subEnd - ct) / 0.85);
+        const sAlpha = Math.max(0, Math.min(sIn, sOut));
+        tctx.save();
+        tctx.globalAlpha = sAlpha * 0.94;
+        tctx.textAlign = 'center';
+        tctx.shadowColor = 'rgba(0, 0, 0, 0.88)';
+        tctx.shadowBlur = 18;
+        tctx.fillStyle = 'rgba(248, 250, 255, 0.94)';
+        tctx.font = '300 24px "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
+        tctx.fillText(ch.zhSub, W * 0.5, H - 116);
+
+        tctx.fillStyle = 'rgba(202, 214, 234, 0.68)';
+        tctx.font = '400 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+        tctx.fillText(ch.enSub, W * 0.5, H - 86);
+        tctx.restore();
+      }
+
+      gl.bindTexture(gl.TEXTURE_2D, textGlTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+    }
+
+    /* =========================================================================
+       5. PROCEDURAL CINEMA SOUNDTRACK & SOUND DESIGN ENGINE (WEB AUDIO API)
+       Hans Zimmer / Olafur Arnalds inspired 60s orchestral-ambient score in D minor
+       Synchronized deterministically to timelineTime (120 BPM = 120 beats = 60.0s)
+    ========================================================================= */
+    class CinemaAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+        this.reverbNode = null;
+        this.analyser = null;
+        this.mediaDest = null;
+        this.freqData = null;
+        this.noiseBuf = null;
+        this.volume = 0.82;
+        this.muted = false;
+        this.initialized = false;
+        this.lastScheduledStep = -1;
+        this.bassLevel = 0;
+        this.highLevel = 0;
+      }
+
+      init() {
+        if (this.initialized) {
+          if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+          return;
+        }
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+
+        this.ctx = new AudioCtx();
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.value = this.muted ? 0 : this.volume;
+
+        /* Mastering safety compressor */
+        const comp = this.ctx.createDynamicsCompressor();
+        comp.threshold.value = -14;
+        comp.knee.value = 18;
+        comp.ratio.value = 4;
+        comp.attack.value = 0.015;
+        comp.release.value = 0.25;
+
+        /* Procedural 3.5-second Stereo Lush Algorithmic Convolution Reverb */
+        this.reverbNode = this.ctx.createConvolver();
+        this.reverbNode.buffer = this._buildHallImpulse(3.5, 2.8);
+        this.reverbSend = this.ctx.createGain();
+        this.reverbSend.gain.value = 0.56;
+
+        this.dryBus = this.ctx.createGain();
+        this.dryBus.gain.value = 0.85;
+
+        this.dryBus.connect(comp);
+        this.reverbSend.connect(this.reverbNode);
+        this.reverbNode.connect(comp);
+        comp.connect(this.masterGain);
+
+        /* Real-time AnalyserNode for shader audio-reactivity */
+        this.analyser = this.ctx.createAnalyser();
+        this.analyser.fftSize = 256;
+        this.analyser.smoothingTimeConstant = 0.82;
+        this.freqData = new Uint8Array(this.analyser.frequencyBinCount);
+
+        this.masterGain.connect(this.analyser);
+        this.analyser.connect(this.ctx.destination);
+
+        /* Dedicated MediaStreamDestination for 1080p60 WebM audio capture */
+        this.mediaDest = this.ctx.createMediaStreamDestination();
+        this.masterGain.connect(this.mediaDest);
+
+        /* Shared filtered white noise buffer for wind, thunder, thunder-crackle & water air */
+        this.noiseBuf = this._buildNoiseBuffer(4.0);
+        this.initialized = true;
+      }
+
+      _buildHallImpulse(seconds, decay) {
+        const rate = this.ctx.sampleRate;
+        const len = Math.floor(rate * seconds);
+        const buf = this.ctx.createBuffer(2, len, rate);
+        for (let ch = 0; ch < 2; ch++) {
+          const data = buf.getChannelData(ch);
+          let lp = 0;
+          for (let i = 0; i < len; i++) {
+            const t = i / len;
+            const env = Math.pow(1.0 - t, decay) * Math.min(1.0, i / (rate * 0.03));
+            const white = Math.random() * 2 - 1;
+            /* Gentle low-pass damping for warm concert-hall tail */
+            lp = lp * 0.72 + white * 0.28;
+            data[i] = lp * env;
+          }
+        }
+        return buf;
+      }
+
+      _buildNoiseBuffer(seconds) {
+        const rate = this.ctx.sampleRate;
+        const len = Math.floor(rate * seconds);
+        const buf = this.ctx.createBuffer(1, len, rate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+        return buf;
+      }
+
+      setVolume(v) {
+        this.volume = v;
+        if (this.masterGain && !this.muted) {
+          this.masterGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.04);
+        }
+      }
+
+      setMuted(m) {
+        this.muted = m;
+        if (this.masterGain) {
+          this.masterGain.gain.setTargetAtTime(m ? 0 : this.volume, this.ctx.currentTime, 0.04);
+        }
+      }
+
+      resetSchedule() {
+        this.lastScheduledStep = -1;
+      }
+
+      midiToFreq(m) {
+        return 440.0 * Math.pow(2.0, (m - 69.0) / 12.0);
+      }
+
+      /* Warm Hans Zimmer-style detuned cello/brass pad voice */
+      playPadChord(notes, when, dur, gainVal, cutoffHz) {
+        const g = this.ctx.createGain();
+        const filt = this.ctx.createBiquadFilter();
+        filt.type = 'lowpass';
+        filt.frequency.setValueAtTime(cutoffHz * 0.55, when);
+        filt.frequency.linearRampToValueAtTime(cutoffHz, when + dur * 0.45);
+        filt.frequency.linearRampToValueAtTime(cutoffHz * 0.65, when + dur);
+        filt.Q.value = 0.9;
+
+        g.gain.setValueAtTime(0.0001, when);
+        g.gain.linearRampToValueAtTime(gainVal, when + Math.min(1.1, dur * 0.35));
+        g.gain.setValueAtTime(gainVal * 0.9, when + dur * 0.72);
+        g.gain.exponentialRampToValueAtTime(0.0001, when + dur + 0.35);
+
+        filt.connect(g);
+        g.connect(this.dryBus);
+        g.connect(this.reverbSend);
+
+        for (const m of notes) {
+          const f = this.midiToFreq(m);
+          for (const detune of [-7, 7]) {
+            const osc = this.ctx.createOscillator();
+            osc.type = m < 52 ? 'sawtooth' : 'triangle';
+            osc.frequency.setValueAtTime(f, when);
+            osc.detune.setValueAtTime(detune, when);
+            osc.connect(filt);
+            osc.start(when);
+            osc.stop(when + dur + 0.4);
+          }
+        }
+      }
+
+      /* Delicate Felt Piano / Harmonic Glass Pluck */
+      playFeltNote(midi, when, dur, amp, brightness = 1.0) {
+        const f = this.midiToFreq(midi);
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        osc1.type = 'sine';
+        osc2.type = 'triangle';
+        osc1.frequency.setValueAtTime(f, when);
+        osc2.frequency.setValueAtTime(f * 2.0, when);
+
+        const filt = this.ctx.createBiquadFilter();
+        filt.type = 'lowpass';
+        filt.frequency.setValueAtTime(Math.min(7200, f * 4.5 * brightness), when);
+        filt.frequency.exponentialRampToValueAtTime(Math.max(320, f * 1.4), when + dur);
+
+        const g = this.ctx.createGain();
+        const g2 = this.ctx.createGain();
+        g2.gain.value = 0.16 * brightness;
+
+        g.gain.setValueAtTime(0.0001, when);
+        g.gain.linearRampToValueAtTime(amp, when + 0.016);
+        g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+
+        osc1.connect(filt);
+        osc2.connect(g2);
+        g2.connect(filt);
+        filt.connect(g);
+        g.connect(this.dryBus);
+        g.connect(this.reverbSend);
+
+        osc1.start(when);
+        osc2.start(when);
+        osc1.stop(when + dur + 0.05);
+        osc2.stop(when + dur + 0.05);
+      }
+
+      /* Deep Cinematic Sub-Bass / Heartbeat Thump */
+      playHeartbeat(when, amp = 0.28) {
+        const triggerThump = (t0, fStart, fEnd, a) => {
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(fStart, t0);
+          osc.frequency.exponentialRampToValueAtTime(fEnd, t0 + 0.14);
+          g.gain.setValueAtTime(0.0001, t0);
+          g.gain.linearRampToValueAtTime(a, t0 + 0.015);
+          g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.24);
+          osc.connect(g);
+          g.connect(this.dryBus);
+          osc.start(t0);
+          osc.stop(t0 + 0.26);
+        };
+        triggerThump(when, 74, 34, amp);
+        triggerThump(when + 0.17, 62, 30, amp * 0.62);
+      }
+
+      /* Atmospheric Filter Sweep / Cosmic Wind Whoosh / Distant Thunder Swell */
+      playNoiseSwell(when, dur, fStart, fPeak, fEnd, q, amp) {
+        const src = this.ctx.createBufferSource();
+        src.buffer = this.noiseBuf;
+        src.loop = true;
+
+        const filt = this.ctx.createBiquadFilter();
+        filt.type = 'bandpass';
+        filt.Q.value = q;
+        filt.frequency.setValueAtTime(fStart, when);
+        filt.frequency.exponentialRampToValueAtTime(fPeak, when + dur * 0.55);
+        filt.frequency.exponentialRampToValueAtTime(fEnd, when + dur);
+
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.0001, when);
+        g.gain.linearRampToValueAtTime(amp, when + dur * 0.45);
+        g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+
+        src.connect(filt);
+        filt.connect(g);
+        g.connect(this.dryBus);
+        g.connect(this.reverbSend);
+        src.start(when);
+        src.stop(when + dur + 0.05);
+      }
+
+      /* Crisp Electrostatic Synapse / Lightning Crackle */
+      playCrackle(when, amp = 0.08) {
+        const src = this.ctx.createBufferSource();
+        src.buffer = this.noiseBuf;
+        const filt = this.ctx.createBiquadFilter();
+        filt.type = 'highpass';
+        filt.frequency.value = 3400;
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.0001, when);
+        g.gain.linearRampToValueAtTime(amp, when + 0.005);
+        g.gain.exponentialRampToValueAtTime(0.0001, when + 0.075);
+        src.connect(filt);
+        filt.connect(g);
+        g.connect(this.reverbSend);
+        src.start(when, Math.random() * 2.0, 0.09);
+      }
+
+      /* Crystalline Quantum / Water-Bell Harmonic Ping */
+      playBellPing(midi, when, dur, amp) {
+        const f = this.midiToFreq(midi);
+        const osc = this.ctx.createOscillator();
+        const overtone = this.ctx.createOscillator();
+        osc.type = 'sine';
+        overtone.type = 'sine';
+        osc.frequency.setValueAtTime(f, when);
+        overtone.frequency.setValueAtTime(f * 2.756, when); /* Glass/water bell partial */
+
+        const g = this.ctx.createGain();
+        const go = this.ctx.createGain();
+        go.gain.value = 0.14;
+
+        g.gain.setValueAtTime(0.0001, when);
+        g.gain.linearRampToValueAtTime(amp, when + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+
+        osc.connect(g);
+        overtone.connect(go);
+        go.connect(g);
+        g.connect(this.dryBus);
+        g.connect(this.reverbSend);
+
+        osc.start(when);
+        overtone.start(when);
+        osc.stop(when + dur + 0.05);
+        overtone.stop(when + dur + 0.05);
+      }
+
+      /* Deterministic 240-step (0.25s = 16th-note at 120 BPM) 60-second Score Sequencer */
+      update(timelineTime, isPlaying) {
+        if (!this.initialized || !this.ctx) return;
+
+        /* Update real-time FFT reactivity */
+        if (this.analyser && isPlaying) {
+          this.analyser.getByteFrequencyData(this.freqData);
+          let b = 0, h = 0;
+          for (let i = 0; i < 8; i++) b += this.freqData[i];
+          for (let i = 18; i < 64; i++) h += this.freqData[i];
+          const targetBass = (b / (8 * 255));
+          const targetHigh = (h / (46 * 255));
+          this.bassLevel += (targetBass - this.bassLevel) * 0.18;
+          this.highLevel += (targetHigh - this.highLevel) * 0.18;
+        } else {
+          this.bassLevel *= 0.92;
+          this.highLevel *= 0.92;
+        }
+
+        if (!isPlaying) return;
+
+        /* 0.25s grid => 240 steps across 60.0s */
+        const stepDur = 0.25;
+        const curStep = Math.floor(timelineTime / stepDur);
+        if (curStep === this.lastScheduledStep) return;
+
+        /* Handle loop wrap or scrub jump cleanly */
+        if (this.lastScheduledStep < 0 || Math.abs(curStep - this.lastScheduledStep) > 6) {
+          this.lastScheduledStep = curStep - 1;
+        }
+
+        const now = this.ctx.currentTime + 0.02;
+        for (let s = this.lastScheduledStep + 1; s <= curStep; s++) {
+          const step = ((s % 240) + 240) % 240;
+          this._triggerStep(step, now + (s - curStep) * stepDur);
+        }
+        this.lastScheduledStep = curStep;
+      }
+
+      _triggerStep(step, when) {
+        const sec = step * 0.25;
+
+        /* ---- 1. GRAND HARMONIC PAD PROGRESSION (D Minor Cinematic Arc) ---- */
+        if (step === 0)   this.playPadChord([38, 50, 57, 62, 65, 69], when, 4.4, 0.105, 680);   // Act I: Dm9
+        if (step === 16)  this.playPadChord([34, 46, 53, 58, 62, 69], when, 4.2, 0.115, 820);   // BbMaj7
+        if (step === 32)  this.playPadChord([33, 45, 52, 57, 62, 64], when, 2.4, 0.130, 1200);  // A7sus4 swell
+        if (step === 40)  this.playPadChord([41, 53, 60, 64, 69, 72], when, 4.4, 0.120, 1100);  // Act II: Fmaj7
+        if (step === 56)  this.playPadChord([36, 48, 55, 62, 64, 67], when, 2.4, 0.115, 1150);  // Cadd9
+        if (step === 64)  this.playPadChord([43, 50, 58, 62, 65, 69], when, 2.4, 0.125, 1300);  // Gm9
+        if (step === 72)  this.playPadChord([33, 45, 55, 61, 64, 69], when, 2.4, 0.140, 1650);  // A7 tension
+        if (step === 80)  this.playPadChord([38, 50, 57, 62, 65, 72], when, 4.3, 0.150, 1800);  // Act III: Dm7 storm
+        if (step === 96)  this.playPadChord([34, 46, 53, 58, 62, 65], when, 2.4, 0.130, 1250);  // Bb capillaries
+        if (step === 104) this.playPadChord([36, 48, 55, 60, 64, 67], when, 2.4, 0.130, 1450);  // C delta
+        if (step === 112) this.playPadChord([38, 50, 57, 62, 65, 69], when, 2.4, 0.135, 1550);  // Dm
+        if (step === 120) this.playPadChord([34, 46, 53, 58, 62, 69], when, 4.4, 0.145, 1750);  // Act IV: BbMaj7 typhoon
+        if (step === 136) this.playPadChord([36, 48, 55, 60, 64, 69], when, 3.4, 0.140, 1900);  // C6 nautilus
+        if (step === 148) this.playPadChord([38, 50, 57, 65, 69, 74], when, 3.6, 0.165, 2400);  // Dm9 galaxy climax!
+        if (step === 160) this.playPadChord([43, 50, 58, 62, 65, 69], when, 4.4, 0.125, 1100);  // Act V: Gm9 basalt
+        if (step === 176) this.playPadChord([41, 50, 57, 62, 65, 69], when, 3.3, 0.125, 1300);  // Dm/F honeycomb
+        if (step === 188) this.playPadChord([33, 45, 52, 57, 61, 69], when, 3.4, 0.135, 1650);  // A7 graphene
+        if (step === 200) this.playPadChord([34, 46, 53, 58, 62, 69], when, 4.3, 0.135, 1500);  // Act VI: BbMaj7 caustics
+        if (step === 216) this.playPadChord([36, 48, 55, 62, 64, 67], when, 2.5, 0.125, 1350);  // Cadd9 spacetime
+        if (step === 224) this.playPadChord([38, 50, 57, 62, 65, 69], when, 4.4, 0.110, 740);   // Dm9 eternal return!
+
+        /* ---- 2. INTERSTELLAR-STYLE FELT PIANO MOTIF & ARPEGGIO ---- */
+        const arpDm  = [69, 74, 77, 81, 77, 74, 69, 72];
+        const arpBb  = [70, 74, 77, 81, 77, 74, 70, 69];
+        const arpF   = [69, 72, 77, 81, 77, 72, 69, 76];
+        const arpGm  = [67, 70, 74, 79, 74, 70, 67, 72];
+        const arpC   = [67, 72, 76, 79, 76, 72, 67, 74];
+
+        /* Act I: Sparse contemplative felt piano + soft heartbeat */
+        if (step < 40) {
+          if (step % 4 === 0 && step < 28) this.playHeartbeat(when, 0.24);
+          if (step % 4 === 0) {
+            const notes = step < 16 ? arpDm : arpBb;
+            this.playFeltNote(notes[(step / 4) % notes.length], when, 2.2, 0.085, 0.72);
+          }
+          if (step === 26) this.playNoiseSwell(when, 3.6, 180, 1400, 320, 2.4, 0.09); // Iris -> Nebula dive
+        }
+
+        /* Act II: Shimmering cosmic web -> firing neuron 8th-note arpeggios + sparks */
+        else if (step < 80) {
+          if (step % 2 === 0) {
+            const notes = step < 56 ? arpF : (step < 64 ? arpC : arpGm);
+            this.playFeltNote(notes[(step / 2) % notes.length], when, 1.4, 0.075, 0.95);
+          }
+          if (step === 40) this.playBellPing(81, when, 3.5, 0.09);
+          if (step >= 65 && (step % 3 === 0 || step % 5 === 0)) {
+            this.playCrackle(when, 0.055); // Neural action-potential crackles
+            this.playBellPing(81 + (step % 5) * 2, when, 0.65, 0.045);
+          }
+        }
+
+        /* Act III: Driving rhythmic ostinato + thunder/lightning -> arterial pulse -> river air */
+        else if (step < 120) {
+          const notes = step < 96 ? arpDm : (step < 104 ? arpBb : arpC);
+          this.playFeltNote(notes[step % notes.length] - (step % 2 === 0 ? 12 : 0), when, 0.65, 0.08, 1.15);
+          if (step === 80 || step === 86) {
+            this.playCrackle(when, 0.14);
+            this.playNoiseSwell(when, 2.2, 160, 85, 42, 1.2, 0.24); // Deep distant thunder boom
+          }
+          if (step >= 94 && step < 108 && step % 4 === 0) {
+            this.playHeartbeat(when, 0.22); // Blood vessel arterial pulse
+          }
+          if (step === 108) {
+            this.playNoiseSwell(when, 3.0, 420, 1600, 600, 1.8, 0.075); // River delta wind
+          }
+        }
+
+        /* Act IV: Rising spiral harp/piano + orbital wind + soaring galaxy climax */
+        else if (step < 160) {
+          const notes = step < 136 ? arpBb : (step < 148 ? arpC : arpDm);
+          const climb = step >= 148 ? 12 : 0;
+          this.playFeltNote(notes[step % notes.length] + climb * (step % 4 === 0 ? 1 : 0), when, 1.1, 0.088, 1.25);
+          if (step === 120) this.playNoiseSwell(when, 4.0, 260, 1200, 380, 2.2, 0.10); // Typhoon wind
+          if (step === 136) this.playBellPing(76, when, 2.6, 0.085); // Nautilus calcify chime
+          if (step === 148) {
+            this.playBellPing(86, when, 4.2, 0.11); // Galaxy reveal shimmer
+            this.playHeartbeat(when, 0.26);
+          }
+        }
+
+        /* Act V: Deep resonant mineral bass + warm honeycomb bells + quantum graphene pings */
+        else if (step < 200) {
+          if (step % 2 === 0) {
+            const notes = step < 176 ? arpGm : arpDm;
+            this.playFeltNote(notes[(step / 2) % notes.length] - 12, when, 1.3, 0.078, 0.85);
+          }
+          if (step === 160) this.playNoiseSwell(when, 2.8, 120, 90, 50, 1.6, 0.15); // Basalt fracture rumble
+          if (step >= 174 && step < 188 && step % 4 === 0) {
+            this.playBellPing(74 + ((step / 4) % 3) * 3, when, 1.9, 0.068); // Warm honeycomb resonance
+          }
+          if (step >= 188 && step % 2 === 0) {
+            const qNotes = [81, 86, 88, 93, 88, 86];
+            this.playBellPing(qNotes[(step / 2) % qNotes.length], when, 1.5, 0.062); // Graphene quantum pings
+          }
+        }
+
+        /* Act VI: Water-bell harmonics -> spacetime resonance -> serene return to heartbeat */
+        else {
+          if (step < 224 && step % 4 === 0) {
+            const wNotes = [81, 77, 74, 86, 81, 76];
+            this.playBellPing(wNotes[(step / 4) % wNotes.length], when, 3.2, 0.088);
+          }
+          if (step === 212) this.playNoiseSwell(when, 3.5, 320, 950, 200, 2.4, 0.07); // Spacetime ripple swell
+          if (step >= 224 && step % 4 === 0) {
+            this.playHeartbeat(when, 0.20); // Seamless loop heartbeat returning to 00:00
+            if (step === 224 || step === 232) {
+              this.playFeltNote(step === 224 ? 74 : 69, when, 2.8, 0.075, 0.72);
+            }
+          }
+        }
+      }
+    }
+
+    const audioEngine = new CinemaAudioEngine();
+
+    /* =========================================================================
+       6. PLAYBACK STATE, INTERACTION & AUTO-HIDING CINEMA HUD
+    ========================================================================= */
+    const introOverlay  = document.getElementById('introOverlay');
+    const cinemaHud     = document.getElementById('cinemaHud');
+    const perfBadge     = document.getElementById('perfBadge');
+    const perfText      = document.getElementById('perfText');
+    const btnLaunch     = document.getElementById('btnLaunch');
+    const btnPlayPause  = document.getElementById('btnPlayPause');
+    const iconPlayPause = document.getElementById('iconPlayPause');
+    const txtPlayPause  = document.getElementById('txtPlayPause');
+    const btnRestart    = document.getElementById('btnRestart');
+    const btnMute       = document.getElementById('btnMute');
+    const iconVol       = document.getElementById('iconVol');
+    const volSlider     = document.getElementById('volSlider');
+    const btnLoop       = document.getElementById('btnLoop');
+    const btnHudToggle  = document.getElementById('btnHudToggle');
+    const resSelect     = document.getElementById('resSelect');
+    const btnExport     = document.getElementById('btnExport');
+    const btnFullscreen = document.getElementById('btnFullscreen');
+    const timelineTrack = document.getElementById('timelineTrack');
+    const trackFill     = document.getElementById('trackFill');
+    const trackThumb    = document.getElementById('trackThumb');
+    const curTimeText   = document.getElementById('curTimeText');
+    const chapterBtns   = Array.from(document.querySelectorAll('.chapter-btn'));
+    const recBanner     = document.getElementById('recBanner');
+    const recLabel      = document.getElementById('recLabel');
+    const recProgressFill = document.getElementById('recProgressFill');
+    const btnCancelRec  = document.getElementById('btnCancelRec');
+    const toastBox      = document.getElementById('toastBox');
+
+    let isPreviewMode = true;
+    let isPlaying = false;
+    let isLooping = true;
+    let timelineTime = 0.0;
+    let previewTime = 1.5;
+    let lastFrameMs = performance.now();
+    let hudTimer = null;
+    let toastTimer = null;
+
+    /* FPS Tracking */
+    let fpsFrames = 0;
+    let fpsAccum = 0;
+    let currentFps = 60;
+
+    function showToast(msg, duration = 3200) {
+      toastBox.textContent = msg;
+      toastBox.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastBox.classList.remove('show'), duration);
+    }
+
+    function formatTime(sec) {
+      const s = Math.max(0, Math.min(TOTAL_DURATION, sec));
+      const mm = Math.floor(s / 60);
+      const ss = Math.floor(s % 60);
+      return `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+    }
+
+    function syncPlayPauseUI() {
+      if (isPlaying) {
+        iconPlayPause.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+        txtPlayPause.textContent = '暂停';
+      } else {
+        iconPlayPause.innerHTML = '<path d="M8 5.14v14l11-7-11-7z"/>';
+        txtPlayPause.textContent = '播放';
+      }
+    }
+
+    function wakeHud() {
+      if (isPreviewMode) return;
+      cinemaHud.classList.remove('hidden-hud');
+      perfBadge.classList.remove('hidden-hud');
+      clearTimeout(hudTimer);
+      if (isPlaying && !isRecording) {
+        hudTimer = setTimeout(() => {
+          cinemaHud.classList.add('hidden-hud');
+          perfBadge.classList.add('hidden-hud');
+        }, 2500);
+      }
+    }
+
+    function startCinema() {
+      audioEngine.init();
+      audioEngine.resetSchedule();
+      isPreviewMode = false;
+      timelineTime = 0.0;
+      isPlaying = true;
+      introOverlay.classList.add('dismissed');
+      syncPlayPauseUI();
+      updateCinemaOverlay(0.0, false, true);
+      wakeHud();
+    }
+
+    function togglePlay() {
+      if (isPreviewMode) {
+        startCinema();
+        return;
+      }
+      audioEngine.init();
+      if (!isPlaying && timelineTime >= TOTAL_DURATION - 0.05) {
+        timelineTime = 0.0;
+        audioEngine.resetSchedule();
+      }
+      isPlaying = !isPlaying;
+      if (isPlaying) audioEngine.resetSchedule();
+      syncPlayPauseUI();
+      wakeHud();
+    }
+
+    function seekTo(sec) {
+      timelineTime = Math.max(0.0, Math.min(TOTAL_DURATION - 0.01, sec));
+      audioEngine.resetSchedule();
+      updateTimelineUI();
+      updateCinemaOverlay(timelineTime, isPreviewMode, true);
+    }
+
+    function updateTimelineUI() {
+      const pct = (timelineTime / TOTAL_DURATION) * 100;
+      trackFill.style.width = `${pct}%`;
+      trackThumb.style.left = `${pct}%`;
+      curTimeText.textContent = formatTime(timelineTime);
+      timelineTrack.setAttribute('aria-valuenow', timelineTime.toFixed(1));
+
+      const actIdx = Math.min(5, Math.floor(timelineTime / 10.0));
+      chapterBtns.forEach((btn, i) => btn.classList.toggle('active', i === actIdx));
+    }
+
+    /* Button Listeners */
+    btnLaunch.addEventListener('click', startCinema);
+    btnPlayPause.addEventListener('click', togglePlay);
+    canvas.addEventListener('click', () => {
+      if (!isPreviewMode && !isRecording) togglePlay();
+    });
+
+    btnRestart.addEventListener('click', () => {
+      if (isRecording) return;
+      seekTo(0.0);
+      if (!isPlaying) togglePlay();
+      wakeHud();
+    });
+
+    btnMute.addEventListener('click', () => {
+      audioEngine.init();
+      const next = !audioEngine.muted;
+      audioEngine.setMuted(next);
+      iconVol.innerHTML = next
+        ? '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>'
+        : '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+      wakeHud();
+    });
+
+    volSlider.addEventListener('input', (e) => {
+      audioEngine.init();
+      const v = parseFloat(e.target.value);
+      audioEngine.setMuted(v <= 0.001);
+      audioEngine.setVolume(v);
+      wakeHud();
+    });
+
+    btnLoop.addEventListener('click', () => {
+      isLooping = !isLooping;
+      btnLoop.classList.toggle('active', isLooping);
+      showToast(isLooping ? '已开启 60 秒无缝闭环循环' : '已切换为单次放映');
+      wakeHud();
+    });
+
+    btnHudToggle.addEventListener('click', () => {
+      showTelemetry = !showTelemetry;
+      btnHudToggle.classList.toggle('active', showTelemetry);
+      updateCinemaOverlay(timelineTime, isPreviewMode, true);
+      showToast(showTelemetry ? '已显示科学标尺与幕次信息' : '已切换为纯净无标尺画面');
+      wakeHud();
+    });
+
+    function applyResolutionMode(mode) {
+      if (mode === '1080') {
+        setupPipelineSize(1920, 1080);
+      } else if (mode === '720') {
+        setupPipelineSize(1280, 720);
+      } else {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = Math.min(1920, Math.max(960, Math.round(canvas.clientWidth * dpr)));
+        const h = Math.round(w * 9 / 16);
+        setupPipelineSize(w, h);
+      }
+    }
+
+    resSelect.addEventListener('change', (e) => {
+      if (isRecording) return;
+      applyResolutionMode(e.target.value);
+      showToast(`渲染分辨率已切换至 ${renderW}×${renderH}`);
+      wakeHud();
+    });
+
+    btnFullscreen.addEventListener('click', () => {
+      const elem = document.getElementById('theater');
+      if (!document.fullscreenElement) {
+        elem.requestFullscreen?.().catch(() => {});
+      } else {
+        document.exitFullscreen?.().catch(() => {});
+      }
+      wakeHud();
+    });
+
+    /* Chapter Jump Buttons */
+    chapterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (isRecording) return;
+        const act = parseInt(btn.dataset.act, 10);
+        seekTo(act * 10.0 + 0.05);
+        wakeHud();
+      });
+    });
+
+    /* Interactive Scrubber (Mouse + Touch) */
+    let isScrubbing = false;
+    function scrubFromClientX(clientX) {
+      const rect = timelineTrack.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      seekTo(ratio * TOTAL_DURATION);
+    }
+
+    timelineTrack.addEventListener('mousedown', (e) => {
+      if (isRecording) return;
+      isScrubbing = true;
+      scrubFromClientX(e.clientX);
+      wakeHud();
+    });
+    window.addEventListener('mousemove', (e) => {
+      wakeHud();
+      if (isScrubbing) scrubFromClientX(e.clientX);
+    });
+    window.addEventListener('mouseup', () => { isScrubbing = false; });
+
+    timelineTrack.addEventListener('touchstart', (e) => {
+      if (isRecording) return;
+      isScrubbing = true;
+      scrubFromClientX(e.touches[0].clientX);
+      wakeHud();
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (isScrubbing && e.touches.length) scrubFromClientX(e.touches[0].clientX);
+    }, { passive: true });
+    window.addEventListener('touchend', () => { isScrubbing = false; });
+
+    /* Keyboard Shortcuts */
+    window.addEventListener('keydown', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (!isRecording) togglePlay();
+      } else if (e.key === 'm' || e.key === 'M') {
+        btnMute.click();
+      } else if (e.key === 'h' || e.key === 'H') {
+        btnHudToggle.click();
+      } else if (e.key === 'f' || e.key === 'F') {
+        btnFullscreen.click();
+      } else if (e.key >= '1' && e.key <= '6' && !isRecording) {
+        if (isPreviewMode) startCinema();
+        seekTo((parseInt(e.key, 10) - 1) * 10.0 + 0.05);
+        wakeHud();
+      } else if (e.code === 'ArrowRight' && !isRecording) {
+        seekTo((timelineTime + 2.0) % TOTAL_DURATION);
+        wakeHud();
+      } else if (e.code === 'ArrowLeft' && !isRecording) {
+        seekTo((timelineTime - 2.0 + TOTAL_DURATION) % TOTAL_DURATION);
+        wakeHud();
+      }
+    });
+
+    /* =========================================================================
+       7. BUILT-IN 1080p 60FPS VIDEO + AUDIO WEBM EXPORTER
+    ========================================================================= */
+    let isRecording = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let recordingAborted = false;
+
+    function selectBestMimeType() {
+      const candidates = [
+        'video/webm;codecs=vp9,opus',
+        'video/webm;codecs=vp8,opus',
+        'video/webm;codecs=vp9',
+        'video/webm'
+      ];
+      for (const mime of candidates) {
+        if (window.MediaRecorder && MediaRecorder.isTypeSupported(mime)) return mime;
+      }
+      return '';
+    }
+
+    function start1080pExport() {
+      if (isRecording) return;
+      if (typeof MediaRecorder === 'undefined' || !canvas.captureStream) {
+        showToast('当前浏览器不支持 MediaRecorder 实时录制，请使用最新版 Edge 或 Chrome。', 4500);
+        return;
+      }
+
+      /* Lock native 1920x1080 resolution & initialize Web Audio */
+      if (renderW !== 1920 || renderH !== 1080) {
+        resSelect.value = '1080';
+        setupPipelineSize(1920, 1080);
+      }
+
+      audioEngine.init();
+      audioEngine.resetSchedule();
+
+      isPreviewMode = false;
+      introOverlay.classList.add('dismissed');
+      timelineTime = 0.0;
+      isPlaying = true;
+      syncPlayPauseUI();
+      updateCinemaOverlay(0.0, false, true);
+
+      try {
+        const videoStream = canvas.captureStream(60);
+        const tracks = [...videoStream.getVideoTracks()];
+        if (audioEngine.mediaDest && audioEngine.mediaDest.stream) {
+          tracks.push(...audioEngine.mediaDest.stream.getAudioTracks());
+        }
+        const combinedStream = new MediaStream(tracks);
+        const mimeType = selectBestMimeType();
+
+        const options = {
+          videoBitsPerSecond: 18_000_000,
+          audioBitsPerSecond: 192_000
+        };
+        if (mimeType) options.mimeType = mimeType;
+
+        recordedChunks = [];
+        recordingAborted = false;
+        mediaRecorder = new MediaRecorder(combinedStream, options);
+
+        mediaRecorder.ondataavailable = (ev) => {
+          if (ev.data && ev.data.size > 0) recordedChunks.push(ev.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          isRecording = false;
+          recBanner.classList.remove('active');
+          combinedStream.getTracks().forEach(tr => tr.stop());
+
+          if (recordingAborted || recordedChunks.length === 0) {
+            showToast('已取消视频导出');
+            return;
+          }
+
+          const blob = new Blob(recordedChunks, { type: mimeType || 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'isomorphism_1080p_60fps.webm';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 10000);
+          showToast('1080p 60fps 影片导出完成！已开始下载 isomorphism_1080p_60fps.webm', 5000);
+        };
+
+        mediaRecorder.start(250);
+        isRecording = true;
+        cinemaHud.classList.add('hidden-hud');
+        perfBadge.classList.add('hidden-hud');
+        recBanner.classList.add('active');
+        showToast('已锁定 1920×1080 · 60fps，正在录制完整 60 秒音画影片...', 3200);
+      } catch (err) {
+        isRecording = false;
+        recBanner.classList.remove('active');
+        showToast('导出初始化失败：' + err.message, 4500);
+      }
+    }
+
+    function stop1080pExport(aborted = false) {
+      if (!isRecording || !mediaRecorder) return;
+      recordingAborted = aborted;
+      if (mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+    }
+
+    btnExport.addEventListener('click', start1080pExport);
+    btnCancelRec.addEventListener('click', () => stop1080pExport(true));
+
+    /* =========================================================================
+       8. MAIN 60HZ MULTI-PASS RENDER LOOP
+    ========================================================================= */
+    function renderFrame(renderTime, bass, high) {
+      /* --- PASS 1: Render 6-Act Photorealistic Isomorphic Scene -> rtScene --- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, rtScene.fbo);
+      gl.viewport(0, 0, rtScene.w, rtScene.h);
+      gl.useProgram(sceneProg);
+      gl.uniform2f(uScene.res, rtScene.w, rtScene.h);
+      gl.uniform1f(uScene.time, renderTime);
+      gl.uniform1f(uScene.bass, bass);
+      gl.uniform1f(uScene.high, high);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      /* --- PASS 2A: HDR Bloom Highlight Extraction -> rtBloomA --- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, rtBloomA.fbo);
+      gl.viewport(0, 0, rtBloomA.w, rtBloomA.h);
+      gl.useProgram(bloomExtractProg);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+      gl.uniform1i(uBloomExtract.tex, 0);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      /* --- PASS 2B & 2C: Dual-Iteration Anamorphic Separable Blur --- */
+      gl.useProgram(blurProg);
+      gl.uniform1i(uBlur.tex, 0);
+      for (let iter = 0; iter < 2; iter++) {
+        const spread = iter === 0 ? 1.55 : 2.85;
+        /* Horizontal (anamorphic wider spread) */
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rtBloomB.fbo);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, rtBloomA.tex);
+        gl.uniform2f(uBlur.dir, (spread * 1.45) / rtBloomA.w, 0.0);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        /* Vertical */
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rtBloomA.fbo);
+        gl.bindTexture(gl.TEXTURE_2D, rtBloomB.tex);
+        gl.uniform2f(uBlur.dir, 0.0, spread / rtBloomA.h);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+
+      /* --- PASS 3: Final ACES Filmic Cinema Composite -> Screen --- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, renderW, renderH);
+      gl.useProgram(compositeProg);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+      gl.uniform1i(uComp.sceneTex, 0);
+
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, rtBloomA.tex);
+      gl.uniform1i(uComp.bloomTex, 1);
+
+      gl.activeTexture(gl.TEXTURE2);
+      gl.bindTexture(gl.TEXTURE_2D, textGlTex);
+      gl.uniform1i(uComp.textTex, 2);
+
+      gl.uniform2f(uComp.res, renderW, renderH);
+      gl.uniform1f(uComp.time, renderTime);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+
+    function animate(nowMs) {
+      requestAnimationFrame(animate);
+
+      const dt = Math.min(0.05, Math.max(0.0, (nowMs - lastFrameMs) / 1000.0));
+      lastFrameMs = nowMs;
+
+      /* FPS counter */
+      fpsFrames++;
+      fpsAccum += dt;
+      if (fpsAccum >= 0.5) {
+        currentFps = Math.round(fpsFrames / fpsAccum);
+        fpsFrames = 0;
+        fpsAccum = 0;
+        perfText.textContent = `${renderW}×${renderH} · ${currentFps} FPS · WebGL2 ${isHdrActive ? 'HDR16F' : 'RGBA8'}`;
+      }
+
+      let activeRenderTime = 0.0;
+
+      if (isPreviewMode) {
+        /* Gentle living preview of Act I iris breathing & subtle nebula shimmer behind launch card */
+        previewTime += dt * 0.45;
+        activeRenderTime = 1.2 + Math.sin(previewTime * 0.5) * 1.1;
+      } else {
+        if (isPlaying) {
+          timelineTime += dt;
+          if (timelineTime >= TOTAL_DURATION) {
+            if (isRecording) {
+              timelineTime = TOTAL_DURATION;
+              stop1080pExport(false);
+            }
+            if (isLooping) {
+              timelineTime = timelineTime % TOTAL_DURATION;
+              audioEngine.resetSchedule();
+            } else {
+              timelineTime = TOTAL_DURATION;
+              isPlaying = false;
+              syncPlayPauseUI();
+            }
+          }
+        }
+        activeRenderTime = timelineTime;
+
+        /* Update Audio Sequencer & Reactivity */
+        audioEngine.update(timelineTime, isPlaying);
+
+        /* Update Cinema Typography / Telemetry Overlay Texture */
+        updateCinemaOverlay(timelineTime, false, false);
+
+        /* Update HUD Scrubber */
+        updateTimelineUI();
+
+        /* Update Recording Progress Pill */
+        if (isRecording) {
+          const pct = Math.min(100, (timelineTime / TOTAL_DURATION) * 100);
+          recProgressFill.style.width = `${pct.toFixed(1)}%`;
+          recLabel.textContent = `正在导出 1080p·60fps  ${formatTime(timelineTime)} / 01:00`;
+        }
+      }
+
+      renderFrame(activeRenderTime, audioEngine.bassLevel, audioEngine.highLevel);
+    }
+
+    /* Boot engine cleanly after window load */
+    window.addEventListener('load', () => {
+      lastFrameMs = performance.now();
+      updateCinemaOverlay(0.0, true, true);
+      requestAnimationFrame(animate);
+    });
+  })();
+  </script>
+</body>
+</html>

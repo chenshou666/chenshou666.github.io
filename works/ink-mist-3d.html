@@ -1,0 +1,2501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>墨韵山河 · INK & MIST | 纯代码3D写实水墨微电影</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #07090b;
+      color: #e8e4da;
+      font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+    }
+
+    #stage-container {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #11161c 0%, #050709 100%);
+    }
+
+    #canvas-frame {
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      background: #050709;
+      transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.35s ease;
+    }
+
+    #master-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 极简磨砂玻璃 HUD */
+    .glass-panel {
+      background: rgba(12, 16, 20, 0.62);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(232, 228, 218, 0.12);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .hud-wrapper {
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .hud-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+    }
+
+    .hud-top-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-10px);
+    }
+
+    .btn-pill {
+      transition: all 0.2s ease;
+    }
+
+    .btn-pill:hover {
+      background: rgba(232, 228, 218, 0.14);
+      border-color: rgba(232, 228, 218, 0.28);
+    }
+
+    .btn-pill.active {
+      background: rgba(196, 54, 43, 0.82);
+      border-color: rgba(235, 95, 82, 0.9);
+      color: #fff8f5;
+      box-shadow: 0 0 16px rgba(196, 54, 43, 0.45);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* 进度条自定义 */
+    #timeline-track {
+      position: relative;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(232, 228, 218, 0.15);
+      cursor: pointer;
+    }
+
+    #timeline-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #647d82 0%, #d4cec0 55%, #c83e32 100%);
+      pointer-events: none;
+    }
+
+    /* 录制呼吸红点 */
+    @keyframes pulseRec {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+    .rec-dot {
+      animation: pulseRec 1.1s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- 主渲染舞台 -->
+  <div id="stage-container">
+    <div id="canvas-frame" class="rounded-xl">
+      <canvas id="master-canvas"></canvas>
+
+      <!-- 开场引导遮罩（首次加载时显示，点击后同时解锁音频并开始四幕演出） -->
+      <div id="start-overlay" class="absolute inset-0 flex flex-col items-center justify-center z-30 bg-black/55 backdrop-blur-sm transition-opacity duration-700">
+        <div class="text-center px-6 max-w-md">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/15 bg-white/5 text-xs tracking-widest text-stone-300 mb-5 mono">
+            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+            GLSL 3D RAYMARCHING · WEB AUDIO
+          </div>
+          <h1 class="text-4xl sm:text-5xl font-light tracking-[0.28em] text-stone-100 mb-3" style="text-shadow: 0 4px 24px rgba(0,0,0,0.8);">
+            墨韵山河
+          </h1>
+          <p class="text-xs sm:text-sm tracking-[0.35em] text-stone-400 uppercase mb-8 mono">
+            INK &amp; MIST · 40S CINEMATIC SHORT
+          </p>
+          <button id="hero-play-btn" class="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#b83227] hover:bg-[#cf3c30] text-stone-50 text-sm tracking-[0.2em] shadow-[0_0_35px_rgba(184,50,39,0.5)] transition-all duration-300 hover:scale-105 active:scale-95">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <span>启幕 · 实时渲染</span>
+          </button>
+          <p class="mt-5 text-[11px] text-stone-400/80 tracking-wider">
+            零图片 · 零音频文件 · 纯数学公式实时演算
+          </p>
+        </div>
+      </div>
+
+      <!-- 录制状态极简指示器（录制时在角落静默提示，不写入画布） -->
+      <div id="rec-badge" class="hidden absolute top-4 left-4 z-40 items-center gap-2 px-3 py-1.5 rounded-full glass-panel text-xs text-red-200 mono">
+        <span class="w-2 h-2 rounded-full bg-red-500 rec-dot"></span>
+        <span>REC</span>
+        <span id="rec-timer">00:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 顶部极简状态栏 -->
+  <header id="hud-top" class="hud-wrapper fixed top-4 left-4 right-4 z-30 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+    <div class="glass-panel rounded-full px-4 py-2 flex items-center gap-3 pointer-events-auto">
+      <span class="text-sm font-medium tracking-[0.2em] text-stone-100">墨韵山河</span>
+      <span class="h-3.5 w-[1px] bg-white/15"></span>
+      <span id="act-label" class="text-xs tracking-widest text-stone-300">第一幕 · 提示化墨</span>
+    </div>
+    <div class="glass-panel rounded-full px-3.5 py-2 flex items-center gap-2.5 text-[11px] mono text-stone-300 pointer-events-auto">
+      <span id="fps-display">60 FPS</span>
+      <span class="h-3 w-[1px] bg-white/15"></span>
+      <span id="res-display">810×1440</span>
+    </div>
+  </header>
+
+  <!-- 可折叠自定义文案面板 -->
+  <div id="custom-popover" class="hidden fixed bottom-28 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-lg glass-panel rounded-2xl p-4 text-xs text-stone-200">
+    <div class="flex items-center justify-between mb-3">
+      <span class="tracking-widest font-medium text-stone-100">自定义开场提示词与落款红印</span>
+      <button id="btn-close-custom" class="text-stone-400 hover:text-stone-100 px-1.5 py-0.5 rounded-lg">✕</button>
+    </div>
+    <div class="space-y-2.5">
+      <div>
+        <label class="block text-[11px] text-stone-400 mb-1">开场主提示词（第一行）</label>
+        <input id="input-prompt-1" type="text" value="用纯代码生成一幅写实水墨山水：喀斯特绝壁、流云、孤舟红灯、落枫"
+          class="w-full px-3 py-2 rounded-xl bg-black/45 border border-white/15 text-stone-100 text-xs focus:outline-none focus:border-red-400/60" />
+      </div>
+      <div>
+        <label class="block text-[11px] text-stone-400 mb-1">代码指令行（第二行 Monospace）</label>
+        <input id="input-prompt-2" type="text" value="render({ shader: 'raymarch_3d', assets: 0, fps: 60, audio: 'guqin_synth' });"
+          class="w-full px-3 py-2 rounded-xl bg-black/45 border border-white/15 text-emerald-200/90 text-xs mono focus:outline-none focus:border-red-400/60" />
+      </div>
+      <div class="flex items-end gap-3">
+        <div class="flex-1">
+          <label class="block text-[11px] text-stone-400 mb-1">结尾朱砂篆印（4字）</label>
+          <input id="input-seal" type="text" maxlength="4" value="码上丹青"
+            class="w-full px-3 py-2 rounded-xl bg-black/45 border border-white/15 text-stone-100 text-xs tracking-widest focus:outline-none focus:border-red-400/60" />
+        </div>
+        <button id="btn-apply-custom" class="px-4 py-2 rounded-xl bg-[#b83227] hover:bg-[#cf3c30] text-stone-50 text-xs tracking-wider transition-colors">
+          应用并重播
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部控制台 HUD -->
+  <footer id="hud-bottom" class="hud-wrapper fixed bottom-4 left-1/2 -translate-x-1/2 z-30 w-[94%] max-w-3xl glass-panel rounded-2xl p-3.5 sm:p-4">
+    <!-- 进度条与四幕刻度 -->
+    <div class="flex items-center gap-3 mb-3">
+      <span id="time-current" class="text-[11px] mono text-stone-300 w-10 text-right">00:00</span>
+      <div id="timeline-track" class="flex-1">
+        <div id="timeline-fill"></div>
+        <!-- 四幕分割标记：5.5s, 17s, 29s / 40s -->
+        <div class="absolute top-0 bottom-0 w-[1px] bg-white/35 pointer-events-none" style="left: 13.75%;"></div>
+        <div class="absolute top-0 bottom-0 w-[1px] bg-white/35 pointer-events-none" style="left: 42.50%;"></div>
+        <div class="absolute top-0 bottom-0 w-[1px] bg-white/35 pointer-events-none" style="left: 72.50%;"></div>
+      </div>
+      <span class="text-[11px] mono text-stone-400 w-10">00:40</span>
+    </div>
+
+    <!-- 控制按钮行 -->
+    <div class="flex flex-wrap items-center justify-between gap-2.5">
+      <!-- 播放 / 录制 / 音效 -->
+      <div class="flex items-center gap-2">
+        <button id="btn-play" class="btn-pill active px-3.5 py-1.5 rounded-xl border border-white/15 text-xs flex items-center gap-1.5">
+          <svg id="icon-play" class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <span id="btn-play-text">启幕 · 实时渲染</span>
+        </button>
+
+        <button id="btn-replay" class="btn-pill px-3 py-1.5 rounded-xl border border-white/15 text-xs text-stone-200 flex items-center gap-1" title="从头播放">
+          <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M5.6 18.4A9 9 0 0 0 20 12M18.4 5.6A9 9 0 0 0 4 12"/></svg>
+          <span class="hidden sm:inline">重播</span>
+        </button>
+
+        <button id="btn-record" class="btn-pill px-3.5 py-1.5 rounded-xl border border-red-400/35 bg-red-950/35 text-xs text-red-100 flex items-center gap-1.5" title="自动从0秒录制完整40秒视频并导出.webm">
+          <span class="w-2 h-2 rounded-full bg-red-500"></span>
+          <span id="btn-record-text">一键录制导出</span>
+        </button>
+
+        <button id="btn-custom" class="btn-pill px-2.5 py-1.5 rounded-xl border border-white/15 text-xs text-stone-200" title="自定义开场提示词与红印">
+          自定义文案
+        </button>
+
+        <button id="btn-mute" class="btn-pill px-2.5 py-1.5 rounded-xl border border-white/15 text-xs text-stone-200" title="音效开关">
+          <span id="mute-label">🔊</span>
+        </button>
+      </div>
+
+      <!-- 画幅与画质切换 -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center bg-black/30 rounded-xl p-0.5 border border-white/10 text-[11px]">
+          <button data-aspect="9:16" class="aspect-btn btn-pill active px-2.5 py-1 rounded-lg border border-transparent">9:16 竖屏</button>
+          <button data-aspect="16:9" class="aspect-btn btn-pill px-2.5 py-1 rounded-lg border border-transparent">16:9 横屏</button>
+          <button data-aspect="full" class="aspect-btn btn-pill px-2.5 py-1 rounded-lg border border-transparent">全屏</button>
+        </div>
+
+        <div class="flex items-center bg-black/30 rounded-xl p-0.5 border border-white/10 text-[11px]">
+          <button data-quality="balanced" class="quality-btn btn-pill px-2 py-1 rounded-lg border border-transparent">流畅</button>
+          <button data-quality="high" class="quality-btn btn-pill active px-2 py-1 rounded-lg border border-transparent">高清</button>
+          <button data-quality="ultra" class="quality-btn btn-pill px-2 py-1 rounded-lg border border-transparent">极致</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 极简 Toast 提示（替代 alert） -->
+  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full glass-panel text-xs tracking-wider text-stone-100 opacity-0 pointer-events-none transition-all duration-300"></div>
+
+  <script>
+    /**
+     * ============================================================================
+     * 墨韵山河 · INK & MIST
+     * Single-File Photorealistic 3D Chinese Ink-Wash Short Film Engine
+     * Architecture:
+     *   1. Offscreen WebGL1 3D Raymarching Engine (Karst Peaks, Volumetric Mist,
+     *      God-rays, Rippling Ink River, Fresnel Reflections, Hero Boat & Lantern)
+     *   2. Unified Master 2D Composite Canvas (Act 1 Code-to-Ink Implosion,
+     *      3D-Tumbling Cinnabar Maple Leaves w/ Bokeh, Ink Birds, Xuan Paper
+     *      Grain, Act 4 Carved Red Seal & Calligraphy)
+     *   3. Web Audio API Procedural Guqin + Mountain Wind + Sub-bass + Bell Synth
+     *   4. MediaRecorder Unified Video + Audio Export (.webm)
+     * ============================================================================
+     */
+
+    (() => {
+      'use strict';
+
+      // ==================== 1. 全局配置与状态 ====================
+      const TOTAL_DURATION = 40.0; // 40秒完整四幕微电影
+      const ACTS = [
+        { start: 0.0,  end: 5.5,  name: '第一幕 · 提示化墨' },
+        { start: 5.5,  end: 17.0, name: '第二幕 · 雾起千峰' },
+        { start: 17.0, end: 29.0, name: '第三幕 · 孤舟红叶' },
+        { start: 29.0, end: 40.0, name: '第四幕 · 码上丹青' }
+      ];
+
+      const QUALITY_PRESETS = {
+        balanced: { scale: 0.62, maxSteps: 68,  volSteps: 14, reflSteps: 22 },
+        high:     { scale: 0.82, maxSteps: 96,  volSteps: 22, reflSteps: 30 },
+        ultra:    { scale: 1.00, maxSteps: 128, volSteps: 30, reflSteps: 40 }
+      };
+
+      const state = {
+        aspect: '9:16',
+        quality: 'high',
+        playing: false,
+        startedOnce: false,
+        muted: false,
+        recording: false,
+        hudVisible: true,
+        simTime: 0.0,
+        lastFrameTs: 0,
+        fps: 60,
+        fpsFrames: 0,
+        fpsLastTs: performance.now(),
+        width: 720,
+        height: 1280,
+        hudTimer: null,
+        promptLine1: '用纯代码生成一幅写实水墨山水：喀斯特绝壁、流云、孤舟红灯、落枫',
+        promptLine2: "render({ shader: 'raymarch_3d', assets: 0, fps: 60, audio: 'guqin_synth' });",
+        sealText: '码上丹青'
+      };
+
+      // DOM 引用
+      const canvasFrame   = document.getElementById('canvas-frame');
+      const masterCanvas  = document.getElementById('master-canvas');
+      const ctx           = masterCanvas.getContext('2d', { alpha: false });
+      const startOverlay  = document.getElementById('start-overlay');
+      const heroPlayBtn   = document.getElementById('hero-play-btn');
+      const hudTop        = document.getElementById('hud-top');
+      const hudBottom     = document.getElementById('hud-bottom');
+      const actLabel      = document.getElementById('act-label');
+      const fpsDisplay    = document.getElementById('fps-display');
+      const resDisplay    = document.getElementById('res-display');
+      const timeCurrent   = document.getElementById('time-current');
+      const timelineTrack = document.getElementById('timeline-track');
+      const timelineFill  = document.getElementById('timeline-fill');
+      const btnPlay       = document.getElementById('btn-play');
+      const btnPlayText   = document.getElementById('btn-play-text');
+      const iconPlay      = document.getElementById('icon-play');
+      const btnReplay     = document.getElementById('btn-replay');
+      const btnRecord     = document.getElementById('btn-record');
+      const btnRecordText = document.getElementById('btn-record-text');
+      const btnMute       = document.getElementById('btn-mute');
+      const muteLabel     = document.getElementById('mute-label');
+      const recBadge      = document.getElementById('rec-badge');
+      const recTimer      = document.getElementById('rec-timer');
+      const toastEl       = document.getElementById('toast');
+      const btnCustom     = document.getElementById('btn-custom');
+      const customPopover = document.getElementById('custom-popover');
+      const btnCloseCustom = document.getElementById('btn-close-custom');
+      const btnApplyCustom = document.getElementById('btn-apply-custom');
+      const inputPrompt1  = document.getElementById('input-prompt-1');
+      const inputPrompt2  = document.getElementById('input-prompt-2');
+      const inputSeal     = document.getElementById('input-seal');
+
+      let toastTimer = null;
+      function showToast(msg, duration = 2600) {
+        toastEl.textContent = msg;
+        toastEl.style.opacity = '1';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastEl.style.opacity = '0';
+        }, duration);
+      }
+
+      function formatTime(sec) {
+        const s = Math.max(0, Math.floor(sec));
+        const mm = String(Math.floor(s / 60)).padStart(2, '0');
+        const ss = String(s % 60).padStart(2, '0');
+        return `${mm}:${ss}`;
+      }
+
+      // ==================== 2. WebGL1 3D 光线步进引擎 ====================
+      const glCanvas = document.createElement('canvas');
+      const gl = glCanvas.getContext('webgl', {
+        antialias: false,
+        depth: false,
+        stencil: false,
+        alpha: false,
+        preserveDrawingBuffer: true,
+        powerPreference: 'high-performance'
+      });
+
+      const VERTEX_SHADER_SRC = `
+        attribute vec2 aPos;
+        void main() {
+          gl_Position = vec4(aPos, 0.0, 1.0);
+        }
+      `;
+
+      // 100% WebGL1 兼容的高精度 3D 水墨山水光线步进着色器
+      const FRAGMENT_SHADER_SRC = `
+        precision highp float;
+
+        uniform vec2  uResolution;
+        uniform float uTime;
+        uniform float uMaxSteps;
+        uniform float uVolSteps;
+        uniform float uReflSteps;
+
+        // ---------- 哈希与噪声函数 ----------
+        float hash12(vec2 p) {
+          vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+          p3 += dot(p3, p3.yzx + 33.33);
+          return fract((p3.x + p3.y) * p3.z);
+        }
+
+        float noise2D(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          vec2 u = f * f * (3.0 - 2.0 * f);
+          float a = hash12(i);
+          float b = hash12(i + vec2(1.0, 0.0));
+          float c = hash12(i + vec2(0.0, 1.0));
+          float d = hash12(i + vec2(1.0, 1.0));
+          return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+        }
+
+        float hash13(vec3 p3) {
+          p3 = fract(p3 * 0.1031);
+          p3 += dot(p3, p3.zyx + 31.32);
+          return fract((p3.x + p3.y) * p3.z);
+        }
+
+        float noise3D(vec3 p) {
+          vec3 i = floor(p);
+          vec3 f = fract(p);
+          vec3 u = f * f * (3.0 - 2.0 * f);
+          float n000 = hash13(i + vec3(0.0, 0.0, 0.0));
+          float n100 = hash13(i + vec3(1.0, 0.0, 0.0));
+          float n010 = hash13(i + vec3(0.0, 1.0, 0.0));
+          float n110 = hash13(i + vec3(1.0, 1.0, 0.0));
+          float n001 = hash13(i + vec3(0.0, 0.0, 1.0));
+          float n101 = hash13(i + vec3(1.0, 0.0, 1.0));
+          float n011 = hash13(i + vec3(0.0, 1.0, 1.0));
+          float n111 = hash13(i + vec3(1.0, 1.0, 1.0));
+          return mix(
+            mix(mix(n000, n100, u.x), mix(n010, n110, u.x), u.y),
+            mix(mix(n001, n101, u.x), mix(n011, n111, u.x), u.y),
+            u.z
+          );
+        }
+
+        const mat2 ROT2 = mat2(0.80, -0.60, 0.60, 0.80);
+
+        // 领域扭曲 + 锐利脊状多维分形 (Ridged Multifractal) 雕刻桂林/黄山喀斯特峰林
+        float ridgedFbm(vec2 p) {
+          float sum = 0.0;
+          float amp = 0.52;
+          float freq = 1.0;
+          float weight = 1.0;
+          for (int i = 0; i < 6; i++) {
+            float n = noise2D(p * freq);
+            n = 1.0 - abs(n * 2.0 - 1.0);
+            n = n * n * weight;
+            weight = clamp(n * 1.85, 0.15, 1.0);
+            sum += n * amp;
+            p = ROT2 * p * 2.03 + vec2(17.3, 9.2);
+            amp *= 0.48;
+          }
+          return sum;
+        }
+
+        float fbm2(vec2 p) {
+          float v = 0.0;
+          float a = 0.5;
+          for (int i = 0; i < 4; i++) {
+            v += a * noise2D(p);
+            p = ROT2 * p * 2.05 + vec2(3.7, 1.9);
+            a *= 0.5;
+          }
+          return v;
+        }
+
+        // 蜿蜒江道中心线
+        float riverCenter(float z) {
+          return sin(z * 0.075) * 4.8 + cos(z * 0.032) * 3.2;
+        }
+
+        // 地形高度场：喀斯特绝壁 + 斧劈皴崖纹 + 蜿蜒峡谷江面
+        float terrainHeight(vec2 xz) {
+          float rc = riverCenter(xz.y);
+          float distRiver = abs(xz.x - rc);
+
+          // 江面宽度随纵深自然收放
+          float riverHalfW = 2.6 + 0.95 * sin(xz.y * 0.09 + 1.2);
+          float canyonMask = smoothstep(riverHalfW, riverHalfW + 4.4, distRiver);
+
+          // 领域扭曲使山势更具东方山水龙脉走势
+          vec2 warp = vec2(fbm2(xz * 0.055), fbm2(xz * 0.055 + vec2(5.2, 1.3)));
+          vec2 q = xz * 0.082 + warp * 0.65;
+
+          float r1 = ridgedFbm(q);
+          float r2 = ridgedFbm(q * 2.15 + vec2(4.1, 8.7));
+
+          // 陡峭喀斯特孤峰造型
+          float peaks = pow(max(r1, 0.0), 1.45) * 14.5 + r2 * 2.6;
+
+          // 层状崖壁阶梯感 (Stratified cliffs)
+          float strata = sin(peaks * 2.1 + noise2D(xz * 0.35) * 2.2) * 0.24;
+          peaks += strata * smoothstep(2.0, 9.0, peaks);
+
+          // 远景更高耸的主峰群
+          float farBoost = 1.0 + 0.42 * smoothstep(18.0, 68.0, xz.y);
+
+          // 江岸平滑落水
+          float bank = smoothstep(riverHalfW - 0.5, riverHalfW + 1.2, distRiver);
+          return (peaks * farBoost * canyonMask) - (1.0 - bank) * 0.55;
+        }
+
+        // ---------- 孤舟与朱砂灯笼 3D SDF ----------
+        vec3 getBoatPos(float t) {
+          // 孤舟在江面缓缓前行，随波轻晃
+          float bz = 19.5 + t * 0.18;
+          float bx = riverCenter(bz) - 0.55;
+          float by = 0.04 + sin(t * 1.9) * 0.018;
+          return vec3(bx, by, bz);
+        }
+
+        // 返回 vec2(距离, 材质ID: 2.0=木舟/舟子, 3.0=朱砂红灯笼)
+        vec2 sdBoatAndLantern(vec3 p, vec3 bPos, float t) {
+          vec3 q = p - bPos;
+          // 轻微船身摇摆与航向偏转
+          float yaw = -0.22 + sin(t * 0.4) * 0.04;
+          float cy = cos(yaw), sy = sin(yaw);
+          q.xz = mat2(cy, -sy, sy, cy) * q.xz;
+          float roll = sin(t * 1.6) * 0.04;
+          float cr = cos(roll), sr = sin(roll);
+          q.xy = mat2(cr, -sr, sr, cr) * q.xy;
+
+          // 快速包围球剔除，保障极高帧率
+          if (length(q) > 2.4) return vec2(length(q) - 1.5, 2.0);
+
+          // 1. 乌篷孤舟船身 (细长弯曲梭形)
+          vec3 hq = q - vec3(0.0, 0.09, 0.0);
+          // 船头船尾微微翘起
+          hq.y -= (hq.z * hq.z) * 0.095;
+          vec3 hs = vec3(0.32 * max(0.15, 1.0 - 0.42 * hq.z * hq.z), 0.14, 1.28);
+          float dHull = (length(hq / hs) - 1.0) * min(min(hs.x, hs.y), hs.z);
+          // 削平船舱上部形成凹槽感
+          dHull = max(dHull, hq.y - 0.07);
+
+          // 2. 乌篷船顶
+          vec3 cq = q - vec3(0.0, 0.25, -0.15);
+          float dCanopy = max(length(cq.xy * vec2(1.0, 1.35)) - 0.26, abs(cq.z) - 0.42);
+          dCanopy = max(dCanopy, -cq.y);
+
+          // 3. 船尾蓑衣舟子剪影 (斗笠 + 身躯)
+          vec3 fq = q - vec3(0.02, 0.38, -0.78);
+          float dBody = length(fq * vec3(1.4, 0.85, 1.4)) - 0.16;
+          vec3 hq2 = q - vec3(0.02, 0.56, -0.78);
+          // 斗笠圆锥
+          float dHat = max(length(hq2.xz) * 0.72 + hq2.y * 0.85 - 0.16, -hq2.y - 0.02);
+          float dBoat = min(min(dHull, dCanopy), min(dBody, dHat));
+
+          // 4. 船头挑杆 + 暖光朱砂红灯笼
+          vec3 pq = q - vec3(0.0, 0.36, 0.92);
+          float dPole = max(length(pq.xz - vec2(0.0, pq.y * 0.35)) - 0.015, abs(pq.y) - 0.32);
+          dBoat = min(dBoat, dPole);
+
+          vec3 lq = q - vec3(0.0, 0.52, 1.12);
+          // 灯笼微晃
+          lq.x += sin(t * 2.8) * 0.02;
+          float dLantern = length(lq * vec3(1.15, 0.88, 1.15)) - 0.095;
+
+          if (dLantern < dBoat) {
+            return vec2(dLantern, 3.0);
+          }
+          return vec2(dBoat, 2.0);
+        }
+
+        // 计算地形法线（叠加斧劈皴微细节）
+        vec3 calcTerrainNormal(vec3 p, float dist) {
+          float eps = max(0.018, dist * 0.0022);
+          float hL = terrainHeight(p.xz - vec2(eps, 0.0));
+          float hR = terrainHeight(p.xz + vec2(eps, 0.0));
+          float hD = terrainHeight(p.xz - vec2(0.0, eps));
+          float hU = terrainHeight(p.xz + vec2(0.0, eps));
+          vec3 n = normalize(vec3(hL - hR, 2.0 * eps, hD - hU));
+
+          // 陡坡加入“斧劈皴”方向性岩石裂隙扰动
+          float steep = 1.0 - clamp(n.y, 0.0, 1.0);
+          float detail = (noise2D(p.xz * 2.8 + vec2(0.0, p.y * 1.4)) - 0.5) * 0.32 * steep;
+          n = normalize(n + vec3(detail, -detail * 0.3, detail * 0.8));
+          return n;
+        }
+
+        // 江面多阶动态涟漪法线
+        vec3 calcWaterNormal(vec2 xz, float t) {
+          vec2 p1 = xz * 1.65 + vec2(t * 0.22, -t * 0.35);
+          vec2 p2 = xz * 3.80 + vec2(-t * 0.31, t * 0.24);
+          vec2 p3 = xz * 8.50 + vec2(t * 0.45, t * 0.52);
+
+          float e = 0.04;
+          float w0 = fbm2(p1) * 0.55 + noise2D(p2) * 0.30 + noise2D(p3) * 0.15;
+          float wx = fbm2(p1 + vec2(e, 0.0)) * 0.55 + noise2D(p2 + vec2(e, 0.0)) * 0.30 + noise2D(p3 + vec2(e, 0.0)) * 0.15;
+          float wz = fbm2(p1 + vec2(0.0, e)) * 0.55 + noise2D(p2 + vec2(0.0, e)) * 0.30 + noise2D(p3 + vec2(0.0, e)) * 0.15;
+
+          float amp = 0.065;
+          return normalize(vec3((w0 - wx) * amp / e, 1.0, (w0 - wz) * amp / e));
+        }
+
+        // ---------- 天空与宣纸微光渲染 ----------
+        vec3 renderSky(vec3 rd, vec3 sunDir) {
+          float y = clamp(rd.y, 0.0, 1.0);
+          // 暖宣纸米白地平线 -> 淡青墨高空
+          vec3 horizonCol = vec3(0.86, 0.84, 0.78);
+          vec3 zenithCol  = vec3(0.45, 0.52, 0.55);
+          vec3 col = mix(horizonCol, zenithCol, pow(y, 0.58));
+
+          // 高空淡淡水墨晕染云层
+          vec2 cloudUV = rd.xz / (rd.y + 0.18) * 0.65 + vec2(uTime * 0.008, -uTime * 0.004);
+          float cl = fbm2(cloudUV * 2.2);
+          float clMask = smoothstep(0.38, 0.82, cl) * smoothstep(0.02, 0.28, y);
+          col = mix(col, vec3(0.93, 0.91, 0.86), clMask * 0.42);
+
+          // 柔和朦胧的东方日光/月轮光晕
+          float sunDot = max(dot(rd, sunDir), 0.0);
+          col += vec3(1.00, 0.94, 0.82) * pow(sunDot, 10.0) * 0.38;
+          col += vec3(1.00, 0.97, 0.90) * pow(sunDot, 180.0) * 1.15;
+          return col;
+        }
+
+        // 软阴影采样（快速步进）
+        float softShadow(vec3 ro, vec3 sunDir) {
+          float res = 1.0;
+          float t = 0.6;
+          for (int i = 0; i < 16; i++) {
+            vec3 p = ro + sunDir * t;
+            float h = p.y - terrainHeight(p.xz);
+            if (h < 0.02) return 0.12;
+            res = min(res, 6.5 * h / t);
+            t += clamp(h * 0.65, 0.5, 4.5);
+            if (t > 45.0) break;
+          }
+          return clamp(res, 0.12, 1.0);
+        }
+
+        // 3D 山谷流动体积云雾密度
+        float mistDensity(vec3 p, float t) {
+          // 主要聚集在海拔 0.2 ~ 4.8 的峡谷腰部
+          float heightBand = exp(-pow((p.y - 1.55) * 0.52, 2.0));
+          float lowMist = exp(-max(p.y, 0.0) * 1.45) * 0.55;
+          float env = heightBand + lowMist;
+          if (env < 0.02) return 0.0;
+
+          vec3 q = p * vec3(0.11, 0.22, 0.11) + vec3(t * 0.045, 0.0, -t * 0.032);
+          float n = noise3D(q) * 0.65 + noise3D(q * 2.15 + vec3(3.1, 1.7, 4.2)) * 0.35;
+          float d = smoothstep(0.42, 0.82, n) * env;
+          return d;
+        }
+
+        // 主地形着墨着色
+        vec3 shadeTerrain(vec3 p, vec3 rd, float dist, vec3 sunDir, vec3 lanternPos, float lanternPulse) {
+          vec3 n = calcTerrainNormal(p, dist);
+
+          // 墨分五色：焦墨阴面、青墨陡崖、湿润青苔微高光、峰顶浅宣白雾霜
+          float steep = 1.0 - clamp(n.y, 0.0, 1.0);
+          float crevices = fbm2(p.xz * 1.9 + vec2(p.y * 0.7, 0.0));
+
+          vec3 inkDark   = vec3(0.035, 0.052, 0.068); // 焦墨青黑
+          vec3 inkMid    = vec3(0.11, 0.16, 0.18);    // 浓墨石青
+          vec3 pineMoss  = vec3(0.07, 0.13, 0.11);    // 幽松黛绿
+          vec3 ridgeMist = vec3(0.42, 0.45, 0.44);    // 崖顶飞白
+
+          vec3 albedo = mix(pineMoss, inkMid, smoothstep(0.25, 0.72, steep));
+          albedo = mix(inkDark, albedo, smoothstep(0.28, 0.75, crevices));
+          // 高峰山脊轻微飞白留白
+          albedo = mix(albedo, ridgeMist, smoothstep(7.5, 14.5, p.y) * smoothstep(0.3, 0.8, n.y) * 0.45);
+
+          float diff = max(dot(n, sunDir), 0.0);
+          float sh = (dist < 62.0) ? softShadow(p + n * 0.12, sunDir) : 0.7;
+
+          // 湿岩微镜面反光
+          vec3 hVec = normalize(sunDir - rd);
+          float spec = pow(max(dot(n, hVec), 0.0), 28.0) * 0.22 * sh * smoothstep(0.4, 0.9, steep);
+
+          // 天光环境漫反射 + 宣纸底色反弹光
+          float hemi = 0.5 + 0.5 * n.y;
+          vec3 ambient = mix(vec3(0.04, 0.06, 0.08), vec3(0.26, 0.30, 0.31), hemi);
+
+          vec3 sunCol = vec3(1.05, 0.96, 0.82);
+          vec3 col = albedo * (ambient + sunCol * diff * sh * 1.35) + sunCol * spec;
+
+          // 边缘轮廓光（电影级逆光勾勒山脊线）
+          float rim = pow(1.0 - max(dot(n, -rd), 0.0), 3.2);
+          float sunAlign = pow(max(dot(rd, sunDir), 0.0), 2.0);
+          col += vec3(0.75, 0.76, 0.72) * rim * (0.14 + 0.35 * sunAlign) * smoothstep(0.8, 5.0, p.y);
+
+          // 近处山岸接收一点孤舟灯笼暖光
+          vec3 toL = lanternPos - p;
+          float dL = length(toL);
+          if (dL < 9.0) {
+            float att = 1.0 / (1.0 + dL * dL * 0.55);
+            float lDiff = max(dot(n, normalize(toL)), 0.0);
+            col += vec3(1.3, 0.32, 0.12) * lanternPulse * att * lDiff * 0.7;
+          }
+
+          return col;
+        }
+
+        // 快速反射射线步进（供江面物理倒影使用）
+        vec3 traceReflection(vec3 ro, vec3 rd, vec3 sunDir, vec3 boatPos, vec3 lanternPos, float lanternPulse) {
+          float t = 0.15;
+          float maxT = 75.0;
+          float hitMat = 0.0;
+          vec3 hitPos = ro;
+
+          for (int i = 0; i < 42; i++) {
+            if (float(i) >= uReflSteps) break;
+            vec3 p = ro + rd * t;
+            // 检测孤舟与灯笼倒影
+            vec2 bHit = sdBoatAndLantern(p, boatPos, uTime);
+            if (bHit.x < 0.03) {
+              hitMat = bHit.y;
+              hitPos = p;
+              break;
+            }
+            float h = p.y - terrainHeight(p.xz);
+            if (h < 0.03 * t) {
+              hitMat = 1.0;
+              hitPos = p;
+              break;
+            }
+            t += max(min(h * 0.55, bHit.x * 0.8), 0.15 + t * 0.025);
+            if (t > maxT) break;
+          }
+
+          vec3 col = renderSky(rd, sunDir);
+          if (hitMat == 1.0) {
+            col = shadeTerrain(hitPos, rd, t, sunDir, lanternPos, lanternPulse);
+            float fog = 1.0 - exp(-t * 0.024);
+            col = mix(col, vec3(0.76, 0.77, 0.74), fog * 0.85);
+          } else if (hitMat == 2.0) {
+            col = vec3(0.02, 0.025, 0.03);
+          } else if (hitMat == 3.0) {
+            col = vec3(2.8, 0.55, 0.18) * lanternPulse;
+          }
+
+          // 灯笼在涟漪水面上拖出的暖红光柱倒影
+          vec3 toL = lanternPos - ro;
+          float proj = max(dot(toL, rd), 0.0);
+          vec3 closest = ro + rd * proj;
+          float distToL = length(closest - lanternPos);
+          float glow = exp(-distToL * 2.4) / (1.0 + length(toL) * 0.08);
+          col += vec3(1.9, 0.38, 0.12) * lanternPulse * glow * 1.45;
+
+          return col;
+        }
+
+        // ACES 电影级色调映射
+        vec3 acesToneMap(vec3 x) {
+          const float a = 2.51;
+          const float b = 0.03;
+          const float c = 2.43;
+          const float d = 0.59;
+          const float e = 0.14;
+          return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+        }
+
+        // ---------- 40秒四幕自动电影运镜编排 ----------
+        void getCamera(float t, vec3 boatPos, out vec3 ro, out vec3 ta, out float fov) {
+          // 平滑缓动进度
+          float p2 = smoothstep(4.5, 17.0, t);   // 第二幕：低空掠江推进
+          float p3 = smoothstep(16.5, 29.0, t);  // 第三幕：贴近孤舟环绕
+          float p4 = smoothstep(28.5, 40.0, t);  // 第四幕：宏大摇臂拉升俯瞰云海
+
+          // 沿江推进纵深
+          float zBase = mix(0.0, 15.6, p2) + mix(0.0, 5.4, p3) - mix(0.0, 6.8, p4);
+          float xRiver = riverCenter(zBase);
+
+          // 机位高度：第二幕低掠水面(1.25m) -> 第三幕贴近孤舟(1.05m) -> 第四幕升至云海之上(8.0m)
+          float camY = 1.45 - 0.35 * sin(p2 * 3.14159) + p4 * 7.0;
+
+          // 第三幕轻柔绕舟侧移
+          float orbitX = sin(p3 * 3.14159) * 2.45;
+          float camX = xRiver + 0.65 * (1.0 - p2) + orbitX - p4 * 1.65;
+
+          // 轻微电影手持/航拍呼吸感
+          camY += sin(t * 0.75) * 0.06;
+          camX += cos(t * 0.55) * 0.08;
+
+          ro = vec3(camX, camY, zBase);
+
+          // 焦点：从远山峡谷 -> 聚焦孤舟灯笼 -> 抬升望向无垠群峰云海
+          vec3 targetCanyon = vec3(riverCenter(zBase + 16.0), 2.35, zBase + 16.0);
+          vec3 targetBoat   = boatPos + vec3(0.0, 0.45, 0.3);
+          vec3 targetFinale = vec3(riverCenter(zBase + 28.0) - 1.2, 4.8, zBase + 28.0);
+
+          float focusBoat = smoothstep(14.5, 19.0, t) * (1.0 - smoothstep(27.0, 31.5, t));
+          ta = mix(targetCanyon, targetBoat, focusBoat * 0.82);
+          ta = mix(ta, targetFinale, p4);
+
+          fov = mix(1.48, 1.65, focusBoat) - p4 * 0.18;
+        }
+
+        void main() {
+          vec2 uv = (gl_FragCoord.xy - 0.5 * uResolution) / min(uResolution.x, uResolution.y);
+          // 竖屏微调视角，使两侧喀斯特绝壁更具压迫感
+          float aspect = uResolution.x / uResolution.y;
+          float portraitComp = (aspect < 1.0) ? 0.84 : 1.0;
+
+          vec3 boatPos = getBoatPos(uTime);
+          vec3 lanternPos = boatPos + vec3(0.0, 0.52, 1.12);
+          float lanternPulse = 0.88 + 0.12 * sin(uTime * 7.3) * cos(uTime * 3.1);
+
+          vec3 ro, ta;
+          float fov;
+          getCamera(uTime, boatPos, ro, ta, fov);
+
+          vec3 fw = normalize(ta - ro);
+          vec3 ri = normalize(cross(vec3(0.0, 1.0, 0.0), fw));
+          vec3 up = cross(fw, ri);
+          vec3 rd = normalize(uv.x * ri * portraitComp + uv.y * up * portraitComp + fw * fov);
+
+          // 温暖斜射穿谷日光方向
+          vec3 sunDir = normalize(vec3(0.46, 0.28 + 0.04 * sin(uTime * 0.08), 0.84));
+
+          // ---------- 1. 主视线光线步进 ----------
+          float tMax = 105.0;
+          float t = 0.2;
+          float hitMat = 0.0; // 0:天空, 1:山峰, 2:孤舟, 3:朱砂灯笼, 4:江面
+          vec3 hitPos = ro;
+
+          // 解析计算江面(y=0)交点
+          float tWater = (rd.y < -0.0005 && ro.y > 0.0) ? (-ro.y / rd.y) : 1e5;
+
+          for (int i = 0; i < 130; i++) {
+            if (float(i) >= uMaxSteps) break;
+            if (t > tMax || t > tWater) break;
+
+            vec3 p = ro + rd * t;
+
+            // 先检测孤舟与灯笼 SDF
+            vec2 bHit = sdBoatAndLantern(p, boatPos, uTime);
+            if (bHit.x < 0.012) {
+              hitMat = bHit.y;
+              hitPos = p;
+              break;
+            }
+
+            // 检测地形高度场
+            float h = p.y - terrainHeight(p.xz);
+            if (h < 0.008 * t) {
+              hitMat = 1.0;
+              hitPos = p;
+              break;
+            }
+
+            float stepTerrain = h * 0.44;
+            float stepBoat = bHit.x * 0.78;
+            t += max(min(stepTerrain, stepBoat), 0.04 + t * 0.014);
+          }
+
+          if (hitMat == 0.0 && tWater < tMax) {
+            hitMat = 4.0;
+            t = tWater;
+            hitPos = ro + rd * tWater;
+          }
+
+          // ---------- 2. 材质着色 ----------
+          vec3 col = renderSky(rd, sunDir);
+          float sceneDist = (hitMat == 0.0) ? tMax : t;
+
+          if (hitMat == 1.0) {
+            col = shadeTerrain(hitPos, rd, t, sunDir, lanternPos, lanternPulse);
+          } else if (hitMat == 2.0) {
+            // 孤舟与蓑衣舟子：极深焦墨剪影 + 船头暖红灯笼微光边缘
+            float dL = length(hitPos - lanternPos);
+            float warmGlow = exp(-dL * 2.1) * lanternPulse;
+            col = vec3(0.018, 0.022, 0.028) + vec3(1.1, 0.28, 0.10) * warmGlow * 0.65;
+          } else if (hitMat == 3.0) {
+            // 朱砂红灯笼核心自发光
+            col = vec3(3.2, 0.58, 0.16) * lanternPulse;
+          } else if (hitMat == 4.0) {
+            // 物理级涟漪江面 + 菲涅尔真实反射
+            vec3 wn = calcWaterNormal(hitPos.xz, uTime);
+            vec3 reflDir = reflect(rd, wn);
+            reflDir.y = abs(reflDir.y);
+
+            float fresnel = 0.06 + 0.94 * pow(1.0 - max(dot(-rd, wn), 0.0), 4.2);
+            vec3 reflCol = traceReflection(hitPos + vec3(0.0, 0.03, 0.0), reflDir, sunDir, boatPos, lanternPos, lanternPulse);
+
+            // 深邃墨绿江水底色
+            vec3 waterBase = vec3(0.018, 0.034, 0.042);
+            col = mix(waterBase, reflCol, clamp(fresnel * 0.92, 0.18, 0.96));
+
+            // 日光在微涟漪上的碎金高光
+            vec3 hSun = normalize(sunDir - rd);
+            float sunGlint = pow(max(dot(wn, hSun), 0.0), 220.0);
+            col += vec3(1.1, 0.98, 0.84) * sunGlint * 1.45;
+
+            // 孤舟朱砂红灯笼在江面近处涟漪上的暖红波光
+            vec3 toLantern = lanternPos - hitPos;
+            float distL = length(toLantern);
+            vec3 hLantern = normalize(normalize(toLantern) - rd);
+            float lSpec = pow(max(dot(wn, hLantern), 0.0), 42.0);
+            col += vec3(2.2, 0.42, 0.14) * lanternPulse * lSpec / (1.0 + distL * distL * 0.18) * 1.6;
+          }
+
+          // ---------- 3. 大气透视深度雾（远山淡青灰、近峰浓墨） ----------
+          float distFog = 1.0 - exp(-sceneDist * 0.0185);
+          vec3 fogCol = mix(vec3(0.68, 0.72, 0.71), vec3(0.88, 0.85, 0.78), pow(max(dot(rd, sunDir), 0.0), 2.5));
+          if (hitMat != 0.0) {
+            col = mix(col, fogCol, clamp(distFog, 0.0, 0.92));
+          }
+
+          // ---------- 4. 3D 体积云雾 + 穿谷丁达尔光束 (Volumetric Mist & God-rays) ----------
+          float volMax = min(sceneDist, 58.0);
+          float dither = hash12(gl_FragCoord.xy + fract(uTime) * 100.0);
+          float vStep = volMax / max(uVolSteps, 1.0);
+          float vt = vStep * dither;
+
+          vec3 volLight = vec3(0.0);
+          float transmittance = 1.0;
+          float sunPhase = 0.35 + 0.65 * pow(max(dot(rd, sunDir), 0.0), 5.0);
+
+          for (int i = 0; i < 32; i++) {
+            if (float(i) >= uVolSteps) break;
+            vec3 vp = ro + rd * vt;
+            float dens = mistDensity(vp, uTime);
+            if (dens > 0.005) {
+              // 简易高度遮蔽模拟丁达尔光柱穿透山峰缺口
+              float sunSampleH = terrainHeight(vp.xz + sunDir.xz * 7.5);
+              float inLight = smoothstep(sunSampleH - 1.2, sunSampleH + 2.8, vp.y + sunDir.y * 7.5);
+
+              vec3 mistCol = mix(vec3(0.56, 0.62, 0.63), vec3(0.96, 0.92, 0.84), inLight * sunPhase);
+              float alpha = 1.0 - exp(-dens * vStep * 0.16);
+              volLight += transmittance * mistCol * alpha;
+              transmittance *= (1.0 - alpha);
+              if (transmittance < 0.08) break;
+            }
+            vt += vStep;
+          }
+
+          col = col * transmittance + volLight;
+
+          // 灯笼在周围雾气中晕开的暖红光晕（仅在灯笼未被遮挡时）
+          float distCamToL = length(lanternPos - ro);
+          if (sceneDist + 0.35 >= distCamToL) {
+            float projL = dot(lanternPos - ro, rd);
+            if (projL > 0.0) {
+              float perpL = length((ro + rd * projL) - lanternPos);
+              float halo = exp(-perpL * 3.8) * 0.55 + exp(-perpL * 11.0) * 1.1;
+              col += vec3(1.65, 0.34, 0.12) * lanternPulse * halo / (1.0 + distCamToL * 0.06);
+            }
+          }
+
+          // ---------- 5. 新中式电影色调映射与微对比 ----------
+          col *= 1.08;
+          col = acesToneMap(col);
+          // 轻微降低中间调饱和度，强化水墨留白与朱砂红的视觉反差
+          float luma = dot(col, vec3(0.299, 0.587, 0.114));
+          // 保护高饱和暖红（灯笼）不被去饱和
+          float redMask = clamp((col.r - max(col.g, col.b)) * 3.5, 0.0, 1.0);
+          col = mix(vec3(luma), col, mix(0.62, 1.15, redMask));
+
+          // 伽马校正 + 宣纸微暖调
+          col = pow(max(col, 0.0), vec3(0.96, 0.97, 1.0));
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `;
+
+      let glProgram = null;
+      let uniforms = {};
+
+      function initWebGL() {
+        if (!gl) {
+          showToast('当前浏览器不支持 WebGL，无法启动 3D 渲染', 5000);
+          return false;
+        }
+        try {
+          const vs = gl.createShader(gl.VERTEX_SHADER);
+          gl.shaderSource(vs, VERTEX_SHADER_SRC);
+          gl.compileShader(vs);
+          if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+            throw new Error('VS: ' + gl.getShaderInfoLog(vs));
+          }
+
+          const fs = gl.createShader(gl.FRAGMENT_SHADER);
+          gl.shaderSource(fs, FRAGMENT_SHADER_SRC);
+          gl.compileShader(fs);
+          if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
+            throw new Error('FS: ' + gl.getShaderInfoLog(fs));
+          }
+
+          glProgram = gl.createProgram();
+          gl.attachShader(glProgram, vs);
+          gl.attachShader(glProgram, fs);
+          gl.linkProgram(glProgram);
+          if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS)) {
+            throw new Error('LINK: ' + gl.getProgramInfoLog(glProgram));
+          }
+
+          gl.useProgram(glProgram);
+          const buf = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+
+          const loc = gl.getAttribLocation(glProgram, 'aPos');
+          gl.enableVertexAttribArray(loc);
+          gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+          uniforms = {
+            uResolution: gl.getUniformLocation(glProgram, 'uResolution'),
+            uTime:       gl.getUniformLocation(glProgram, 'uTime'),
+            uMaxSteps:   gl.getUniformLocation(glProgram, 'uMaxSteps'),
+            uVolSteps:   gl.getUniformLocation(glProgram, 'uVolSteps'),
+            uReflSteps:  gl.getUniformLocation(glProgram, 'uReflSteps')
+          };
+          return true;
+        } catch (err) {
+          console.error('WebGL Init Error:', err);
+          showToast('着色器编译失败: ' + err.message, 5000);
+          return false;
+        }
+      }
+
+      // ==================== 3. 预生成 2D 电影级素材（宣纸纹理、红枫离屏精灵、篆书红印） ====================
+
+      // 3.1 宣纸纤维 + 细腻胶片颗粒平铺图
+      const paperPatternCanvas = document.createElement('canvas');
+      paperPatternCanvas.width = 256;
+      paperPatternCanvas.height = 256;
+      (function buildPaperTexture() {
+        const pctx = paperPatternCanvas.getContext('2d');
+        const img = pctx.createImageData(256, 256);
+        const d = img.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const n = 232 + (Math.random() - 0.5) * 26;
+          d[i]     = Math.min(255, n + 4);
+          d[i + 1] = Math.min(255, n + 1);
+          d[i + 2] = Math.max(0, n - 5);
+          d[i + 3] = 255;
+        }
+        pctx.putImageData(img, 0, 0);
+        // 细微宣纸草木纤维
+        pctx.strokeStyle = 'rgba(130, 120, 102, 0.14)';
+        pctx.lineWidth = 0.6;
+        for (let i = 0; i < 120; i++) {
+          const x = Math.random() * 256;
+          const y = Math.random() * 256;
+          const len = 4 + Math.random() * 14;
+          const ang = Math.random() * Math.PI * 2;
+          pctx.beginPath();
+          pctx.moveTo(x, y);
+          pctx.quadraticCurveTo(
+            x + Math.cos(ang + 0.4) * len * 0.5,
+            y + Math.sin(ang + 0.4) * len * 0.5,
+            x + Math.cos(ang) * len,
+            y + Math.sin(ang) * len
+          );
+          pctx.stroke();
+        }
+      })();
+
+      // 3.2 预渲染3档景深虚化级别的朱砂红枫叶精灵（保障60fps顺滑渲染）
+      const mapleSprites = [];
+      function createMapleSprite(blurPx) {
+        const size = 128;
+        const c = document.createElement('canvas');
+        c.width = size;
+        c.height = size;
+        const m = c.getContext('2d');
+        m.save();
+        m.translate(size / 2, size / 2 + 6);
+        if (blurPx > 0) m.filter = `blur(${blurPx}px)`;
+
+        // 枫叶五裂片写实轮廓
+        const grad = m.createRadialGradient(0, -4, 4, 0, -4, 44);
+        grad.addColorStop(0.0, '#d93829');
+        grad.addColorStop(0.55, '#b6241b');
+        grad.addColorStop(1.0, '#6e110d');
+
+        m.fillStyle = grad;
+        m.beginPath();
+        m.moveTo(0, 26);
+        // 右下裂片
+        m.bezierCurveTo(6, 22, 16, 24, 24, 20);
+        m.bezierCurveTo(20, 15, 22, 10, 18, 8);
+        // 右侧主裂片
+        m.bezierCurveTo(28, 8, 38, 2, 42, -6);
+        m.bezierCurveTo(32, -8, 28, -12, 22, -10);
+        // 右上副裂片
+        m.bezierCurveTo(26, -18, 24, -28, 20, -34);
+        m.bezierCurveTo(14, -26, 10, -24, 7, -20);
+        // 顶部主裂片
+        m.bezierCurveTo(6, -32, 4, -44, 0, -50);
+        m.bezierCurveTo(-4, -44, -6, -32, -7, -20);
+        // 左上副裂片
+        m.bezierCurveTo(-10, -24, -14, -26, -20, -34);
+        m.bezierCurveTo(-24, -28, -26, -18, -22, -10);
+        // 左侧主裂片
+        m.bezierCurveTo(-28, -12, -32, -8, -42, -6);
+        m.bezierCurveTo(-38, 2, -28, 8, -18, 8);
+        // 左下裂片
+        m.bezierCurveTo(-22, 10, -20, 15, -24, 20);
+        m.bezierCurveTo(-16, 24, -6, 22, 0, 26);
+        m.closePath();
+        m.fill();
+
+        // 精细叶脉与叶柄
+        m.strokeStyle = 'rgba(255, 190, 150, 0.35)';
+        m.lineWidth = 1.2;
+        m.beginPath();
+        m.moveTo(0, 24); m.lineTo(0, -42);
+        m.moveTo(0, 14); m.lineTo(32, -4);
+        m.moveTo(0, 14); m.lineTo(-32, -4);
+        m.moveTo(0, 8);  m.lineTo(18, -26);
+        m.moveTo(0, 8);  m.lineTo(-18, -26);
+        m.stroke();
+
+        m.strokeStyle = '#5a1610';
+        m.lineWidth = 2.0;
+        m.beginPath();
+        m.moveTo(0, 24);
+        m.quadraticCurveTo(3, 35, -2, 44);
+        m.stroke();
+
+        m.restore();
+        return c;
+      }
+      mapleSprites.push(createMapleSprite(0), createMapleSprite(2.5), createMapleSprite(6.5));
+
+      // 3.3 预渲染程序化朱砂篆书红印（支持自定义4字，带金石残破边纹与印泥质感）
+      const sealCanvas = document.createElement('canvas');
+      sealCanvas.width = 180;
+      sealCanvas.height = 180;
+      function buildSealStamp(text = '码上丹青') {
+        const chars = Array.from((text || '码上丹青').trim().padEnd(4, '印')).slice(0, 4);
+        const s = sealCanvas.getContext('2d');
+        s.clearRect(0, 0, 180, 180);
+        // 朱砂红底
+        s.fillStyle = '#b5281e';
+        s.beginPath();
+        s.roundRect(10, 10, 160, 160, 10);
+        s.fill();
+
+        // 阳刻细内框
+        s.strokeStyle = '#f2ede2';
+        s.lineWidth = 4.5;
+        s.strokeRect(20, 20, 140, 140);
+
+        // 传统右上->右下->左上->左下 篆意排版
+        s.fillStyle = '#f5f0e5';
+        s.font = '700 54px "Noto Serif SC", "Songti SC", serif';
+        s.textAlign = 'center';
+        s.textBaseline = 'middle';
+        s.fillText(chars[0], 122, 60);
+        s.fillText(chars[1], 122, 122);
+        s.fillText(chars[2], 58, 60);
+        s.fillText(chars[3], 58, 122);
+
+        // 印泥斑驳飞白噪点与金石残边
+        s.globalCompositeOperation = 'destination-out';
+        for (let i = 0; i < 420; i++) {
+          const rx = 8 + Math.random() * 164;
+          const ry = 8 + Math.random() * 164;
+          const rad = 0.5 + Math.random() * 1.9;
+          s.fillStyle = `rgba(0,0,0,${0.18 + Math.random() * 0.45})`;
+          s.beginPath();
+          s.arc(rx, ry, rad, 0, Math.PI * 2);
+          s.fill();
+        }
+        // 边缘轻微石刻磕碰
+        for (let i = 0; i < 14; i++) {
+          const side = i % 4;
+          let ex = 10, ey = 10;
+          if (side === 0) { ex = 14 + Math.random() * 150; ey = 10; }
+          if (side === 1) { ex = 14 + Math.random() * 150; ey = 170; }
+          if (side === 2) { ex = 10; ey = 14 + Math.random() * 150; }
+          if (side === 3) { ex = 170; ey = 14 + Math.random() * 150; }
+          s.fillStyle = 'rgba(0,0,0,0.85)';
+          s.beginPath();
+          s.arc(ex, ey, 2 + Math.random() * 4.5, 0, Math.PI * 2);
+          s.fill();
+        }
+        s.globalCompositeOperation = 'source-over';
+      }
+      buildSealStamp(state.sealText);
+
+      // ==================== 4. 动态粒子系统（化墨粒子、3D红枫、远山墨鸟） ====================
+
+      // 4.1 第一幕：输入框化墨粒子（3.9s - 5.5s 随墨浪旋涡飘散）
+      const inkDissolveParticles = [];
+      for (let i = 0; i < 240; i++) {
+        inkDissolveParticles.push({
+          ox: (Math.random() - 0.5),       // 输入框内相对位置 X (-0.5 ~ 0.5)
+          oy: (Math.random() - 0.5),       // 输入框内相对位置 Y (-0.5 ~ 0.5)
+          angle: Math.random() * Math.PI * 2,
+          swirl: (Math.random() < 0.5 ? -1 : 1) * (1.4 + Math.random() * 2.8),
+          dist: 0.18 + Math.random() * 0.58,
+          size: 1.8 + Math.random() * 6.5,
+          delay: Math.random() * 0.25,
+          isVermilion: Math.random() < 0.08
+        });
+      }
+
+      // 4.2 第三/四幕：3D 翻滚朱砂红枫叶
+      const mapleLeaves = [];
+      const LEAF_COUNT = 52;
+      function resetLeaf(leaf, randomX = false) {
+        leaf.x = randomX ? (Math.random() * 1.6 - 0.3) : (1.15 + Math.random() * 0.45);
+        leaf.y = -0.15 + Math.random() * 1.1;
+        // z: 0.45(贴近镜头大虚化) ~ 3.2(中景清晰)
+        leaf.z = 0.45 + Math.pow(Math.random(), 1.35) * 2.8;
+        leaf.vx = -(0.16 + Math.random() * 0.26) / Math.sqrt(leaf.z);
+        leaf.vy = (0.04 + Math.random() * 0.11) / Math.sqrt(leaf.z);
+        leaf.pitch = Math.random() * Math.PI * 2;
+        leaf.yaw   = Math.random() * Math.PI * 2;
+        leaf.roll  = Math.random() * Math.PI * 2;
+        leaf.vp = (Math.random() - 0.5) * 3.4;
+        leaf.vyaw = (Math.random() - 0.5) * 2.8;
+        leaf.vr = (Math.random() - 0.5) * 2.2;
+        leaf.swayPhase = Math.random() * Math.PI * 2;
+        leaf.scale = 0.65 + Math.random() * 0.7;
+      }
+      for (let i = 0; i < LEAF_COUNT; i++) {
+        const l = {};
+        resetLeaf(l, true);
+        mapleLeaves.push(l);
+      }
+
+      // 4.3 远山翱翔墨鸟群
+      const birdFlocks = [
+        { baseX: -0.15, baseY: 0.24, speedX: 0.026, count: 7, scale: 1.0, startT: 7.0 },
+        { baseX: 1.15,  baseY: 0.19, speedX: -0.022, count: 5, scale: 0.78, startT: 17.5 },
+        { baseX: -0.10, baseY: 0.31, speedX: 0.019, count: 6, scale: 0.85, startT: 26.0 }
+      ];
+
+      // ==================== 5. Web Audio API 纯代码古琴与山谷风声合成器 ====================
+      let audioCtx = null;
+      let masterGain = null;
+      let mediaStreamDest = null;
+      let windGain = null;
+      let windFilter = null;
+      let lastTypedCharCount = 0;
+
+      // D大调五声音阶 (宫商角徵羽: D, E, F#, A, B) 跨三个八度
+      const GUQIN_SCALE = [
+        146.83, 164.81, 185.00, 220.00, 246.94,
+        293.66, 329.63, 369.99, 440.00, 493.88,
+        587.33, 659.25, 739.99, 880.00
+      ];
+
+      // 40秒四幕古琴乐谱事件 [触发时间(s), 音高索引, 力度, 是否带古琴滑音(吟猱)]
+      const GUQIN_SCORE = [
+        // 第二幕：雾起千峰（空灵稀疏泛音）
+        [5.6,  5, 0.42, false],
+        [7.2,  8, 0.36, true],
+        [9.0,  6, 0.32, false],
+        [10.8, 3, 0.48, true],
+        [12.6, 5, 0.34, false],
+        [14.2, 9, 0.38, true],
+        [15.8, 7, 0.35, false],
+        // 第三幕：孤舟红叶（情绪渐起、绵密琶音）
+        [17.2, 0, 0.55, false],
+        [17.7, 5, 0.44, true],
+        [18.6, 8, 0.48, false],
+        [19.7, 10, 0.46, true],
+        [20.8, 9, 0.38, false],
+        [21.6, 8, 0.42, true],
+        [22.8, 6, 0.40, false],
+        [23.6, 5, 0.50, true],
+        [24.7, 3, 0.46, false],
+        [25.5, 8, 0.48, true],
+        [26.5, 11, 0.44, false],
+        [27.5, 10, 0.46, true],
+        [28.4, 8, 0.42, false],
+        // 第四幕：码上丹青（悠远余韵）
+        [29.8, 0, 0.56, false],
+        [31.4, 5, 0.40, true],
+        [33.2, 8, 0.36, false],
+        [35.4, 10, 0.32, true]
+      ];
+      let triggeredScoreIdx = new Set();
+      let triggeredRunChime = false;
+      let triggeredImpact = false;
+      let triggeredBell = false;
+
+      // 生成山谷算法混响脉冲响应
+      function createReverbImpulse(ctx, duration = 3.2, decay = 2.4) {
+        const rate = ctx.sampleRate;
+        const len = Math.floor(rate * duration);
+        const buf = ctx.createBuffer(2, len, rate);
+        for (let ch = 0; ch < 2; ch++) {
+          const data = buf.getChannelData(ch);
+          for (let i = 0; i < len; i++) {
+            const env = Math.pow(1 - i / len, decay);
+            data[i] = (Math.random() * 2 - 1) * env;
+          }
+        }
+        return buf;
+      }
+
+      // 第一幕：细腻机械键盘敲击微音、运行确认清音 & 3.9s 化墨深沉低音冲击
+      function playKeystrokeClick() {
+        if (!audioCtx || audioCtx.state !== 'running') return;
+        const now = audioCtx.currentTime;
+        // 短促滤波敲击瞬态，清脆克制不刺耳
+        const osc = audioCtx.createOscillator();
+        const env = audioCtx.createGain();
+        osc.type = 'triangle';
+        const baseF = 1600 + Math.random() * 900;
+        osc.frequency.setValueAtTime(baseF, now);
+        osc.frequency.exponentialRampToValueAtTime(320, now + 0.022);
+        env.gain.setValueAtTime(0.055, now);
+        env.gain.exponentialRampToValueAtTime(0.0001, now + 0.028);
+        osc.connect(env);
+        env.connect(masterGain);
+        osc.start(now);
+        osc.stop(now + 0.032);
+      }
+
+      function playRunChime() {
+        if (!audioCtx || audioCtx.state !== 'running') return;
+        const now = audioCtx.currentTime;
+        [587.33, 880.0].forEach((f, idx) => {
+          const osc = audioCtx.createOscillator();
+          const env = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, now + idx * 0.055);
+          env.gain.setValueAtTime(0.0001, now + idx * 0.055);
+          env.gain.linearRampToValueAtTime(0.14 / (idx + 1), now + idx * 0.055 + 0.015);
+          env.gain.exponentialRampToValueAtTime(0.0002, now + idx * 0.055 + 0.65);
+          osc.connect(env);
+          env.connect(masterGain);
+          osc.start(now + idx * 0.055);
+          osc.stop(now + idx * 0.055 + 0.7);
+        });
+      }
+
+      function playInkDropImpact() {
+        if (!audioCtx || audioCtx.state !== 'running') return;
+        const now = audioCtx.currentTime;
+        // 深沉低频水墨晕开冲击
+        const sub = audioCtx.createOscillator();
+        const env = audioCtx.createGain();
+        sub.type = 'sine';
+        sub.frequency.setValueAtTime(115, now);
+        sub.frequency.exponentialRampToValueAtTime(34, now + 1.45);
+        env.gain.setValueAtTime(0.001, now);
+        env.gain.linearRampToValueAtTime(0.65, now + 0.03);
+        env.gain.exponentialRampToValueAtTime(0.0005, now + 2.3);
+        sub.connect(env);
+        env.connect(masterGain);
+        sub.start(now);
+        sub.stop(now + 2.4);
+      }
+
+      function initAudio() {
+        if (audioCtx) {
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          return;
+        }
+        try {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AC();
+
+          masterGain = audioCtx.createGain();
+          masterGain.gain.value = state.muted ? 0.0 : 0.85;
+
+          const compressor = audioCtx.createDynamicsCompressor();
+          compressor.threshold.value = -14;
+          compressor.ratio.value = 3.5;
+
+          // 算法山谷混响
+          const convolver = audioCtx.createConvolver();
+          convolver.buffer = createReverbImpulse(audioCtx, 3.4, 2.5);
+          const wetGain = audioCtx.createGain();
+          wetGain.gain.value = 0.48;
+
+          masterGain.connect(compressor);
+          masterGain.connect(convolver);
+          convolver.connect(wetGain);
+          wetGain.connect(compressor);
+
+          compressor.connect(audioCtx.destination);
+          mediaStreamDest = audioCtx.createMediaStreamDestination();
+          compressor.connect(mediaStreamDest);
+
+          // 持续山谷风声（立体声粉红噪声 + 低通/带通滤波）
+          const windLen = audioCtx.sampleRate * 4;
+          const windBuf = audioCtx.createBuffer(2, windLen, audioCtx.sampleRate);
+          for (let ch = 0; ch < 2; ch++) {
+            const out = windBuf.getChannelData(ch);
+            let b0 = 0, b1 = 0, b2 = 0;
+            for (let i = 0; i < windLen; i++) {
+              const white = Math.random() * 2 - 1;
+              b0 = 0.997 * b0 + white * 0.029;
+              b1 = 0.985 * b1 + white * 0.032;
+              b2 = 0.950 * b2 + white * 0.048;
+              out[i] = (b0 + b1 + b2) * 0.35;
+            }
+          }
+          const windSrc = audioCtx.createBufferSource();
+          windSrc.buffer = windBuf;
+          windSrc.loop = true;
+
+          windFilter = audioCtx.createBiquadFilter();
+          windFilter.type = 'bandpass';
+          windFilter.frequency.value = 320;
+          windFilter.Q.value = 1.4;
+
+          windGain = audioCtx.createGain();
+          windGain.gain.value = 0.0;
+
+          windSrc.connect(windFilter);
+          windFilter.connect(windGain);
+          windGain.connect(masterGain);
+          windSrc.start();
+        } catch (err) {
+          console.warn('Web Audio init skipped:', err);
+        }
+      }
+
+      // 合成古琴拨弦（带基频+泛音+吟猱滑音+拨弦瞬态）
+      function playGuqinNote(freq, velocity = 0.4, slide = false) {
+        if (!audioCtx || audioCtx.state !== 'running') return;
+        const now = audioCtx.currentTime;
+
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const osc3 = audioCtx.createOscillator();
+        osc1.type = 'triangle';
+        osc2.type = 'sine';
+        osc3.type = 'sawtooth';
+
+        osc1.frequency.setValueAtTime(slide ? freq * 0.94 : freq, now);
+        osc2.frequency.setValueAtTime((slide ? freq * 0.94 : freq) * 2.0, now);
+        osc3.frequency.setValueAtTime(freq * 3.0, now);
+
+        if (slide) {
+          osc1.frequency.exponentialRampToValueAtTime(freq, now + 0.16);
+          osc2.frequency.exponentialRampToValueAtTime(freq * 2.0, now + 0.16);
+        }
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(freq * 6.5, now);
+        filter.frequency.exponentialRampToValueAtTime(freq * 1.4, now + 1.8);
+
+        const g1 = audioCtx.createGain();
+        const g2 = audioCtx.createGain();
+        const g3 = audioCtx.createGain();
+        g1.gain.value = 0.72;
+        g2.gain.value = 0.22;
+        g3.gain.value = 0.06;
+
+        const env = audioCtx.createGain();
+        env.gain.setValueAtTime(0.0001, now);
+        env.gain.linearRampToValueAtTime(velocity * 0.55, now + 0.014);
+        env.gain.exponentialRampToValueAtTime(0.0005, now + 4.2);
+
+        osc1.connect(g1); g1.connect(filter);
+        osc2.connect(g2); g2.connect(filter);
+        osc3.connect(g3); g3.connect(filter);
+        filter.connect(env);
+        env.connect(masterGain);
+
+        osc1.start(now); osc2.start(now); osc3.start(now);
+        osc1.stop(now + 4.3); osc2.stop(now + 4.3); osc3.stop(now + 4.3);
+      }
+
+      // 第四幕：29.5s 落印远山古寺钟声
+      function playTempleBell() {
+        if (!audioCtx || audioCtx.state !== 'running') return;
+        const now = audioCtx.currentTime;
+        const partials = [1.0, 2.02, 2.76, 4.18];
+        const base = 196.0;
+        partials.forEach((ratio, idx) => {
+          const osc = audioCtx.createOscillator();
+          const env = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(base * ratio, now);
+          const amp = 0.22 / (idx + 1);
+          env.gain.setValueAtTime(0.0001, now);
+          env.gain.linearRampToValueAtTime(amp, now + 0.02);
+          env.gain.exponentialRampToValueAtTime(0.0003, now + 5.8 - idx * 0.8);
+          osc.connect(env);
+          env.connect(masterGain);
+          osc.start(now);
+          osc.stop(now + 6.0);
+        });
+      }
+
+      function updateAudioSync(t) {
+        if (!audioCtx || audioCtx.state !== 'running') return;
+
+        // 1. 山谷风声随幕次呼吸起伏（第三幕风起叶落时增强，末尾淡出）
+        if (windGain && windFilter) {
+          const fadeOut = t > 38.2 ? Math.max(0, 1 - (t - 38.2) / 1.8) : 1.0;
+          const windBase = t < 3.9 ? 0.0 : (t < 16.5 ? 0.14 : (t < 29.0 ? 0.30 : 0.16));
+          const swell = 0.75 + 0.25 * Math.sin(t * 0.6);
+          windGain.gain.setTargetAtTime(windBase * swell * fadeOut, audioCtx.currentTime, 0.2);
+          windFilter.frequency.setTargetAtTime(260 + 180 * Math.sin(t * 0.35 + 1.0) + (t > 17 && t < 29 ? 160 : 0), audioCtx.currentTime, 0.2);
+        }
+
+        // 2. 第一幕：0.5s - 3.3s 打字机机械敲击微音精准同步
+        if (t >= 0.5 && t <= 3.35) {
+          const totalChars = Array.from(state.promptLine1).length + Array.from(state.promptLine2).length;
+          const p = Math.max(0, Math.min(1, (t - 0.5) / 2.75));
+          const curChars = Math.floor(p * totalChars);
+          if (curChars > lastTypedCharCount) {
+            // 每隔1~2字发出一声轻脆敲击，避免长代码行过密
+            if (curChars - lastTypedCharCount >= 1 && (curChars % 2 === 1 || curChars < Array.from(state.promptLine1).length)) {
+              playKeystrokeClick();
+            }
+            lastTypedCharCount = curChars;
+          }
+        }
+
+        // 3. 3.32s 运行按钮点击确认清音
+        if (t >= 3.32 && !triggeredRunChime) {
+          triggeredRunChime = true;
+          playRunChime();
+        }
+
+        // 4. 3.90s 化墨低频冲击
+        if (t >= 3.90 && !triggeredImpact) {
+          triggeredImpact = true;
+          playInkDropImpact();
+        }
+
+        // 5. 古琴乐谱精准触发
+        for (let i = 0; i < GUQIN_SCORE.length; i++) {
+          const [noteT, scaleIdx, vel, slide] = GUQIN_SCORE[i];
+          if (t >= noteT && t < noteT + 0.35 && !triggeredScoreIdx.has(i)) {
+            triggeredScoreIdx.add(i);
+            playGuqinNote(GUQIN_SCALE[scaleIdx], vel, slide);
+          }
+        }
+
+        // 6. 29.5s 落印钟声
+        if (t >= 29.5 && !triggeredBell) {
+          triggeredBell = true;
+          playTempleBell();
+        }
+      }
+
+      function resetAudioTriggers() {
+        triggeredScoreIdx.clear();
+        triggeredRunChime = false;
+        triggeredImpact = false;
+        triggeredBell = false;
+        lastTypedCharCount = 0;
+      }
+
+      // ==================== 6. 2D 电影级合成管线（AI输入框化墨、3D红枫、墨鸟、宣纸、落印） ====================
+
+      // 离屏遮罩画布（用于第一幕有机水墨晕开擦除过渡）
+      const introMaskCanvas = document.createElement('canvas');
+      const introCtx = introMaskCanvas.getContext('2d');
+
+      function drawRoundedRectPath(c, x, y, w, h, r) {
+        const rr = Math.min(r, w * 0.5, h * 0.5);
+        c.beginPath();
+        c.moveTo(x + rr, y);
+        c.arcTo(x + w, y, x + w, y + h, rr);
+        c.arcTo(x + w, y + h, x, y + h, rr);
+        c.arcTo(x, y + h, x, y, rr);
+        c.arcTo(x, y, x + w, y, rr);
+        c.closePath();
+      }
+
+      function wrapTextChars(c, text, maxWidth) {
+        const chars = Array.from(text);
+        const lines = [];
+        let line = '';
+        for (let i = 0; i < chars.length; i++) {
+          const test = line + chars[i];
+          if (c.measureText(test).width > maxWidth && line.length > 0) {
+            lines.push(line);
+            line = chars[i];
+          } else {
+            line = test;
+          }
+        }
+        if (line.length > 0) lines.push(line);
+        return lines;
+      }
+
+      function renderAct1CodeToInk(t, W, H) {
+        if (t >= 5.55) return;
+
+        if (introMaskCanvas.width !== W || introMaskCanvas.height !== H) {
+          introMaskCanvas.width = W;
+          introMaskCanvas.height = H;
+        }
+
+        const cx = W * 0.5;
+        const cy = H * 0.5;
+        const isPortrait = H > W;
+        const maxR = Math.hypot(W, H) * 0.68;
+
+        // 1. 深邃玄墨宣纸暗底
+        introCtx.globalCompositeOperation = 'source-over';
+        introCtx.fillStyle = '#07090c';
+        introCtx.fillRect(0, 0, W, H);
+
+        // 柔和径向幽青微光 + 细腻暗宣纸纹理
+        const bgG = introCtx.createRadialGradient(cx, cy, 10, cx, cy, maxR * 0.9);
+        bgG.addColorStop(0, 'rgba(24, 38, 42, 0.52)');
+        bgG.addColorStop(0.6, 'rgba(10, 14, 18, 0.85)');
+        bgG.addColorStop(1, 'rgba(5, 7, 9, 1.0)');
+        introCtx.fillStyle = bgG;
+        introCtx.fillRect(0, 0, W, H);
+
+        if (!paperPattern) {
+          paperPattern = ctx.createPattern(paperPatternCanvas, 'repeat');
+        }
+        introCtx.save();
+        introCtx.globalAlpha = 0.055;
+        introCtx.fillStyle = paperPattern;
+        introCtx.fillRect(0, 0, W, H);
+        introCtx.restore();
+
+        // 2. AI 提示词输入框几何参数
+        const cardW = isPortrait ? W * 0.88 : Math.min(W * 0.64, 920);
+        const padX = Math.round(cardW * 0.052);
+        const padY = Math.round(cardW * (isPortrait ? 0.055 : 0.036));
+        const btnR = Math.round(Math.min(W, H) * (isPortrait ? 0.038 : 0.034));
+        const fontMainSize = Math.max(15, Math.round(cardW * (isPortrait ? 0.036 : 0.025)));
+        const fontCodeSize = Math.max(11, Math.round(cardW * (isPortrait ? 0.022 : 0.0155)));
+        const badgeFontSize = Math.max(10, Math.round(cardW * (isPortrait ? 0.020 : 0.014)));
+
+        const textMaxW = cardW - padX * 2.2 - btnR * 2.4;
+
+        // 预计算折行高度以自适应卡片高度
+        introCtx.font = `400 ${fontMainSize}px "Noto Serif SC", "Songti SC", sans-serif`;
+        const fullLines1 = wrapTextChars(introCtx, state.promptLine1, textMaxW);
+        introCtx.font = `400 ${fontCodeSize}px "JetBrains Mono", monospace`;
+        const fullLines2 = wrapTextChars(introCtx, state.promptLine2, textMaxW);
+
+        const line1H = fontMainSize * 1.48;
+        const line2H = fontCodeSize * 1.48;
+        const headerH = badgeFontSize * 2.3;
+        const cardH = padY * 2 + headerH + fullLines1.length * line1H + 14 + fullLines2.length * line2H;
+        const cardX = cx - cardW * 0.5;
+        const cardY = cy - cardH * 0.5;
+        const radius = Math.round(Math.min(W, H) * 0.028);
+
+        // 入场动画 (0.0s - 0.5s) 与 化墨坍缩消散 (3.9s - 4.55s)
+        const enterP = Math.min(1, t / 0.5);
+        const enterEase = 1 - Math.pow(1 - enterP, 3);
+        const dissolveP = Math.max(0, Math.min(1, (t - 3.9) / 0.65));
+        const dissolveEase = dissolveP * dissolveP;
+        const cardAlpha = enterEase * (1 - dissolveEase);
+        const cardScale = (0.94 + 0.06 * enterEase) * (1 - 0.14 * dissolveEase);
+
+        if (cardAlpha > 0.01) {
+          introCtx.save();
+          introCtx.globalAlpha = cardAlpha;
+          introCtx.translate(cx, cy);
+          introCtx.scale(cardScale, cardScale);
+          introCtx.translate(-cx, -cy);
+
+          // 卡片背后微妙氛围背光（3.3s 点击运行后转为朱砂暖红微光）
+          const runGlowP = Math.max(0, Math.min(1, (t - 3.3) / 0.35));
+          const cardGlow = introCtx.createRadialGradient(cx, cy, cardH * 0.2, cx, cy, cardW * 0.68);
+          cardGlow.addColorStop(0, runGlowP > 0.01
+            ? `rgba(196, 56, 44, ${0.14 + 0.16 * runGlowP})`
+            : 'rgba(92, 148, 142, 0.14)');
+          cardGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          introCtx.fillStyle = cardGlow;
+          introCtx.fillRect(cardX - 80, cardY - 80, cardW + 160, cardH + 160);
+
+          // 卡片磨砂玻璃主体
+          drawRoundedRectPath(introCtx, cardX, cardY, cardW, cardH, radius);
+          const cardFill = introCtx.createLinearGradient(cardX, cardY, cardX, cardY + cardH);
+          cardFill.addColorStop(0, 'rgba(24, 30, 36, 0.86)');
+          cardFill.addColorStop(1, 'rgba(13, 17, 21, 0.92)');
+          introCtx.fillStyle = cardFill;
+          introCtx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+          introCtx.shadowBlur = 42;
+          introCtx.shadowOffsetY = 18;
+          introCtx.fill();
+          introCtx.shadowBlur = 0;
+          introCtx.shadowOffsetY = 0;
+
+          // 细腻磨砂边框
+          introCtx.lineWidth = 1.4;
+          introCtx.strokeStyle = runGlowP > 0.01
+            ? `rgba(225, 92, 76, ${0.28 + 0.38 * runGlowP})`
+            : 'rgba(232, 228, 218, 0.18)';
+          introCtx.stroke();
+
+          // 3.35s - 3.9s: 编译流光条横扫边框 (Compiling Shader...)
+          if (t >= 3.32 && t <= 3.95) {
+            const shimP = (t - 3.32) / 0.6;
+            const shimX = cardX - cardW * 0.2 + shimP * cardW * 1.4;
+            introCtx.save();
+            drawRoundedRectPath(introCtx, cardX, cardY, cardW, cardH, radius);
+            introCtx.clip();
+            const shimG = introCtx.createLinearGradient(shimX - cardW * 0.22, cardY, shimX + cardW * 0.22, cardY);
+            shimG.addColorStop(0, 'rgba(255, 255, 255, 0)');
+            shimG.addColorStop(0.5, 'rgba(242, 120, 96, 0.32)');
+            shimG.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            introCtx.fillStyle = shimG;
+            introCtx.fillRect(cardX, cardY, cardW, cardH);
+
+            // 顶部极细高亮进度流光线
+            const barG = introCtx.createLinearGradient(cardX, cardY, cardX + cardW, cardY);
+            barG.addColorStop(0, 'rgba(200, 56, 44, 0.2)');
+            barG.addColorStop(Math.min(1, Math.max(0, shimP)), 'rgba(255, 195, 175, 0.95)');
+            barG.addColorStop(1, 'rgba(200, 56, 44, 0.0)');
+            introCtx.fillStyle = barG;
+            introCtx.fillRect(cardX, cardY, cardW * Math.min(1, shimP * 1.15), 2.5);
+            introCtx.restore();
+          }
+
+          // 顶部状态徽章: GLSL Raymarching · 0 贴图 · 实时渲染
+          const badgeY = cardY + padY + badgeFontSize * 0.5;
+          introCtx.fillStyle = runGlowP > 0.01 ? '#e24a3b' : '#58c9a8';
+          introCtx.beginPath();
+          introCtx.arc(cardX + padX + 4, badgeY, Math.max(3, badgeFontSize * 0.24), 0, Math.PI * 2);
+          introCtx.fill();
+
+          introCtx.font = `500 ${badgeFontSize}px "JetBrains Mono", monospace`;
+          introCtx.fillStyle = 'rgba(218, 214, 204, 0.65)';
+          introCtx.textAlign = 'left';
+          introCtx.textBaseline = 'middle';
+          const statusStr = (t >= 3.35)
+            ? 'Compiling Shader · 正在演算 3D 水墨光影...'
+            : 'GLSL Raymarching · 0 贴图 · 实时渲染';
+          introCtx.fillText(statusStr, cardX + padX + 16, badgeY);
+
+          // 打字机逐字显示逻辑 (0.5s - 3.3s)
+          const chars1 = Array.from(state.promptLine1);
+          const chars2 = Array.from(state.promptLine2);
+          const totalC = chars1.length + chars2.length;
+          const typeProgress = Math.max(0, Math.min(1, (t - 0.5) / 2.75));
+          const shownCount = Math.floor(typeProgress * totalC);
+
+          const shown1 = chars1.slice(0, Math.min(shownCount, chars1.length)).join('');
+          const shown2 = shownCount > chars1.length
+            ? chars2.slice(0, shownCount - chars1.length).join('')
+            : '';
+
+          // 绘制第一行：写实提示词（暖宣白）
+          const textStartX = cardX + padX;
+          let curY = cardY + padY + headerH + fontMainSize * 0.5;
+          introCtx.font = `400 ${fontMainSize}px "Noto Serif SC", "Songti SC", sans-serif`;
+          introCtx.fillStyle = '#f3efe6';
+          const dispLines1 = wrapTextChars(introCtx, shown1, textMaxW);
+          let cursorX = textStartX;
+          let cursorY = curY;
+
+          for (let i = 0; i < dispLines1.length; i++) {
+            introCtx.fillText(dispLines1[i], textStartX, curY + i * line1H);
+            if (i === dispLines1.length - 1) {
+              cursorX = textStartX + introCtx.measureText(dispLines1[i]).width + 3;
+              cursorY = curY + i * line1H;
+            }
+          }
+
+          // 绘制第二行：代码参数指令（淡青玉 Monospace）
+          const codeStartY = curY + fullLines1.length * line1H + 10;
+          introCtx.font = `400 ${fontCodeSize}px "JetBrains Mono", monospace`;
+          introCtx.fillStyle = 'rgba(130, 212, 192, 0.88)';
+          const dispLines2 = wrapTextChars(introCtx, shown2, textMaxW);
+          for (let i = 0; i < dispLines2.length; i++) {
+            introCtx.fillText(dispLines2[i], textStartX, codeStartY + i * line2H);
+            if (shownCount > chars1.length && i === dispLines2.length - 1) {
+              cursorX = textStartX + introCtx.measureText(dispLines2[i]).width + 3;
+              cursorY = codeStartY + i * line2H;
+            }
+          }
+
+          // 闪烁竖线光标
+          if (t < 3.35 && Math.floor(t * 2.8) % 2 === 0) {
+            const curH = (shownCount > chars1.length) ? fontCodeSize * 1.1 : fontMainSize * 1.1;
+            introCtx.fillStyle = '#e04f3e';
+            introCtx.fillRect(cursorX, cursorY - curH * 0.5, 2.2, curH);
+          }
+
+          // 右侧圆形 Run / Send 按钮 (↵)
+          const btnX = cardX + cardW - padX - btnR;
+          const btnY = cardY + cardH * 0.5 + headerH * 0.2;
+          const clickBounce = (t >= 3.30 && t <= 3.55)
+            ? (1.0 - 0.14 * Math.sin(((t - 3.30) / 0.25) * Math.PI))
+            : 1.0;
+
+          // 3.3s 点击朱砂红扩散波纹
+          if (t >= 3.30 && t <= 3.90) {
+            const ripP = (t - 3.30) / 0.6;
+            introCtx.strokeStyle = `rgba(220, 66, 52, ${(1 - ripP) * 0.75})`;
+            introCtx.lineWidth = 2.0;
+            introCtx.beginPath();
+            introCtx.arc(btnX, btnY, btnR * (1 + ripP * 1.45), 0, Math.PI * 2);
+            introCtx.stroke();
+          }
+
+          introCtx.save();
+          introCtx.translate(btnX, btnY);
+          introCtx.scale(clickBounce, clickBounce);
+          introCtx.beginPath();
+          introCtx.arc(0, 0, btnR, 0, Math.PI * 2);
+          if (runGlowP > 0.01) {
+            introCtx.fillStyle = `rgba(196, 50, 39, ${0.35 + 0.65 * runGlowP})`;
+            introCtx.shadowColor = 'rgba(210, 56, 44, 0.75)';
+            introCtx.shadowBlur = 22 * runGlowP;
+          } else {
+            introCtx.fillStyle = 'rgba(232, 228, 218, 0.10)';
+          }
+          introCtx.fill();
+          introCtx.shadowBlur = 0;
+          introCtx.lineWidth = 1.2;
+          introCtx.strokeStyle = runGlowP > 0.01 ? 'rgba(255, 165, 150, 0.85)' : 'rgba(232, 228, 218, 0.25)';
+          introCtx.stroke();
+
+          // 按钮内 ↵ 符号
+          introCtx.fillStyle = runGlowP > 0.01 ? '#fff8f5' : 'rgba(232, 228, 218, 0.82)';
+          introCtx.font = `500 ${Math.round(btnR * 0.92)}px "JetBrains Mono", sans-serif`;
+          introCtx.textAlign = 'center';
+          introCtx.textBaseline = 'middle';
+          introCtx.fillText('↵', 0, 1);
+          introCtx.restore();
+
+          introCtx.restore();
+        }
+
+        // 3. 3.90s - 5.50s: 输入框碎裂成数百旋涡墨粒 + 有机水墨晕染展开，透出底层 3D 水墨山河
+        if (t > 3.90) {
+          const bloom = Math.min(1, (t - 3.90) / 1.55);
+          const easeBloom = 1 - Math.pow(1 - bloom, 3);
+          const baseR = easeBloom * maxR * 1.18;
+
+          // 有机多瓣水墨晕开擦除，透出 WebGL 3D 水墨山水
+          introCtx.globalCompositeOperation = 'destination-out';
+          introCtx.beginPath();
+          const lobes = 48;
+          for (let i = 0; i <= lobes; i++) {
+            const ang = (i / lobes) * Math.PI * 2;
+            const organic = 1.0
+              + 0.17 * Math.sin(ang * 5.0 + 1.1)
+              + 0.11 * Math.cos(ang * 11.0 - bloom * 3.4)
+              + 0.06 * Math.sin(ang * 19.0 + 0.6);
+            const r = baseR * organic;
+            const x = cx + Math.cos(ang) * r;
+            const y = cy + Math.sin(ang) * r;
+            if (i === 0) introCtx.moveTo(x, y);
+            else introCtx.lineTo(x, y);
+          }
+          introCtx.closePath();
+          introCtx.fillStyle = '#000';
+          introCtx.fill();
+          introCtx.globalCompositeOperation = 'source-over';
+
+          // 将暗底过渡层合成到主画布
+          ctx.drawImage(introMaskCanvas, 0, 0);
+
+          // 在主画布上叠加水墨晕染湿边环与旋涡化墨粒子
+          const ringAlpha = Math.sin(bloom * Math.PI) * 0.52;
+          if (ringAlpha > 0.01) {
+            ctx.save();
+            ctx.strokeStyle = `rgba(14, 22, 26, ${ringAlpha})`;
+            ctx.lineWidth = Math.max(10, W * 0.028);
+            ctx.beginPath();
+            ctx.arc(cx, cy, baseR * 0.96, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          ctx.save();
+          for (let i = 0; i < inkDissolveParticles.length; i++) {
+            const pt = inkDissolveParticles[i];
+            const lp = Math.max(0, Math.min(1, (bloom - pt.delay * 0.4) / 0.85));
+            if (lp <= 0 || lp >= 1) continue;
+            const startX = cx + pt.ox * cardW;
+            const startY = cy + pt.oy * cardH;
+            const ang = pt.angle + pt.swirl * lp;
+            const rad = pt.dist * maxR * Math.pow(lp, 0.85);
+            const px = startX + Math.cos(ang) * rad;
+            const py = startY + Math.sin(ang) * rad;
+            const pAlpha = Math.sin(lp * Math.PI) * 0.82;
+            const pSize = pt.size * (1.2 - lp * 0.65) * (W / 720);
+
+            ctx.fillStyle = pt.isVermilion
+              ? `rgba(196, 52, 40, ${pAlpha})`
+              : `rgba(16, 23, 28, ${pAlpha})`;
+            ctx.beginPath();
+            ctx.arc(px, py, Math.max(1, pSize), 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
+        } else {
+          ctx.drawImage(introMaskCanvas, 0, 0);
+        }
+      }
+
+      // 绘制远山翱翔墨鸟
+      function renderInkBirds(t, W, H) {
+        if (t < 6.0) return;
+        ctx.save();
+        for (let f = 0; f < birdFlocks.length; f++) {
+          const flock = birdFlocks[f];
+          const dt = t - flock.startT;
+          if (dt < 0 || dt > 19.0) continue;
+
+          const fade = Math.min(1, dt / 2.2) * Math.min(1, (19.0 - dt) / 2.5);
+          ctx.strokeStyle = `rgba(18, 25, 30, ${0.62 * fade})`;
+          ctx.lineCap = 'round';
+
+          for (let b = 0; b < flock.count; b++) {
+            const rank = b - (flock.count - 1) * 0.5;
+            const bx = (flock.baseX + dt * flock.speedX - Math.abs(rank) * 0.022 * Math.sign(flock.speedX)) * W;
+            const by = (flock.baseY + rank * 0.016 + Math.sin(dt * 1.1 + b) * 0.008) * H;
+            const flap = Math.sin(t * 7.2 + b * 1.4);
+            const span = (7 + (b % 3) * 2.2) * flock.scale * (W / 900 + 0.55);
+
+            ctx.lineWidth = Math.max(1.1, span * 0.16);
+            ctx.beginPath();
+            ctx.moveTo(bx - span, by - flap * span * 0.45);
+            ctx.quadraticCurveTo(bx - span * 0.35, by - span * 0.35 - flap * span * 0.15, bx, by);
+            ctx.quadraticCurveTo(bx + span * 0.35, by - span * 0.35 - flap * span * 0.15, bx + span, by - flap * span * 0.45);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+
+      // 更新与绘制 3D 翻滚朱砂红枫叶（带景深虚化）
+      function renderMapleLeaves(t, dt, W, H) {
+        // 第二幕后半段零星飘落，第三幕(17~29s)风起大量红枫掠过镜头，第四幕逐渐稀疏
+        const intensity = t < 12.0 ? 0.0
+          : (t < 17.0 ? (t - 12.0) / 5.0 * 0.28
+          : (t < 29.0 ? 0.28 + Math.sin(((t - 17.0) / 12.0) * Math.PI) * 0.72
+          : Math.max(0.14, 0.28 * (1 - (t - 29.0) / 11.0))));
+
+        if (intensity <= 0.01) return;
+
+        const activeCount = Math.floor(LEAF_COUNT * intensity);
+        const windBoost = (t > 17.0 && t < 29.0) ? (1.35 + 0.45 * Math.sin(t * 1.4)) : 0.85;
+        const baseSize = Math.min(W, H) * 0.072;
+
+        for (let i = 0; i < activeCount; i++) {
+          const l = mapleLeaves[i];
+          if (state.playing) {
+            l.x += l.vx * windBoost * dt;
+            l.y += (l.vy + Math.sin(t * 2.1 + l.swayPhase) * 0.06) * dt;
+            l.pitch += l.vp * dt;
+            l.yaw   += l.vyaw * dt;
+            l.roll  += l.vr * dt;
+
+            if (l.x < -0.25 || l.y > 1.2) {
+              resetLeaf(l, false);
+            }
+          }
+
+          const sx = l.x * W;
+          const sy = l.y * H;
+          const persp = 1.0 / l.z;
+          const drawSize = baseSize * l.scale * persp;
+
+          // 按景深选择不同虚化档位的离屏红枫精灵
+          const spriteIdx = l.z < 0.85 ? 2 : (l.z < 1.35 ? 1 : 0);
+          const sprite = mapleSprites[spriteIdx];
+
+          // 3D 翻滚投影缩放（pitch / yaw 制造真实三维翻转感）
+          const flipX = Math.max(0.16, Math.abs(Math.cos(l.yaw)));
+          const flipY = Math.max(0.22, Math.abs(Math.cos(l.pitch)));
+          const alpha = Math.min(0.95, (l.z < 0.75 ? 0.72 : 0.92) * Math.min(1, intensity * 2.2));
+
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.translate(sx, sy);
+          ctx.rotate(l.roll);
+          ctx.scale(flipX, flipY);
+          ctx.drawImage(sprite, -drawSize * 0.5, -drawSize * 0.5, drawSize, drawSize);
+          ctx.restore();
+        }
+      }
+
+      // 第四幕：朱砂篆书红印 + 竖排书法题跋
+      function renderFinaleSeal(t, W, H) {
+        if (t < 29.5) return;
+        const p = Math.min(1, (t - 29.5) / 1.15);
+        // 盖印微震落定缓动
+        const stampScale = 1.0 + Math.pow(1.0 - p, 3) * 0.55;
+        const alpha = Math.min(1, p * 1.4);
+
+        const isPortrait = H > W;
+        const sealSize = Math.round(Math.min(W, H) * (isPortrait ? 0.115 : 0.105));
+        const marginX = Math.round(W * (isPortrait ? 0.08 : 0.065));
+        const marginY = Math.round(H * (isPortrait ? 0.11 : 0.12));
+
+        const sx = W - marginX - sealSize;
+        const sy = marginY;
+
+        ctx.save();
+        ctx.globalAlpha = alpha * 0.92;
+        ctx.translate(sx + sealSize * 0.5, sy + sealSize * 0.5);
+        ctx.scale(stampScale, stampScale);
+        ctx.rotate(-0.025);
+        ctx.drawImage(sealCanvas, -sealSize * 0.5, -sealSize * 0.5, sealSize, sealSize);
+        ctx.restore();
+
+        // 竖排题跋：“以码为墨 · 算尽山河”
+        const textP = Math.max(0, Math.min(1, (t - 30.5) / 1.8));
+        if (textP > 0.01) {
+          const chars = ['以', '码', '为', '墨', '·', '算', '尽', '山', '河'];
+          const fontSize = Math.max(14, Math.round(sealSize * 0.28));
+          const lineStep = fontSize * 1.38;
+          const tx = sx + sealSize * 0.5;
+          const startY = sy + sealSize + fontSize * 1.5;
+
+          ctx.save();
+          ctx.font = `300 ${fontSize}px "Noto Serif SC", "Songti SC", serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          for (let i = 0; i < chars.length; i++) {
+            const charP = Math.max(0, Math.min(1, (textP * chars.length - i * 0.65) * 0.85));
+            if (charP <= 0) continue;
+            ctx.fillStyle = `rgba(22, 28, 32, ${charP * 0.78})`;
+            ctx.shadowColor = 'rgba(245, 240, 228, 0.75)';
+            ctx.shadowBlur = 8;
+            ctx.fillText(chars[i], tx, startY + i * lineStep + (1 - charP) * 6);
+          }
+          ctx.restore();
+        }
+      }
+
+      // 宣纸质感 + 电影暗角
+      let paperPattern = null;
+      function renderFilmOverlay(W, H) {
+        if (!paperPattern) {
+          paperPattern = ctx.createPattern(paperPatternCanvas, 'repeat');
+        }
+        ctx.save();
+        // 细腻宣纸纤维叠加
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.globalAlpha = 0.16;
+        ctx.fillStyle = paperPattern;
+        ctx.fillRect(0, 0, W, H);
+
+        // 电影级柔和四周暗角
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 1.0;
+        const rad = Math.hypot(W, H) * 0.62;
+        const vig = ctx.createRadialGradient(W * 0.5, H * 0.5, rad * 0.45, W * 0.5, H * 0.5, rad);
+        vig.addColorStop(0, 'rgba(0,0,0,0)');
+        vig.addColorStop(1, 'rgba(6,9,12,0.46)');
+        ctx.fillStyle = vig;
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
+
+      // ==================== 7. 画幅适配与分辨率管理 ====================
+      function updateCanvasLayout() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const pad = state.aspect === 'full' ? 0 : 28;
+        const maxW = Math.max(240, vw - pad * 2);
+        const maxH = Math.max(240, vh - pad * 2);
+
+        let dispW = maxW;
+        let dispH = maxH;
+
+        if (state.aspect === '9:16') {
+          const targetRatio = 9 / 16;
+          if (maxW / maxH > targetRatio) {
+            dispH = maxH;
+            dispW = Math.round(dispH * targetRatio);
+          } else {
+            dispW = maxW;
+            dispH = Math.round(dispW / targetRatio);
+          }
+          canvasFrame.classList.add('rounded-xl');
+        } else if (state.aspect === '16:9') {
+          const targetRatio = 16 / 9;
+          if (maxW / maxH > targetRatio) {
+            dispH = maxH;
+            dispW = Math.round(dispH * targetRatio);
+          } else {
+            dispW = maxW;
+            dispH = Math.round(dispW / targetRatio);
+          }
+          canvasFrame.classList.add('rounded-xl');
+        } else {
+          dispW = vw;
+          dispH = vh;
+          canvasFrame.classList.remove('rounded-xl');
+        }
+
+        canvasFrame.style.width = `${dispW}px`;
+        canvasFrame.style.height = `${dispH}px`;
+
+        // 内部主画布分辨率（保证导出视频清晰度）
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let outW, outH;
+        if (state.aspect === '9:16') {
+          outW = state.quality === 'ultra' ? 1080 : (state.quality === 'high' ? 810 : 648);
+          outH = Math.round(outW * 16 / 9);
+        } else if (state.aspect === '16:9') {
+          outW = state.quality === 'ultra' ? 1920 : (state.quality === 'high' ? 1440 : 1152);
+          outH = Math.round(outW * 9 / 16);
+        } else {
+          outW = Math.min(1920, Math.round(dispW * dpr));
+          outH = Math.min(1080, Math.round(dispH * dpr));
+        }
+
+        state.width = outW;
+        state.height = outH;
+        masterCanvas.width = outW;
+        masterCanvas.height = outH;
+
+        const preset = QUALITY_PRESETS[state.quality];
+        glCanvas.width  = Math.max(320, Math.round(outW * preset.scale));
+        glCanvas.height = Math.max(320, Math.round(outH * preset.scale));
+
+        if (gl) {
+          gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+        }
+        resDisplay.textContent = `${outW}×${outH}`;
+      }
+
+      // ==================== 8. 一键录制导出 (.webm) ====================
+      let mediaRecorder = null;
+      let recordedChunks = [];
+
+      function startRecording() {
+        if (typeof MediaRecorder === 'undefined') {
+          showToast('当前浏览器不支持 MediaRecorder 录制', 4000);
+          return;
+        }
+        initAudio();
+        startOverlay.style.opacity = '0';
+        setTimeout(() => { startOverlay.style.display = 'none'; }, 400);
+        // 重置到 0.0 秒开始完整录制 40 秒
+        state.simTime = 0.0;
+        resetAudioTriggers();
+        state.playing = true;
+        state.recording = true;
+        customPopover.classList.add('hidden');
+        updatePlayButtonUI();
+        setHudVisibility(false);
+
+        recBadge.classList.remove('hidden');
+        recBadge.classList.add('flex');
+        btnRecordText.textContent = '停止录制';
+
+        try {
+          const videoStream = masterCanvas.captureStream(60);
+          const tracks = [...videoStream.getVideoTracks()];
+          if (mediaStreamDest) {
+            tracks.push(...mediaStreamDest.stream.getAudioTracks());
+          }
+          const combinedStream = new MediaStream(tracks);
+
+          const mimeTypes = [
+            'video/webm;codecs=vp9,opus',
+            'video/webm;codecs=vp8,opus',
+            'video/webm'
+          ];
+          const mimeType = mimeTypes.find(m => MediaRecorder.isTypeSupported(m)) || '';
+
+          recordedChunks = [];
+          mediaRecorder = new MediaRecorder(combinedStream, {
+            mimeType: mimeType || undefined,
+            videoBitsPerSecond: 10000000 // 10 Mbps 高码率保证水墨渐变不糊
+          });
+
+          mediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+          };
+
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, { type: mimeType || 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ink_and_mist_cinema.webm`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+            showToast('视频已成功导出 (ink_and_mist_cinema.webm)', 3500);
+          };
+
+          mediaRecorder.start(250);
+          showToast('开始录制 40 秒完整成片，结束后将自动下载', 3200);
+        } catch (err) {
+          console.error('Recording error:', err);
+          state.recording = false;
+          recBadge.classList.add('hidden');
+          btnRecordText.textContent = '一键录制导出';
+          showToast('录制启动失败: ' + err.message, 4000);
+        }
+      }
+
+      function stopRecording() {
+        if (!state.recording) return;
+        state.recording = false;
+        recBadge.classList.add('hidden');
+        recBadge.classList.remove('flex');
+        btnRecordText.textContent = '一键录制导出';
+        setHudVisibility(true);
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+          mediaRecorder.stop();
+        }
+      }
+
+      // ==================== 9. 主渲染循环 ====================
+      function renderFrame(ts) {
+        requestAnimationFrame(renderFrame);
+
+        if (!state.lastFrameTs) state.lastFrameTs = ts;
+        const dt = Math.min(0.05, (ts - state.lastFrameTs) / 1000);
+        state.lastFrameTs = ts;
+
+        // FPS 统计
+        state.fpsFrames++;
+        if (ts - state.fpsLastTs >= 500) {
+          state.fps = Math.round((state.fpsFrames * 1000) / (ts - state.fpsLastTs));
+          fpsDisplay.textContent = `${state.fps} FPS`;
+          state.fpsFrames = 0;
+          state.fpsLastTs = ts;
+        }
+
+        // 时间推进
+        if (state.playing) {
+          state.simTime += dt;
+          updateAudioSync(state.simTime);
+
+          if (state.simTime >= TOTAL_DURATION) {
+            if (state.recording) {
+              state.simTime = TOTAL_DURATION;
+              state.playing = false;
+              updatePlayButtonUI();
+              stopRecording();
+            } else {
+              // 非录制模式下平滑循环重播
+              state.simTime = 0.0;
+              resetAudioTriggers();
+            }
+          }
+        }
+
+        const t = state.simTime;
+        const W = state.width;
+        const H = state.height;
+
+        // 1. 渲染 3D WebGL 水墨山水（第一幕 3.85s 水墨晕开前跳过 3D 计算以保极致流畅）
+        if (gl && glProgram && t >= 3.85) {
+          const preset = QUALITY_PRESETS[state.quality];
+          gl.useProgram(glProgram);
+          gl.uniform2f(uniforms.uResolution, glCanvas.width, glCanvas.height);
+          gl.uniform1f(uniforms.uTime, t);
+          gl.uniform1f(uniforms.uMaxSteps, preset.maxSteps);
+          gl.uniform1f(uniforms.uVolSteps, preset.volSteps);
+          gl.uniform1f(uniforms.uReflSteps, preset.reflSteps);
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(glCanvas, 0, 0, W, H);
+        } else {
+          ctx.fillStyle = '#07090c';
+          ctx.fillRect(0, 0, W, H);
+        }
+
+        // 2. 叠加远山墨鸟
+        renderInkBirds(t, W, H);
+
+        // 3. 叠加 3D 翻滚朱砂红枫叶（带前景景深虚化）
+        renderMapleLeaves(t, dt, W, H);
+
+        // 4. 叠加宣纸肌理与暗角
+        if (t >= 3.90) {
+          renderFilmOverlay(W, H);
+        }
+
+        // 5. 叠加第四幕朱砂红印与题跋
+        renderFinaleSeal(t, W, H);
+
+        // 6. 叠加第一幕“AI 提示词输入框 -> 化墨晕染”过渡层
+        renderAct1CodeToInk(t, W, H);
+
+        // 7. 末尾 1.5s 电影级平滑渐黑落幕 (38.5s - 40.0s)
+        if (t > 38.5) {
+          const fadeOut = Math.min(1, (t - 38.5) / 1.5);
+          ctx.fillStyle = `rgba(5, 7, 9, ${fadeOut * fadeOut})`;
+          ctx.fillRect(0, 0, W, H);
+        }
+
+        // 8. 同步 HUD 进度与幕次名称
+        const pct = (t / TOTAL_DURATION) * 100;
+        timelineFill.style.width = `${pct.toFixed(2)}%`;
+        timeCurrent.textContent = formatTime(t);
+        if (state.recording) {
+          recTimer.textContent = formatTime(t);
+        }
+
+        for (let i = 0; i < ACTS.length; i++) {
+          if (t >= ACTS[i].start && t <= ACTS[i].end) {
+            if (actLabel.textContent !== ACTS[i].name) {
+              actLabel.textContent = ACTS[i].name;
+            }
+            break;
+          }
+        }
+      }
+
+      // ==================== 10. UI 交互事件绑定 ====================
+      function updatePlayButtonUI() {
+        if (state.playing) {
+          btnPlayText.textContent = '暂停';
+          iconPlay.innerHTML = '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
+        } else {
+          btnPlayText.textContent = '继续演出';
+          iconPlay.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        }
+      }
+
+      function setHudVisibility(visible) {
+        state.hudVisible = visible;
+        if (visible) {
+          hudTop.classList.remove('hud-top-hidden');
+          hudBottom.classList.remove('hud-hidden');
+        } else {
+          hudTop.classList.add('hud-top-hidden');
+          hudBottom.classList.add('hud-hidden');
+        }
+      }
+
+      function scheduleHudAutoHide() {
+        clearTimeout(state.hudTimer);
+        if (!state.playing || state.recording) return;
+        state.hudTimer = setTimeout(() => {
+          if (state.playing && !state.recording) {
+            setHudVisibility(false);
+          }
+        }, 3200);
+      }
+
+      function startShow() {
+        initAudio();
+        if (!state.startedOnce) {
+          state.startedOnce = true;
+          startOverlay.style.opacity = '0';
+          setTimeout(() => { startOverlay.style.display = 'none'; }, 650);
+        }
+        state.playing = true;
+        updatePlayButtonUI();
+        scheduleHudAutoHide();
+      }
+
+      heroPlayBtn.addEventListener('click', () => {
+        state.simTime = 0.0;
+        resetAudioTriggers();
+        startShow();
+      });
+
+      btnPlay.addEventListener('click', () => {
+        if (!state.startedOnce) {
+          startShow();
+          return;
+        }
+        initAudio();
+        state.playing = !state.playing;
+        updatePlayButtonUI();
+        if (state.playing) scheduleHudAutoHide();
+        else clearTimeout(state.hudTimer);
+      });
+
+      btnReplay.addEventListener('click', () => {
+        initAudio();
+        state.simTime = 0.0;
+        resetAudioTriggers();
+        state.playing = true;
+        if (!state.startedOnce) {
+          state.startedOnce = true;
+          startOverlay.style.display = 'none';
+        }
+        updatePlayButtonUI();
+        scheduleHudAutoHide();
+      });
+
+      btnRecord.addEventListener('click', () => {
+        if (state.recording) stopRecording();
+        else startRecording();
+      });
+
+      btnMute.addEventListener('click', () => {
+        initAudio();
+        state.muted = !state.muted;
+        muteLabel.textContent = state.muted ? '🔇' : '🔊';
+        if (masterGain && audioCtx) {
+          masterGain.gain.setTargetAtTime(state.muted ? 0.0 : 0.85, audioCtx.currentTime, 0.08);
+        }
+      });
+
+      // 自定义开场提示词与落款红印弹窗
+      btnCustom.addEventListener('click', () => {
+        customPopover.classList.toggle('hidden');
+      });
+
+      btnCloseCustom.addEventListener('click', () => {
+        customPopover.classList.add('hidden');
+      });
+
+      btnApplyCustom.addEventListener('click', () => {
+        const p1 = inputPrompt1.value.trim();
+        const p2 = inputPrompt2.value.trim();
+        const sl = inputSeal.value.trim();
+        if (p1) state.promptLine1 = p1;
+        if (p2) state.promptLine2 = p2;
+        if (sl) {
+          state.sealText = sl;
+          buildSealStamp(state.sealText);
+        }
+        customPopover.classList.add('hidden');
+        initAudio();
+        state.simTime = 0.0;
+        resetAudioTriggers();
+        state.playing = true;
+        if (!state.startedOnce) {
+          state.startedOnce = true;
+          startOverlay.style.display = 'none';
+        }
+        updatePlayButtonUI();
+        scheduleHudAutoHide();
+        showToast('已更新开场提示词与红印，重新启幕');
+      });
+
+      // 画幅切换
+      document.querySelectorAll('.aspect-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (state.recording) {
+            showToast('录制过程中请勿切换画幅');
+            return;
+          }
+          document.querySelectorAll('.aspect-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.aspect = btn.dataset.aspect;
+          updateCanvasLayout();
+        });
+      });
+
+      // 画质切换
+      document.querySelectorAll('.quality-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.quality = btn.dataset.quality;
+          updateCanvasLayout();
+          showToast(`已切换至 ${btn.textContent} 渲染模式`);
+        });
+      });
+
+      // 进度条拖拽跳转
+      timelineTrack.addEventListener('click', (e) => {
+        const rect = timelineTrack.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        state.simTime = ratio * TOTAL_DURATION;
+        resetAudioTriggers();
+        if (!state.startedOnce) {
+          state.startedOnce = true;
+          startOverlay.style.display = 'none';
+        }
+      });
+
+      // 鼠标移动唤出 HUD / H 键切换 HUD / 空格暂停
+      window.addEventListener('mousemove', () => {
+        if (state.recording) return;
+        if (!state.hudVisible) setHudVisibility(true);
+        scheduleHudAutoHide();
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+        if (e.key === 'h' || e.key === 'H') {
+          if (!state.recording) {
+            clearTimeout(state.hudTimer);
+            setHudVisibility(!state.hudVisible);
+          }
+        } else if (e.code === 'Space') {
+          e.preventDefault();
+          btnPlay.click();
+        }
+      });
+
+      window.addEventListener('resize', updateCanvasLayout);
+
+      // ==================== 11. 初始化启动 ====================
+      window.onload = () => {
+        initWebGL();
+        updateCanvasLayout();
+        // 静态首帧预览定位到第二幕最美水墨山谷，点“启幕”后从 0s 代码化墨开始完整演出
+        state.simTime = 11.5;
+        requestAnimationFrame(renderFrame);
+      };
+    })();
+  </script>
+</body>
+</html>

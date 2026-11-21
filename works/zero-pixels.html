@@ -1,0 +1,3500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>《纯代码视界 · ZERO PIXELS》— 100% 实时代码生成影院</title>
+  <style>
+    /* =========================================================================
+       DESIGN TOKENS & STUDIO CINEMA LAYOUT (ZERO EXTERNAL DEPENDENCIES)
+       ========================================================================= */
+    :root {
+      --bg-obsidian: #05060a;
+      --bg-panel: rgba(10, 12, 20, 0.78);
+      --border-glass: rgba(255, 255, 255, 0.12);
+      --cyan: #00f0ff;
+      --violet: #a855f7;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --text-main: #f3f6ff;
+      --text-dim: rgba(226, 234, 255, 0.68);
+      --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 45%, #0c1020 0%, #05060a 65%, #020205 100%);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Studio Theater Outer Wrapper */
+    #theater {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(8px, 1.8vw, 24px);
+      position: relative;
+    }
+
+    /* 16:9 Cinema Frame */
+    #stage {
+      position: relative;
+      width: min(100%, calc((100vh - 32px) * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: #030408;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 0 80px rgba(0, 240, 255, 0.07);
+      isolation: isolate;
+    }
+
+    /* Fullscreen Mode Adjustment */
+    #stage:fullscreen,
+    #stage:-webkit-full-screen {
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      aspect-ratio: auto;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    /* Dual-Layer Render Canvases */
+    .render-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #glCanvas { z-index: 1; }
+    #fxCanvas { z-index: 2; cursor: crosshair; }
+
+    /* =========================================================================
+       OPENING POSTER & END CARD OVERLAYS
+       ========================================================================= */
+    .cinema-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 48%, rgba(8, 12, 26, 0.35) 0%, rgba(4, 5, 10, 0.84) 75%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.65s;
+    }
+
+    .cinema-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .poster-card {
+      max-width: 760px;
+      width: 100%;
+      text-align: center;
+      padding: clamp(22px, 4vw, 44px) clamp(20px, 4vw, 48px);
+      border-radius: 22px;
+      background: linear-gradient(160deg, rgba(16, 20, 36, 0.72), rgba(7, 9, 18, 0.82));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        0 0 40px rgba(0, 240, 255, 0.08);
+    }
+
+    .badge-row {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .tech-pill {
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1vw, 12px);
+      letter-spacing: 0.08em;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.28);
+      color: var(--cyan);
+      text-transform: uppercase;
+    }
+
+    .tech-pill.violet {
+      background: rgba(168, 85, 247, 0.1);
+      border-color: rgba(168, 85, 247, 0.34);
+      color: #d8b4fe;
+    }
+
+    .tech-pill.amber {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.32);
+      color: #fcd34d;
+    }
+
+    .poster-title {
+      font-size: clamp(24px, 4.1vw, 48px);
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1.18;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #ffffff 0%, #8be9fd 42%, #c084fc 78%, #fcd34d 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 4px 24px rgba(0, 240, 255, 0.22));
+    }
+
+    .poster-en {
+      font-family: var(--font-mono);
+      font-size: clamp(11px, 1.15vw, 14px);
+      letter-spacing: 0.28em;
+      color: rgba(255, 255, 255, 0.56);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .poster-sub {
+      font-size: clamp(13px, 1.4vw, 16px);
+      line-height: 1.65;
+      color: var(--text-dim);
+      margin-bottom: 26px;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn-primary {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: clamp(14px, 1.3vw, 16px);
+      font-weight: 700;
+      color: #030712;
+      background: linear-gradient(135deg, #00f0ff 0%, #7dd3fc 48%, #c084fc 100%);
+      box-shadow:
+        0 0 28px rgba(0, 240, 255, 0.42),
+        0 10px 24px rgba(0, 0, 0, 0.45);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 38px rgba(0, 240, 255, 0.65), 0 12px 30px rgba(0, 0, 0, 0.55);
+      filter: brightness(1.07);
+    }
+
+    .btn-primary:active { transform: translateY(0) scale(0.99); }
+
+    .btn-secondary {
+      appearance: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 22px;
+      border-radius: 999px;
+      font-size: clamp(13px, 1.2vw, 15px);
+      font-weight: 600;
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(0, 240, 255, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .shortcut-hint {
+      margin-top: 20px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.42);
+      letter-spacing: 0.04em;
+    }
+
+    /* End Card Stats Grid */
+    .end-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 18px 0 24px;
+    }
+
+    .stat-box {
+      padding: 12px 10px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .stat-val {
+      font-family: var(--font-mono);
+      font-size: clamp(16px, 2vw, 24px);
+      font-weight: 800;
+      color: var(--cyan);
+    }
+
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* =========================================================================
+       RECORDING INDICATOR & TOAST NOTIFICATIONS
+       ========================================================================= */
+    #recBadge {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: rgba(20, 6, 12, 0.85);
+      border: 1px solid rgba(244, 63, 94, 0.55);
+      box-shadow: 0 8px 28px rgba(244, 63, 94, 0.28);
+      backdrop-filter: blur(8px);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #ffe4e6;
+    }
+
+    #recBadge.active { display: inline-flex; }
+
+    .rec-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #f43f5e;
+      box-shadow: 0 0 12px #f43f5e;
+      animation: pulseRec 1s infinite;
+    }
+
+    @keyframes pulseRec {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    #recStopBtn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      background: rgba(244, 63, 94, 0.24);
+      color: #fff;
+      border: 1px solid rgba(244, 63, 94, 0.5);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+
+    #recStopBtn:hover { background: rgba(244, 63, 94, 0.45); }
+
+    #toast {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 40;
+      max-width: 340px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: rgba(12, 17, 30, 0.92);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      color: #e0f2fe;
+      font-size: 13px;
+      line-height: 1.45;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================================================================
+       BOTTOM AUTO-HIDING CINEMA CONTROL BAR
+       ========================================================================= */
+    #controls {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 15;
+      padding: 28px 16px 12px;
+      background: linear-gradient(to top, rgba(4, 6, 12, 0.94) 0%, rgba(4, 6, 12, 0.68) 62%, transparent 100%);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    #controls.autohide {
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+    }
+
+    /* Chapter Pills Row */
+    .chapter-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .chapter-pill {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(226, 234, 255, 0.68);
+      border-radius: 8px;
+      padding: 5px 6px;
+      font-size: clamp(10px, 1vw, 12px);
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .chapter-pill:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .chapter-pill.active {
+      background: rgba(0, 240, 255, 0.16);
+      border-color: rgba(0, 240, 255, 0.6);
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.22);
+    }
+
+    /* Scrubbable Progress Timeline */
+    .timeline-wrap {
+      position: relative;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      margin-bottom: 6px;
+      touch-action: none;
+    }
+
+    .timeline-track {
+      position: relative;
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      overflow: hidden;
+      transition: height 0.15s ease;
+    }
+
+    .timeline-wrap:hover .timeline-track { height: 7px; }
+
+    .timeline-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--amber));
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.65);
+    }
+
+    .timeline-markers {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .timeline-markers span {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(5, 6, 10, 0.75);
+    }
+
+    .timeline-thumb {
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 12px var(--cyan);
+      transform: translate(-50%, -50%) scale(0.85);
+      pointer-events: none;
+      transition: transform 0.15s ease;
+    }
+
+    .timeline-wrap:hover .timeline-thumb { transform: translate(-50%, -50%) scale(1.15); }
+
+    /* Bottom Buttons Row */
+    .ctrl-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-left, .ctrl-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border-radius: 9px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .icon-btn.active {
+      background: rgba(0, 240, 255, 0.18);
+      border-color: rgba(0, 240, 255, 0.55);
+      color: var(--cyan);
+    }
+
+    .icon-btn.recording {
+      background: rgba(244, 63, 94, 0.24);
+      border-color: rgba(244, 63, 94, 0.65);
+      color: #fda4af;
+    }
+
+    .timecode {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.04em;
+      padding: 0 4px;
+    }
+
+    /* Mobile Tweaks */
+    @media (max-width: 680px) {
+      #theater { padding: 6px; }
+      #stage { border-radius: 10px; }
+      .chapter-row { gap: 4px; }
+      .chapter-pill { padding: 4px 2px; font-size: 10px; }
+      .icon-btn { padding: 5px 8px; font-size: 11px; }
+      .shortcut-hint { display: none; }
+      .end-stats { grid-template-columns: 1fr; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="theater">
+    <div id="stage">
+      <!-- Layer 1: WebGL1 GLSL Fragment Shader Engine -->
+      <canvas id="glCanvas" class="render-layer"></canvas>
+      <!-- Layer 2: Canvas2D Math, 3D Particles, Physics, HUD & Subtitles -->
+      <canvas id="fxCanvas" class="render-layer"></canvas>
+
+      <!-- Live Recording Badge -->
+      <div id="recBadge">
+        <span class="rec-dot"></span>
+        <span id="recStatusText">REC 00:00.0 / 01:00.0</span>
+        <button id="recStopBtn" type="button">停止并保存</button>
+      </div>
+
+      <!-- Toast Message Box -->
+      <div id="toast" role="status" aria-live="polite"></div>
+
+      <!-- Opening Cinema Poster Overlay -->
+      <div id="startOverlay" class="cinema-overlay">
+        <div class="poster-card">
+          <div class="badge-row">
+            <span class="tech-pill">WEBGL1 GLSL RAYMARCHING</span>
+            <span class="tech-pill violet">4D MATH &amp; N-BODY PHYSICS</span>
+            <span class="tech-pill amber">WEB AUDIO 128 BPM SYNTH</span>
+          </div>
+          <h1 class="poster-title">《纯代码视界 · ZERO PIXELS》</h1>
+          <div class="poster-en">CODE AS CINEMA · ZERO PRE-RENDERED ASSETS</div>
+          <p class="poster-sub">
+            零视频模型 · 零预制图片 · 零音频文件<br />
+            接下来 60 秒的每一帧画面与每一个音符，均由你的浏览器实时计算与合成
+          </p>
+          <div class="cta-group">
+            <button id="btnStartPlay" class="btn-primary" type="button">
+              <span>▶</span> 立即放映（含实时配乐）
+            </button>
+            <button id="btnStartRecord" class="btn-secondary" type="button">
+              <span>🎬</span> 录制并导出视频 (.webm)
+            </button>
+          </div>
+          <div class="shortcut-hint">
+            快捷键：Space 播放/暂停 · 1-6 切换乐章 · H 开启 HUD 透视 · C 字幕 · F 全屏
+          </div>
+        </div>
+      </div>
+
+      <!-- Finale End Card Overlay -->
+      <div id="endOverlay" class="cinema-overlay hidden">
+        <div class="poster-card">
+          <div class="badge-row">
+            <span class="tech-pill">FINALE · 01:00.0</span>
+            <span class="tech-pill violet">100% PROCEDURAL REAL-TIME</span>
+          </div>
+          <h2 class="poster-title">CODE IS ART · 代码即艺术</h2>
+          <div class="end-stats">
+            <div class="stat-box">
+              <div class="stat-val">0 MB</div>
+              <div class="stat-lbl">预制视频 / 图片 / 音频素材</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">6 大乐章</div>
+              <div class="stat-lbl">傅里叶 · 四维 · 引力 · 声谱 · 光追</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">60 FPS</div>
+              <div class="stat-lbl">纯代码实时渲染 + 实时音频合成</div>
+            </div>
+          </div>
+          <div class="cta-group">
+            <button id="btnReplay" class="btn-primary" type="button">
+              <span>↻</span> 重新放映
+            </button>
+            <button id="btnEndRecord" class="btn-secondary" type="button">
+              <span>🎬</span> 录制并导出完整视频 (.webm)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto-Hiding Bottom Cinema Control Bar -->
+      <div id="controls" class="autohide">
+        <div class="chapter-row" id="chapterRow">
+          <button class="chapter-pill active" data-t="0">01 创世</button>
+          <button class="chapter-pill" data-t="10">02 四维</button>
+          <button class="chapter-pill" data-t="20">03 物理</button>
+          <button class="chapter-pill" data-t="30">04 律动</button>
+          <button class="chapter-pill" data-t="40">05 光追</button>
+          <button class="chapter-pill" data-t="50">06 终章</button>
+        </div>
+
+        <div class="timeline-wrap" id="timelineWrap" title="点击或拖动进度条">
+          <div class="timeline-track">
+            <div class="timeline-fill" id="timelineFill"></div>
+            <div class="timeline-markers">
+              <span style="left: 16.666%"></span>
+              <span style="left: 33.333%"></span>
+              <span style="left: 50%"></span>
+              <span style="left: 66.666%"></span>
+              <span style="left: 83.333%"></span>
+            </div>
+          </div>
+          <div class="timeline-thumb" id="timelineThumb"></div>
+        </div>
+
+        <div class="ctrl-bar">
+          <div class="ctrl-left">
+            <button id="btnPlayPause" class="icon-btn" type="button">▶ 播放</button>
+            <span class="timecode" id="timecode">00:00.0 / 01:00.0</span>
+            <button id="btnMute" class="icon-btn" type="button">🔊 声音</button>
+          </div>
+          <div class="ctrl-right">
+            <button id="btnSubtitles" class="icon-btn active" type="button">字幕</button>
+            <button id="btnHud" class="icon-btn" type="button">HUD 透视</button>
+            <button id="btnRecord" class="icon-btn" type="button">🎬 录制视频</button>
+            <button id="btnFullscreen" class="icon-btn" type="button">⛶ 全屏</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* =======================================================================
+         1. CORE CONSTANTS, TIMELINE & SUBTITLE SCRIPT
+         ======================================================================= */
+      const DURATION = 60.0;
+      const BPM = 128;
+      const STEP_DUR = 60 / BPM / 4; // 16th note = 0.1171875s
+
+      const ACTS = [
+        {
+          id: 0, start: 0, end: 10,
+          code: '01 创世', en: 'GENESIS',
+          formula: 'f(t) = Σ c_n · e^(i·n·ω·t)  |  P_2D = (x/z, y/z)',
+          engine: 'FOURIER EPICYCLES + 3D PERSPECTIVE STARFIELD'
+        },
+        {
+          id: 1, start: 10, end: 20,
+          code: '02 四维', en: 'HYPERGEOMETRY',
+          formula: 'v′ = R_zw(γ)·R_yw(β)·R_xw(α)·v ∈ ℝ⁴ → ℝ³ → ℝ²',
+          engine: '4D TESSERACT PROJECTION + GLSL FRACTAL PLASMA'
+        },
+        {
+          id: 2, start: 20, end: 30,
+          code: '03 物理', en: 'GRAVITY & FLUID',
+          formula: 'a_i = Σ G·m_j·r_ij / (|r|² + ε)^1.5 + ∇ × Ψ(x,y)',
+          engine: 'N-BODY BINARY GRAVITY + 2D CURL FLOW (2000 PTCL)'
+        },
+        {
+          id: 3, start: 30, end: 40,
+          code: '04 律动', en: 'SYNESTHESIA',
+          formula: 'X_k = Σ x_n · e^(-i·2π·k·n/N)  |  y(x,z) = FFT(f)',
+          engine: 'WEB AUDIO REAL-TIME FFT + 3D SYNTHWAVE TERRAIN'
+        },
+        {
+          id: 4, start: 40, end: 50,
+          code: '05 光追', en: 'RAYMARCHED WORLD',
+          formula: 't_{n+1} = t_n + SDF(o + d·t_n)  |  N = ∇SDF(p)',
+          engine: 'PURE WEBGL1 GLSL SDF RAYMARCHING (64 STEPS/PX)'
+        },
+        {
+          id: 5, start: 50, end: 60,
+          code: '06 终章', en: 'FINALE',
+          formula: 'F = -k·(x - x_target) - c·v  |  0 KB ASSETS',
+          engine: 'WARP SUPERNOVA + SPRING-PHYSICS PARTICLE MORPH'
+        }
+      ];
+
+      const SUBTITLES = [
+        { s: 0.5, e: 4.5, text: '没有视频模型，没有一张预制图片 — 每一帧，都是此刻实时算出来的。' },
+        { s: 5.0, e: 9.5, text: '从一粒光子出发，用傅里叶级数与三维透视，在虚无中点燃星海。' },
+        { s: 10.5, e: 15.0, text: '数学不只是枯燥的公式 — 这是正在四维空间旋转的超立方体 (Tesseract)。' },
+        { s: 15.2, e: 19.5, text: '它在 XW 与 ZW 维度穿梭，将高维几何的影子实时投射进你的屏幕。' },
+        { s: 20.5, e: 25.0, text: '引力、湍流、混沌与秩序 — 2,000 个独立粒子正在实时求解运动方程。' },
+        { s: 25.2, e: 29.5, text: '试着移动你的鼠标：你甚至可以实时拨动这片引力场。' },
+        { s: 30.5, e: 35.0, text: '你听到的每一个音符也没有音频文件 — 它们由 Web Audio 实时合成。' },
+        { s: 35.2, e: 39.5, text: '声波经过实时傅里叶变换，直接雕刻出此刻跃动的地形与光谱。' },
+        { s: 40.5, e: 45.0, text: '没有建模师，没有渲染农场 — 你正在穿越一个纯靠 GLSL 距离场方程算出的三维世界。' },
+        { s: 45.2, e: 49.5, text: '屏幕上的每一个像素，每秒都在独立发射虚拟光线，寻找光影与几何的交点。' },
+        { s: 50.5, e: 55.0, text: '当数学、物理、光影与音乐在代码里合流——' },
+        { s: 55.2, e: 59.5, text: '代码本身，就是最极致的视觉艺术。' }
+      ];
+
+      /* =======================================================================
+         2. DOM REFERENCES & GLOBAL STATE
+         ======================================================================= */
+      const stage = document.getElementById('stage');
+      const glCanvas = document.getElementById('glCanvas');
+      const fxCanvas = document.getElementById('fxCanvas');
+      const ctx = fxCanvas.getContext('2d', { alpha: true });
+
+      const startOverlay = document.getElementById('startOverlay');
+      const endOverlay = document.getElementById('endOverlay');
+      const controlsEl = document.getElementById('controls');
+      const recBadge = document.getElementById('recBadge');
+      const recStatusText = document.getElementById('recStatusText');
+      const recStopBtn = document.getElementById('recStopBtn');
+      const toastEl = document.getElementById('toast');
+
+      const btnStartPlay = document.getElementById('btnStartPlay');
+      const btnStartRecord = document.getElementById('btnStartRecord');
+      const btnReplay = document.getElementById('btnReplay');
+      const btnEndRecord = document.getElementById('btnEndRecord');
+      const btnPlayPause = document.getElementById('btnPlayPause');
+      const btnMute = document.getElementById('btnMute');
+      const btnSubtitles = document.getElementById('btnSubtitles');
+      const btnHud = document.getElementById('btnHud');
+      const btnRecord = document.getElementById('btnRecord');
+      const btnFullscreen = document.getElementById('btnFullscreen');
+      const timecodeEl = document.getElementById('timecode');
+      const timelineWrap = document.getElementById('timelineWrap');
+      const timelineFill = document.getElementById('timelineFill');
+      const timelineThumb = document.getElementById('timelineThumb');
+      const chapterPills = Array.from(document.querySelectorAll('.chapter-pill'));
+
+      const state = {
+        started: false,
+        playing: false,
+        ended: false,
+        t: 0.0,
+        ambientT: 0.0,
+        muted: false,
+        showSubtitles: true,
+        showHud: false,
+        recording: false,
+        fps: 60,
+        frameMs: 16.6,
+        mouseX: 0.5,
+        mouseY: 0.5,
+        mouseActive: false,
+        mouseLastMove: 0,
+        pointerIdleTimer: null,
+        width: 1280,
+        height: 720,
+        dpr: 1,
+        audioBass: 0,
+        audioMid: 0,
+        audioHigh: 0,
+        audioEnergy: 0,
+        fftBins: new Uint8Array(256),
+        waveBins: new Uint8Array(256),
+        activeParticles: 1800,
+        shake: 0
+      };
+
+      let toastTimeout = null;
+      function showToast(msg, durationMs = 3400) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toastEl.classList.remove('show'), durationMs);
+      }
+
+      /* =======================================================================
+         3. UTILITY MATH HELPERS
+         ======================================================================= */
+      const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const smoothstep = (e0, e1, x) => {
+        const t = clamp((x - e0) / (e1 - e0), 0, 1);
+        return t * t * (3 - 2 * t);
+      };
+
+      // Deterministic PRNG for repeatable cinematic choreography
+      function mulberry32(seed) {
+        return function () {
+          let t = (seed += 0x6d2b79f5);
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function formatTime(sec) {
+        const s = clamp(sec, 0, DURATION);
+        const mins = Math.floor(s / 60);
+        const rem = s - mins * 60;
+        const whole = Math.floor(rem);
+        const tenths = Math.floor((rem - whole) * 10);
+        return `${String(mins).padStart(2, '0')}:${String(whole).padStart(2, '0')}.${tenths}`;
+      }
+
+      function actWeight(t, start, end, fade = 0.85) {
+        const fadeIn = start === 0 ? 1.0 : smoothstep(start - fade * 0.5, start + fade * 0.5, t);
+        const fadeOut = end >= DURATION ? 1.0 : 1.0 - smoothstep(end - fade * 0.5, end + fade * 0.5, t);
+        return clamp(fadeIn * fadeOut, 0, 1);
+      }
+
+      /* =======================================================================
+         4. LAYER 1: WEBGL1 GLSL SHADER ENGINE (NEBULA, PLASMA, SYNTHWAVE, SDF RAYMARCHING)
+         ======================================================================= */
+      const glEngine = {
+        gl: null,
+        program: null,
+        uniforms: {},
+        ready: false
+      };
+
+      const VERT_SRC = `
+        attribute vec2 a_pos;
+        void main() {
+          gl_Position = vec4(a_pos, 0.0, 1.0);
+        }
+      `;
+
+      // Rock-solid strictly typed WebGL1 GLSL Fragment Shader
+      const FRAG_SRC = `
+        precision highp float;
+
+        uniform vec2 u_res;
+        uniform float u_time;
+        uniform float u_ambient;
+        uniform float u_bass;
+        uniform float u_mid;
+        uniform float u_high;
+        uniform vec3 u_w123;
+        uniform vec3 u_w456;
+
+        mat2 rot2(float a) {
+          float c = cos(a);
+          float s = sin(a);
+          return mat2(c, -s, s, c);
+        }
+
+        float hash21(vec2 p) {
+          p = fract(p * vec2(123.34, 456.21));
+          p += dot(p, p + 45.32);
+          return fract(p.x * p.y);
+        }
+
+        float noise2(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          float a = hash21(i);
+          float b = hash21(i + vec2(1.0, 0.0));
+          float c = hash21(i + vec2(0.0, 1.0));
+          float d = hash21(i + vec2(1.0, 1.0));
+          return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+        }
+
+        float fbm(vec2 p) {
+          float v = 0.0;
+          float a = 0.5;
+          mat2 m = mat2(0.8, 0.6, -0.6, 0.8);
+          for (int i = 0; i < 4; i++) {
+            v += a * noise2(p);
+            p = m * p * 2.04;
+            a *= 0.5;
+          }
+          return v;
+        }
+
+        // ACT 1 & AMBIENT: Deep Cosmic Nebula
+        vec3 renderNebula(vec2 uv, float t) {
+          vec2 p = uv * 1.45;
+          float n1 = fbm(p + vec2(t * 0.06, -t * 0.04));
+          float n2 = fbm(p * 1.8 - vec2(n1 * 1.6, t * 0.08));
+          vec3 col = vec3(0.012, 0.016, 0.038);
+          col += vec3(0.02, 0.24, 0.42) * smoothstep(0.28, 0.88, n1) * 0.55;
+          col += vec3(0.32, 0.08, 0.52) * smoothstep(0.35, 0.92, n2) * 0.48;
+          float core = exp(-dot(uv, uv) * (2.6 - u_bass * 0.6));
+          col += vec3(0.0, 0.65, 0.95) * core * (0.28 + u_bass * 0.35);
+          return col;
+        }
+
+        // ACT 2: Hypergeometry Fractal Domain-Warped Plasma
+        vec3 renderHyperPlasma(vec2 uv, float t) {
+          vec2 p = uv * 1.8;
+          p *= rot2(t * 0.14);
+          vec2 q = vec2(
+            fbm(p + vec2(0.0, t * 0.18)),
+            fbm(p + vec2(5.2, 1.3 - t * 0.15))
+          );
+          float f = fbm(p + 2.4 * q + vec2(t * 0.12, -t * 0.1));
+          float wave = 0.5 + 0.5 * sin(f * 10.0 - t * 2.2 + length(uv) * 3.0);
+          vec3 col = mix(vec3(0.02, 0.02, 0.07), vec3(0.04, 0.45, 0.65), smoothstep(0.2, 0.85, f));
+          col = mix(col, vec3(0.58, 0.16, 0.88), smoothstep(0.45, 0.95, wave) * 0.65);
+          float ring = abs(length(uv) - (0.58 + 0.05 * sin(t * 3.0)));
+          col += vec3(0.0, 0.9, 1.0) * (0.008 / (ring + 0.015)) * (0.4 + u_bass * 0.7);
+          return col * 0.78;
+        }
+
+        // ACT 3: Gravitational Space-Time Abyss
+        vec3 renderGravitySpace(vec2 uv, float t) {
+          vec2 p1 = vec2(cos(t * 0.95) * 0.34, sin(t * 0.95) * 0.19);
+          vec2 p2 = -p1;
+          float d1 = length(uv - p1);
+          float d2 = length(uv - p2);
+          // Spacetime warp distortion
+          vec2 warp = uv + (uv - p1) * (0.04 / (d1 + 0.15)) + (uv - p2) * (0.04 / (d2 + 0.15));
+          vec2 grid = abs(fract(warp * 7.0 - 0.5) - 0.5) / 0.04;
+          float gLine = 1.0 - min(min(grid.x, grid.y), 1.0);
+          vec3 col = vec3(0.015, 0.018, 0.036);
+          col += vec3(0.12, 0.32, 0.55) * gLine * 0.14;
+          col += vec3(0.96, 0.55, 0.12) * exp(-d1 * 4.5) * (0.42 + u_bass * 0.3);
+          col += vec3(0.0, 0.82, 1.0) * exp(-d2 * 4.5) * (0.42 + u_mid * 0.3);
+          return col;
+        }
+
+        // ACT 4: Synthwave Atmospheric Horizon Backdrop
+        vec3 renderSynthSky(vec2 uv, float t) {
+          float y = uv.y;
+          vec3 topCol = vec3(0.03, 0.015, 0.11);
+          vec3 midCol = vec3(0.24, 0.04, 0.34);
+          vec3 horCol = vec3(0.95, 0.24, 0.45);
+          vec3 col = mix(horCol, midCol, smoothstep(-0.08, 0.32, y));
+          col = mix(col, topCol, smoothstep(0.22, 0.85, y));
+          // Dark ground below horizon
+          if (y < -0.04) {
+            col = mix(vec3(0.06, 0.02, 0.12), vec3(0.01, 0.01, 0.03), smoothstep(-0.04, -0.5, y));
+          }
+          // Horizon neon band glow
+          float hGlow = exp(-abs(y + 0.03) * 14.0);
+          col += vec3(0.0, 0.88, 1.0) * hGlow * (0.35 + u_bass * 0.65);
+          // Subtle stars in upper sky
+          vec2 starGrid = floor((uv + vec2(t * 0.01, 0.0)) * 90.0);
+          float st = hash21(starGrid);
+          if (st > 0.992 && y > 0.05) {
+            float tw = 0.5 + 0.5 * sin(t * 6.0 + st * 90.0);
+            col += vec3(0.9, 0.95, 1.0) * tw * 0.7;
+          }
+          return col * 0.78;
+        }
+
+        // ACT 5: REAL-TIME SDF RAYMARCHED CYBER-CATHEDRAL CORRIDOR
+        float sdBox(vec3 p, vec3 b) {
+          vec3 q = abs(p) - b;
+          return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
+        }
+
+        float sdOctahedron(vec3 p, float s) {
+          p = abs(p);
+          return (p.x + p.y + p.z - s) * 0.57735027;
+        }
+
+        // Returns vec2(distance, materialID)
+        vec2 mapCathedral(vec3 p, float t) {
+          // Gentle sinusoidal winding tunnel path
+          p.x += sin(p.z * 0.11) * 1.15;
+          p.y += cos(p.z * 0.08) * 0.45;
+
+          // Infinite repetition along Z every 4.0 units
+          vec3 q = p;
+          float cellId = floor(p.z / 4.0);
+          q.z = mod(p.z + 2.0, 4.0) - 2.0;
+
+          // Corridor outer walls (inverted box frame)
+          float wallX = 2.65 - abs(q.x);
+          float wallY = 2.15 - abs(q.y);
+          float tunnel = min(wallX, wallY);
+
+          // Gothic-cyber structural ribs & pillars
+          vec3 rp = q;
+          rp.x = abs(rp.x) - 2.35;
+          float pillar = sdBox(rp, vec3(0.32, 2.3, 0.28));
+
+          // Overhead & floor arch beams
+          vec3 ap = q;
+          ap.y = abs(ap.y) - 1.95;
+          float archBeam = sdBox(ap, vec3(2.6, 0.24, 0.24));
+
+          // Angled cyber buttresses
+          vec3 bp = q;
+          bp.x = abs(bp.x) - 1.85;
+          bp.y = abs(bp.y) - 1.45;
+          bp.xy *= rot2(0.785398);
+          float buttress = sdBox(bp, vec3(0.18, 0.95, 0.22));
+
+          float structure = min(tunnel, min(pillar, min(archBeam, buttress)));
+
+          // Floating rotating neon crystal octahedron in each corridor bay
+          vec3 op = q;
+          op.y -= sin(t * 2.2 + cellId * 1.3) * 0.25;
+          op.xz *= rot2(t * 1.35 + cellId * 0.9);
+          op.xy *= rot2(t * 0.85);
+          float crystal = sdOctahedron(op, 0.42 + u_bass * 0.14);
+
+          // Pulsing neon rail strips along floor/ceiling corners
+          vec3 lp = q;
+          lp.x = abs(lp.x) - 2.12;
+          lp.y = abs(lp.y) - 1.72;
+          float neonRail = length(lp.xy) - 0.055;
+
+          // Glowing arch ring inside each rib
+          vec3 ringP = q;
+          float neonRing = abs(length(ringP.xy) - 2.28) - 0.04;
+          neonRing = max(neonRing, abs(ringP.z) - 0.06);
+
+          float neon = min(neonRail, min(neonRing, crystal));
+
+          if (neon < structure) {
+            float mat = (crystal <= min(neonRail, neonRing) + 0.001) ? 3.0 : 2.0;
+            return vec2(neon, mat);
+          }
+          return vec2(structure, 1.0);
+        }
+
+        vec3 calcNormal(vec3 p, float t) {
+          vec2 e = vec2(0.0035, 0.0);
+          return normalize(vec3(
+            mapCathedral(p + e.xyy, t).x - mapCathedral(p - e.xyy, t).x,
+            mapCathedral(p + e.yxy, t).x - mapCathedral(p - e.yxy, t).x,
+            mapCathedral(p + e.yyx, t).x - mapCathedral(p - e.yyx, t).x
+          ));
+        }
+
+        vec3 renderRaymarch(vec2 uv, float t) {
+          float actT = max(0.0, t - 40.0);
+          // Smooth warp acceleration near end of Act 5
+          float speedBoost = smoothstep(7.5, 10.5, actT) * 14.0;
+          float camZ = actT * 6.2 + speedBoost * 0.6;
+
+          vec3 ro = vec3(-sin(camZ * 0.11) * 1.0, -cos(camZ * 0.08) * 0.38, camZ);
+          float roll = sin(actT * 0.65) * 0.28 + smoothstep(7.5, 10.5, actT) * 0.8;
+          vec2 ruv = uv * rot2(roll);
+          vec3 rd = normalize(vec3(ruv, 1.15 - smoothstep(8.0, 10.2, actT) * 0.35));
+
+          float dist = 0.0;
+          float mat = 0.0;
+          float glowCyan = 0.0;
+          float glowMagenta = 0.0;
+
+          for (int i = 0; i < 64; i++) {
+            vec3 p = ro + rd * dist;
+            vec2 res = mapCathedral(p, t);
+            float d = res.x;
+            mat = res.y;
+
+            // Volumetric neon glow accumulation
+            if (mat > 1.5 && mat < 2.5) {
+              glowCyan += 0.014 / (abs(d) + 0.035);
+            } else if (mat > 2.5) {
+              glowMagenta += 0.018 / (abs(d) + 0.035);
+            }
+
+            if (d < 0.004 || dist > 46.0) break;
+            dist += d * 0.85;
+          }
+
+          vec3 col = vec3(0.012, 0.016, 0.045);
+
+          if (dist < 46.0) {
+            vec3 p = ro + rd * dist;
+            vec3 n = calcNormal(p, t);
+            vec3 lightPos = ro + vec3(0.0, 0.4, 5.0);
+            vec3 lDir = normalize(lightPos - p);
+            float diff = max(dot(n, lDir), 0.0);
+            vec3 hDir = normalize(lDir - rd);
+            float spec = pow(max(dot(n, hDir), 0.0001), 28.0);
+            float fresnel = pow(max(1.0 - max(dot(n, -rd), 0.0), 0.0001), 3.0);
+
+            if (mat < 1.5) {
+              // Dark reflective obsidian architecture
+              vec3 baseCol = vec3(0.04, 0.06, 0.12);
+              float ribPulse = 0.5 + 0.5 * sin(p.z * 1.5 - t * 5.0);
+              col = baseCol * (0.25 + diff * 0.9);
+              col += vec3(0.0, 0.85, 1.0) * fresnel * (0.45 + 0.35 * ribPulse);
+              col += vec3(0.65, 0.35, 1.0) * spec * 0.9;
+            } else if (mat < 2.5) {
+              // Neon light conduits
+              col = vec3(0.15, 0.95, 1.0) * (1.5 + u_bass * 0.9);
+            } else {
+              // Glowing crystal octahedrons
+              col = mix(vec3(0.85, 0.25, 1.0), vec3(1.0, 0.72, 0.2), fresnel) * (1.2 + u_mid * 0.9);
+              col += vec3(1.0) * spec;
+            }
+          }
+
+          // Exponential distance volumetric fog
+          float fog = 1.0 - exp(-dist * dist * 0.0018);
+          vec3 fogCol = vec3(0.025, 0.018, 0.075);
+          col = mix(col, fogCol, fog);
+
+          // Additive volumetric neon halos
+          col += vec3(0.0, 0.85, 1.0) * glowCyan * (0.042 + u_bass * 0.032);
+          col += vec3(0.82, 0.24, 1.0) * glowMagenta * (0.048 + u_high * 0.035);
+
+          return col;
+        }
+
+        // ACT 6: Supernova Bloom into Velvet Cosmos
+        vec3 renderFinale(vec2 uv, float t) {
+          float ft = max(0.0, t - 50.0);
+          vec3 col = renderNebula(uv * 0.85, t * 0.5) * 0.65;
+          // Initial supernova flash at 50.0s - 52.5s
+          float burst = exp(-ft * 1.45) * exp(-dot(uv, uv) * (1.2 + ft * 0.8));
+          col += vec3(0.65, 0.95, 1.0) * burst * 2.2;
+          // Soft ambient backlight behind "CODE IS ART"
+          float halo = exp(-dot(uv * vec2(0.55, 1.35), uv * vec2(0.55, 1.35)) * 2.2);
+          col += vec3(0.06, 0.22, 0.42) * halo * smoothstep(1.0, 4.0, ft);
+          return col;
+        }
+
+        void main() {
+          vec2 uv = (gl_FragCoord.xy - 0.5 * u_res) / u_res.y;
+          vec3 col = vec3(0.0);
+
+          if (u_ambient > 0.5) {
+            col = renderNebula(uv, u_time);
+          } else {
+            if (u_w123.x > 0.001) col += renderNebula(uv, u_time) * u_w123.x;
+            if (u_w123.y > 0.001) col += renderHyperPlasma(uv, u_time) * u_w123.y;
+            if (u_w123.z > 0.001) col += renderGravitySpace(uv, u_time) * u_w123.z;
+            if (u_w456.x > 0.001) col += renderSynthSky(uv, u_time) * u_w456.x;
+            if (u_w456.y > 0.001) col += renderRaymarch(uv, u_time) * u_w456.y;
+            if (u_w456.z > 0.001) col += renderFinale(uv, u_time) * u_w456.z;
+          }
+
+          // Subtle tone mapping & cinema vignette
+          col = col / (1.0 + col * 0.35);
+          float vig = 1.0 - dot(uv * 0.52, uv * 0.52);
+          col *= clamp(vig, 0.32, 1.0);
+          col = pow(max(col, vec3(0.0)), vec3(0.92));
+
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `;
+
+      function initWebGL() {
+        try {
+          const gl = glCanvas.getContext('webgl', {
+            antialias: false,
+            alpha: false,
+            preserveDrawingBuffer: true, // Essential for clean video recording compositing
+            powerPreference: 'high-performance'
+          }) || glCanvas.getContext('experimental-webgl', { preserveDrawingBuffer: true });
+
+          if (!gl) return false;
+
+          const compile = (type, src) => {
+            const sh = gl.createShader(type);
+            gl.shaderSource(sh, src);
+            gl.compileShader(sh);
+            if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+              console.warn('GLSL Compile Error:', gl.getShaderInfoLog(sh));
+              return null;
+            }
+            return sh;
+          };
+
+          const vs = compile(gl.VERTEX_SHADER, VERT_SRC);
+          const fs = compile(gl.FRAGMENT_SHADER, FRAG_SRC);
+          if (!vs || !fs) return false;
+
+          const prog = gl.createProgram();
+          gl.attachShader(prog, vs);
+          gl.attachShader(prog, fs);
+          gl.linkProgram(prog);
+          if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+            console.warn('GLSL Link Error:', gl.getProgramInfoLog(prog));
+            return false;
+          }
+
+          gl.useProgram(prog);
+          const buf = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+          gl.bufferData(
+            gl.ARRAY_BUFFER,
+            new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+            gl.STATIC_DRAW
+          );
+
+          const posLoc = gl.getAttribLocation(prog, 'a_pos');
+          gl.enableVertexAttribArray(posLoc);
+          gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+          glEngine.gl = gl;
+          glEngine.program = prog;
+          glEngine.uniforms = {
+            res: gl.getUniformLocation(prog, 'u_res'),
+            time: gl.getUniformLocation(prog, 'u_time'),
+            ambient: gl.getUniformLocation(prog, 'u_ambient'),
+            bass: gl.getUniformLocation(prog, 'u_bass'),
+            mid: gl.getUniformLocation(prog, 'u_mid'),
+            high: gl.getUniformLocation(prog, 'u_high'),
+            w123: gl.getUniformLocation(prog, 'u_w123'),
+            w456: gl.getUniformLocation(prog, 'u_w456')
+          };
+          glEngine.ready = true;
+          return true;
+        } catch (err) {
+          console.warn('WebGL fallback active:', err);
+          return false;
+        }
+      }
+
+      /* =======================================================================
+         5. REAL-TIME PROCEDURAL WEB AUDIO SYNTHESIZER (128 BPM, 0.0s – 60.0s)
+         ======================================================================= */
+      class ProceduralSynthEngine {
+        constructor() {
+          this.ctx = null;
+          this.masterGain = null;
+          this.analyser = null;
+          this.mediaDest = null;
+          this.delayNode = null;
+          this.delayWet = null;
+          this.noiseBuf = null;
+          this.lastStep = -1;
+          this.lastImpactIdx = -1;
+          this.lastRiserIdx = -1;
+          this.initialized = false;
+        }
+
+        init() {
+          if (this.initialized) {
+            if (this.ctx && this.ctx.state === 'suspended') {
+              this.ctx.resume().catch(() => {});
+            }
+            return;
+          }
+          try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioCtx();
+
+            // Master dynamics compressor for punchy, distortion-free mix
+            const comp = this.ctx.createDynamicsCompressor();
+            comp.threshold.value = -12;
+            comp.knee.value = 18;
+            comp.ratio.value = 5;
+            comp.attack.value = 0.004;
+            comp.release.value = 0.16;
+
+            this.masterGain = this.ctx.createGain();
+            this.masterGain.gain.value = state.muted ? 0.0 : 0.82;
+
+            this.analyser = this.ctx.createAnalyser();
+            this.analyser.fftSize = 512;
+            this.analyser.smoothingTimeConstant = 0.78;
+
+            // Stereo space echo send bus
+            this.delayNode = this.ctx.createDelay(1.0);
+            this.delayNode.delayTime.value = STEP_DUR * 3; // Dotted 8th epic space delay
+            const delayFb = this.ctx.createGain();
+            delayFb.gain.value = 0.36;
+            const delayFilter = this.ctx.createBiquadFilter();
+            delayFilter.type = 'lowpass';
+            delayFilter.frequency.value = 2600;
+            this.delayWet = this.ctx.createGain();
+            this.delayWet.gain.value = 0.32;
+
+            this.delayNode.connect(delayFilter);
+            delayFilter.connect(delayFb);
+            delayFb.connect(this.delayNode);
+            delayFilter.connect(this.delayWet);
+            this.delayWet.connect(comp);
+
+            comp.connect(this.masterGain);
+            this.masterGain.connect(this.analyser);
+            this.analyser.connect(this.ctx.destination);
+
+            // MediaStream destination for video export audio capture
+            if (typeof this.ctx.createMediaStreamDestination === 'function') {
+              this.mediaDest = this.ctx.createMediaStreamDestination();
+              this.masterGain.connect(this.mediaDest);
+            }
+
+            // Generate reusable white noise buffer
+            const len = this.ctx.sampleRate * 2.0;
+            this.noiseBuf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+            const data = this.noiseBuf.getChannelData(0);
+            for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+
+            this.initialized = true;
+          } catch (e) {
+            console.warn('Web Audio unavailable:', e);
+          }
+        }
+
+        setMuted(muted) {
+          if (!this.masterGain || !this.ctx) return;
+          this.masterGain.gain.setTargetAtTime(muted ? 0.0 : 0.82, this.ctx.currentTime, 0.03);
+        }
+
+        resync(t) {
+          this.lastStep = Math.floor(t / STEP_DUR) - 1;
+          this.lastImpactIdx = -1;
+          this.lastRiserIdx = -1;
+        }
+
+        midiToFreq(m) {
+          return 440 * Math.pow(2, (m - 69) / 12);
+        }
+
+        // Synthesized Punchy Kick
+        playKick(time, gainVal = 0.9) {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(155, time);
+          osc.frequency.exponentialRampToValueAtTime(42, time + 0.095);
+          gain.gain.setValueAtTime(gainVal, time);
+          gain.gain.exponentialRampToValueAtTime(0.001, time + 0.34);
+          osc.connect(gain);
+          gain.connect(this.masterGain);
+          osc.start(time);
+          osc.stop(time + 0.36);
+        }
+
+        // Synthesized Crisp Snare / Clap
+        playSnare(time, gainVal = 0.42) {
+          // Noise burst
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuf;
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = 'bandpass';
+          flt.frequency.setValueAtTime(1900, time);
+          flt.Q.value = 0.9;
+          const nGain = this.ctx.createGain();
+          nGain.gain.setValueAtTime(gainVal, time);
+          nGain.gain.exponentialRampToValueAtTime(0.001, time + 0.19);
+          src.connect(flt);
+          flt.connect(nGain);
+          nGain.connect(this.masterGain);
+          nGain.connect(this.delayNode);
+          src.start(time);
+          src.stop(time + 0.21);
+
+          // Tonal snap
+          const osc = this.ctx.createOscillator();
+          const oGain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(210, time);
+          osc.frequency.exponentialRampToValueAtTime(110, time + 0.06);
+          oGain.gain.setValueAtTime(gainVal * 0.65, time);
+          oGain.gain.exponentialRampToValueAtTime(0.001, time + 0.09);
+          osc.connect(oGain);
+          oGain.connect(this.masterGain);
+          osc.start(time);
+          osc.stop(time + 0.1);
+        }
+
+        // Synthesized Metallic Hi-Hat
+        playHat(time, open = false, gainVal = 0.15) {
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuf;
+          const hp = this.ctx.createBiquadFilter();
+          hp.type = 'highpass';
+          hp.frequency.setValueAtTime(7200, time);
+          const g = this.ctx.createGain();
+          const dur = open ? 0.18 : 0.045;
+          g.gain.setValueAtTime(gainVal, time);
+          g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+          src.connect(hp);
+          hp.connect(g);
+          g.connect(this.masterGain);
+          src.start(time);
+          src.stop(time + dur + 0.02);
+        }
+
+        // Warm Punchy Sub + Saw Bass
+        playBass(time, midi, dur, cutoff = 900, gainVal = 0.34) {
+          const freq = this.midiToFreq(midi);
+          const osc1 = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          osc1.type = 'sawtooth';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(freq, time);
+          osc2.frequency.setValueAtTime(freq * 0.5, time);
+
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = 'lowpass';
+          flt.Q.value = 3.2;
+          flt.frequency.setValueAtTime(cutoff * 1.9, time);
+          flt.frequency.exponentialRampToValueAtTime(Math.max(120, cutoff * 0.45), time + dur);
+
+          const g = this.ctx.createGain();
+          g.gain.setValueAtTime(0.001, time);
+          g.gain.linearRampToValueAtTime(gainVal, time + 0.012);
+          g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+          osc1.connect(flt);
+          osc2.connect(flt);
+          flt.connect(g);
+          g.connect(this.masterGain);
+
+          osc1.start(time);
+          osc2.start(time);
+          osc1.stop(time + dur + 0.02);
+          osc2.stop(time + dur + 0.02);
+        }
+
+        // Sparkling Resonant Arpeggiator Pluck
+        playArp(time, midi, dur = 0.16, gainVal = 0.16, bright = 3200) {
+          const freq = this.midiToFreq(midi);
+          const osc = this.ctx.createOscillator();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, time);
+
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = 'lowpass';
+          flt.Q.value = 4.0;
+          flt.frequency.setValueAtTime(bright, time);
+          flt.frequency.exponentialRampToValueAtTime(420, time + dur);
+
+          const g = this.ctx.createGain();
+          g.gain.setValueAtTime(0.001, time);
+          g.gain.linearRampToValueAtTime(gainVal, time + 0.008);
+          g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+          osc.connect(flt);
+          flt.connect(g);
+          g.connect(this.masterGain);
+          g.connect(this.delayNode);
+          osc.start(time);
+          osc.stop(time + dur + 0.03);
+        }
+
+        // Lush Detuned Cinematic Pad Chord
+        playPadChord(time, midis, dur = 1.9, gainVal = 0.075, cutoff = 1400) {
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = 'lowpass';
+          flt.frequency.setValueAtTime(cutoff * 0.45, time);
+          flt.frequency.linearRampToValueAtTime(cutoff, time + dur * 0.45);
+          flt.frequency.linearRampToValueAtTime(cutoff * 0.5, time + dur);
+
+          const g = this.ctx.createGain();
+          g.gain.setValueAtTime(0.001, time);
+          g.gain.linearRampToValueAtTime(gainVal, time + Math.min(0.4, dur * 0.3));
+          g.gain.setValueAtTime(gainVal * 0.85, time + dur * 0.7);
+          g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+          flt.connect(g);
+          g.connect(this.masterGain);
+          g.connect(this.delayNode);
+
+          for (let i = 0; i < midis.length; i++) {
+            const freq = this.midiToFreq(midis[i]);
+            [-6, 6].forEach((det) => {
+              const osc = this.ctx.createOscillator();
+              osc.type = i === 0 ? 'triangle' : 'sawtooth';
+              osc.frequency.setValueAtTime(freq, time);
+              osc.detune.setValueAtTime(det, time);
+              osc.connect(flt);
+              osc.start(time);
+              osc.stop(time + dur + 0.05);
+            });
+          }
+        }
+
+        // Soaring Synthwave Anthem Lead
+        playLead(time, midi, dur = 0.42, gainVal = 0.14) {
+          const freq = this.midiToFreq(midi);
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = 'lowpass';
+          flt.frequency.setValueAtTime(3800, time);
+          flt.Q.value = 2.0;
+
+          const g = this.ctx.createGain();
+          g.gain.setValueAtTime(0.001, time);
+          g.gain.linearRampToValueAtTime(gainVal, time + 0.025);
+          g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+          flt.connect(g);
+          g.connect(this.masterGain);
+          g.connect(this.delayNode);
+
+          [-9, 9].forEach((det) => {
+            const osc = this.ctx.createOscillator();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, time);
+            osc.detune.setValueAtTime(det, time);
+            osc.connect(flt);
+            osc.start(time);
+            osc.stop(time + dur + 0.04);
+          });
+        }
+
+        // Deep Cinematic Impact Boom on Drops & Act Transitions
+        playImpact(time, intensity = 0.7) {
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(92, time);
+          osc.frequency.exponentialRampToValueAtTime(26, time + 0.85);
+          g.gain.setValueAtTime(intensity, time);
+          g.gain.exponentialRampToValueAtTime(0.001, time + 1.15);
+          osc.connect(g);
+          g.connect(this.masterGain);
+          osc.start(time);
+          osc.stop(time + 1.2);
+
+          // Airy crash sweep
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuf;
+          const flt = this.ctx.createBiquadFilter();
+          flt.type = 'lowpass';
+          flt.frequency.setValueAtTime(4200, time);
+          flt.frequency.exponentialRampToValueAtTime(260, time + 1.1);
+          const ng = this.ctx.createGain();
+          ng.gain.setValueAtTime(intensity * 0.35, time);
+          ng.gain.exponentialRampToValueAtTime(0.001, time + 1.15);
+          src.connect(flt);
+          flt.connect(ng);
+          ng.connect(this.masterGain);
+          src.start(time);
+          src.stop(time + 1.2);
+        }
+
+        // Sweeping Transition Riser
+        playRiser(time, dur = 1.45) {
+          const src = this.ctx.createBufferSource();
+          src.buffer = this.noiseBuf;
+          const bp = this.ctx.createBiquadFilter();
+          bp.type = 'bandpass';
+          bp.Q.value = 3.2;
+          bp.frequency.setValueAtTime(220, time);
+          bp.frequency.exponentialRampToValueAtTime(5200, time + dur);
+          const g = this.ctx.createGain();
+          g.gain.setValueAtTime(0.001, time);
+          g.gain.exponentialRampToValueAtTime(0.22, time + dur);
+          g.gain.linearRampToValueAtTime(0.001, time + dur + 0.05);
+          src.connect(bp);
+          bp.connect(g);
+          g.connect(this.masterGain);
+          src.start(time);
+          src.stop(time + dur + 0.08);
+        }
+
+        // Called every animation frame to trigger notes locked tightly to timeline t
+        update(t) {
+          if (!this.initialized || !this.ctx || !state.playing) return;
+          if (this.ctx.state === 'suspended') return;
+
+          const now = this.ctx.currentTime + 0.015;
+
+          // 1. Trigger Risers before major drops
+          const riserPoints = [3.05, 8.55, 18.55, 28.55, 38.55, 48.55];
+          for (let i = 0; i < riserPoints.length; i++) {
+            if (t >= riserPoints[i] && t < riserPoints[i] + 0.25 && this.lastRiserIdx !== i) {
+              this.lastRiserIdx = i;
+              this.playRiser(now, 1.42);
+            }
+          }
+
+          // 2. Trigger Impacts on drops & act entries
+          const impactPoints = [4.5, 10.0, 20.0, 30.0, 40.0, 50.0];
+          for (let i = 0; i < impactPoints.length; i++) {
+            if (t >= impactPoints[i] && t < impactPoints[i] + 0.2 && this.lastImpactIdx !== i) {
+              this.lastImpactIdx = i;
+              this.playImpact(now, i === 0 || i === 3 || i === 5 ? 0.78 : 0.56);
+              state.shake = Math.max(state.shake, 1.0);
+            }
+          }
+
+          // 3. 16th-Note Step Sequencer
+          const step = Math.floor(t / STEP_DUR);
+          if (step <= this.lastStep) return;
+          if (step - this.lastStep > 4) {
+            this.lastStep = step - 1; // Prevent burst after tab switch
+          }
+
+          while (this.lastStep < step) {
+            this.lastStep++;
+            this.triggerStep(this.lastStep, now);
+          }
+        }
+
+        triggerStep(step, now) {
+          const stepTime = step * STEP_DUR;
+          if (stepTime >= 59.3) return;
+
+          const s16 = step % 16;
+          const bar = Math.floor(step / 16);
+          const chordIdx = bar % 4;
+
+          // Epic D-Minor progression: Dm -> Bb -> F -> C
+          const chords = [
+            [50, 57, 62, 65], // Dm
+            [46, 53, 58, 62], // Bb
+            [48, 57, 60, 65], // F/C
+            [48, 55, 60, 64]  // C
+          ];
+          const bassRoots = [38, 34, 41, 36]; // D2, Bb1, F2, C2
+          const arpPatterns = [
+            [62, 65, 69, 74, 69, 65, 72, 69],
+            [58, 62, 65, 70, 65, 62, 69, 65],
+            [60, 65, 69, 72, 69, 65, 74, 72],
+            [60, 64, 67, 72, 67, 64, 71, 67]
+          ];
+          const leadMelody = [74, 77, 81, 79, 77, 74, 72, 74, 70, 74, 77, 76, 72, 76, 79, 81];
+
+          const chord = chords[chordIdx];
+          const root = bassRoots[chordIdx];
+          const arpNote = arpPatterns[chordIdx][step % 8];
+
+          // --- ACT I (0–10s): Genesis ---
+          if (stepTime < 10.0) {
+            if (s16 === 0) {
+              this.playPadChord(now, chord, 1.9, 0.08, stepTime < 4.5 ? 950 : 1700);
+            }
+            if (stepTime < 4.5) {
+              // Delicate pulsing crystalline photon pings
+              if (s16 % 4 === 0) {
+                this.playArp(now, arpNote + 12, 0.35, 0.1, 2400);
+              }
+            } else {
+              // Post-4.5s Big Bang awakening
+              if (s16 % 4 === 0) this.playKick(now, 0.72);
+              if (s16 % 2 === 0) this.playArp(now, arpNote, 0.18, 0.14, 3000);
+              if (s16 === 0 || s16 === 8) this.playBass(now, root, 0.45, 750, 0.34);
+            }
+            return;
+          }
+
+          // --- ACT II (10–20s): Hypergeometry ---
+          if (stepTime < 20.0) {
+            if (s16 === 0) this.playPadChord(now, chord, 1.85, 0.07, 1600);
+            if (s16 % 4 === 0) this.playKick(now, 0.85);
+            if (s16 === 4 || s16 === 12) this.playSnare(now, 0.3);
+            if (stepTime > 14.5 && s16 % 2 === 1) this.playHat(now, s16 === 15, 0.13);
+            // Rolling geometric 16th bass
+            const bNote = (s16 % 4 === 2) ? root + 12 : root;
+            if (s16 % 2 === 0) this.playBass(now, bNote, 0.19, 1050, 0.3);
+            this.playArp(now, arpNote, 0.14, 0.14, 3400);
+            return;
+          }
+
+          // --- ACT III (20–30s): Gravity & Fluid ---
+          if (stepTime < 30.0) {
+            if (s16 === 0) this.playPadChord(now, chord, 1.95, 0.095, 2000);
+            if (s16 % 4 === 0) this.playKick(now, 0.82);
+            if (s16 === 4 || s16 === 12) this.playSnare(now, 0.34);
+            if (s16 % 2 === 1) this.playHat(now, s16 === 7 || s16 === 15, 0.14);
+            // Flowing syncopated bass
+            if (s16 === 0 || s16 === 3 || s16 === 6 || s16 === 10 || s16 === 14) {
+              this.playBass(now, root, 0.24, 1200, 0.33);
+            }
+            if (s16 % 2 === 0 || s16 === 15) {
+              this.playArp(now, arpNote + (s16 === 15 ? 12 : 0), 0.19, 0.15, 3800);
+            }
+            return;
+          }
+
+          // --- ACT IV (30–40s): Synesthesia Synthwave Climax! ---
+          if (stepTime < 40.0) {
+            if (s16 === 0) this.playPadChord(now, chord, 1.85, 0.085, 2500);
+            if (s16 % 4 === 0) this.playKick(now, 0.98);
+            if (s16 === 4 || s16 === 12) this.playSnare(now, 0.48);
+            this.playHat(now, s16 % 4 === 2, s16 % 2 === 1 ? 0.18 : 0.09);
+            // Driving 16th-note sawtooth synthwave bassline
+            this.playBass(now, (s16 % 4 === 2) ? root + 12 : root, 0.12, 1650, 0.32);
+            // Rapid sparkling arpeggio
+            this.playArp(now, arpNote + 12, 0.11, 0.13, 4600);
+            // Soaring anthem lead on half-beats
+            if (s16 % 4 === 0) {
+              const lNote = leadMelody[(Math.floor(step / 4)) % leadMelody.length];
+              this.playLead(now, lNote, 0.44, 0.16);
+            }
+            return;
+          }
+
+          // --- ACT V (40–50s): Raymarched Cyber-Cathedral ---
+          if (stepTime < 50.0) {
+            if (s16 === 0) this.playPadChord(now, chord, 1.9, 0.09, 2200);
+            if (s16 % 4 === 0) this.playKick(now, 0.96);
+            if (s16 === 4 || s16 === 12) this.playSnare(now, 0.45);
+            if (s16 % 2 === 1) this.playHat(now, s16 === 11, 0.16);
+            // Relentless dark cyber bass
+            if (s16 % 2 === 0) this.playBass(now, root, 0.16, 1450, 0.35);
+            this.playArp(now, arpNote, 0.13, 0.15, 4200);
+            if (s16 === 0 || s16 === 6 || s16 === 12) {
+              const lNote = leadMelody[(bar * 3 + Math.floor(s16 / 4)) % leadMelody.length];
+              this.playLead(now, lNote - 12, 0.35, 0.14);
+            }
+            return;
+          }
+
+          // --- ACT VI (50–60s): Emotional Finale ---
+          const finaleChords = [
+            [50, 57, 62, 65], // Dm
+            [46, 53, 58, 62], // Bb
+            [48, 55, 60, 64], // C
+            [50, 57, 62, 66]  // D major hopeful resolution!
+          ];
+          const fIdx = Math.min(3, Math.floor((stepTime - 50.0) / 2.2));
+          if (s16 === 0 && stepTime < 58.0) {
+            this.playPadChord(now, finaleChords[fIdx], 2.4, 0.1, 2100);
+            this.playBass(now, bassRoots[fIdx], 1.6, 550, 0.28);
+          }
+          if (stepTime < 57.5 && s16 % 4 === 0) {
+            const chime = finaleChords[fIdx][Math.floor(s16 / 4) % 4] + 12;
+            this.playArp(now, chime, 0.55, 0.12, 2800);
+          }
+        }
+
+        // Read live FFT spectrum + smooth fallback beat sync
+        sampleAudio(t) {
+          if (this.initialized && this.analyser && state.playing && !state.muted) {
+            this.analyser.getByteFrequencyData(state.fftBins);
+            this.analyser.getByteTimeDomainData(state.waveBins);
+            let b = 0, m = 0, h = 0;
+            for (let i = 0; i < 10; i++) b += state.fftBins[i];
+            for (let i = 10; i < 48; i++) m += state.fftBins[i];
+            for (let i = 48; i < 120; i++) h += state.fftBins[i];
+            state.audioBass = lerp(state.audioBass, b / (10 * 255), 0.35);
+            state.audioMid = lerp(state.audioMid, m / (38 * 255), 0.3);
+            state.audioHigh = lerp(state.audioHigh, h / (72 * 255), 0.3);
+            state.audioEnergy = (state.audioBass * 0.5 + state.audioMid * 0.3 + state.audioHigh * 0.2);
+          } else {
+            // Synthetic procedural FFT fallback (works even when muted or previewing)
+            const beatPhase = (t * BPM / 60) % 1.0;
+            const kick = Math.exp(-beatPhase * 5.5);
+            const active = state.started ? 1.0 : 0.35;
+            state.audioBass = kick * 0.78 * active;
+            state.audioMid = (0.35 + 0.35 * Math.sin(t * 6.5)) * active;
+            state.audioHigh = (0.25 + 0.3 * Math.cos(t * 11.0)) * active;
+            state.audioEnergy = state.audioBass * 0.6 + state.audioMid * 0.4;
+            for (let i = 0; i < 256; i++) {
+              const f = i / 256;
+              const v = Math.exp(-f * 3.2) * kick * 210 + (0.5 + 0.5 * Math.sin(t * 9 + i * 0.22)) * 90 * (1 - f * 0.7);
+              state.fftBins[i] = clamp(v * active, 0, 255);
+              state.waveBins[i] = 128 + Math.sin(t * 14 + i * 0.14) * 58 * kick;
+            }
+          }
+        }
+      }
+
+      const synth = new ProceduralSynthEngine();
+
+      /* =======================================================================
+         6. PROCEDURAL DATA SYSTEMS FOR ALL 6 ACTS
+         ======================================================================= */
+
+      // --- ACT I: 1,800 3D Starfield Burst Particles ---
+      const GENESIS_COUNT = 1800;
+      const genesisParticles = [];
+      (function initGenesis() {
+        const rand = mulberry32(202601);
+        for (let i = 0; i < GENESIS_COUNT; i++) {
+          const theta = rand() * Math.PI * 2;
+          const phi = Math.acos(2 * rand() - 1);
+          const speed = 0.22 + Math.pow(rand(), 1.6) * 2.1;
+          const hue = rand() < 0.6 ? 190 + rand() * 30 : 265 + rand() * 45;
+          genesisParticles.push({
+            dx: Math.sin(phi) * Math.cos(theta),
+            dy: Math.sin(phi) * Math.sin(theta),
+            dz: Math.cos(phi),
+            speed,
+            size: 0.9 + rand() * 2.4,
+            hue,
+            phase: rand() * Math.PI * 2,
+            orbitSpeed: (rand() - 0.5) * 0.6
+          });
+        }
+      })();
+
+      // --- ACT II: 4D Tesseract Geometry (16 Vertices, 32 Edges, 24 Faces) ---
+      const tesseractVerts = [];
+      const tesseractEdges = [];
+      const tesseractFaces = [];
+      (function initTesseract() {
+        for (let i = 0; i < 16; i++) {
+          tesseractVerts.push([
+            (i & 1) ? 1 : -1,
+            (i & 2) ? 1 : -1,
+            (i & 4) ? 1 : -1,
+            (i & 8) ? 1 : -1
+          ]);
+        }
+        for (let i = 0; i < 16; i++) {
+          for (let bit = 0; bit < 4; bit++) {
+            const j = i ^ (1 << bit);
+            if (j > i) {
+              tesseractEdges.push([i, j, bit]);
+            }
+          }
+        }
+        // Generate selected 24 square 2D faces of the 4D hypercube
+        for (let a = 0; a < 4; a++) {
+          for (let b = a + 1; b < 4; b++) {
+            const others = [0, 1, 2, 3].filter((k) => k !== a && k !== b);
+            for (let s0 = 0; s0 < 2; s0++) {
+              for (let s1 = 0; s1 < 2; s1++) {
+                const base = (s0 << others[0]) | (s1 << others[1]);
+                tesseractFaces.push([
+                  base,
+                  base | (1 << a),
+                  base | (1 << a) | (1 << b),
+                  base | (1 << b)
+                ]);
+              }
+            }
+          }
+        }
+      })();
+
+      // --- ACT III: 2,000 N-Body Gravity + Curl-Flow Fluid Particles ---
+      const FLUID_COUNT = 2000;
+      const fluidParticles = [];
+      function resetFluidParticles() {
+        fluidParticles.length = 0;
+        const rand = mulberry32(202603);
+        for (let i = 0; i < FLUID_COUNT; i++) {
+          const ang = rand() * Math.PI * 2;
+          const rad = 0.08 + Math.pow(rand(), 0.7) * 0.44;
+          const x = 0.5 + Math.cos(ang) * rad;
+          const y = 0.5 + Math.sin(ang) * rad * 0.85;
+          fluidParticles.push({
+            x, y, px: x, py: y,
+            vx: -Math.sin(ang) * 0.16,
+            vy: Math.cos(ang) * 0.16,
+            mass: 0.7 + rand() * 0.8,
+            seed: rand()
+          });
+        }
+      }
+      resetFluidParticles();
+
+      // --- ACT VI: 1,500 Spring-Physics Particle Text ("CODE IS ART") ---
+      const FINALE_COUNT = 1550;
+      const finaleParticles = [];
+      let finaleReady = false;
+
+      function initFinaleTextTargets() {
+        const off = document.createElement('canvas');
+        off.width = 960;
+        off.height = 260;
+        const octx = off.getContext('2d');
+        octx.clearRect(0, 0, off.width, off.height);
+        octx.fillStyle = '#ffffff';
+        octx.font = '900 132px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+        octx.textAlign = 'center';
+        octx.textBaseline = 'middle';
+        octx.fillText('CODE IS ART', off.width / 2, off.height / 2);
+
+        const img = octx.getImageData(0, 0, off.width, off.height).data;
+        const pts = [];
+        for (let y = 0; y < off.height; y += 3) {
+          for (let x = 0; x < off.width; x += 3) {
+            if (img[(y * off.width + x) * 4 + 3] > 140) {
+              pts.push({
+                nx: (x - off.width / 2) / off.width,
+                ny: (y - off.height / 2) / off.height
+              });
+            }
+          }
+        }
+
+        const rand = mulberry32(202606);
+        finaleParticles.length = 0;
+        for (let i = 0; i < FINALE_COUNT; i++) {
+          const target = pts[Math.floor((i / FINALE_COUNT) * pts.length)] || { nx: 0, ny: 0 };
+          const ang = rand() * Math.PI * 2;
+          const dist = 0.2 + rand() * 0.9;
+          finaleParticles.push({
+            tx: target.nx,
+            ty: target.ny,
+            x: Math.cos(ang) * dist,
+            y: Math.sin(ang) * dist,
+            vx: Math.cos(ang) * (0.6 + rand() * 1.4),
+            vy: Math.sin(ang) * (0.6 + rand() * 1.4),
+            size: 1.3 + rand() * 1.8,
+            hue: 185 + (target.nx + 0.5) * 115, // Cyan -> Violet -> Amber gradient across word
+            delay: rand() * 0.9
+          });
+        }
+        finaleReady = true;
+      }
+      initFinaleTextTargets();
+
+      function resetFinalePositions() {
+        const rand = mulberry32(202606);
+        for (let i = 0; i < finaleParticles.length; i++) {
+          const p = finaleParticles[i];
+          const ang = rand() * Math.PI * 2;
+          const dist = 0.04 + rand() * 0.35;
+          p.x = Math.cos(ang) * dist;
+          p.y = Math.sin(ang) * dist;
+          p.vx = Math.cos(ang) * (0.8 + rand() * 2.2);
+          p.vy = Math.sin(ang) * (0.8 + rand() * 2.2);
+        }
+      }
+
+      /* =======================================================================
+         7. CANVAS2D SCENE RENDERERS (ACTS I – VI)
+         ======================================================================= */
+
+      // --- AMBIENT POSTER FLOATING PARTICLES (Before Play) ---
+      function drawAmbientParticles(w, h, t) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        for (let i = 0; i < 120; i++) {
+          const p = genesisParticles[i];
+          const x = ((p.dx * 0.5 + 0.5 + t * 0.015 * p.speed) % 1.0) * w;
+          const y = ((p.dy * 0.5 + 0.5 + Math.sin(t * 0.4 + p.phase) * 0.06) % 1.0) * h;
+          const a = 0.22 + 0.28 * Math.sin(t * 1.8 + p.phase);
+          ctx.fillStyle = `hsla(${p.hue}, 95%, 72%, ${a})`;
+          ctx.beginPath();
+          ctx.arc(x, y, p.size * (w / 1280), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // --- ACT I (0–10s): GENESIS (Fourier Epicycles -> 3D Particle Starburst) ---
+      function drawAct1(w, h, t, alpha) {
+        if (alpha <= 0.01) return;
+        const cx = w * 0.5;
+        const cy = h * 0.48;
+        const scale = Math.min(w, h);
+        state.activeParticles = GENESIS_COUNT;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        // Phase A (0.0s – 5.2s): Live Animated Fourier Epicycles + Luminous Curve
+        const epiFade = 1.0 - smoothstep(4.45, 5.25, t);
+        if (epiFade > 0.01) {
+          ctx.save();
+          ctx.globalAlpha = alpha * epiFade;
+          const baseR = scale * (0.145 + smoothstep(0, 4.5, t) * 0.055);
+          const harmonics = [
+            { f: 1, r: baseR * 0.65, ph: 0 },
+            { f: -3, r: baseR * 0.34, ph: 0.4 },
+            { f: 5, r: baseR * 0.21, ph: 1.1 },
+            { f: -7, r: baseR * 0.13, ph: 2.0 },
+            { f: 11, r: baseR * 0.075, ph: 0.8 }
+          ];
+
+          const speedUp = 1.2 + Math.pow(smoothstep(0, 4.5, t), 2.2) * 3.8;
+          const thetaNow = t * speedUp;
+
+          // Draw luminous traced Fourier curve trail
+          ctx.beginPath();
+          const trailSteps = 180;
+          const span = Math.min(thetaNow, Math.PI * 2.4);
+          for (let s = 0; s <= trailSteps; s++) {
+            const ang = thetaNow - span * (1 - s / trailSteps);
+            let px = cx, py = cy;
+            for (let k = 0; k < harmonics.length; k++) {
+              const hk = harmonics[k];
+              px += Math.cos(ang * hk.f + hk.ph) * hk.r;
+              py += Math.sin(ang * hk.f + hk.ph) * hk.r;
+            }
+            if (s === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.88)';
+          ctx.lineWidth = Math.max(1.5, scale * 0.003);
+          ctx.shadowColor = '#00f0ff';
+          ctx.shadowBlur = 16;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          // Draw rotating epicycle circles & vector arms
+          let ex = cx, ey = cy;
+          for (let k = 0; k < harmonics.length; k++) {
+            const hk = harmonics[k];
+            ctx.strokeStyle = `rgba(168, 85, 247, ${0.42 - k * 0.06})`;
+            ctx.lineWidth = 1.1;
+            ctx.beginPath();
+            ctx.arc(ex, ey, hk.r, 0, Math.PI * 2);
+            ctx.stroke();
+
+            const nx = ex + Math.cos(thetaNow * hk.f + hk.ph) * hk.r;
+            const ny = ey + Math.sin(thetaNow * hk.f + hk.ph) * hk.r;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+            ctx.beginPath();
+            ctx.moveTo(ex, ey);
+            ctx.lineTo(nx, ny);
+            ctx.stroke();
+
+            ctx.fillStyle = '#00f0ff';
+            ctx.beginPath();
+            ctx.arc(nx, ny, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+            ex = nx;
+            ey = ny;
+          }
+
+          // Central pulsing photon core building toward 4.5s drop
+          const charge = smoothstep(0.0, 4.5, t);
+          const coreR = scale * (0.012 + charge * 0.032 + state.audioBass * 0.015);
+          const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 4.5);
+          grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+          grad.addColorStop(0.25, 'rgba(0, 240, 255, 0.85)');
+          grad.addColorStop(0.6, 'rgba(168, 85, 247, 0.25)');
+          grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(cx, cy, coreR * 4.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // Phase B (4.5s – 10.0s): Big Bang Shockwave + 1,800 3D Perspective Particles + Neural Web
+        if (t >= 4.45) {
+          const bt = t - 4.5;
+          // Expanding supernova shockwave ring
+          if (bt >= 0 && bt < 2.2) {
+            const ringR = bt * scale * 0.62;
+            const ringA = (1 - bt / 2.2) * 0.85;
+            ctx.strokeStyle = `rgba(140, 245, 255, ${ringA})`;
+            ctx.lineWidth = Math.max(1.5, (1 - bt / 2.2) * 9);
+            ctx.beginPath();
+            ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          // Camera rotation & perspective projection
+          const rotY = bt * 0.26;
+          const rotX = Math.sin(bt * 0.35) * 0.22;
+          const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+          const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+          const fov = scale * 0.92;
+          const burstEase = 1.0 - Math.exp(-Math.max(0, bt) * 1.35);
+
+          ctx.globalCompositeOperation = 'lighter';
+          const webPts = [];
+
+          for (let i = 0; i < GENESIS_COUNT; i++) {
+            const p = genesisParticles[i];
+            const dist = (0.05 + burstEase * 2.15 * p.speed);
+            let x = p.dx * dist;
+            let y = p.dy * dist;
+            let z = p.dz * dist;
+
+            // Rotate Y then X
+            const x1 = x * cosY - z * sinY;
+            const z1 = x * sinY + z * cosY;
+            const y2 = y * cosX - z1 * sinX;
+            const z2 = y * sinX + z1 * cosX + 3.1;
+
+            if (z2 < 0.25) continue;
+            const invZ = fov / z2;
+            const sx = cx + x1 * invZ;
+            const sy = cy + y2 * invZ;
+            if (sx < -40 || sx > w + 40 || sy < -40 || sy > h + 40) continue;
+
+            const sz = clamp(p.size * invZ * 0.0042 * (1 + state.audioBass * 0.45), 0.7, 5.5);
+            const depthAlpha = clamp((1.55 - z2 * 0.24) * smoothstep(0, 0.35, bt), 0.1, 0.95);
+
+            // Velocity streak tail during early explosion
+            if (bt < 2.2) {
+              const tailFactor = (1 - bt / 2.2) * 0.16;
+              const tx = cx + x1 * (1 - tailFactor) * invZ;
+              const ty = cy + y2 * (1 - tailFactor) * invZ;
+              ctx.strokeStyle = `hsla(${p.hue}, 95%, 72%, ${depthAlpha * 0.65})`;
+              ctx.lineWidth = Math.max(0.8, sz * 0.65);
+              ctx.beginPath();
+              ctx.moveTo(tx, ty);
+              ctx.lineTo(sx, sy);
+              ctx.stroke();
+            }
+
+            ctx.fillStyle = `hsla(${p.hue}, 96%, 76%, ${depthAlpha})`;
+            ctx.beginPath();
+            ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (i < 110) webPts.push({ sx, sy, z2 });
+          }
+
+          // Dynamic Neural Constellation Web among foreground star nodes
+          const maxConnDist = scale * 0.145;
+          const maxConnSq = maxConnDist * maxConnDist;
+          const webAlpha = smoothstep(0.6, 2.2, bt) * 0.42;
+          if (webAlpha > 0.01) {
+            ctx.lineWidth = 0.85;
+            for (let i = 0; i < webPts.length; i++) {
+              const a = webPts[i];
+              for (let j = i + 1; j < webPts.length; j++) {
+                const b = webPts[j];
+                const dx = a.sx - b.sx;
+                const dy = a.sy - b.sy;
+                const dSq = dx * dx + dy * dy;
+                if (dSq < maxConnSq) {
+                  const strength = (1 - Math.sqrt(dSq) / maxConnDist) * webAlpha;
+                  ctx.strokeStyle = `rgba(0, 240, 255, ${strength})`;
+                  ctx.beginPath();
+                  ctx.moveTo(a.sx, a.sy);
+                  ctx.lineTo(b.sx, b.sy);
+                  ctx.stroke();
+                }
+              }
+            }
+          }
+
+          // Brief white supernova bloom flash right at 4.5s
+          if (bt >= 0 && bt < 0.7) {
+            ctx.globalCompositeOperation = 'screen';
+            ctx.fillStyle = `rgba(210, 248, 255, ${(1 - bt / 0.7) * 0.55})`;
+            ctx.fillRect(0, 0, w, h);
+          }
+        }
+
+        ctx.restore();
+      }
+
+      // --- ACT II (10–20s): HYPERGEOMETRY (True 4D Tesseract Hypercube) ---
+      function drawAct2(w, h, t, alpha) {
+        if (alpha <= 0.01) return;
+        const actT = t - 10.0;
+        const cx = w * 0.5;
+        const cy = h * 0.48;
+        const scale = Math.min(w, h);
+        state.activeParticles = 16;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        // 4D Rotation Angles (XW, YW, ZW, XY planes simultaneously)
+        const aXW = actT * 0.72;
+        const aYW = actT * 0.48;
+        const aZW = actT * 0.61;
+        const aXY = actT * 0.25;
+
+        const cXW = Math.cos(aXW), sXW = Math.sin(aXW);
+        const cYW = Math.cos(aYW), sYW = Math.sin(aYW);
+        const cZW = Math.cos(aZW), sZW = Math.sin(aZW);
+        const cXY = Math.cos(aXY), sXY = Math.sin(aXY);
+
+        const zoomIn = smoothstep(-0.4, 1.2, actT);
+        const pulse = 1.0 + state.audioBass * 0.1;
+        const projScale = scale * 0.34 * (0.45 + 0.55 * zoomIn) * pulse;
+
+        // Transform & project all 16 4D vertices -> 3D -> 2D
+        const proj = new Array(16);
+        for (let i = 0; i < 16; i++) {
+          let [x, y, z, w4] = tesseractVerts[i];
+
+          // Rotate XW
+          let nx = x * cXW - w4 * sXW;
+          let nw = x * sXW + w4 * cXW;
+          x = nx; w4 = nw;
+
+          // Rotate YW
+          let ny = y * cYW - w4 * sYW;
+          nw = y * sYW + w4 * cYW;
+          y = ny; w4 = nw;
+
+          // Rotate ZW
+          let nz = z * cZW - w4 * sZW;
+          nw = z * sZW + w4 * cZW;
+          z = nz; w4 = nw;
+
+          // Rotate XY
+          nx = x * cXY - y * sXY;
+          ny = x * sXY + y * cXY;
+          x = nx; y = ny;
+
+          // 4D -> 3D Stereographic Perspective Projection
+          const wDist = 2.75;
+          const k4 = 1.0 / (wDist - w4);
+          const x3 = x * k4;
+          const y3 = y * k4;
+          const z3 = z * k4;
+
+          // 3D -> 2D Perspective Projection
+          const zDist = 2.4;
+          const k3 = 1.0 / (zDist - z3);
+          proj[i] = {
+            sx: cx + x3 * k3 * projScale,
+            sy: cy + y3 * k3 * projScale,
+            z3,
+            w4,
+            k: k4 * k3
+          };
+        }
+
+        // Subtle orbital mathematical coordinate rings around the hypercube
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.16)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, scale * 0.34, scale * 0.11, actT * 0.2, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.16)';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, scale * 0.36, scale * 0.12, -actT * 0.16 + 1.1, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Depth-sort translucent 4D holographic energy faces
+        const sortedFaces = tesseractFaces.map((f, idx) => {
+          const avgZ = (proj[f[0]].z3 + proj[f[1]].z3 + proj[f[2]].z3 + proj[f[3]].z3) * 0.25;
+          return { f, avgZ, idx };
+        }).sort((a, b) => a.avgZ - b.avgZ);
+
+        ctx.globalCompositeOperation = 'lighter';
+        for (let i = 0; i < sortedFaces.length; i++) {
+          const { f, idx } = sortedFaces[i];
+          const p0 = proj[f[0]], p1 = proj[f[1]], p2 = proj[f[2]], p3 = proj[f[3]];
+          ctx.beginPath();
+          ctx.moveTo(p0.sx, p0.sy);
+          ctx.lineTo(p1.sx, p1.sy);
+          ctx.lineTo(p2.sx, p2.sy);
+          ctx.lineTo(p3.sx, p3.sy);
+          ctx.closePath();
+          const isHyperFace = idx % 3 === 0;
+          ctx.fillStyle = isHyperFace
+            ? `rgba(0, 240, 255, ${0.032 + state.audioMid * 0.03})`
+            : `rgba(168, 85, 247, ${0.028 + state.audioHigh * 0.025})`;
+          ctx.fill();
+        }
+
+        // Draw all 32 luminous edges (color-coded by 4D dimension axis)
+        for (let i = 0; i < tesseractEdges.length; i++) {
+          const [ia, ib, bit] = tesseractEdges[i];
+          const a = proj[ia], b = proj[ib];
+          const avgDepth = clamp((a.k + b.k) * 0.9, 0.25, 1.35);
+
+          let strokeCol;
+          if (bit === 3) {
+            // 4th-dimension W hyper-struts glow amber/magenta
+            strokeCol = `rgba(245, 158, 11, ${0.55 + avgDepth * 0.35})`;
+          } else if ((ia & 8) && (ib & 8)) {
+            strokeCol = `rgba(0, 240, 255, ${0.5 + avgDepth * 0.45})`;
+          } else {
+            strokeCol = `rgba(182, 110, 255, ${0.48 + avgDepth * 0.42})`;
+          }
+
+          ctx.strokeStyle = strokeCol;
+          ctx.lineWidth = Math.max(1.2, avgDepth * (scale * 0.0038));
+          ctx.shadowColor = bit === 3 ? '#f59e0b' : '#00f0ff';
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.moveTo(a.sx, a.sy);
+          ctx.lineTo(b.sx, b.sy);
+          ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+
+        // Draw depth-sorted glowing 16 vertex nodes
+        const sortedVerts = proj.slice().sort((a, b) => a.z3 - b.z3);
+        for (let i = 0; i < sortedVerts.length; i++) {
+          const v = sortedVerts[i];
+          const r = clamp(v.k * scale * 0.015, 2.5, 9.5);
+          const g = ctx.createRadialGradient(v.sx, v.sy, 0, v.sx, v.sy, r * 2.4);
+          g.addColorStop(0, '#ffffff');
+          g.addColorStop(0.35, v.w4 > 0 ? 'rgba(0, 240, 255, 0.95)' : 'rgba(192, 132, 252, 0.95)');
+          g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(v.sx, v.sy, r * 2.4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Floating Minimal 4D Rotation Matrix Readout (Diegetic Art Telemetry)
+        ctx.globalCompositeOperation = 'source-over';
+        const fontSize = Math.max(10, Math.round(scale * 0.017));
+        ctx.font = `600 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+        ctx.textAlign = 'left';
+        const rx = w * 0.06;
+        const ry = h * 0.34;
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.72)';
+        ctx.fillText('4D TESSERACT · R_xw(θ) PROJECTION', rx, ry);
+        ctx.fillStyle = 'rgba(226, 234, 255, 0.56)';
+        const fmt = (n) => (n >= 0 ? ' ' : '') + n.toFixed(2);
+        ctx.fillText(`[ ${fmt(cXW)}   0.00   0.00  ${fmt(-sXW)} ]`, rx, ry + fontSize * 1.5);
+        ctx.fillText(`[  0.00  ${fmt(cYW)}   0.00  ${fmt(-sYW)} ]`, rx, ry + fontSize * 2.8);
+        ctx.fillText(`[  0.00   0.00  ${fmt(cZW)}  ${fmt(-sZW)} ]`, rx, ry + fontSize * 4.1);
+        ctx.fillText(`[ ${fmt(sXW)}  ${fmt(sYW)}  ${fmt(sZW)}  ${fmt(cXW)} ]`, rx, ry + fontSize * 5.4);
+        ctx.fillStyle = 'rgba(192, 132, 252, 0.75)';
+        ctx.fillText(`VERTICES: 16  |  EDGES: 32  |  FACES: 24`, rx, ry + fontSize * 7.2);
+
+        ctx.restore();
+      }
+
+      // --- ACT III (20–30s): GRAVITY & FLUID (N-Body Binary Attractors + Curl Vortex) ---
+      let lastFluidT = -1;
+      function drawAct3(w, h, t, dt, alpha) {
+        if (alpha <= 0.01) return;
+        const actT = t - 20.0;
+        const scale = Math.min(w, h);
+        state.activeParticles = FLUID_COUNT;
+
+        // If scrubbed significantly, re-seed cleanly
+        if (Math.abs(t - lastFluidT) > 1.2) {
+          resetFluidParticles();
+        }
+        lastFluidT = t;
+
+        // Binary Star Attractors orbiting gracefully
+        const orbitA = actT * 0.95;
+        const ax1 = 0.5 + Math.cos(orbitA) * 0.21;
+        const ay1 = 0.48 + Math.sin(orbitA) * 0.14;
+        const ax2 = 0.5 - Math.cos(orbitA) * 0.21;
+        const ay2 = 0.48 - Math.sin(orbitA) * 0.14;
+
+        const stepDt = clamp(dt, 0.004, 0.028);
+        const mousePull = state.mouseActive && (performance.now() - state.mouseLastMove < 3000);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.globalCompositeOperation = 'lighter';
+
+        for (let i = 0; i < FLUID_COUNT; i++) {
+          const p = fluidParticles[i];
+          p.px = p.x;
+          p.py = p.y;
+
+          // Gravitational pull + tangential swirl from Binary Attractor 1 (Amber)
+          let dx1 = ax1 - p.x;
+          let dy1 = ay1 - p.y;
+          let r1Sq = dx1 * dx1 + dy1 * dy1 + 0.009;
+          let invR1 = 1.0 / Math.sqrt(r1Sq);
+          let f1 = 0.019 / r1Sq;
+
+          // Gravitational pull + tangential swirl from Binary Attractor 2 (Cyan)
+          let dx2 = ax2 - p.x;
+          let dy2 = ay2 - p.y;
+          let r2Sq = dx2 * dx2 + dy2 * dy2 + 0.009;
+          let invR2 = 1.0 / Math.sqrt(r2Sq);
+          let f2 = 0.019 / r2Sq;
+
+          let ax = dx1 * invR1 * f1 - dy1 * invR1 * f1 * 0.42 + dx2 * invR2 * f2 + dy2 * invR2 * f2 * 0.42;
+          let ay = dy1 * invR1 * f1 + dx1 * invR1 * f1 * 0.42 + dy2 * invR2 * f2 - dx2 * invR2 * f2 * 0.42;
+
+          // Analytical 2D Curl-Noise Vortex Turbulence
+          const cx = p.x * 7.5 + actT * 0.5;
+          const cy = p.y * 7.5 - actT * 0.4;
+          ax += Math.cos(cy) * Math.sin(cx) * 0.18;
+          ay += -Math.sin(cy) * Math.cos(cx) * 0.18;
+
+          // Subtle Interactive Mouse Gravity Ripple!
+          if (mousePull) {
+            const mdx = state.mouseX - p.x;
+            const mdy = state.mouseY - p.y;
+            const mrSq = mdx * mdx + mdy * mdy + 0.005;
+            if (mrSq < 0.09) {
+              const mForce = 0.045 / mrSq;
+              // Swirling orbital gravity ripple
+              ax += (mdx * 0.6 - mdy * 1.1) * mForce;
+              ay += (mdy * 0.6 + mdx * 1.1) * mForce;
+            }
+          }
+
+          // Gentle boundary centering spring
+          ax += (0.5 - p.x) * 0.14;
+          ay += (0.48 - p.y) * 0.14;
+
+          p.vx = (p.vx + ax * stepDt) * 0.988;
+          p.vy = (p.vy + ay * stepDt) * 0.988;
+
+          // Speed clamp to keep silky orbits
+          const spdSq = p.vx * p.vx + p.vy * p.vy;
+          if (spdSq > 0.64) {
+            const sc = 0.8 / Math.sqrt(spdSq);
+            p.vx *= sc;
+            p.vy *= sc;
+          }
+
+          p.x += p.vx * stepDt;
+          p.y += p.vy * stepDt;
+
+          // Color grade by speed: violet -> electric cyan -> amber gold -> white-hot
+          const spd = Math.sqrt(spdSq);
+          let rCol, gCol, bCol;
+          if (spd < 0.26) {
+            const k = spd / 0.26;
+            rCol = Math.round(lerp(90, 0, k));
+            gCol = Math.round(lerp(100, 235, k));
+            bCol = 255;
+          } else {
+            const k = clamp((spd - 0.26) / 0.42, 0, 1);
+            rCol = Math.round(lerp(0, 255, k));
+            gCol = Math.round(lerp(235, 185, k));
+            bCol = Math.round(lerp(255, 65, k));
+          }
+
+          const sx = p.x * w;
+          const sy = p.y * h;
+          const sxPrev = (p.x - p.vx * stepDt * 3.8) * w;
+          const syPrev = (p.y - p.vy * stepDt * 3.8) * h;
+
+          ctx.strokeStyle = `rgba(${rCol}, ${gCol}, ${bCol}, ${0.38 + clamp(spd * 0.9, 0, 0.58)})`;
+          ctx.lineWidth = Math.max(1.0, (0.9 + spd * 2.2) * (w / 1280));
+          ctx.beginPath();
+          ctx.moveTo(sxPrev, syPrev);
+          ctx.lineTo(sx, sy);
+          ctx.stroke();
+        }
+
+        // Render the two Binary Gravitational Attractor Stars
+        const drawStar = (nx, ny, c1, c2) => {
+          const x = nx * w, y = ny * h;
+          const r = scale * (0.042 + state.audioBass * 0.018);
+          const g = ctx.createRadialGradient(x, y, 0, x, y, r * 2.2);
+          g.addColorStop(0, '#ffffff');
+          g.addColorStop(0.22, c1);
+          g.addColorStop(0.55, c2);
+          g.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(x, y, r * 2.2, 0, Math.PI * 2);
+          ctx.fill();
+        };
+        drawStar(ax1, ay1, 'rgba(255, 200, 80, 0.95)', 'rgba(245, 110, 20, 0.25)');
+        drawStar(ax2, ay2, 'rgba(0, 240, 255, 0.95)', 'rgba(56, 130, 255, 0.25)');
+
+        // Interactive Mouse Lensing Ring Indicator
+        if (mousePull) {
+          const mx = state.mouseX * w;
+          const my = state.mouseY * h;
+          const mr = scale * (0.045 + 0.008 * Math.sin(t * 10));
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.55)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(mx, my, mr, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+          ctx.beginPath();
+          ctx.arc(mx, my, mr * 1.45, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+
+      // --- ACT IV (30–40s): SYNESTHESIA (Audio-Reactive 3D Synthwave Terrain + Cymatics Mandala) ---
+      function drawAct4(w, h, t, alpha) {
+        if (alpha <= 0.01) return;
+        const actT = t - 30.0;
+        const cx = w * 0.5;
+        const horizonY = h * 0.49;
+        const scale = Math.min(w, h);
+        state.activeParticles = 42 * 26;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        // 1. Sliced Glowing Synthwave Horizon Sun
+        const sunR = scale * (0.17 + state.audioBass * 0.025);
+        const sunY = horizonY - sunR * 0.16;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, sunY, sunR, 0, Math.PI * 2);
+        ctx.clip();
+
+        const sunGrad = ctx.createLinearGradient(cx, sunY - sunR, cx, sunY + sunR);
+        sunGrad.addColorStop(0, '#fde047');
+        sunGrad.addColorStop(0.45, '#fb7185');
+        sunGrad.addColorStop(0.85, '#c026d3');
+        sunGrad.addColorStop(1, '#4c1d95');
+        ctx.fillStyle = sunGrad;
+        ctx.fillRect(cx - sunR, sunY - sunR, sunR * 2, sunR * 2);
+
+        // Classic retro horizontal scanline cuts across lower half of sun
+        ctx.fillStyle = '#090514';
+        for (let i = 0; i < 8; i++) {
+          const sliceY = sunY + sunR * (0.08 + i * 0.115) + ((actT * 18) % (sunR * 0.115));
+          const sliceH = sunR * (0.015 + i * 0.0085);
+          ctx.fillRect(cx - sunR, sliceY, sunR * 2, sliceH);
+        }
+        ctx.restore();
+
+        // 2. Symmetrical Cymatics Audio Frequency Mandala Crown
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        const mandalaR = sunR * 1.18;
+        const bins = 96;
+
+        // Inner pulsing oscilloscope ring
+        ctx.beginPath();
+        for (let i = 0; i <= bins; i++) {
+          const ang = (i / bins) * Math.PI * 2 - Math.PI / 2;
+          const wv = (state.waveBins[(i * 2) % 256] - 128) / 128;
+          const r = mandalaR * 0.88 + wv * scale * 0.045;
+          const x = cx + Math.cos(ang) * r;
+          const y = sunY + Math.sin(ang) * r;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.72)';
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+
+        // Mirrored Radial FFT Spectrum Spikes
+        for (let i = 0; i < bins; i++) {
+          const symIdx = i < bins / 2 ? i : bins - 1 - i;
+          const fftVal = state.fftBins[Math.min(120, Math.floor(symIdx * 2.1))] / 255;
+          const ang = (i / bins) * Math.PI * 2 - Math.PI / 2;
+          const len = (0.015 + Math.pow(fftVal, 1.35) * 0.16) * scale;
+          const r0 = mandalaR;
+          const r1 = mandalaR + len;
+
+          const x0 = cx + Math.cos(ang) * r0;
+          const y0 = sunY + Math.sin(ang) * r0;
+          const x1 = cx + Math.cos(ang) * r1;
+          const y1 = sunY + Math.sin(ang) * r1;
+
+          const hue = 185 + (symIdx / (bins / 2)) * 135;
+          ctx.strokeStyle = `hsla(${hue}, 100%, 66%, ${0.42 + fftVal * 0.58})`;
+          ctx.lineWidth = Math.max(1.8, scale * 0.0042);
+          ctx.beginPath();
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(x1, y1);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // 3. Audio-Reactive 3D Perspective Neon Wireframe Mountain Terrain
+        const cols = 38;
+        const rows = 24;
+        const speedZ = actT * 10.5;
+        const zFrac = speedZ % 1.0;
+        const zBase = Math.floor(speedZ);
+        const fov = scale * 0.92;
+        const camH = 2.65;
+
+        const gridPts = [];
+        for (let r = 0; r < rows; r++) {
+          const rowPts = [];
+          const worldZ = (rows - r) - zFrac + 1.4;
+          const depthRatio = 1.0 - r / rows;
+          for (let c = 0; c <= cols; c++) {
+            const nx = (c / cols - 0.5) * 2.0; // -1 to 1
+            const worldX = nx * 16.5;
+
+            // Center valley road + dramatic audio-carved canyon peaks on sides
+            const valleyMask = smoothstep(0.14, 0.58, Math.abs(nx));
+            const binIdx = Math.min(110, Math.floor(Math.abs(nx) * 60 + ((r + zBase) % 12) * 2));
+            const audioH = (state.fftBins[binIdx] / 255) * 3.1;
+            const ridge = (
+              Math.sin((c * 0.42) + (zBase - r) * 0.35) * 0.5 +
+              Math.cos((c * 0.21) - (zBase - r) * 0.25) * 0.5 + 1.0
+            ) * 1.15;
+
+            const elev = valleyMask * (ridge + audioH) + (1 - valleyMask) * state.audioBass * 0.22;
+            const worldY = camH - elev;
+
+            const invZ = fov / worldZ;
+            rowPts.push({
+              sx: cx + worldX * invZ * 0.48,
+              sy: horizonY + worldY * invZ * 0.48,
+              elev,
+              depthRatio
+            });
+          }
+          gridPts.push(rowPts);
+        }
+
+        // Draw back-to-front occluded quads & glowing wireframe grid
+        for (let r = 0; r < rows - 1; r++) {
+          const rowA = gridPts[r];
+          const rowB = gridPts[r + 1];
+          const fogAlpha = smoothstep(0, 6, r);
+
+          for (let c = 0; c < cols; c++) {
+            const p0 = rowA[c];
+            const p1 = rowA[c + 1];
+            const p2 = rowB[c + 1];
+            const p3 = rowB[c];
+
+            const avgElev = (p0.elev + p1.elev + p2.elev + p3.elev) * 0.25;
+            ctx.beginPath();
+            ctx.moveTo(p0.sx, p0.sy);
+            ctx.lineTo(p1.sx, p1.sy);
+            ctx.lineTo(p2.sx, p2.sy);
+            ctx.lineTo(p3.sx, p3.sy);
+            ctx.closePath();
+
+            // Dark translucent fill occludes terrain behind peaks
+            ctx.fillStyle = `rgba(8, 5, 22, ${0.88 * fogAlpha})`;
+            ctx.fill();
+
+            // Glowing wireframe edges: cyan in the highway, neon magenta/violet on audio peaks
+            const isPeak = avgElev > 0.75;
+            ctx.strokeStyle = isPeak
+              ? `rgba(217, 70, 239, ${(0.35 + clamp(avgElev * 0.22, 0, 0.6)) * fogAlpha})`
+              : `rgba(0, 240, 255, ${(0.32 + state.audioBass * 0.45) * fogAlpha})`;
+            ctx.lineWidth = Math.max(0.8, (0.7 + (r / rows) * 1.1));
+            ctx.stroke();
+          }
+        }
+
+        ctx.restore();
+      }
+
+      // --- ACT V (40–50s): RAYMARCHED WORLD (Minimal Crisp Technical Callouts over GLSL SDF) ---
+      function drawAct5(w, h, t, alpha) {
+        if (alpha <= 0.01) return;
+        const actT = t - 40.0;
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        const scale = Math.min(w, h);
+        state.activeParticles = Math.round(glCanvas.width * glCanvas.height);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        // Subtle futuristic optical viewfinder brackets
+        const padX = w * 0.055;
+        const padY = h * 0.095;
+        const brk = scale * 0.032;
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.48)';
+        ctx.lineWidth = 1.5;
+
+        const corners = [
+          [padX, padY, 1, 1],
+          [w - padX, padY, -1, 1],
+          [padX, h - padY, 1, -1],
+          [w - padX, h - padY, -1, -1]
+        ];
+        corners.forEach(([x, y, dx, dy]) => {
+          ctx.beginPath();
+          ctx.moveTo(x + dx * brk, y);
+          ctx.lineTo(x, y);
+          ctx.lineTo(x, y + dy * brk);
+          ctx.stroke();
+        });
+
+        // Subtle vanishing-point ray reticle
+        const rx = cx + Math.sin(actT * 1.1) * scale * 0.03;
+        const ry = cy + Math.cos(actT * 0.9) * scale * 0.02;
+        ctx.strokeStyle = `rgba(0, 240, 255, ${0.35 + state.audioBass * 0.35})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(rx, ry, scale * 0.026, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(rx - 14, ry); ctx.lineTo(rx - 6, ry);
+        ctx.moveTo(rx + 6, ry); ctx.lineTo(rx + 14, ry);
+        ctx.moveTo(rx, ry - 14); ctx.lineTo(rx, ry - 6);
+        ctx.moveTo(rx, ry + 6); ctx.lineTo(rx, ry + 14);
+        ctx.stroke();
+
+        // Crisp Minimal Technical Callouts with Leader Lines
+        const fontSize = Math.max(10, Math.round(scale * 0.0165));
+        ctx.font = `700 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+
+        const callouts = [
+          { x: w * 0.14, y: h * 0.25, lx: w * 0.24, ly: h * 0.33, label: 'SDF RAYMARCHING · 64 STEPS/PX', delay: 0.6 },
+          { x: w * 0.72, y: h * 0.27, lx: w * 0.62, ly: h * 0.37, label: 'VOLUMETRIC GLOW ACCUMULATION', delay: 2.2 },
+          { x: w * 0.70, y: h * 0.67, lx: w * 0.58, ly: h * 0.56, label: '100% GLSL SHADER · ZERO 3D MODELS', delay: 4.0 }
+        ];
+
+        for (let i = 0; i < callouts.length; i++) {
+          const c = callouts[i];
+          const vis = smoothstep(c.delay, c.delay + 0.7, actT) * (1 - smoothstep(8.2, 9.6, actT));
+          if (vis <= 0.01) continue;
+          ctx.save();
+          ctx.globalAlpha = alpha * vis;
+
+          // Leader line
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.52)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(c.lx, c.ly);
+          ctx.lineTo(c.x, c.y + fontSize * 0.4);
+          ctx.stroke();
+
+          ctx.fillStyle = '#00f0ff';
+          ctx.beginPath();
+          ctx.arc(c.lx, c.ly, 3, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Tag pill
+          const tw = ctx.measureText(c.label).width + 18;
+          ctx.fillStyle = 'rgba(6, 10, 22, 0.65)';
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.45)';
+          ctx.beginPath();
+          roundRectPath(ctx, c.x - 6, c.y - fontSize * 0.85, tw, fontSize * 1.7, 6);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#e0f2fe';
+          ctx.textAlign = 'left';
+          ctx.fillText(c.label, c.x + 3, c.y + fontSize * 0.32);
+          ctx.restore();
+        }
+
+        // Warp-speed streaks accelerating into Act VI supernova (48.0s - 50.0s)
+        const warp = smoothstep(7.8, 10.0, actT);
+        if (warp > 0.01) {
+          ctx.globalCompositeOperation = 'lighter';
+          for (let i = 0; i < 90; i++) {
+            const ang = (i / 90) * Math.PI * 2 + actT * 0.4;
+            const r0 = scale * (0.06 + ((i * 37 + actT * 120) % 40) * 0.012);
+            const r1 = r0 + scale * (0.12 + warp * 0.45);
+            ctx.strokeStyle = `rgba(180, 245, 255, ${warp * 0.65})`;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(ang) * r0, cy + Math.sin(ang) * r0);
+            ctx.lineTo(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1);
+            ctx.stroke();
+          }
+        }
+
+        ctx.restore();
+      }
+
+      // --- ACT VI (50–60s): FINALE (Supernova -> Spring-Physics "CODE IS ART" Particle Morph) ---
+      let lastFinaleT = -1;
+      function drawAct6(w, h, t, dt, alpha) {
+        if (alpha <= 0.01 || !finaleReady) return;
+        const ft = Math.max(0, t - 50.0);
+        const cx = w * 0.5;
+        const cy = h * 0.41;
+        const scale = Math.min(w, h);
+        const textW = w * 0.78;
+        const textH = textW * (260 / 960);
+        state.activeParticles = FINALE_COUNT;
+
+        // Reset burst if user just entered or scrubbed into Act VI
+        if (lastFinaleT < 50.0 || Math.abs(t - lastFinaleT) > 1.0) {
+          resetFinalePositions();
+          // Fast-forward spring simulation if scrubbed into middle of Act VI
+          if (ft > 0.5) {
+            const settle = smoothstep(0.5, 4.2, ft);
+            for (let i = 0; i < FINALE_COUNT; i++) {
+              const p = finaleParticles[i];
+              p.x = lerp(p.x, p.tx, settle);
+              p.y = lerp(p.y, p.ty, settle);
+              p.vx *= (1 - settle);
+              p.vy *= (1 - settle);
+            }
+          }
+        }
+        lastFinaleT = t;
+
+        const stepDt = clamp(dt, 0.005, 0.028);
+        const pullStrength = smoothstep(0.35, 2.2, ft) * 18.5;
+        const damp = Math.pow(0.08, stepDt);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.globalCompositeOperation = 'lighter';
+
+        // Update spring physics & render 1,550 luminous particles forming "CODE IS ART"
+        for (let i = 0; i < FINALE_COUNT; i++) {
+          const p = finaleParticles[i];
+          if (ft > 0.15) {
+            const activePull = smoothstep(p.delay * 0.65, p.delay * 0.65 + 1.2, ft) * pullStrength;
+            const dx = p.tx - p.x;
+            const dy = p.ty - p.y;
+            // Subtle swirl while converging
+            const swirl = Math.exp(-ft * 0.85) * 3.2;
+            p.vx = (p.vx + (dx * activePull - dy * swirl) * stepDt) * damp;
+            p.vy = (p.vy + (dy * activePull + dx * swirl) * stepDt) * damp;
+            p.x += p.vx * stepDt;
+            p.y += p.vy * stepDt;
+          } else {
+            p.x += p.vx * stepDt;
+            p.y += p.vy * stepDt;
+          }
+
+          const sx = cx + p.x * textW;
+          const sy = cy + p.y * textH;
+          const shimmer = 0.72 + 0.28 * Math.sin(t * 5.2 + i * 0.37);
+          const sz = p.size * (w / 1280) * (1.0 + state.audioBass * 0.25);
+
+          ctx.fillStyle = `hsla(${p.hue}, 96%, 72%, ${shimmer})`;
+          ctx.beginPath();
+          ctx.arc(sx, sy, sz, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Subtle crisp glow layer over settled "CODE IS ART" for ultra legibility
+        const textGlow = smoothstep(2.6, 4.6, ft);
+        if (textGlow > 0.01) {
+          ctx.save();
+          ctx.globalAlpha = alpha * textGlow * 0.38;
+          ctx.font = `900 ${Math.round(textW * 0.1375)}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.shadowColor = '#00f0ff';
+          ctx.shadowBlur = 28;
+          ctx.fillStyle = '#e0f7ff';
+          ctx.fillText('CODE IS ART', cx, cy);
+          ctx.restore();
+        }
+
+        // Chinese Monumental Title: 《代码即艺术》
+        const cnReveal = smoothstep(3.6, 5.2, ft);
+        if (cnReveal > 0.01) {
+          ctx.save();
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.globalAlpha = alpha * cnReveal;
+          const cnSize = Math.round(scale * 0.056);
+          ctx.font = `700 ${cnSize}px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.shadowColor = 'rgba(168, 85, 247, 0.85)';
+          ctx.shadowBlur = 22;
+          ctx.fillStyle = '#ffffff';
+          ctx.fillText('《代码即艺术》', cx, cy + textH * 0.72);
+          ctx.restore();
+        }
+
+        // Sleek Cinema End Telemetry Line
+        const statsReveal = smoothstep(5.2, 6.8, ft);
+        if (statsReveal > 0.01) {
+          ctx.save();
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.globalAlpha = alpha * statsReveal;
+          const stSize = Math.max(11, Math.round(scale * 0.021));
+          ctx.font = `600 ${stSize}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+          ctx.textAlign = 'center';
+          ctx.fillStyle = 'rgba(0, 240, 255, 0.9)';
+          ctx.fillText('0 MB 视频素材  ·  0 张预制图片  ·  0 KB 音频文件  ·  100% 实时代码生成', cx, cy + textH * 1.15);
+          ctx.restore();
+        }
+
+        // Graceful cinema fade-to-black at 59.0s – 60.0s
+        const fadeOut = smoothstep(9.1, 10.0, ft);
+        if (fadeOut > 0.01) {
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = `rgba(3, 4, 8, ${fadeOut * 0.85})`;
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        ctx.restore();
+      }
+
+      /* =======================================================================
+         8. CINEMA OVERLAYS RENDERED ON FX CANVAS (INCLUDED IN WEBM VIDEO EXPORT!)
+         ======================================================================= */
+      function roundRectPath(c, x, y, w, h, r) {
+        const rr = Math.min(r, w * 0.5, h * 0.5);
+        c.moveTo(x + rr, y);
+        c.arcTo(x + w, y, x + w, y + h, rr);
+        c.arcTo(x + w, y + h, x, y + h, rr);
+        c.arcTo(x, y + h, x, y, rr);
+        c.arcTo(x, y, x + w, y, rr);
+        c.closePath();
+      }
+
+      // Act Chapter Title Card Flash at the start of every 10s act
+      function drawChapterBanner(w, h, t) {
+        const actIdx = clamp(Math.floor(t / 10), 0, 5);
+        const act = ACTS[actIdx];
+        const localT = t - act.start;
+        const vis = smoothstep(0.15, 0.75, localT) * (1 - smoothstep(2.6, 3.4, localT));
+        if (vis <= 0.01) return;
+
+        const scale = Math.min(w, h);
+        ctx.save();
+        ctx.globalAlpha = vis;
+        const y = h * 0.075;
+        const fSmall = Math.max(10, Math.round(scale * 0.017));
+        const fBig = Math.max(13, Math.round(scale * 0.025));
+
+        ctx.textAlign = 'center';
+        ctx.font = `700 ${fSmall}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.9)';
+        ctx.fillText(`ACT 0${actIdx + 1}  //  ${act.en}`, w * 0.5, y);
+
+        ctx.font = `700 ${fBig}px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif`;
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = 'rgba(0, 240, 255, 0.6)';
+        ctx.shadowBlur = 14;
+        ctx.fillText(act.code, w * 0.5, y + fBig * 1.18);
+        ctx.restore();
+      }
+
+      // Crisp Bilingual-Style Cinema Subtitles
+      function drawSubtitles(w, h, t) {
+        if (!state.showSubtitles || !state.started) return;
+        let activeSub = null;
+        for (let i = 0; i < SUBTITLES.length; i++) {
+          if (t >= SUBTITLES[i].s && t <= SUBTITLES[i].e) {
+            activeSub = SUBTITLES[i];
+            break;
+          }
+        }
+        if (!activeSub) return;
+
+        const fadeIn = smoothstep(activeSub.s, activeSub.s + 0.35, t);
+        const fadeOut = 1.0 - smoothstep(activeSub.e - 0.35, activeSub.e, t);
+        const alpha = fadeIn * fadeOut;
+        if (alpha <= 0.01) return;
+
+        const scale = Math.min(w, h);
+        const fontSize = Math.max(13, Math.round(scale * 0.03));
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.font = `600 ${fontSize}px -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const text = activeSub.text;
+        const padX = Math.round(fontSize * 1.1);
+        const padY = Math.round(fontSize * 0.52);
+        const tw = ctx.measureText(text).width;
+        const boxW = Math.min(w * 0.92, tw + padX * 2);
+        const boxH = fontSize + padY * 2;
+        const subY = h * 0.855;
+
+        // Translucent dark studio subtitle pill
+        ctx.fillStyle = 'rgba(4, 6, 14, 0.68)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        roundRectPath(ctx, w * 0.5 - boxW * 0.5, subY - boxH * 0.5, boxW, boxH, 12);
+        ctx.fill();
+        ctx.stroke();
+
+        // Subtle cyan accent line on left edge
+        ctx.fillStyle = '#00f0ff';
+        ctx.fillRect(w * 0.5 - boxW * 0.5 + 1, subY - boxH * 0.25, 3, boxH * 0.5);
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+        ctx.shadowBlur = 6;
+        ctx.fillText(text, w * 0.5, subY + 1, w * 0.88);
+        ctx.restore();
+      }
+
+      // Live Geeky Technical Telemetry HUD ("HUD 透视")
+      function drawHudOverlay(w, h, t) {
+        if (!state.showHud || !state.started) return;
+        const act = ACTS[clamp(Math.floor(t / 10), 0, 5)];
+        const scale = Math.min(w, h);
+        const fs = Math.max(10, Math.round(scale * 0.0155));
+
+        ctx.save();
+        ctx.font = `600 ${fs}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+
+        // Top-Left Telemetry Card
+        const lx = w * 0.025;
+        const ly = h * 0.035;
+        const lw = Math.min(w * 0.44, fs * 34);
+        const lh = fs * 6.4;
+
+        ctx.fillStyle = 'rgba(5, 8, 18, 0.72)';
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        roundRectPath(ctx, lx, ly, lw, lh, 10);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#00f0ff';
+        ctx.fillText(`● REAL-TIME ENGINE  |  ${Math.round(state.fps)} FPS (${state.frameMs.toFixed(1)} ms)`, lx + 12, ly + fs * 1.4);
+        ctx.fillStyle = 'rgba(226, 234, 255, 0.88)';
+        ctx.fillText(`PIPELINE: ${act.engine}`, lx + 12, ly + fs * 2.85, lw - 24);
+        ctx.fillStyle = '#d8b4fe';
+        ctx.fillText(`MATH: ${act.formula}`, lx + 12, ly + fs * 4.25, lw - 24);
+        ctx.fillStyle = '#fcd34d';
+        ctx.fillText(`ENTITIES: ${state.activeParticles.toLocaleString()}  |  ASSETS: 0 KB  |  T=${t.toFixed(2)}s`, lx + 12, ly + fs * 5.6);
+
+        // Top-Right Live Audio FFT Mini Spectrum Meter
+        const rw = Math.min(w * 0.24, 230);
+        const rh = lh;
+        const rx = w - lx - rw;
+        const ry = ly;
+
+        ctx.fillStyle = 'rgba(5, 8, 18, 0.72)';
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+        ctx.beginPath();
+        roundRectPath(ctx, rx, ry, rw, rh, 10);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#d8b4fe';
+        ctx.fillText('WEB AUDIO FFT · 128 BPM', rx + 10, ry + fs * 1.35);
+
+        const bars = 28;
+        const barAreaW = rw - 20;
+        const barAreaH = rh - fs * 2.4;
+        const barW = barAreaW / bars;
+        for (let i = 0; i < bars; i++) {
+          const val = state.fftBins[i * 3] / 255;
+          const bh = Math.max(2, val * barAreaH);
+          const hue = 185 + (i / bars) * 120;
+          ctx.fillStyle = `hsl(${hue}, 95%, 62%)`;
+          ctx.fillRect(rx + 10 + i * barW, ry + rh - 8 - bh, Math.max(1.5, barW - 2), bh);
+        }
+
+        ctx.restore();
+      }
+
+      /* =======================================================================
+         9. UNIFIED VIDEO + AUDIO EXPORT ENGINE (MediaRecorder -> .webm)
+         ======================================================================= */
+      const exporter = {
+        canvas: null,
+        ctx: null,
+        recorder: null,
+        chunks: [],
+        mimeType: 'video/webm'
+      };
+
+      function getSupportedMimeType() {
+        if (typeof MediaRecorder === 'undefined') return null;
+        const candidates = [
+          'video/webm;codecs=vp9,opus',
+          'video/webm;codecs=vp8,opus',
+          'video/webm;codecs=vp9',
+          'video/webm;codecs=vp8',
+          'video/webm'
+        ];
+        for (const m of candidates) {
+          if (MediaRecorder.isTypeSupported(m)) return m;
+        }
+        return '';
+      }
+
+      function startRecording(fromBeginning = true) {
+        if (state.recording) {
+          stopRecording();
+          return;
+        }
+
+        const mime = getSupportedMimeType();
+        if (mime === null) {
+          showToast('当前浏览器不支持 MediaRecorder 视频录制，建议使用 Chrome / Edge / Firefox 桌面版。', 5000);
+          return;
+        }
+
+        // Ensure Web Audio is unlocked and active
+        synth.init();
+        if (state.muted) {
+          state.muted = false;
+          synth.setMuted(false);
+          updateControlUI();
+        }
+
+        try {
+          if (!exporter.canvas) {
+            exporter.canvas = document.createElement('canvas');
+            exporter.canvas.width = 1280;
+            exporter.canvas.height = 720;
+            exporter.ctx = exporter.canvas.getContext('2d');
+          }
+
+          // Combine Unified 1280x720 Canvas Video Stream + Web Audio Stream
+          const videoStream = exporter.canvas.captureStream(60);
+          const tracks = [...videoStream.getVideoTracks()];
+          if (synth.mediaDest && synth.mediaDest.stream) {
+            tracks.push(...synth.mediaDest.stream.getAudioTracks());
+          }
+          const combinedStream = new MediaStream(tracks);
+
+          const opts = mime ? { mimeType: mime, videoBitsPerSecond: 6000000 } : { videoBitsPerSecond: 6000000 };
+          exporter.chunks = [];
+          exporter.mimeType = mime || 'video/webm';
+          exporter.recorder = new MediaRecorder(combinedStream, opts);
+
+          exporter.recorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) exporter.chunks.push(e.data);
+          };
+
+          exporter.recorder.onstop = () => {
+            const blob = new Blob(exporter.chunks, { type: exporter.mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'ZeroPixels_PureCodeCinema.webm';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }, 1500);
+            const mb = (blob.size / (1024 * 1024)).toFixed(2);
+            showToast(`✅ 录制完成！已自动下载 ZeroPixels_PureCodeCinema.webm (${mb} MB)`, 5200);
+          };
+
+          state.recording = true;
+          recBadge.classList.add('active');
+          btnRecord.classList.add('recording');
+          btnRecord.textContent = '⏹ 停止录制';
+
+          if (fromBeginning) {
+            startCinema(0.0);
+          } else if (!state.playing) {
+            startCinema(state.t);
+          }
+
+          exporter.recorder.start(250);
+          showToast('🎬 已开始 720p 实时视频+配乐录制，播完 60 秒后将自动导出 .webm 文件。', 4000);
+        } catch (err) {
+          console.error('Recording error:', err);
+          state.recording = false;
+          recBadge.classList.remove('active');
+          showToast('录制初始化失败，请重试或切换至 Chrome / Edge 浏览器。', 4500);
+        }
+      }
+
+      function stopRecording() {
+        if (!state.recording) return;
+        state.recording = false;
+        recBadge.classList.remove('active');
+        btnRecord.classList.remove('recording');
+        btnRecord.textContent = '🎬 录制视频';
+        try {
+          if (exporter.recorder && exporter.recorder.state !== 'inactive') {
+            exporter.recorder.stop();
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+      }
+
+      function compositeExportFrame() {
+        if (!state.recording || !exporter.ctx) return;
+        const ec = exporter.ctx;
+        ec.clearRect(0, 0, 1280, 720);
+        if (glEngine.ready) {
+          ec.drawImage(glCanvas, 0, 0, 1280, 720);
+        } else {
+          ec.fillStyle = '#05060a';
+          ec.fillRect(0, 0, 1280, 720);
+        }
+        ec.drawImage(fxCanvas, 0, 0, 1280, 720);
+      }
+
+      /* =======================================================================
+         10. CANVAS RESIZING & MAIN 60 FPS RENDER LOOP
+         ======================================================================= */
+      function resizeCanvases() {
+        const rect = stage.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        state.width = Math.max(320, Math.round(rect.width));
+        state.height = Math.max(180, Math.round(rect.height));
+        state.dpr = dpr;
+
+        // Layer 1 (WebGL): Render at crisp balanced resolution for blazing 60fps SDF raymarching
+        const glScale = Math.min(dpr, 1.35);
+        glCanvas.width = Math.round(state.width * glScale);
+        glCanvas.height = Math.round(state.height * glScale);
+
+        // Layer 2 (Canvas2D): Full crisp HiDPI for razor-sharp typography & vector lines
+        fxCanvas.width = Math.round(state.width * dpr);
+        fxCanvas.height = Math.round(state.height * dpr);
+      }
+
+      let lastFrameNow = performance.now();
+      let fpsAccum = 0;
+      let fpsFrames = 0;
+
+      function renderLoop(now) {
+        requestAnimationFrame(renderLoop);
+
+        const rawDt = (now - lastFrameNow) * 0.001;
+        lastFrameNow = now;
+        const dt = clamp(rawDt, 0.001, 0.05);
+
+        // FPS Telemetry smoothing
+        fpsAccum += rawDt;
+        fpsFrames++;
+        if (fpsAccum >= 0.35) {
+          state.fps = fpsFrames / fpsAccum;
+          state.frameMs = (fpsAccum / fpsFrames) * 1000;
+          fpsAccum = 0;
+          fpsFrames = 0;
+        }
+
+        // Advance timeline
+        state.ambientT += dt;
+        if (state.playing) {
+          state.t += dt;
+          if (state.t >= DURATION) {
+            state.t = DURATION;
+            state.playing = false;
+            state.ended = true;
+            if (state.recording) stopRecording();
+            endOverlay.classList.remove('hidden');
+            controlsEl.classList.remove('autohide');
+            updateControlUI();
+          }
+        }
+
+        // Update Web Audio sequencer & sample live FFT
+        const renderT = state.started ? state.t : state.ambientT;
+        if (state.playing) synth.update(state.t);
+        synth.sampleAudio(renderT);
+
+        // Camera impact shake decay
+        state.shake *= Math.pow(0.015, dt);
+
+        // Compute smooth crossfade weights across all 6 acts
+        const w1 = actWeight(state.t, 0, 10, 0.8);
+        const w2 = actWeight(state.t, 10, 20, 0.85);
+        const w3 = actWeight(state.t, 20, 30, 0.85);
+        const w4 = actWeight(state.t, 30, 40, 0.85);
+        const w5 = actWeight(state.t, 40, 50, 0.85);
+        const w6 = actWeight(state.t, 50, 60, 0.85);
+
+        // --- LAYER 1: RENDER WEBGL SHADER ---
+        if (glEngine.ready) {
+          const gl = glEngine.gl;
+          gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+          gl.uniform2f(glEngine.uniforms.res, glCanvas.width, glCanvas.height);
+          gl.uniform1f(glEngine.uniforms.time, renderT);
+          gl.uniform1f(glEngine.uniforms.ambient, state.started ? 0.0 : 1.0);
+          gl.uniform1f(glEngine.uniforms.bass, state.audioBass);
+          gl.uniform1f(glEngine.uniforms.mid, state.audioMid);
+          gl.uniform1f(glEngine.uniforms.high, state.audioHigh);
+          gl.uniform3f(glEngine.uniforms.w123, w1, w2, w3);
+          gl.uniform3f(glEngine.uniforms.w456, w4, w5, w6);
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
+        }
+
+        // --- LAYER 2: RENDER CANVAS2D ---
+        ctx.save();
+        ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        const w = state.width;
+        const h = state.height;
+
+        if (glEngine.ready) {
+          ctx.clearRect(0, 0, w, h);
+        } else {
+          // Graceful Canvas2D fallback backdrop
+          const bg = ctx.createRadialGradient(w * 0.5, h * 0.5, 0, w * 0.5, h * 0.5, w * 0.7);
+          bg.addColorStop(0, '#0d1528');
+          bg.addColorStop(1, '#04050a');
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        // Subtle impact camera shake
+        if (state.shake > 0.01) {
+          const sx = (Math.random() - 0.5) * state.shake * 10;
+          const sy = (Math.random() - 0.5) * state.shake * 8;
+          ctx.translate(sx, sy);
+        }
+
+        if (!state.started) {
+          drawAmbientParticles(w, h, state.ambientT);
+        } else {
+          if (w1 > 0.01) drawAct1(w, h, state.t, w1);
+          if (w2 > 0.01) drawAct2(w, h, state.t, w2);
+          if (w3 > 0.01) drawAct3(w, h, state.t, dt, w3);
+          if (w4 > 0.01) drawAct4(w, h, state.t, w4);
+          if (w5 > 0.01) drawAct5(w, h, state.t, w5);
+          if (w6 > 0.01) drawAct6(w, h, state.t, dt, w6);
+
+          // Cinema overlays baked into Canvas2D so exported WebM looks complete
+          drawChapterBanner(w, h, state.t);
+          drawSubtitles(w, h, state.t);
+          drawHudOverlay(w, h, state.t);
+        }
+
+        ctx.restore();
+
+        // Composite unified export frame if recording
+        if (state.recording) {
+          compositeExportFrame();
+          recStatusText.textContent = `REC ${formatTime(state.t)} / 01:00.0`;
+        }
+
+        // Update UI timeline
+        if (state.started) {
+          const pct = (state.t / DURATION) * 100;
+          timelineFill.style.width = `${pct}%`;
+          timelineThumb.style.left = `${pct}%`;
+          timecodeEl.textContent = `${formatTime(state.t)} / 01:00.0`;
+
+          const curAct = clamp(Math.floor(state.t / 10), 0, 5);
+          for (let i = 0; i < chapterPills.length; i++) {
+            chapterPills[i].classList.toggle('active', i === curAct);
+          }
+        }
+      }
+
+      /* =======================================================================
+         11. PLAYBACK CONTROLS, SCRUBBING, INTERACTION & KEYBOARD SHORTCUTS
+         ======================================================================= */
+      function startCinema(startTime = 0.0) {
+        synth.init();
+        state.started = true;
+        state.ended = false;
+        state.t = clamp(startTime, 0, DURATION - 0.05);
+        state.playing = true;
+        synth.resync(state.t);
+        startOverlay.classList.add('hidden');
+        endOverlay.classList.add('hidden');
+        updateControlUI();
+        revealControlsTemporarily();
+      }
+
+      function togglePlayPause() {
+        if (!state.started) {
+          startCinema(0.0);
+          return;
+        }
+        if (state.ended) {
+          startCinema(0.0);
+          return;
+        }
+        synth.init();
+        state.playing = !state.playing;
+        if (state.playing) {
+          synth.resync(state.t);
+          revealControlsTemporarily();
+        } else {
+          controlsEl.classList.remove('autohide');
+        }
+        updateControlUI();
+      }
+
+      function seekTo(sec) {
+        const target = clamp(sec, 0, DURATION - 0.05);
+        if (!state.started) {
+          startCinema(target);
+          return;
+        }
+        state.t = target;
+        state.ended = false;
+        endOverlay.classList.add('hidden');
+        synth.resync(target);
+        updateControlUI();
+      }
+
+      function updateControlUI() {
+        btnPlayPause.textContent = state.playing ? '⏸ 暂停' : '▶ 播放';
+        btnMute.textContent = state.muted ? '🔇 静音' : '🔊 声音';
+        btnSubtitles.classList.toggle('active', state.showSubtitles);
+        btnHud.classList.toggle('active', state.showHud);
+      }
+
+      function revealControlsTemporarily() {
+        if (!state.started) return;
+        controlsEl.classList.remove('autohide');
+        clearTimeout(state.pointerIdleTimer);
+        if (state.playing) {
+          state.pointerIdleTimer = setTimeout(() => {
+            if (state.playing && !isScrubbing) {
+              controlsEl.classList.add('autohide');
+            }
+          }, 2600);
+        }
+      }
+
+      // Button Listeners
+      btnStartPlay.addEventListener('click', () => startCinema(0.0));
+      btnStartRecord.addEventListener('click', () => startRecording(true));
+      btnReplay.addEventListener('click', () => startCinema(0.0));
+      btnEndRecord.addEventListener('click', () => startRecording(true));
+      btnPlayPause.addEventListener('click', togglePlayPause);
+      btnRecord.addEventListener('click', () => startRecording(true));
+      recStopBtn.addEventListener('click', stopRecording);
+
+      btnMute.addEventListener('click', () => {
+        state.muted = !state.muted;
+        synth.setMuted(state.muted);
+        updateControlUI();
+      });
+
+      btnSubtitles.addEventListener('click', () => {
+        state.showSubtitles = !state.showSubtitles;
+        updateControlUI();
+      });
+
+      btnHud.addEventListener('click', () => {
+        state.showHud = !state.showHud;
+        updateControlUI();
+      });
+
+      btnFullscreen.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          (stage.requestFullscreen || stage.webkitRequestFullscreen || (() => {})).call(stage);
+        } else {
+          (document.exitFullscreen || document.webkitExitFullscreen || (() => {})).call(document);
+        }
+      });
+
+      chapterPills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+          const target = parseFloat(pill.dataset.t || '0');
+          seekTo(target);
+        });
+      });
+
+      // Timeline Drag Scrubbing (Mouse + Touch)
+      let isScrubbing = false;
+      function scrubFromEvent(e) {
+        const rect = timelineWrap.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const pct = clamp((clientX - rect.left) / rect.width, 0, 1);
+        seekTo(pct * DURATION);
+      }
+
+      timelineWrap.addEventListener('pointerdown', (e) => {
+        isScrubbing = true;
+        timelineWrap.setPointerCapture(e.pointerId);
+        scrubFromEvent(e);
+      });
+      timelineWrap.addEventListener('pointermove', (e) => {
+        if (isScrubbing) scrubFromEvent(e);
+      });
+      timelineWrap.addEventListener('pointerup', () => {
+        isScrubbing = false;
+        revealControlsTemporarily();
+      });
+
+      // Mouse / Touch Interaction for Act III Gravity Ripple + Auto-Hiding Bar
+      function updatePointer(e) {
+        const rect = fxCanvas.getBoundingClientRect();
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        const cy = e.touches ? e.touches[0].clientY : e.clientY;
+        state.mouseX = clamp((cx - rect.left) / rect.width, 0, 1);
+        state.mouseY = clamp((cy - rect.top) / rect.height, 0, 1);
+        state.mouseActive = true;
+        state.mouseLastMove = performance.now();
+        revealControlsTemporarily();
+      }
+
+      stage.addEventListener('mousemove', updatePointer);
+      stage.addEventListener('touchmove', updatePointer, { passive: true });
+      stage.addEventListener('touchstart', updatePointer, { passive: true });
+      stage.addEventListener('mouseleave', () => {
+        state.mouseActive = false;
+        if (state.playing) controlsEl.classList.add('autohide');
+      });
+
+      // Click on canvas toggles play/pause (except during Act III gravity play)
+      fxCanvas.addEventListener('click', () => {
+        if (!state.started) return;
+        revealControlsTemporarily();
+      });
+
+      // Keyboard Shortcuts
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          togglePlayPause();
+        } else if (e.key === 'm' || e.key === 'M') {
+          state.muted = !state.muted;
+          synth.setMuted(state.muted);
+          updateControlUI();
+        } else if (e.key === 'h' || e.key === 'H') {
+          state.showHud = !state.showHud;
+          updateControlUI();
+        } else if (e.key === 'c' || e.key === 'C') {
+          state.showSubtitles = !state.showSubtitles;
+          updateControlUI();
+        } else if (e.key === 'f' || e.key === 'F') {
+          btnFullscreen.click();
+        } else if (e.key >= '1' && e.key <= '6') {
+          seekTo((parseInt(e.key, 10) - 1) * 10);
+        }
+      });
+
+      window.addEventListener('resize', resizeCanvases);
+      document.addEventListener('fullscreenchange', () => setTimeout(resizeCanvases, 60));
+
+      // Boot Engine on Window Load
+      window.onload = function () {
+        initWebGL();
+        resizeCanvases();
+        updateControlUI();
+        requestAnimationFrame(renderLoop);
+      };
+    })();
+  </script>
+</body>
+</html>
