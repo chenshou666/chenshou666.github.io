@@ -29,7 +29,8 @@ htlab-site/                        站点根目录（= GitHub Pages 发布根目
 ├─ .gitignore                      忽略 .verify/（本地验证输出）与系统垃圾文件
 ├─ docs/
 │  ├─ ARCHITECTURE.md              本文件：架构、加载顺序、子系统、全局符号、约束
-│  └─ CONTENT-GUIDE.md             内容作者指南：C / 四级关卡数据 schema、加关卡、加音频
+│  ├─ CONTENT-GUIDE.md             内容作者指南：C / 四级关卡数据 schema、加关卡、加音频
+│  └─ AI-HANDOFF.md                交接说明：把项目交给其他 AI 时的提示词与验收清单
 │                                  （开发辅助，不参与站点运行；用法见 AGENTS.md 或脚本 --help）
 ├─ css/                            2 个样式文件，按顺序加载（唯一 UI）
 │  ├─ 08-liquid-glass.css          showcase 液态玻璃材质原样：深空极光画布、.liquid-glass / .liquid-pill / .glass-ripple

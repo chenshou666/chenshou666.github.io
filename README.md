@@ -63,6 +63,7 @@ assets/
 docs/
   ARCHITECTURE.md           架构说明：加载顺序、子系统、存储键、全局符号、约束
   CONTENT-GUIDE.md          内容编写指南：关卡数据格式、加关卡/模块/音频、数量同步
+  AI-HANDOFF.md             把项目交给其他 AI 的交接说明：三种方式、可复制提示词、验收清单
 AGENTS.md                   给维护者 / AI 编码代理的仓库须知（先读这个）
 README.md                   本文件
 .gitignore                  忽略本地验证输出（.verify/）与系统垃圾文件
@@ -88,6 +89,7 @@ python -m http.server 8000
 - **`AGENTS.md`**——维护者/AI 编码代理必读：加载顺序与全局作用域约定、常见任务对应文件、验证与部署流程。
 - **`docs/ARCHITECTURE.md`**——架构地图：页面生命周期、加载顺序、各子系统、localStorage 键、数据流、已知约束。
 - **`docs/CONTENT-GUIDE.md`**——课程内容编写指南：C / 四级关卡的数据格式、`check` 检查规格、如何加关卡/模块/音频、需要同步的数量文案。
+- **`docs/AI-HANDOFF.md`**——想把网站交给其他 AI（Gemini / ChatGPT / Claude / Cursor 等）修改时，先给它这份：交接方式、可直接复制的提示词、禁止事项、验收清单。
 
 ## 音频与作者素材
 
