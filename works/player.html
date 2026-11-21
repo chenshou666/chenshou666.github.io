@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-skin="portfolio-player">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#05070f">
 <title>代码影院 · 在线体验 | 尘狩作品集</title>
 <!--
-  works/player.html — 「代码影院」4 部短片的统一播放器（作品集内部使用）
-  作用：给手机/桌面都提供「← 返回作品集」入口，并可直接切换同系列下一部。
-  不放任何业务逻辑，只是 iframe 容器 + 顶部导航。
+  works/player.html — 「代码影院」4 部作品的统一播放器
+  作用：
+    · 顶部「← 作品集」返回按钮 + 系列切换（不用返回就能看下一部）
+    · 手机竖屏时自动进入「影院模式」：把画面旋转 90° 铺满屏幕，
+      让本身按 16:9 / 大屏设计的作品完整显示（把手机横过来观看）
+    · 可随时切回竖屏；桌面 / 横屏手机保持普通布局
+  本文件只是 iframe 容器，不含任何作品业务逻辑。
 -->
 <style>
   :root {
@@ -16,13 +20,11 @@
     --ink: #ffffff;
     --ink-2: rgba(226, 236, 255, 0.78);
     --line: rgba(255, 255, 255, 0.16);
-    --glass: linear-gradient(135deg, rgba(18, 26, 48, 0.86), rgba(10, 15, 30, 0.82));
-    --accent: #38bdf8;
+    --glass: linear-gradient(135deg, rgba(18, 26, 48, 0.88), rgba(10, 15, 30, 0.84));
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; }
+  html, body { height: 100%; margin: 0; }
   body {
-    margin: 0;
     display: flex;
     flex-direction: column;
     background: radial-gradient(80% 60% at 50% 0%, #101a34, var(--bg) 70%);
@@ -30,7 +32,8 @@
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
     overflow: hidden;
   }
-  /* 顶部导航栏 */
+
+  /* ================= 普通模式 ================= */
   .pf-bar {
     flex: 0 0 auto;
     display: flex;
@@ -43,8 +46,7 @@
     -webkit-backdrop-filter: blur(18px);
     z-index: 10;
   }
-  .pf-back,
-  .pf-tab {
+  .pf-btn {
     appearance: none;
     -webkit-appearance: none;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -61,8 +63,7 @@
     -webkit-user-select: none;
     user-select: none;
   }
-  .pf-back { display: inline-flex; align-items: center; gap: 4px; }
-  .pf-back:active { transform: scale(0.96); }
+  .pf-btn:active { transform: scale(0.96); }
   .pf-title {
     flex: 1 1 auto;
     min-width: 0;
@@ -76,7 +77,6 @@
     text-overflow: ellipsis;
   }
   .pf-spacer { flex: 0 0 auto; width: 84px; }
-  /* 系列切换 */
   .pf-tabs {
     flex: 0 0 auto;
     display: flex;
@@ -94,54 +94,108 @@
     border-color: rgba(186, 230, 253, 0.6);
     color: #fff;
   }
-  /* 播放区 */
   .pf-stage { flex: 1 1 auto; position: relative; min-height: 0; background: #000; }
-  .pf-stage iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    background: #000;
-  }
+  .pf-stage iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
   .pf-hint {
     position: absolute;
     left: 50%;
-    bottom: calc(12px + env(safe-area-inset-bottom));
+    bottom: calc(10px + env(safe-area-inset-bottom));
     transform: translateX(-50%);
     padding: 6px 12px;
     border-radius: 999px;
-    background: rgba(8, 12, 24, 0.72);
+    background: rgba(8, 12, 24, 0.74);
     border: 1px solid rgba(255, 255, 255, 0.16);
-    color: rgba(226, 236, 255, 0.7);
+    color: rgba(226, 236, 255, 0.72);
     font-size: 11px;
     pointer-events: none;
     white-space: nowrap;
     transition: opacity 0.6s ease;
   }
   .pf-hint.hide { opacity: 0; }
+
+  /* ================= 影院模式（竖屏手机横向铺满） ================= */
+  #pfCinema { display: none; position: fixed; inset: 0; background: #000; overflow: hidden; z-index: 50; }
+  body.cinema #pfNormal { display: none; }
+  body.cinema #pfCinema { display: block; }
+  .cinema-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(90deg);
+    transform-origin: center center;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+    overflow: hidden;
+  }
+  .cinema-bar {
+    flex: 0 0 auto;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    background: var(--glass);
+    border-bottom: 1px solid var(--line);
+  }
+  .cinema-bar .pf-btn { padding: 7px 13px; font-size: 12px; }
+  .cinema-bar .pf-title { font-size: 12px; }
+  .cinema-stage { flex: 1 1 auto; position: relative; min-height: 0; background: #000; }
+  .cinema-stage iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
+  .cinema-tip {
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(8, 12, 24, 0.78);
+    border: 1px solid rgba(186, 230, 253, 0.35);
+    color: #bae6fd;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  .cinema-tip.hide { opacity: 0; }
+
   @media (max-width: 520px) {
     .pf-spacer { display: none; }
     .pf-title { font-size: 11.5px; }
-    .pf-back { padding: 8px 12px; font-size: 12.5px; }
+    .pf-btn { padding: 8px 12px; font-size: 12.5px; }
     .pf-tab { padding: 7px 11px; font-size: 11.5px; }
   }
 </style>
 </head>
 <body>
 
-<header class="pf-bar">
-  <a class="pf-back" href="../index.html" aria-label="返回作品集">← 作品集</a>
-  <div class="pf-title" id="pfTitle">代码影院</div>
-  <div class="pf-spacer" aria-hidden="true"></div>
-</header>
+<!-- ============ 普通模式 ============ -->
+<div id="pfNormal" style="display:flex;flex-direction:column;height:100%">
+  <header class="pf-bar">
+    <a class="pf-btn" href="../index.html" aria-label="返回作品集">← 作品集</a>
+    <div class="pf-title" id="pfTitle">代码影院</div>
+    <button class="pf-btn" id="pfCinemaBtn" type="button" title="横屏铺满观看">⛶ 影院</button>
+  </header>
+  <nav class="pf-tabs" id="pfTabs" aria-label="切换系列作品"></nav>
+  <main class="pf-stage" id="pfNormalStage">
+    <div class="pf-hint" id="pfHint">可切换上方作品 · 点「影院」横屏铺满</div>
+  </main>
+</div>
 
-<nav class="pf-tabs" id="pfTabs" aria-label="切换系列作品"></nav>
-
-<main class="pf-stage">
-  <iframe id="pfFrame" title="作品演示" allow="autoplay; fullscreen; microphone" allowfullscreen></iframe>
-  <div class="pf-hint" id="pfHint">可切换上方作品 · 左上下方返回作品集</div>
-</main>
+<!-- ============ 影院模式 ============ -->
+<div id="pfCinema">
+  <div class="cinema-frame" id="pfCinemaFrame">
+    <div class="cinema-bar">
+      <a class="pf-btn" href="../index.html">← 作品集</a>
+      <div class="pf-title" id="pfCinemaTitle">代码影院</div>
+      <button class="pf-btn" id="pfNextBtn" type="button">下一部 ▸</button>
+      <button class="pf-btn" id="pfPortraitBtn" type="button">竖屏</button>
+    </div>
+    <div class="cinema-stage" id="pfCinemaStage">
+      <div class="cinema-tip" id="pfCinemaTip">把手机横过来，画面更完整</div>
+    </div>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -152,47 +206,123 @@
     { id: "zero-pixels", name: "纯代码视界", src: "zero-pixels.html" }
   ];
 
-  var frame = document.getElementById("pfFrame");
+  var frame = document.createElement("iframe");
+  frame.id = "pfFrame";
+  frame.title = "作品演示";
+  frame.setAttribute("allow", "autoplay; fullscreen; microphone; gyroscope; accelerometer; encrypted-media");
+  frame.setAttribute("allowfullscreen", "");
+
+  var body = document.body;
+  var normalStage = document.getElementById("pfNormalStage");
+  var cinemaStage = document.getElementById("pfCinemaStage");
+  var cinemaFrame = document.getElementById("pfCinemaFrame");
   var tabs = document.getElementById("pfTabs");
-  var title = document.getElementById("pfTitle");
-  var hint = document.getElementById("pfHint");
+  var normalTitle = document.getElementById("pfTitle");
+  var cinemaTitle = document.getElementById("pfCinemaTitle");
+  var normalHint = document.getElementById("pfHint");
+  var cinemaTip = document.getElementById("pfCinemaTip");
+
+  var autoModeDone = false;
+  var manualPortrait = false;
 
   function find(id) {
     for (var i = 0; i < WORKS.length; i++) if (WORKS[i].id === id) return WORKS[i];
     return WORKS[0];
   }
-
   function currentId() {
     var m = /[?&]w=([^&]+)/.exec(location.search || "");
     return m ? decodeURIComponent(m[1]) : WORKS[0].id;
   }
+  var current = find(currentId());
 
-  function render(id) {
-    var w = find(id);
-    title.textContent = "代码影院 · " + w.name;
-    frame.src = w.src;
+  function layoutCinema() {
+    var w = Math.max(480, window.innerHeight);
+    var h = Math.max(320, window.innerWidth);
+    cinemaFrame.style.width = w + "px";
+    cinemaFrame.style.height = h + "px";
+  }
+
+  function setMode(cinema) {
+    if (cinema) {
+      body.classList.add("cinema");
+      cinemaStage.appendChild(frame);
+      layoutCinema();
+      cinemaTip.classList.remove("hide");
+      window.setTimeout(function () { cinemaTip.classList.add("hide"); }, 3800);
+    } else {
+      body.classList.remove("cinema");
+      normalStage.appendChild(frame);
+      normalHint.classList.remove("hide");
+      window.setTimeout(function () { normalHint.classList.add("hide"); }, 3000);
+    }
+  }
+
+  function isPortraitPhone() {
+    return window.innerWidth <= 900 && window.innerHeight > window.innerWidth;
+  }
+
+  function render(id, keepMode) {
+    current = find(id);
+    normalTitle.textContent = "代码影院 · " + current.name;
+    cinemaTitle.textContent = "代码影院 · " + current.name;
+    frame.src = current.src;
     if (window.history && history.replaceState) {
-      history.replaceState(null, "", "?w=" + encodeURIComponent(w.id));
+      history.replaceState(null, "", "?w=" + encodeURIComponent(current.id));
     }
     var btns = tabs.querySelectorAll(".pf-tab");
     for (var i = 0; i < btns.length; i++) {
-      btns[i].setAttribute("aria-current", btns[i].dataset.id === w.id ? "true" : "false");
+      btns[i].setAttribute("aria-current", btns[i].dataset.id === current.id ? "true" : "false");
+    }
+    if (!keepMode) {
+      /* 首次进入 / 切换作品时按屏幕方向决定显示模式 */
+      if (isPortraitPhone() && !manualPortrait) setMode(true);
+      else setMode(false);
     }
   }
 
   WORKS.forEach(function (w) {
     var b = document.createElement("button");
     b.type = "button";
-    b.className = "pf-tab";
+    b.className = "pf-tab pf-btn";
     b.dataset.id = w.id;
     b.textContent = w.name;
     b.addEventListener("click", function () { render(w.id); });
     tabs.appendChild(b);
   });
 
-  render(currentId());
+  document.getElementById("pfCinemaBtn").addEventListener("click", function () {
+    manualPortrait = false;
+    setMode(true);
+  });
+  document.getElementById("pfPortraitBtn").addEventListener("click", function () {
+    manualPortrait = true;
+    setMode(false);
+  });
+  document.getElementById("pfNextBtn").addEventListener("click", function () {
+    var idx = 0;
+    for (var i = 0; i < WORKS.length; i++) if (WORKS[i].id === current.id) idx = i;
+    var next = WORKS[(idx + 1) % WORKS.length];
+    render(next.id, true);
+  });
 
-  window.setTimeout(function () { hint.classList.add("hide"); }, 4200);
+  window.addEventListener("resize", function () {
+    if (body.classList.contains("cinema")) layoutCinema();
+    else if (autoModeDone && !manualPortrait) {
+      if (isPortraitPhone()) setMode(true);
+    }
+  });
+  window.addEventListener("orientationchange", function () {
+    window.setTimeout(function () {
+      if (body.classList.contains("cinema")) layoutCinema();
+      else if (!manualPortrait && isPortraitPhone()) setMode(true);
+    }, 220);
+  });
+
+  /* 首次进入：竖屏手机直接进影院模式，保证画面完整 */
+  render(current.id);
+  autoModeDone = true;
+
+  window.setTimeout(function () { normalHint.classList.add("hide"); }, 4200);
 })();
 </script>
 </body>

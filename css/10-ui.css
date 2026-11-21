@@ -2546,3 +2546,23 @@ body[data-zone="portfolio"] .reset-button {
     isolation: isolate;
   }
 }
+
+/* ==========================================================================
+ * 导航分区：作品集页面只显示「作品集 / 关于作者」，
+ *           进入 HT Lab（学习站）后才显示学习课程 / 继续挑战 / 总结 / 项目 / 关于许可
+ * ========================================================================== */
+.nav-btn[data-page="author"] {
+  display: none;
+}
+
+body[data-zone="portfolio"] .nav-btn[data-page="author"] {
+  display: flex;
+}
+
+body[data-zone="portfolio"] .nav-btn[data-page="courses"],
+body[data-zone="portfolio"] .nav-btn[data-page="practice"],
+body[data-zone="portfolio"] .nav-btn[data-page="summary"],
+body[data-zone="portfolio"] .nav-btn[data-page="project"],
+body[data-zone="portfolio"] .nav-btn[data-page="about"] {
+  display: none !important;
+}

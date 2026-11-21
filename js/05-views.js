@@ -7,10 +7,10 @@
 
 const PORTFOLIO_DATA={
  author:"尘狩",
- role:"个人作品集 · 独立前端与学习工具制作",
- tagline:"把复杂知识做成打开就能练的纯前端工具，注重清晰结构、离线可用与打磨细节。",
- bioTodo:"TODO：这里预留为「尘狩」的个人简介，后续可直接修改 js/05-views.js 顶部的 PORTFOLIO_DATA.bioTodo（例如学校专业、学习方向、近期计划或代表经历）。",
- focusTodo:"TODO：可补充你正在做或计划中的下一件作品方向。",
+ role:"贵州师范学院 · 电子信息科学与技术 · 学生",
+ tagline:"用 AI 辅助把想法做成打开就能玩的作品：从学习工具到纯代码影像实验。",
+ bio:"贵州师范学院电子信息科学与技术专业学生。日常借助 AI 工具协作完成前端与创意编程作品：把抽象的想法做成打开即用、可以交互、可以看完的东西——HT Lab 学习站和「代码影院」系列都是这样诞生的。",
+ focus:"近期没有特别明确的目标，主要在继续打磨作品集和已有两个作品；如果你有想法、反馈或合作意向，欢迎通过下面的方式联系我。",
  githubUrl:"https://github.com/chenshou666/chenshou666.github.io",
  githubLabel:"github.com/chenshou666/chenshou666.github.io",
  skills:[
@@ -254,11 +254,12 @@ function renderAuthor(){
   +'</div>'
   +'<div class="pf-author-grid">'
    +'<section class="panel">'
-    +'<div class="challenge-head"><div class="challenge-label">作者简介</div><span class="chip">待补充</span></div>'
-    +'<div class="pf-todo-note">'+esc(PORTFOLIO_DATA.bioTodo)+'</div>'
-    +'<div class="pf-todo-note" style="margin-top:10px">'+esc(PORTFOLIO_DATA.focusTodo)+'</div>'
+    +'<div class="challenge-head"><div class="challenge-label">作者简介</div><span class="chip">在校学生</span></div>'
+    +'<p class="lesson-copy">'+esc(PORTFOLIO_DATA.bio||PORTFOLIO_DATA.bioTodo||"")+'</p>'
+    +'<p class="lesson-copy" style="margin-top:10px">'+esc(PORTFOLIO_DATA.focus||PORTFOLIO_DATA.focusTodo||"")+'</p>'
     +'<div class="pf-work-actions" style="margin-top:16px">'
-     +'<button class="btn btn-primary btn-small" type="button" data-action="open-work">查看代表作品 HT Lab →</button>'
+     +'<button class="btn btn-primary btn-small" type="button" data-action="open-work" data-work="ht-lab">查看作品 HT Lab →</button>'
+     +'<button class="btn btn-soft btn-small" type="button" data-action="open-work" data-work="code-cinema">查看作品 代码影院 →</button>'
     +'</div>'
    +'</section>'
    +'<section class="panel">'
@@ -292,7 +293,7 @@ function render(){
  var __changed=__k!==__lastViewKey;__lastViewKey=__k;
  if(__v&&__changed){__v.classList.remove("view-enter");void __v.offsetWidth;__v.classList.add("view-enter");
   var __tb=document.querySelector(".topbar");if(__tb){__tb.classList.remove("title-enter");void __tb.offsetWidth;__tb.classList.add("title-enter")}}
- syncZoneChrome();navTitle();document.getElementById("xpTop").textContent=data.xp;var __navPage=(page==="work"||page==="author")?"home":page;document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===__navPage)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="home")renderPortfolio();else if(page==="work")renderWorkDetail();else if(page==="author")renderAuthor();else if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="project")renderProject();else{renderSummary();ensureProgressTools()}}
+ syncZoneChrome();navTitle();document.getElementById("xpTop").textContent=data.xp;var __navPage=(page==="work")?"home":(page==="author"?"author":page);document.querySelectorAll(".nav-btn").forEach(function(b){b.classList.toggle("active",b.dataset.page===__navPage)});if(activeLevel){renderLesson();ensureNextBar();return}if(page==="home")renderPortfolio();else if(page==="work")renderWorkDetail();else if(page==="author")renderAuthor();else if(page==="courses")renderCourses();else if(page==="map")renderMap();else if(page==="practice")renderPractice();else if(page==="about")renderAbout();else if(page==="project")renderProject();else{renderSummary();ensureProgressTools()}}
 function renderCourses(){
  const cards=COURSES.map(function(c){
   const ls=courseLevels[c.id]||[],st=stores[c.id],dn=Object.keys(st.completed).length,pc=ls.length?Math.round(dn/ls.length*100):0,ready=ls.length>0;
