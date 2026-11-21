@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-skin="portfolio-player">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070f">
+<title>代码影院 · 在线体验 | 尘狩作品集</title>
+<!--
+  works/player.html — 「代码影院」4 部短片的统一播放器（作品集内部使用）
+  作用：给手机/桌面都提供「← 返回作品集」入口，并可直接切换同系列下一部。
+  不放任何业务逻辑，只是 iframe 容器 + 顶部导航。
+-->
+<style>
+  :root {
+    --bg: #05070f;
+    --ink: #ffffff;
+    --ink-2: rgba(226, 236, 255, 0.78);
+    --line: rgba(255, 255, 255, 0.16);
+    --glass: linear-gradient(135deg, rgba(18, 26, 48, 0.86), rgba(10, 15, 30, 0.82));
+    --accent: #38bdf8;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(80% 60% at 50% 0%, #101a34, var(--bg) 70%);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
+    overflow: hidden;
+  }
+  /* 顶部导航栏 */
+  .pf-bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: calc(8px + env(safe-area-inset-top)) 12px 8px;
+    background: var(--glass);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    z-index: 10;
+  }
+  .pf-back,
+  .pf-tab {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 650;
+    font-family: inherit;
+    border-radius: 999px;
+    padding: 9px 14px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .pf-back { display: inline-flex; align-items: center; gap: 4px; }
+  .pf-back:active { transform: scale(0.96); }
+  .pf-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--ink-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pf-spacer { flex: 0 0 auto; width: 84px; }
+  /* 系列切换 */
+  .pf-tabs {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--line);
+  }
+  .pf-tabs::-webkit-scrollbar { display: none; }
+  .pf-tab { flex: 0 0 auto; padding: 7px 13px; font-size: 12px; color: var(--ink-2); }
+  .pf-tab[aria-current="true"] {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.42), rgba(129, 140, 248, 0.3));
+    border-color: rgba(186, 230, 253, 0.6);
+    color: #fff;
+  }
+  /* 播放区 */
+  .pf-stage { flex: 1 1 auto; position: relative; min-height: 0; background: #000; }
+  .pf-stage iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #000;
+  }
+  .pf-hint {
+    position: absolute;
+    left: 50%;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(8, 12, 24, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: rgba(226, 236, 255, 0.7);
+    font-size: 11px;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 0.6s ease;
+  }
+  .pf-hint.hide { opacity: 0; }
+  @media (max-width: 520px) {
+    .pf-spacer { display: none; }
+    .pf-title { font-size: 11.5px; }
+    .pf-back { padding: 8px 12px; font-size: 12.5px; }
+    .pf-tab { padding: 7px 11px; font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="pf-bar">
+  <a class="pf-back" href="../index.html" aria-label="返回作品集">← 作品集</a>
+  <div class="pf-title" id="pfTitle">代码影院</div>
+  <div class="pf-spacer" aria-hidden="true"></div>
+</header>
+
+<nav class="pf-tabs" id="pfTabs" aria-label="切换系列作品"></nav>
+
+<main class="pf-stage">
+  <iframe id="pfFrame" title="作品演示" allow="autoplay; fullscreen; microphone" allowfullscreen></iframe>
+  <div class="pf-hint" id="pfHint">可切换上方作品 · 左上下方返回作品集</div>
+</main>
+
+<script>
+(function () {
+  var WORKS = [
+    { id: "ink-mist", name: "墨韵山河", src: "ink-mist-3d.html" },
+    { id: "pure-code-cinema", name: "PURE CODE CINEMA", src: "pure-code-cinema.html" },
+    { id: "isomorphism", name: "万物同构", src: "isomorphism.html" },
+    { id: "zero-pixels", name: "纯代码视界", src: "zero-pixels.html" }
+  ];
+
+  var frame = document.getElementById("pfFrame");
+  var tabs = document.getElementById("pfTabs");
+  var title = document.getElementById("pfTitle");
+  var hint = document.getElementById("pfHint");
+
+  function find(id) {
+    for (var i = 0; i < WORKS.length; i++) if (WORKS[i].id === id) return WORKS[i];
+    return WORKS[0];
+  }
+
+  function currentId() {
+    var m = /[?&]w=([^&]+)/.exec(location.search || "");
+    return m ? decodeURIComponent(m[1]) : WORKS[0].id;
+  }
+
+  function render(id) {
+    var w = find(id);
+    title.textContent = "代码影院 · " + w.name;
+    frame.src = w.src;
+    if (window.history && history.replaceState) {
+      history.replaceState(null, "", "?w=" + encodeURIComponent(w.id));
+    }
+    var btns = tabs.querySelectorAll(".pf-tab");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].setAttribute("aria-current", btns[i].dataset.id === w.id ? "true" : "false");
+    }
+  }
+
+  WORKS.forEach(function (w) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "pf-tab";
+    b.dataset.id = w.id;
+    b.textContent = w.name;
+    b.addEventListener("click", function () { render(w.id); });
+    tabs.appendChild(b);
+  });
+
+  render(currentId());
+
+  window.setTimeout(function () { hint.classList.add("hide"); }, 4200);
+})();
+</script>
+</body>
+</html>

@@ -54,10 +54,10 @@ const PORTFOLIO_DATA={
     {v:"WebGL",l:"GLSL + Web Audio"}
    ],
    demos:[
-    {name:"墨韵山河 · INK & MIST",subtitle:"3D 写实水墨微电影（GLSL 光线步进）",desc:"40 秒水墨正片：山川、云雾与光影全部由 GLSL 光线步进实时计算，配合 Web Audio 合成配乐；可自定义开场提示词与结尾朱砂篆印，一键录制导出。",href:"works/ink-mist-3d.html",tags:["水墨","GLSL 光线步进","40 秒","录屏导出"]},
-    {name:"PURE CODE CINEMA",subtitle:"零依赖生成式电影引擎",desc:"36 秒五幕编舞（奇点 → 形变 → 超空间 → 超新星 → GEMINI），Web Audio 实时合成 128 BPM 配乐，0 字节外部素材，支持 1080p / 720p WebM 导出。",href:"works/pure-code-cinema.html",tags:["生成式电影","五幕","128 BPM","0 素材"]},
-    {name:"万物同构 · ISOMORPHISM",subtitle:"1080p60 电影感视觉诗（WebGL2 多通道）",desc:"六章同构视觉诗：虹膜⇄星云、蛛网⇄神经、闪电⇄脉络⇄江河、飓风⇄鹦鹉螺⇄星系、玄武岩⇄蜂巢⇄石墨烯、水波⇄时空⇄归瞳；多通道光学渲染 + 电影原声。",href:"works/isomorphism.html",tags:["WebGL2 多通道","六章","1080p60"]},
-    {name:"纯代码视界 · ZERO PIXELS",subtitle:"100% 实时代码生成影院",desc:"六大乐章（创世 / 四维 / 物理 / 律动 / 光追 …）全部实时生成，把傅里叶、四维、引力、声谱与光追等抽象主题变成可看可听的画面；支持停止并保存导出。",href:"works/zero-pixels.html",tags:["傅里叶","四维","光追","六乐章"]}
+    {name:"墨韵山河 · INK & MIST",subtitle:"3D 写实水墨微电影（GLSL 光线步进）",desc:"40 秒水墨正片：山川、云雾与光影全部由 GLSL 光线步进实时计算，配合 Web Audio 合成配乐；可自定义开场提示词与结尾朱砂篆印，一键录制导出。",href:"works/player.html?w=ink-mist",tags:["水墨","GLSL 光线步进","40 秒","录屏导出"]},
+    {name:"PURE CODE CINEMA",subtitle:"零依赖生成式电影引擎",desc:"36 秒五幕编舞（奇点 → 形变 → 超空间 → 超新星 → GEMINI），Web Audio 实时合成 128 BPM 配乐，0 字节外部素材，支持 1080p / 720p WebM 导出。",href:"works/player.html?w=pure-code-cinema",tags:["生成式电影","五幕","128 BPM","0 素材"]},
+    {name:"万物同构 · ISOMORPHISM",subtitle:"1080p60 电影感视觉诗（WebGL2 多通道）",desc:"六章同构视觉诗：虹膜⇄星云、蛛网⇄神经、闪电⇄脉络⇄江河、飓风⇄鹦鹉螺⇄星系、玄武岩⇄蜂巢⇄石墨烯、水波⇄时空⇄归瞳；多通道光学渲染 + 电影原声。",href:"works/player.html?w=isomorphism",tags:["WebGL2 多通道","六章","1080p60"]},
+    {name:"纯代码视界 · ZERO PIXELS",subtitle:"100% 实时代码生成影院",desc:"六大乐章（创世 / 四维 / 物理 / 律动 / 光追 …）全部实时生成，把傅里叶、四维、引力、声谱与光追等抽象主题变成可看可听的画面；支持停止并保存导出。",href:"works/player.html?w=zero-pixels",tags:["傅里叶","四维","光追","六乐章"]}
    ],
    features:[
     {title:"画面 100% 由代码生成",desc:"不加载任何图片、贴图、3D 模型或音频文件：山峦、云雾、光线、粒子与节奏全部是 GLSL/WebGL 的实时计算结果。"},

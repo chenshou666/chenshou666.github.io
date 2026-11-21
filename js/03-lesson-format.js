@@ -38,7 +38,8 @@ function switchPage(p){
  page=p||"home";
  activeLevel=null;
  render();
- window.scrollTo({top:0,behavior:"smooth"});
+ var small=!!(window.matchMedia&&window.matchMedia("(max-width: 900px)").matches);
+ window.scrollTo({top:0,behavior:small?"auto":"smooth"});
 }
 function navTitle(){
  const n="HT LAB · "+currentCourse().name;

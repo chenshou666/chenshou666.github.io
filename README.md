@@ -66,6 +66,7 @@ works/                       作品「代码影院」的 4 部独立演示（单
   pure-code-cinema.html      PURE CODE CINEMA（生成式电影引擎，零外部依赖）
   isomorphism.html           万物同构 · ISOMORPHISM（1080p60 光学视觉诗，零外部依赖）
   zero-pixels.html           纯代码视界 · ZERO PIXELS（实时生成影院，零外部依赖）
+  player.html                统一播放器：顶部「← 作品集」返回 + 四部作品一键切换（手机友好）
 assets/
   favicon.svg               站点图标（SVG）
   ht-lab.ico                站点图标（ICO）

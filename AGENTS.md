@@ -44,7 +44,7 @@ AGENTS.md / README.md  维护须知 / 使用者说明
 | 任务 | 主要文件 | 注意 |
 | --- | --- | --- |
 | 改配色 / 圆角 / 间距 / 阴影 | `css/10-ui.css` 的 `:root` 令牌与对应章节 | 用 `--ui-*` 变量统一改，禁止到处写死色值 |
-| 新增一个作品 | 把作品文件放进 `works/`；在 `js/05-views.js` 顶部 `PORTFOLIO_DATA.works` 数组里加一项（id / name / summary / metrics / features / stack；系列作品用 `demos:[{name,subtitle,desc,href,tags}]`，详情页会自动生成逐部体验列表） | 作品卡与详情页会自动生成；作品详情页顶栏标题自动跟随 |
+| 新增一个作品 | 把作品文件放进 `works/`；在 `js/05-views.js` 顶部 `PORTFOLIO_DATA.works` 数组里加一项（id / name / summary / metrics / features / stack；系列作品用 `demos:[{name,subtitle,desc,href,tags}]`，`href` 统一指向 `works/player.html?w=<id>`，播放器自带返回作品集与系列切换） | 作品卡与详情页会自动生成；作品详情页顶栏标题自动跟随 |
 | 改作品集首页 / 作品详情 / 关于作者内容 | `js/05-views.js` 顶部 `PORTFOLIO_DATA`（作者名、简介 TODO、作品文案、技能、联系方式）+ `css/10-ui.css` 末尾「作品集」章节 | 只改数据与文案，不动学习站逻辑；bio 仍是 TODO 占位 |
 | 改顶栏 / 底部 Dock / 页面壳 | `index.html` 静态 DOM + `css/10-ui.css` 第 3 节 | 保留 `#view`、`#topTitle`、`#xpTop` 等 JS 依赖节点 |
 | 改玻璃材质 / 极光背景 | `css/08-liquid-glass.css` + `js/14-liquid-glass.js` | 材质参数在 08 的 `:root`；10 只做组件映射 |

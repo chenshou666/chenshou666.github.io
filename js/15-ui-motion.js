@@ -21,7 +21,8 @@
 
   var reduceMotion = !!(window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  var supportsVT = !reduceMotion && typeof document.startViewTransition === "function";
+  var isSmallScreen = !!(window.matchMedia && window.matchMedia("(max-width: 900px)").matches);
+  var supportsVT = !reduceMotion && !isSmallScreen && typeof document.startViewTransition === "function";
 
   var PAGE_ORDER = { courses: 0, map: 1, practice: 2, summary: 3, project: 4, about: 5 };
   var lastKey = null;

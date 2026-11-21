@@ -2527,3 +2527,22 @@ body[data-zone="portfolio"] .reset-button {
     font-size: 16px;
   }
 }
+
+/* ==========================================================================
+ * 手机端：Dock / 顶栏永远压在最上层（切页内容不会盖住导航按键）
+ * ========================================================================== */
+@media (max-width: 900px) {
+  .sidebar {
+    z-index: 130 !important;
+  }
+  .topbar {
+    z-index: 120 !important;
+  }
+  #view {
+    position: relative;
+    z-index: 1;
+  }
+  .app {
+    isolation: isolate;
+  }
+}
