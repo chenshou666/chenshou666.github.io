@@ -9,7 +9,6 @@ function handleClick(e){
  const levelBtn=e.target.closest("[data-level]");if(levelBtn){openLevel(Number(levelBtn.dataset.level));return}
  const action=e.target.closest("[data-action]");if(!action)return;
  const a=action.dataset.action;
- if(a==="cycle-theme"){apCycleSky();return}
  if(a==="open-work"){selectedWorkId=action.dataset.work||"ht-lab";switchPage("work");return}
  if(a==="enter-lab"){switchPage("courses");return}
  if(a==="open-author"){switchPage("author");return}

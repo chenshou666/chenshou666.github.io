@@ -35,7 +35,8 @@ const cet4Groups=cet4Modules.map(function(m){return m.name});
 const courseLevels={c:cLevels,cet4:cet4Levels};
 const courseGroups={c:cGroups,cet4:cet4Groups};
 function hasCourse(id){return !!(courseLevels[id]&&courseLevels[id].length)}
-let activeCourse=localStorage.getItem(courseKey)||"c";
+let activeCourse="c";
+try{activeCourse=localStorage.getItem(courseKey)||"c"}catch(e){/* 隐私模式等环境下读取失败时退回默认课程 */}
 if(!hasCourse(activeCourse))activeCourse="c";
 let levels=courseLevels[activeCourse],groups=courseGroups[activeCourse];
 function courseById(id){return COURSES.filter(function(c){return c.id===id})[0]}

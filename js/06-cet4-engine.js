@@ -5,7 +5,7 @@
  *       编号即加载顺序；调整顺序或拆合并文件前请先读 docs/ARCHITECTURE.md。
  * ========================================================================== */
 /* ==================== 英语四级任务引擎（听力/阅读/写作/翻译/口语） ==================== */
-let recUrl=null,recorder=null,recChunks=[],taskTimer=null;
+let recUrl=null,recorder=null,recChunks=[],recMime="audio/webm",taskTimer=null;
 function stopTaskTimer(){if(taskTimer){clearInterval(taskTimer);taskTimer=null}}
 function startTaskTimer(l){
  if(!l||!l.timeLimit)return;
@@ -75,7 +75,7 @@ function pickAnswer(qi,pi){
  st.answers[qi]=pi;
  data.attempts++;if(pi===l.questions[qi].answer)data.correct++;save();
  const answered=st.answers.filter(function(a){return a!==null&&a!==undefined}).length;
- const needsTask=(l.type==="write"||l.type==="translate"||l.type==="speak");
+ const needsTask=(l.type==="write"||l.type==="translate"||l.type==="speak"||l.type==="code");
  if(answered===l.questions.length&&!needsTask){
   const right=st.answers.filter(function(a,i){return a===l.questions[i].answer}).length;
   st.score={right:right,total:l.questions.length};
@@ -143,14 +143,18 @@ function startRecorder(){
  const l=activeLevel;if(!l)return;
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast("当前浏览器不支持录音，可直接跟读自评。");return}
  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
-  recChunks=[];recorder=new MediaRecorder(stream);
+  var recLevel=activeLevel;
+  recChunks=[];recorder=new MediaRecorder(stream);recMime=recorder.mimeType||"audio/webm";
   recorder.ondataavailable=function(e){if(e.data&&e.data.size)recChunks.push(e.data)};
   recorder.onstop=function(){
    stream.getTracks().forEach(function(t){t.stop()});
+   window.recording=false;
+   /* 停止录音是异步回调：此时可能已切课程/退出关卡，activeLevel 为空或已换关，不能再写入 */
+   if(!recLevel||activeLevel!==recLevel){render();return}
    if(recUrl)URL.revokeObjectURL(recUrl);
-   recUrl=URL.createObjectURL(new Blob(recChunks,{type:(recorder&&recorder.mimeType)||"audio/webm"}));
-   const st=ensureTaskState(activeLevel);st.recordUrl=recUrl;
-   window.recording=false;render();
+   recUrl=URL.createObjectURL(new Blob(recChunks,{type:recMime}));
+   ensureTaskState(recLevel).recordUrl=recUrl;
+   render();
   };
   recorder.start();window.recording=true;render();toast("正在录音，跟读完成后点「停止录音」。");
  }).catch(function(err){window.recording=false;render();toast("麦克风不可用："+((err&&err.name)||"未知错误"))});

@@ -3,6 +3,8 @@
 > 本文件是站点的完整架构地图。第一次接触代码，请先读根目录 `AGENTS.md`；写课程数据请看 [CONTENT-GUIDE.md](CONTENT-GUIDE.md)。
 > 文中路径均相对于仓库根目录（= 站点根目录 = GitHub Pages 发布根目录）。
 
+> **文档状态（2026-11 更新）**：站点已改为「作品集 + 液态玻璃单 UI」。`js/11-appearance.js`、`js/12-pointer-tilt.js`、`js/13-dual-ui.js`、`css/04`–`css/07`，以及双 UI 门户、星空画布、FPS 监视器等节点**均已删除**。本文中凡提到这些文件、双 UI、天空预设、`apCycleSky()` 的段落都只是历史记录，**不要照着改当前代码**；当前实现以 `AGENTS.md`、`index.html` 和 `js/01`–`js/10`、`js/14`、`js/15` 为准。
+
 ## 1. 项目概览
 
 学习工具 是一个**纯静态**的中文学习网站，包含 C 语言（86 关 / 11 个模块）与英语四级（62 关 / 7 个模块）两门课。
@@ -15,7 +17,7 @@
 - **GitHub Pages 托管**：仓库 `chenshou666/chenshou666.github.io` 的 `main` 分支根目录即发布目录，`.nojekyll` 已就位。
 - **必须支持 `file://` 双击打开**：所有资源引用都是相对路径；不能依赖 fetch 本地 JSON、Service Worker 等需要 HTTP 的能力。
 - **经典 `<script>`（不是 ES Module）**：`js/` 下 12 个文件共享同一个全局作用域，靠加载顺序表达依赖；`content/` 下的数据文件也是经典脚本。
-- **CSS 靠层叠顺序**：`css/` 下 3 个文件按 06 → 08 → 10 加载，10-ui.css 是全新界面层（最后加载、优先级最高）。
+- **CSS 靠层叠顺序**：`css/` 下 2 个文件按 08 → 10 加载，10-ui.css 是界面层（最后加载、优先级最高）。
 
 ## 2. 目录树与职责
 
@@ -268,7 +270,7 @@ render()
 | --- | --- |
 | `#splash-screen` / `#splash-skip` | 开屏动画与跳过按钮 |
 | `.sidebar` / `.nav-btn[data-page]` | 左侧导航（学习课程 / 继续挑战 / 我的总结 / 7 天项目 / 关于许可） |
-| `.topbar` / `#topTitle` / `#themeButton` / `#xpTop` | 顶栏：标题、切换天空外观、学习点 |
+| `.topbar` / `#topTitle` / `#uiTuneBtn` / `#xpTop` | 顶栏：标题、外观面板入口、学习点 |
 | `main#view` | 所有页面内容的容器（渲染目标） |
 | `#toast` | 全局轻提示 |
 | `#resetModal` / `#resetModalContent` | 通用弹窗（重置密码 / 查看答案） |
@@ -382,13 +384,14 @@ cQuizOk(level) && codePassed && cOutputOk(level)
 
 存档码/链接只包含学习进度数据，不含个人信息；导入后自动刷新页面。
 
-## 8. 外观系统（`js/11-appearance.js` + CSS 变量）
+## 8. 外观系统（`js/14-liquid-glass.js` 第 5 步 + CSS 变量）
 
-- 数据：`cquest.appearance.v1`，默认 `{sky:"noon", blur:24, tint:54, radius:22, noise:3.0, edge:72}`。
-- 天空预设：`dawn / noon / dusk / night` → `<html data-sky="…">`；天空同时决定深浅色基调（CSS 里大量 `html[data-sky="night"]` 规则）。
-- `apApply()` 把参数写成 CSS 变量（`--glass-blur`、`--glass-alpha`、`--glass-alpha-n`、`--r-xl/--r-l/--r-m`、`--noise`、`--edge`），卡片、面板、代码块在 `css/04` 里消费这些变量。
-- UI：`apBuild()` 在页面右下角动态生成"外观"按钮 `#apFab` 与面板 `#apSheet`（不是 index.html 里的静态 DOM）；面板按钮/滑杆用事件委托，改完立即生效并持久化。
-- 顶栏 `#themeButton`（`data-action="cycle-theme"`）实际调用 `apCycleSky()` 循环切换天空预设；旧主题键 `codesword.theme.v1` 仍会读写，但当前渲染固定浅色基调、由天空预设控制观感。
+- 入口：`index.html` 顶栏的静态按钮 `#uiTuneBtn`（「⚙ 外观」）；面板 `#uiTunePanel` 由 `js/14` 动态生成（不在 HTML 里）。
+- 数据：`cquest.appearance.v1`，字段与默认值 `{blur:28, saturate:210, opacity:11, glare:38, bgSpeed:(触屏 2.2 / 桌面 1.0), bgBright:55, bgAnim:true}`。
+- 面板控件：玻璃模糊、玻璃饱和、玻璃透明、镜面高光、背景速度、背景亮度、背景动画开关，外加「恢复默认」；改动即时生效并持久化，读取失败时退回默认值。
+- 生效方式：把 `--glass-blur` / `--glass-saturate` / `--glass-opacity` / `--glare-opacity` / `--bg-brightness` 写到 `:root`；背景动画速度与开关写 `window.__fluidSpeed` / `window.__bgAnim`，由极光渲染循环读取。
+- 面板函数（`buildTunePanel` / `applyAppearance` / `saveAppearance` 等）都在 `js/14` 的 IIFE 内部，**不挂在 `window` 上**；滑杆/开关用 `data-tune` 委托绑定。
+- 顶栏已没有 `#themeButton`；`applyTheme()` 仍存在但渲染固定浅色基调，`codesword.theme.v1` 仅兼容保留。
 
 ## 9. 开屏动画（`js/10-splash.js`）
 
@@ -506,6 +509,8 @@ cQuizOk(level) && codePassed && cOutputOk(level)
 
 ### 12.6 事件、外观、双 UI
 
+> 下表标注 `11` / `13` 的行来自已删除的双 UI 版本，仅作历史对照；当前外观面板见 §8。
+
 | 符号 | 说明 |
 | --- | --- |
 | `handleClick(e)` + document 级监听（`09`） | `data-page` / `data-level` / `data-action` / `data-pick` / `data-option` 总入口 |
@@ -584,12 +589,12 @@ js/05 render() → #view.innerHTML = ...（纯字符串模板，esc() 转义）
 - **`level.input` / `level.example.input` 不在页面显示**：它们是作者记录的真实运行输入（用于复现示例），只有 `example.code/output/explain`、`expectedOutput` 会渲染。18 个 C 关没有 `expectedOutput`（只做结构检查，不比对输出）。
 - **旧式单题字段 `level.quiz/options/answer/explain` 已无数据使用**：只在 `renderCodeLesson` 里保留兼容分支；`awardForQuiz()` 的 +10 点逻辑同样属遗留。
 - **导出/存档码不含 `7 天项目`、`双 UI 模式`、旧主题键**：见 `4.2` 表格。
-- **顶栏"切换外观"按钮实际是切天空预设**（`apCycleSky`），不是 old `applyTheme` 的深浅色切换；`codesword.theme.v1` 仅兼容保留。
+- **顶栏的「⚙ 外观」按钮打开的是 `js/14` 的外观面板**（玻璃模糊 / 饱和度 / 透明度 / 高光 / 背景动画），不再是旧的天空预设切换；`codesword.theme.v1` 仅兼容保留。
 - **UI 门户每次加载都会出现**：1.55s 后弹出，选一次后写入 `htlab.uimode.v1`，但没有"已选过就跳过"的判断。
 - **`#cosmosInspectModal` / `#cosmosInspectCard` 是死 DOM**：HTML 里有、JS 中无引用（旧版 3D 卡片检视残留）。
 - **`06-fps.css` 里也有手机端玻璃 UI 修复**，手机问题别只看 `07`，先确认规则落在哪个文件。
 - **音频作者元数据（manifest/dialogue JSON）不在运行时加载**：改内容文案不会自动改元数据，两者要一起维护（见 CONTENT-GUIDE）。
-- **`js/02 save()` 没有 try/catch**：浏览器禁用 localStorage（极端隐私模式/配额满）时会抛错；读取侧 `loadStateFor` 有兜底。
+- **进度写入统一走 `lsSet()` 兜底**：浏览器禁用 localStorage（隐私模式 / 配额满）时不再抛错打断答题与通关，失败会提示一次「这次的改动不会被保存」；读取侧 `loadStateFor` / `lsGet` 同样有兜底。
 - **`index.html` 里的静态节点很多是给 `13` 用的**：删除/改名 `#uiChooserModal`、`#cosmos-stage`、`#htFpsMonitor` 等会让双 UI 初始化直接报错。
 
 ## 15. 相关文档

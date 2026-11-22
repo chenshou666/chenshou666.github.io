@@ -35,7 +35,7 @@ function ensureProgressTools(){
 }
 function exportProgress(){
  var out={app:"学习工具",kind:"progress",version:1,exportedAt:new Date().toISOString(),data:{}};
- PROGRESS_KEYS.forEach(function(k){var cur=localStorage.getItem(k);if(cur!==null)out.data[k]=cur});
+ PROGRESS_KEYS.forEach(function(k){var cur=lsGet(k);if(cur!==null)out.data[k]=cur});
  try{
   var blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json;charset=utf-8"});
   var url=URL.createObjectURL(blob);
@@ -55,12 +55,13 @@ function importProgressFile(file){
   try{
    var obj=JSON.parse(String(reader.result||""));
    if(!obj||(obj.app!=="学习工具"&&obj.app!=="HT Lab")||!obj.data||typeof obj.data!=="object")throw new Error("不是「学习工具」的进度文件");
-   var n=0;
+   var n=0,failed=0;
    PROGRESS_KEYS.forEach(function(k){
     var val=obj.data[k];
-    if(typeof val==="string"&&val){localStorage.setItem(k,val);n++}
+    if(typeof val==="string"&&val){if(lsSet(k,val))n++;else failed++}
    });
-   if(!n)throw new Error("文件里没有可导入的进度");
+   if(!n&&!failed)throw new Error("文件里没有可导入的进度");
+   if(!n)throw new Error("浏览器存储不可用，无法写入进度");
    toast("已导入 "+n+" 项进度，正在刷新…");
    window.setTimeout(function(){location.reload()},800);
   }catch(err){toast("导入失败："+(err.message||"文件格式不对"));}
@@ -79,7 +80,7 @@ function b64urlFromBytes(bytes){var bin="",i;for(i=0;i<bytes.length;i++)bin+=Str
 function bytesFromB64url(str){var sN=str.replace(/-/g,"+").replace(/_/g,"/");while(sN.length%4)sN+="=";var bin=atob(sN),out=new Uint8Array(bin.length),i;for(i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out}
 function saveProgressPayload(){
  var out={app:"学习工具",kind:"progress",version:1,exportedAt:new Date().toISOString(),data:{}};
- PROGRESS_KEYS.forEach(function(k){var v=localStorage.getItem(k);if(v!==null)out.data[k]=v});
+ PROGRESS_KEYS.forEach(function(k){var v=lsGet(k);if(v!==null)out.data[k]=v});
  return out;
 }
 async function compressSaveText(text){
@@ -116,9 +117,10 @@ async function applySaveCode(raw){
  var json=await decompressSaveText(code.slice(SAVE_PREFIX.length));
  var obj=JSON.parse(json);
  if(!obj||(obj.app!=="学习工具"&&obj.app!=="HT Lab")||!obj.data||typeof obj.data!=="object")throw new Error("存档内容无法识别");
- var n=0;
- PROGRESS_KEYS.forEach(function(k){var val=obj.data[k];if(typeof val==="string"&&val){localStorage.setItem(k,val);n++}});
- if(!n)throw new Error("存档里没有可用进度");
+ var n=0,failed=0;
+ PROGRESS_KEYS.forEach(function(k){var val=obj.data[k];if(typeof val==="string"&&val){if(lsSet(k,val))n++;else failed++}});
+ if(!n&&!failed)throw new Error("存档里没有可用进度");
+ if(!n)throw new Error("浏览器存储不可用，无法写入进度");
  return n;
 }
 function copyTextSmart(text){
