@@ -56,6 +56,7 @@
     }
 
     function onStart(e) {
+      if (document.body.classList.contains("layout-editing")) return;
       e.preventDefault();
       const p = getPoint(e);
       if (!p) return;
@@ -104,6 +105,7 @@
     if (!el) return;
 
     const press = (e) => {
+      if (document.body.classList.contains("layout-editing")) return;
       e.preventDefault();
       e.stopPropagation();
       Input[flag] = true;
@@ -293,6 +295,125 @@
     if (global.Game && global.Game.setPaused) global.Game.setPaused(false);
   }
 
+
+  /* ------------------------------------------------
+   * 按钮位置调整（摇杆 / 技能区，可拖动 + 持久化）
+   * ------------------------------------------------ */
+  const LAYOUT_STORE = "stickman.layout.v1";
+  let layout = { joyX: 0, joyY: 0, padX: 0, padY: 0 };
+
+  function loadLayout() {
+    try {
+      const raw = localStorage.getItem(LAYOUT_STORE);
+      if (raw) {
+        const o = JSON.parse(raw) || {};
+        ["joyX", "joyY", "padX", "padY"].forEach((k) => {
+          if (typeof o[k] === "number" && isFinite(o[k])) layout[k] = o[k];
+        });
+      }
+    } catch (e) {}
+  }
+
+  function applyLayout() {
+    const zone = document.getElementById("joystick-zone");
+    const pad = document.getElementById("skill-pad");
+    if (zone) zone.style.transform = "translate(" + layout.joyX + "px," + layout.joyY + "px)";
+    if (pad) pad.style.transform = "translate(" + layout.padX + "px," + layout.padY + "px)";
+  }
+
+  function saveLayout() {
+    try { localStorage.setItem(LAYOUT_STORE, JSON.stringify(layout)); } catch (e) {}
+  }
+
+  function clampLayout() {
+    const zone = document.getElementById("joystick-zone");
+    const pad = document.getElementById("skill-pad");
+    const maxX = Math.max(0, window.innerWidth - 80);
+    const maxY = Math.max(0, window.innerHeight - 80);
+    layout.joyX = Math.max(-maxX, Math.min(maxX, layout.joyX));
+    layout.joyY = Math.max(-maxY, Math.min(maxY, layout.joyY));
+    layout.padX = Math.max(-maxX, Math.min(maxX, layout.padX));
+    layout.padY = Math.max(-maxY, Math.min(maxY, layout.padY));
+    if (zone) zone.style.transform = "translate(" + layout.joyX + "px," + layout.joyY + "px)";
+    if (pad) pad.style.transform = "translate(" + layout.padX + "px," + layout.padY + "px)";
+  }
+
+  let editingLayout = false;
+
+  function setLayoutEditing(on) {
+    editingLayout = !!on;
+    document.body.classList.toggle("layout-editing", editingLayout);
+    const bar = document.getElementById("layout-bar");
+    if (bar) bar.classList.toggle("hidden", !editingLayout);
+    if (editingLayout) {
+      clampLayout();
+      if (global.Game && global.Game.setPaused) global.Game.setPaused(true);
+    }
+  }
+
+  function setupLayoutEditor() {
+    loadLayout();
+    applyLayout();
+
+    const zone = document.getElementById("joystick-zone");
+    const pad = document.getElementById("skill-pad");
+    const targets = [
+      { el: zone, keys: ["joyX", "joyY"] },
+      { el: pad, keys: ["padX", "padY"] }
+    ];
+
+    targets.forEach((t) => {
+      if (!t.el) return;
+      let drag = null;
+      t.el.addEventListener("pointerdown", (e) => {
+        if (!editingLayout) return;
+        e.preventDefault();
+        try { if (t.el.setPointerCapture) t.el.setPointerCapture(e.pointerId); } catch (err) {}
+        drag = {
+          id: e.pointerId,
+          startX: e.clientX,
+          startY: e.clientY,
+          baseX: layout[t.keys[0]],
+          baseY: layout[t.keys[1]]
+        };
+      });
+      t.el.addEventListener("pointermove", (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        e.preventDefault();
+        layout[t.keys[0]] = drag.baseX + (e.clientX - drag.startX);
+        layout[t.keys[1]] = drag.baseY + (e.clientY - drag.startY);
+        clampLayout();
+      });
+      const end = (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        drag = null;
+        saveLayout();
+      };
+      t.el.addEventListener("pointerup", end);
+      t.el.addEventListener("pointercancel", end);
+    });
+
+    const editBtn = document.getElementById("btn-layout-edit");
+    if (editBtn) editBtn.addEventListener("click", () => {
+      closeKeysPanel();
+      setLayoutEditing(true);
+    });
+    const saveBtn = document.getElementById("btn-layout-save");
+    if (saveBtn) saveBtn.addEventListener("click", () => {
+      saveLayout();
+      setLayoutEditing(false);
+      if (global.Game && global.Game.setPaused) global.Game.setPaused(false);
+    });
+    const resetBtn = document.getElementById("btn-layout-reset");
+    if (resetBtn) resetBtn.addEventListener("click", () => {
+      layout = { joyX: 0, joyY: 0, padX: 0, padY: 0 };
+      saveLayout();
+      applyLayout();
+    });
+
+    window.addEventListener("resize", () => { if (editingLayout) clampLayout(); });
+  }
+
   function setupKeysUI() {
     const openBtns = [document.getElementById("btn-keys"), document.getElementById("btn-hud-keys")];
     openBtns.forEach((b) => { if (b) b.addEventListener("click", openKeysPanel); });
@@ -364,6 +485,7 @@
     setupButtons();
     setupKeyboard();
     setupKeysUI();
+    setupLayoutEditor();
   };
 
   global.GameInput = Input;

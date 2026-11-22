@@ -84,11 +84,18 @@
     </div>
   </div>
 
+  <div id="layout-bar" class="hidden" role="status">
+    <span>拖动左侧摇杆 / 右侧技能区调整位置</span>
+    <button id="btn-layout-reset" type="button" class="start-btn">复位</button>
+    <button id="btn-layout-save" type="button" class="start-btn primary">保存</button>
+  </div>
+
   <div id="keys-panel" class="hidden" role="dialog" aria-modal="true" aria-label="键位设置">
     <div class="keys-card">
       <div class="keys-head"><h2>键位设置</h2><button id="btn-keys-close" type="button" class="keys-close" aria-label="关闭">✕</button></div>
       <div class="keys-list" id="keysList"></div>
       <div class="keys-actions">
+        <button id="btn-layout-edit" type="button" class="start-btn">调整按钮位置</button>
         <button id="btn-keys-reset" type="button" class="start-btn">恢复默认</button>
         <button id="btn-keys-done" type="button" class="start-btn primary">完成</button>
       </div>

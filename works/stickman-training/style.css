@@ -698,3 +698,56 @@ html, body {
 @media screen and (orientation: portrait) and (max-width: 900px) {
   #start-screen, .hud-keys { display: none !important; }
 }
+
+/* ==========================================================================
+ * 按钮位置调整（拖动摇杆 / 技能区）
+ * ========================================================================== */
+#layout-bar {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(8, 13, 26, 0.86);
+  border: 1px solid rgba(186, 230, 253, 0.35);
+  color: #dff3ff;
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  white-space: nowrap;
+  max-width: calc(100vw - 24px);
+  overflow: hidden;
+}
+
+#layout-bar.hidden { display: none; }
+
+#layout-bar .start-btn {
+  padding: 7px 14px;
+  font-size: 12px;
+}
+
+body.layout-editing #joystick-zone,
+body.layout-editing #skill-pad {
+  outline: 2px dashed rgba(56, 189, 248, 0.85);
+  outline-offset: 8px;
+  border-radius: 16px;
+  cursor: grab;
+  touch-action: none;
+}
+
+body.layout-editing #joystick-zone:active,
+body.layout-editing #skill-pad:active { cursor: grabbing; }
+
+body.layout-editing .skill-btn,
+body.layout-editing #joystick-knob {
+  pointer-events: none;
+}
+
+body.layout-editing #joystick-base {
+  opacity: 0.55;
+}
