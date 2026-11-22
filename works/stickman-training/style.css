@@ -794,3 +794,81 @@ body.layout-editing .hud-keys { display: none; }
 .keys-select:focus { outline: 1px solid rgba(186, 230, 253, 0.8); }
 
 .keys-actions { flex-wrap: wrap; }
+
+/* ==========================================================================
+ * 手机横屏（矮屏）：键位面板两列铺满、HUD 不再被返回/设置键压住
+ * ========================================================================== */
+@media (max-height: 520px) {
+  /* 开始页压缩 */
+  .start-card {
+    width: min(560px, 94vw);
+    padding: 16px 18px 14px;
+  }
+  .start-eyebrow { font-size: 10px; margin-bottom: 6px; }
+  .start-card h1 { font-size: 24px; margin-bottom: 6px; }
+  .start-sub { margin-bottom: 10px; font-size: 12px; }
+  .start-keys { margin-bottom: 12px; font-size: 11px; }
+  .start-btn { padding: 8px 18px; font-size: 13px; }
+  .start-hint { margin-top: 10px; font-size: 10.5px; }
+
+  /* 键位面板：两列，所有动作一屏看全 */
+  .keys-card {
+    width: min(760px, 96vw);
+    max-height: 94vh;
+    padding: 10px 12px;
+    border-radius: 16px;
+  }
+  .keys-head { margin-bottom: 8px; }
+  .keys-head h2 { font-size: 14px; }
+  .keys-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .keys-row { padding: 5px 8px; gap: 6px; }
+  .keys-name { font-size: 12px; }
+  .key-chip { font-size: 10px; padding: 2px 6px; min-width: 24px; }
+  .keys-select { padding: 4px 8px; font-size: 11px; max-width: 78px; }
+  .keys-tip { display: none; }
+  .keys-actions { margin-top: 8px; gap: 6px; }
+  .keys-actions .start-btn { padding: 6px 10px; font-size: 11.5px; }
+
+  /* HUD：血条避开返回 / 设置 / 退出按钮 */
+  .hp-wrap.left { padding-left: 84px; }
+  .hp-wrap.right { padding-right: 92px; }
+  .hud-back {
+    top: 8px;
+    left: 8px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  .hud-keys {
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .hud-exit {
+    top: 46px;
+    right: 8px;
+  }
+}
+
+/* 手机安全区：避开刘海 / 底部工具栏，保证摇杆与技能键完整可见 */
+@supports (padding: env(safe-area-inset-bottom)) {
+  @media (max-height: 520px) {
+    #skill-pad {
+      right: calc(18px + env(safe-area-inset-right));
+      bottom: calc(14px + env(safe-area-inset-bottom));
+    }
+    #joystick-base {
+      left: calc(30px + env(safe-area-inset-left));
+      bottom: calc(22px + env(safe-area-inset-bottom));
+    }
+    .start-card {
+      max-height: 94vh;
+      overflow: auto;
+    }
+  }
+}
