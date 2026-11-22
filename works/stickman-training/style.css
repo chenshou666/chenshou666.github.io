@@ -872,3 +872,37 @@ body.layout-editing .hud-keys { display: none; }
     }
   }
 }
+
+/* ==========================================================================
+ * 键位面板自适应：够宽时两列，列表内部滚动，底部按钮永远可见
+ * ========================================================================== */
+.keys-card {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 96vw);
+  max-height: min(92vh, 720px);
+}
+
+.keys-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.keys-actions {
+  position: sticky;
+  bottom: 0;
+  padding-top: 8px;
+  background: linear-gradient(to top, rgba(13, 19, 35, 0.98) 60%, rgba(13, 19, 35, 0.6));
+}
+
+@media (max-height: 800px) and (min-width: 560px) {
+  .keys-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: start;
+    gap: 6px;
+  }
+  .keys-tip { display: none; }
+}
