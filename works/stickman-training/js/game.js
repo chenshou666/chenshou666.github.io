@@ -778,6 +778,14 @@
       this.paused = !!v;
       this.lastTime = performance.now();
     }
+
+    backToStart() {
+      const startScreen = document.getElementById('start-screen');
+      if (startScreen) startScreen.classList.remove('hidden');
+      this.started = false;
+      this.setPaused(true);
+      this.restart();
+    }
   }
 
   window.addEventListener('DOMContentLoaded', () => {
@@ -786,6 +794,11 @@
     }
     global.Game = new TrainingGame();
     global.Game.start();
+
+    const exitBtn = document.getElementById('btn-exit');
+    if (exitBtn) {
+      exitBtn.addEventListener('click', () => { global.Game.backToStart(); });
+    }
 
     const startBtn = document.getElementById('btn-start');
     const startScreen = document.getElementById('start-screen');

@@ -248,6 +248,33 @@
    * ------------------------------------------------ */
   let pendingAction = null;
 
+  const KEY_CHOICES = (function () {
+    const list = [];
+    for (let i = 0; i < 26; i++) list.push("Key" + String.fromCharCode(65 + i));
+    for (let i = 0; i <= 9; i++) list.push("Digit" + i);
+    return list.concat(["Space", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "ShiftLeft", "ControlLeft", "AltLeft", "Enter"]);
+  })();
+
+  function keyOptionsHtml(action) {
+    const used = {};
+    ACTIONS.forEach((a) => {
+      if (a !== action) bindings[a].forEach((c) => { used[c] = true; });
+    });
+    return KEY_CHOICES.map((code) => {
+      const disabled = used[code] ? " disabled" : "";
+      const selected = bindings[action][0] === code ? " selected" : "";
+      return '<option value="' + code + '"' + disabled + selected + '>' + codeLabel(code) + "</option>";
+    }).join("");
+  }
+
+  function syncSkillHints() {
+    const map = { attack: "btn-attack", s1: "btn-s1", s2: "btn-s2", s3: "btn-s3" };
+    Object.keys(map).forEach((action) => {
+      const el = document.querySelector("#" + map[action] + " .key");
+      if (el) el.textContent = bindings[action].map((c) => codeLabel(c)).join("/");
+    });
+  }
+
   function renderKeysList() {
     const list = document.getElementById("keysList");
     if (!list) return;
@@ -257,10 +284,13 @@
         '<div class="keys-row" data-action="' + a + '">' +
         '<span class="keys-name">' + ACTION_LABELS[a] + "</span>" +
         '<span class="keys-codes">' + chips + "</span>" +
-        '<button type="button" class="keys-edit" data-edit="' + a + '">修改</button>' +
+        '<select class="keys-select" data-bind="' + a + '" aria-label="修改' + ACTION_LABELS[a] + '键位">' +
+        keyOptionsHtml(a) +
+        "</select>" +
         "</div>"
       );
     }).join("");
+    syncSkillHints();
   }
 
   function setCapturing(action) {
@@ -425,36 +455,29 @@
     if (reset) reset.addEventListener("click", () => {
       Input.resetBindings();
       renderKeysList();
-      cancelCapture();
+    });
+    const exit = document.getElementById("btn-keys-exit");
+    if (exit) exit.addEventListener("click", () => {
+      closeKeysPanel();
+      if (global.Game && global.Game.backToStart) global.Game.backToStart();
     });
 
-    document.addEventListener("click", (e) => {
-      const btn = e.target && e.target.closest ? e.target.closest("[data-edit]") : null;
-      if (!btn) return;
-      pendingAction = btn.getAttribute("data-edit");
-      Input.capturing = true;
-      setCapturing(pendingAction);
-    }, true);
-
-    window.addEventListener("keydown", (e) => {
-      if (!Input.capturing || !pendingAction) return;
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.code === "Escape") { cancelCapture(); return; }
-      const action = pendingAction;
-      const ok = Input.setBinding(action, e.code);
-      cancelCapture();
-      if (ok) {
-        renderKeysList();
-      } else {
-        renderKeysList();
+    document.addEventListener("change", (e) => {
+      const sel = e.target && e.target.closest ? e.target.closest("[data-bind]") : null;
+      if (!sel) return;
+      const action = sel.getAttribute("data-bind");
+      const ok = Input.setBinding(action, sel.value);
+      renderKeysList();
+      if (!ok) {
         const row = document.querySelector('.keys-row[data-action="' + action + '"]');
         if (row) {
           row.classList.add("conflict");
           window.setTimeout(() => row.classList.remove("conflict"), 900);
         }
       }
-    }, true);
+    });
+
+    syncSkillHints();
   }
 
   Input.consume = function consume(flag) {
