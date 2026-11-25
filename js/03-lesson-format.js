@@ -5,7 +5,7 @@
  *       编号即加载顺序；调整顺序或拆合并文件前请先读 docs/ARCHITECTURE.md。
  * ========================================================================== */
 /* ==== 知识点重点标记 ==== */
-var LESSON_CODE_RE=/#include\s*&lt;[^&]{1,40}&gt;|#define\b|-std=c\d+|\b(?:printf|scanf|fgets|fputs|fopen|fclose|malloc|free|sizeof|typedef|struct|union|enum|return|while|for|switch|break|continue|goto|strlen|strcpy|strcmp) \b|\b(?:stdio|stdbool|stdint|stdlib|string|math|ctype|time)\.h\b|\b(?:int|char|float|double|long|short|void|unsigned|signed|const|static|extern|volatile)\b|\b(?:main|argc|argv)\b|\b(?:gcc|F11|F9|Dev-C\+\+)\b|%(?:d|s|f|lf|ld|c|u|x|p)|\b[A-Za-z0-9_]+\.(?:c|h|exe)\b|\b0x[0-9a-fA-F]+\b|\\n/g;
+var LESSON_CODE_RE=/#include\s*&lt;[^&]{1,40}&gt;|#define\b|-std=c\d+|\b(?:printf|scanf|fprintf|fscanf|fgets|fputs|fopen|fclose|getchar|putchar|malloc|calloc|realloc|free|sizeof|typedef|struct|union|enum|return|while|for|switch|break|continue|goto|strlen|strcpy|strcat|strcmp|memcpy|qsort)\b|\b(?:stdio|stdbool|stdint|stdlib|string|math|ctype|time)\.h\b|\b(?:int|char|float|double|long|short|void|bool|size_t|FILE|NULL|unsigned|signed|const|static|extern|volatile|int32_t|uint8_t)\b|\b(?:main|argc|argv)\b|\b(?:gcc|F11|F9|Dev-C\+\+)\b|%(?:d|s|f|lf|ld|c|u|x|p|zu)|\b[A-Za-z0-9_]+\.(?:c|h|exe)\b|\b0x[0-9a-fA-F]+\b|\\n/g;
 function fmtLesson(raw){
  if(raw===undefined||raw===null)return "";
  var out=esc(String(raw));

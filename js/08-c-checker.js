@@ -24,13 +24,40 @@ function vals(ts){return ts.map(t=>t.v)}
 function seq(ts,pat){const a=vals(ts);for(let i=0;i<=a.length-pat.length;i++){let ok=true;for(let j=0;j<pat.length;j++)if(a[i+j]!==pat[j]){ok=false;break}if(ok)return true}return false}
 function closeGroup(ts,s){const open=ts[s]&&ts[s].v,match={'(':')','{':'}','[':']'},end=match[open];if(!end)return-1;let d=0;for(let i=s;i<ts.length;i++){if(ts[i].type==="string"||ts[i].type==="char")continue;if(ts[i].v===open)d++;else if(ts[i].v===end&&--d===0)return i}return-1}
 function splitTop(ts,sep){const r=[];let s=0,d=0;for(let i=0;i<ts.length;i++){const v=ts[i].v;if(v==='('||v==='['||v==='{')d++;else if(v===')'||v===']'||v==='}')d--;else if(v===sep&&d===0){r.push(ts.slice(s,i));s=i+1}}r.push(ts.slice(s));return r}
-function calls(ts,name){const r=[];for(let i=0;i<ts.length-1;i++)if(ts[i].v===name&&ts[i+1].v==='('){const e=closeGroup(ts,i+1);if(e>0)r.push({args:splitTop(ts.slice(i+2,e),','),at:i,end:e})}return r}
+function calls(ts,name,skipProtos){
+ const r=[];
+ let depth=0;
+ for(let i=0;i<ts.length-1;i++){
+  if(ts[i].v==='{')depth++;
+  else if(ts[i].v==='}')depth=Math.max(0,depth-1);
+  if(ts[i].v!==name||ts[i+1].v!=='(')continue;
+  const e=closeGroup(ts,i+1);if(e<=0)continue;
+  /* 跳过函数定义 fn(...) { ... } */
+  if(ts[e+1]&&ts[e+1].v==='{')continue;
+  /* 仅在顶层 (depth===0) 跳过前置函数原型声明，如 int fn(...); 或 int *fn(...); */
+  if(skipProtos!==false&&depth===0&&ts[e+1]&&ts[e+1].v===';'){
+   let k=i-1;
+   while(k>=0&&(ts[k].v==='*'||ts[k].v==='const'||ts[k].v==='volatile'||ts[k].v==='restrict'))k--;
+   if(k>=0&&CS_TYPES.indexOf(ts[k].v)>=0)continue;
+  }
+  r.push({args:splitTop(ts.slice(i+2,e),','),at:i,end:e});
+ }
+ return r;
+}
+function funcBodyByName(ts,name){
+ for(let i=0;i<ts.length-2;i++){
+  if(ts[i].v!==name||ts[i+1].v!=='(')continue;
+  const p=closeGroup(ts,i+1);if(p<0||!ts[p+1]||ts[p+1].v!=='{')continue;
+  const e=closeGroup(ts,p+1);if(e>=0)return ts.slice(p+2,e);
+ }
+ return null;
+}
 function func(ts,name,ret){for(let i=0;i<ts.length-2;i++){if(ts[i].v!==ret||ts[i+1].v!==name||ts[i+2].v!=='(')continue;const p=closeGroup(ts,i+2);if(p<0||!ts[p+1]||ts[p+1].v!=='{')continue;const e=closeGroup(ts,p+1);if(e>=0)return{params:splitTop(ts.slice(i+3,p),','),body:ts.slice(p+2,e),at:i,bodyAt:p+1,end:e+1}}return null}
 function takeStatement(ts,s){if(!ts[s])return-1;if(ts[s].v==='{'){const e=closeGroup(ts,s);return e<0?-1:e+1}let d=0;for(let i=s;i<ts.length;i++){const v=ts[i].v;if(v==='('||v==='['||v==='{')d++;else if(v===')'||v===']'||v==='}'){d--;if(d<0)return-1}else if(v===';'&&d===0)return i+1}return-1}
 function ifs(ts){const r=[];for(let i=0;i<ts.length-2;i++){if(ts[i].v!=='if'||ts[i+1].v!=='(')continue;const p=closeGroup(ts,i+1);if(p<0||!ts[p+1])continue;let end,thenSlice,other=null;if(ts[p+1].v==='{'){const e=closeGroup(ts,p+1);if(e<0)continue;end=e+1;thenSlice=ts.slice(p+2,e)}else{end=takeStatement(ts,p+1);if(end<0)continue;thenSlice=ts.slice(p+1,end)}if(ts[end]&&ts[end].v==='else'){if(ts[end+1]&&ts[end+1].v==='{'){const x=closeGroup(ts,end+1);if(x>0){other=ts.slice(end+2,x);end=x+1}}else{const x=takeStatement(ts,end+1);if(x>0){other=ts.slice(end+1,x);end=x}}}r.push({cond:ts.slice(i+2,p),then:thenSlice,elseBody:other,at:i,end})}return r}
 function ret(ts,v){return seq(ts,['return',v,';'])}
 /* ---------- 轻量 C 语法解析器：分号、括号、控制流、声明、函数定义都要符合真实 C 语法 ---------- */
-const CS_TYPES=["void","char","short","int","long","float","double","signed","unsigned","_Bool","_Complex","_Imaginary","struct","enum","union","typedef","extern","static","auto","register","const","volatile","restrict","inline","_Atomic","_Static_assert","_Alignas","size_t","FILE"];
+const CS_TYPES=["void","char","short","int","long","float","double","signed","unsigned","_Bool","bool","_Complex","_Imaginary","struct","enum","union","typedef","extern","static","auto","register","const","volatile","restrict","inline","_Atomic","_Static_assert","_Alignas","size_t","ptrdiff_t","intptr_t","uintptr_t","int8_t","uint8_t","int16_t","uint16_t","int32_t","uint32_t","int64_t","uint64_t","time_t","clock_t","FILE"];
 const CS_BIN={"=":2,"+=":2,"-=":2,"*=":2,"/=":2,"%=":2,"<<=":2,">>=":2,"&=":2,"|=":2,"^=":2,"||":4,"&&":5,"|":6,"^":7,"&":8,"==":9,"!=":9,"<":10,">":10,"<=":10,">=":10,"<<":11,">>":11,"+":12,"-":12,"*":13,"/":13,"%":13};
 function closeGroupRange(ts,s,end){const open=ts[s]?ts[s].v:null,close={'(':')','[':']','{':'}'}[open];if(!close)return-1;let d=0;for(let i=s;i<end;i++){if(ts[i].type==="string"||ts[i].type==="char")continue;const v=ts[i].v;if(v===open)d++;else if(v===close){d--;if(d===0)return i}}return-1}
 function csLine(source,at){let n=1;for(let k=0;k<at;k++)if(source[k]==="\n")n++;return n}
@@ -111,6 +138,9 @@ function runCheckSpec(ts,source,spec){
   if(cc[2]&&n>cc[2])return bad(cc[0]+'() 不要超过 '+cc[2]+' 次。');
  }
  if(spec.forbid)for(const f of spec.forbid)if(cIdent(clean,f))return bad('本关请不要使用 '+f+' 。');
+ if(spec.forbidPattern)for(const fp of spec.forbidPattern){
+  const re=new RegExp(fp[0]);if(re.test(clean))return bad(fp[1]||'代码里包含本关禁止的写法。');
+ }
  const req=spec.require||{};
  if(req.if&&!ifs(ts).length)return bad('需要用到 if 判断。');
  if(req.switch&&!cIdent(clean,'switch'))return bad('需要用到 switch 。');
@@ -129,9 +159,22 @@ function runCheckSpec(ts,source,spec){
  if(req.file&&!cIdent(clean,'fopen'))return bad('需要用 fopen 打开文件。');
  if(req.recursion){
   const fnNames=(req.recursion===true)?null:req.recursion;
-  const self=(fnNames||[]).some(function(fn){return new RegExp('\\b'+fn+'\\s*\\([^;]*\\)\\s*\\{').test(clean)&&new RegExp('\\b'+fn+'\\s*\\(').test(clean)});
-  if(fnNames&&!self)return bad('需要用递归实现（函数内部调用自己）。');
-  if(!fnNames&&!/(\w+)\s*\([^;{]*\)\s*\{[^}]*\b\1\s*\(/.test(clean))return bad('需要用递归实现（函数内部调用自己）。');
+  if(fnNames){
+   const allRecursive=fnNames.every(function(fn){
+    const b=funcBodyByName(ts,fn);
+    return !!(b&&calls(b,fn,false).length>0);
+   });
+   if(!allRecursive)return bad('需要用真正的递归实现（在 '+fnNames.join(' / ')+' 函数体内部调用自己）。');
+  }else{
+   let foundRec=false;
+   for(let i=0;i<ts.length-2;i++){
+    if(ts[i].type!=='id'||ts[i+1].v!=='(')continue;
+    const p=closeGroup(ts,i+1);if(p<0||!ts[p+1]||ts[p+1].v!=='{')continue;
+    const e=closeGroup(ts,p+1);
+    if(e>=0&&calls(ts.slice(p+2,e),ts[i].v,false).length>0){foundRec=true;break}
+   }
+   if(!foundRec)return bad('需要用递归实现（函数体内部调用自己）。');
+  }
  }
  if(req.funcs)for(const fn of req.funcs){
   const re2=new RegExp('\\b[a-zA-Z_][A-Za-z0-9_ \\t\\*]*\\b'+fn+'\\s*\\([^;{]*\\)\\s*\\{');
