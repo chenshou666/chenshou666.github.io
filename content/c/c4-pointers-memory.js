@@ -19,12 +19,31 @@ window.C_MODULES.push({
       lesson: "指针是 C 的灵魂，也是最容易学歪的地方。先把第一件事说清楚：程序里的每个变量都住在内存的某个位置上，这个位置有一个编号，叫做地址。地址就是一串数字，像酒店的房间号——号码本身没有意义，有意义的是它指向的那个房间。\n"
         + "& 是取地址运算符。如果 n 是 int 变量，&n 就是「n 所在的地址」，它的类型写作 int *，读作「指向 int 的指针」。\n"
         + "指针变量就是专门用来存地址的变量：int *p = &n; 的意思是「p 的类型是 int *，初始值是 n 的地址」。p 里不存 42，它存的是 42 住在哪里。\n"
+        + "用一张内存盒子图把两者分开看：\n"
+        + "[ 地址 0x1000 | 变量 n | 值 42 ] <--- [ 指针 p | 存着 0x1000 ]\n"
+        + "（&n 拿到门牌号 0x1000 放进 p；*p 顺着 0x1000 推开门，拿到的就是 n 本人）\n"
         + "有了地址，* 就能顺着地址找回去，这个动作叫解引用。*p 不是「p 的值」，而是「p 指向的那个变量」——它就是 n 本人。所以 *p 可以读，也可以写：*p = 7; 等于把 n 改成 7，方向刚好和 &n 相反。\n"
         + "注意同一个 * 出现在两种位置时含义不同：声明 int *p; 里的 * 是类型的一部分，表示 p 是指针；语句 *p = 7; 里的 * 是解引用运算符。读别人代码时先分清它在声明里还是在语句里。\n"
         + "指针的类型很关键：int * 解引用时按 int 读 4 个字节，char * 只读 1 个字节，而且 p + 1 前进多少也由类型决定（下一关细讲）。这就是指针不能只写「一个指针」、必须写清指向什么类型的原因。\n"
         + "两个必须马上养成的习惯。第一，指针声明时就给明确初值，暂时没有目标就写 int *p = NULL;（NULL 是「不指向任何地方」的空指针）。第二，绝不解引用未初始化的指针：它里面是随机地址，解引用属于未定义行为，可能悄悄改坏别的变量，也可能当场崩溃。\n"
         + "想看地址本身可以用 printf(\"%p\", (void *)p)，但操作系统会随机化内存布局，地址每次运行都可能不同，所以它只能用来观察，不能写进判断条件，也不能作为作业输出。\n"
         + "最后一句提醒：初学阶段能放心解引用的指针只有两种——你刚用 & 取过地址的，和后面用 malloc 申请到的。除此之外，先假设它不能碰。",
+      beginner: {
+        idea: "把内存想成一排带门牌号的格子：普通变量 n 存的是数据 42，指针变量 p 存的不是 42，而是 n 的门牌号（&n）。写 *p 就是「顺着 p 里的门牌号推开门」，拿到 n 本人，所以读 *p 等于读 n，写 *p = 20 等于直接改 n。",
+        read: [
+          "先看 int n = 42; 和 int *p = &n;：声明里的 * 只说明 p 是指针类型，&n 取出 n 的地址放进 p。",
+          "再看两次 printf：n 和 *p 打出同一个数 42，说明 *p 顺着地址找回了 n 本人。",
+          "接着看 *p = 7;：语句里的 * 是解引用，它把门后面的 n 改成了 7，所以再打印 n 也变成 7。",
+          "最后看 sizeof(int) 和 sizeof(int *)：int 占 4 字节，64 位本机上指针统一占 8 字节，只和平台有关。"
+        ],
+        steps: [
+          "在 main 里保留 int n = 5;，再声明 int *p = &n;（或分两行 int *p; p = &n;）让 p 指向 n。",
+          "写第一条 printf(\"*p = %d\\n\", *p);，验证通过指针能读出 5。",
+          "写 *p = 20; 通过指针修改 n，再写第二条 printf(\"n = %d\\n\", n); 验证 n 变成 20。",
+          "最后写两条 printf，用 (int)sizeof(int) 和 (int)sizeof(int *) 配 %d 输出两种大小。"
+        ],
+        pitfall: "最容易混的是声明和语句里的 *：int *p = &n; 里 * 说明类型、右边给地址；给已有指针改指向要写 p = &n;，千万别写成 *p = &n;。还没目标时先写 = NULL，绝不解引用野指针。"
+      },
       example: {
         code: "#include <stdio.h>\n\n"
           + "int main(void) {\n"
@@ -111,7 +130,7 @@ window.C_MODULES.push({
         include: ["stdio.h"],
         return0: true,
         seq: [
-          ["int", "*", "p", "=", "&", "n"],
+          ["=", "&", "n"],
           ["*", "p", "=", "20"],
           ["sizeof", "(", "int", "*", ")"]
         ],
@@ -119,7 +138,7 @@ window.C_MODULES.push({
         callCounts: [["printf", 4, 4]],
         require: { pointer: true },
         minStatements: 6,
-        message: "需要 #include <stdio.h>、int main(void)、`int *p = &n;`、`*p = 20;`、sizeof(int *) 这处写法，以及恰好 4 条 printf 和 return 0; 。",
+        message: "需要 #include <stdio.h>、int main(void)、让指针 p 指向 &n（一行 int *p = &n; 或两行 int *p; p = &n; 均可）、`*p = 20;`、sizeof(int *) 这处写法，以及恰好 4 条 printf 和 return 0; 。",
         ok: "取地址、解引用、通过指针改值、sizeof 对比都写对了，结构完全符合本关要求。"
       },
       solution: "#include <stdio.h>\n\n"
@@ -151,6 +170,21 @@ window.C_MODULES.push({
         + "下标运算其实只是语法糖：C 标准规定 p[i] 就等于 *(p + i)。所以 a[i]、*(a + i)、p[i]、*(p + i) 四种写法效果完全一样（a 和 p 都指向首元素时）。反过来 a[i] 也能写成 i[a]，语法上合法，但没人这么写。\n"
         + "两个便利：&a[0] == a 的结果是 1；同一个数组内的两个指针相减，得到的是它们之间相差多少个元素（不是字节数）。\n"
         + "最后是边界。指针算术只在同一个数组内才有意义：p + i 算出来的地址，只有落在这个数组里才能解引用。越界访问（比如对 5 个元素的数组解引用 *(p + 5)）是未定义行为，它可能读到别的变量、也可能崩溃，而且往往在下一次 free 或几行之后才炸，非常难查。",
+      beginner: {
+        idea: "数组的元素在内存里紧挨着排成一排，数组名 a 在表达式里会自动变成首元素地址 &a[0]。所以拿到起点 p = a 之后，p + 1 不是加 1 字节，而是直接跳到下一个元素（int * 跳 4 字节）；下标 p[i] 本质上只是 *(p + i) 的简写。",
+        read: [
+          "看 int a[5] = {10, 20, 30, 40, 50}; 和 int *p = a;：p 拿到的是首元素 a[0] 的地址。",
+          "对照 a[2] 与 *(a + 2)、p[3] 与 *(p + 3)：结果完全相同，说明下标就是「起点 + 偏移再解引用」。",
+          "看 (char *)(p + 1) - (char *)p 得到 4：验证 int * 加 1 实际前进 4 字节；接着 p++ 把 p 挪到 a[1]，*p 变成 20。",
+          "最后对比 sizeof(a) = 20 与 sizeof(p) = 8：a 代表整块 5 个 int 的数组，p 只是一个 8 字节的地址变量。"
+        ],
+        steps: [
+          "保留 starter 里的 int a[6] = {1, 2, 3, 4, 5, 6};、int *p = a; 和累加变量 sum = 0。",
+          "写一个从 0 到 5 的 for 循环，循环体用指针写法累加，如 sum += *(p + i);、sum += *(a + i); 或 sum += *p++;。",
+          "打印完 sum 后，再用 (int)(sizeof(a) / sizeof(a[0])) 算出元素个数，按 count = %d 格式输出。"
+        ],
+        pitfall: "数组名 a 不是可修改的指针变量，写 a++ 或 a = p 会直接编译报错；要移动位置只能移动指针 p。另外，p + 5 对 5 元素数组已经越界，解引用属于未定义行为。"
+      },
       example: {
         code: "#include <stdio.h>\n\n"
           + "int main(void) {\n"
@@ -222,7 +256,7 @@ window.C_MODULES.push({
         }
       ],
       passRatio: 0.8,
-      mission: "写一个程序：在 main 里声明 `int a[6] = {1, 2, 3, 4, 5, 6};` 和 `int *p = a;`。用 for 循环配合指针写法 `*(p + i)` 求和，打印 `sum = 21`；再用 `sizeof(a) / sizeof(a[0])` 算出元素个数，打印 `count = 6`。"
+      mission: "写一个程序：在 main 里声明 `int a[6] = {1, 2, 3, 4, 5, 6};` 和 `int *p = a;`。用 for 循环配合指针算术写法（如 `*(p + i)`、`*(a + i)` 或 `p++`）求和，打印 `sum = 21`；再用 `sizeof(a) / sizeof(a[0])` 算出元素个数，打印 `count = 6`。"
         + "求和那一行不许用 a[i]，要真的走指针这条线。",
       starter: "#include <stdio.h>\n\n"
         + "int main(void) {\n"
@@ -239,14 +273,21 @@ window.C_MODULES.push({
         include: ["stdio.h"],
         return0: true,
         seq: [
-          ["int", "a", "[", "6", "]"],
-          ["int", "*", "p", "=", "a"],
-          ["*", "(", "p", "+", "i", ")"]
+          ["int", "a", "["],
+          ["int", "*", "p"]
+        ],
+        seqAny: [
+          ["*", "(", "p", "+"],
+          ["*", "(", "a", "+"],
+          ["p", "++"],
+          ["++", "p"],
+          ["p", "+="],
+          ["p", "=", "p", "+"]
         ],
         calls: [["printf", "sum = %d"], ["printf", "count = %d"]],
         require: { for: true, pointer: true, array: true },
         minStatements: 7,
-        message: "需要 int a[6] = {...}; 、int *p = a; 、循环里的 *(p + i) 写法，以及两行格式为 sum = %d 和 count = %d 的打印。",
+        message: "需要数组 a、指针 p、for 循环里的指针算术写法（如 `*(p + i)`、`*(a + i)` 或 `p++`），以及两行格式为 sum = %d 和 count = %d 的打印。",
         ok: "数组名退化、指针算术、元素个数计算都用对了，结构符合本关要求。"
       },
       solution: "#include <stdio.h>\n\n"
@@ -280,6 +321,20 @@ window.C_MODULES.push({
         + "指针参数还有一个常用法：一次带回多个结果。比如写 void min_max(int *a, int n, int *mn, int *mx)，就能同时把最小值和最大值写回调用者的两个变量——C 的函数只有一个返回值，需要多个结果时就传地址。\n"
         + "只读的参数记得加 const：void print(const char *s) 向读代码的人声明「我不会通过 s 改你的数据」，同时也让编译器帮你拦住手滑的赋值。这是 C 代码里最常见的约定之一。\n"
         + "最后有一个容易忽略的点：指针参数本身也是按值传递的。函数里写 a = &other; 改的只是形参这个副本，调用者的指针变量纹丝不动。要修改调用者的指针本身，必须传 &p，形参写成二级指针 int **——这就是下一关的主题。",
+      beginner: {
+        idea: "C 函数传参永远是「复印一份交进去」（按值传递），改复印件当然不会影响原件。想让函数改到外面的变量，就别传值本身，改传它的地址 &x；函数用指针 int *p 接住地址，再写 *p = ... 就能顺着地址改回原件。",
+        read: [
+          "先看 swap_by_value(int x, int y)：函数里把 x、y 换成了 8 和 3，但回到 main 后 m、n 还是 3 和 8，因为换的只是副本。",
+          "再看 swap(int *a, int *b)：形参接的是地址，函数里三句都带 *，改的是地址指向的 m 和 n 本人。",
+          "对比两次调用：按值版本写 swap_by_value(m, n)，指针版本必须写 swap(&m, &n) 把地址传进去。"
+        ],
+        steps: [
+          "在 swap(int *a, int *b) 里先写 int t = *a; 暂存第一个数，再依次写 *a = *b; 和 *b = t;。",
+          "在 main 里保留 before 那行 printf，下一行调用 swap(&x, &y);，注意两个实参前都要加 &。",
+          "保留 after 那行 printf，编译运行确认输出从 x = 1, y = 2 变成 x = 2, y = 1。"
+        ],
+        pitfall: "常见两个翻车点：调用 swap 时忘写 &（写成 swap(x, y) 会把整数当地址）；或者在 swap 里交换了指针本身（t = a; a = b; b = t;）而漏掉 *，那只改了形参副本的指向，外面的 x、y 一点没变。"
+      },
       example: {
         code: "#include <stdio.h>\n\n"
           + "void swap_by_value(int x, int y) {\n"
@@ -412,6 +467,21 @@ window.C_MODULES.push({
         + "遍历字符串的标准写法是用指针一路走：const char *p = s; while (*p != '\\0') { ...; p++; }。每轮读一个字符再前进一格，直到读到 '\\0'。也可以写成 while (*p)，因为 '\\0' 的值就是 0，直接当条件用；初学阶段建议把 != '\\0' 写全，读起来更清楚。\n"
         + "函数参数一般写成 const char *s：表示「我只读不改」。这样传 char 数组和传字符串字面量都合法，而且函数里如果手滑写 s[0] = 'X'，编译器会直接报错。要写才不加 const。\n"
         + "最后三个高频错误：把字面量赋给 char * 后去改它（char *s = \"hi\"; s[0] = 'H'; 能编译，运行时可能直接崩溃）；想给数组整体赋值（buf = \"hi\"; 数组名不是变量，报错，要逐字符复制或 strcpy）；以及 printf(\"%s\") 一个没有 '\\0' 结尾的字符数组（会一直往后读，输出乱码甚至崩溃）。",
+      beginner: {
+        idea: "C 语言没有专门的字符串类型，字符串其实就是「末尾带 '\\0' 的一串 char」。char buf[] = \"hello\"; 是把字符复制进你自己的可写数组；const char *lit = \"hello\"; 只是拿一根指针指向只读字面量，能读不能改。",
+        read: [
+          "对比第 4、5 行：buf 是 6 字节数组（5 个字母加 '\\0'），lit 只是 8 字节指针。",
+          "看 buf[0] = 'H';：改自己数组里的副本完全合法，lit 指向的字面量则原封不动。",
+          "看 while (*p != '\\0')：指针 p 从首字符一步步往后走，每走一格 len++，直到撞见结束符 '\\0' 才停下。",
+          "最后看 sizeof(buf) = 6 与 sizeof(lit) = 8：sizeof 对数组量的是总字节数（含 '\\0'），对指针量的是地址大小，都不能当字符串长度用。"
+        ],
+        steps: [
+          "在 my_strlen(const char *s) 里写 while (*s != '\\0') 循环，每轮执行 len++; 和 s++;，最后 return len;。",
+          "在 main 里分别把数组 buf 和字面量 \"pointer\" 传给 my_strlen，按题目要求打印 buf length = %d 和 literal length = %d。",
+          "确认没有调用标准库 strlen，编译运行核对输出 5 和 7。"
+        ],
+        pitfall: "千万别写 char *s = \"hi\"; s[0] = 'H'; 去修改字符串字面量，它虽常能编过却会在运行时直接崩溃；只读字符串一律写成 const char *，让编译器替你把关。另外，手填字符数组别忘了末尾补 '\\0'。"
+      },
       example: {
         code: "#include <stdio.h>\n\n"
           + "int main(void) {\n"
@@ -536,17 +606,35 @@ window.C_MODULES.push({
       title: "二级指针与指针数组：char *argv[] 的模型",
       minutes: 20,
       gist: "搞清「指针的指针」，看懂 char *argv[] 这类声明，并知道什么时候必须用二级指针。",
-      lesson: "先把两个容易混的声明分开。char *words[3]; 是「指针数组」：它是一个真正的数组，有 3 个元素，每个元素都是一个 char *。数组名 words 在表达式里退化成指向首元素的指针，而首元素本身就是 char *，所以退化的结果是 char **——指向「指针」的指针，这就是二级指针。\n"
+      lesson: "先把两个容易混的声明分开。const char *words[3];（也常见写成 char *words[3];）是「指针数组」：它是一个真正的数组，有 3 个元素，每个元素都是一个指向字符串首字符的指针。数组名 words 在表达式里退化成指向首元素的指针，而首元素本身就是指针，所以退化的结果是 const char **（或 char **）——指向「指针」的指针，这就是二级指针。\n"
+        + "用内存盒子图看指针数组与二级指针：\n"
+        + "[ words[0] ] ---> \"Ann\"　　[ words[1] ] ---> \"Bob\"　　[ words[2] ] ---> \"Cid\"\n"
+        + "[ 变量 x | 值 1 ] <--- [ 指针 px | 存 &x ] <--- [ 二级指针 pp | 存 &px ]\n"
         + "再看 int **pp;：它存的不是 int 的地址，而是「一个 int * 变量的地址」。对 pp 做一次解引用得到一级指针（*pp 是一个 int *），做两次解引用才拿到最终的 int（**pp 是那个 int）。每多一层 *，就多剥一层。\n"
-        + "分清两件常被写混的事。执行 *pp = &y; 改的是「被指向的那个指针」，也就是让一级指针改指向 y；执行 **pp = 100; 改的是最终的那个变量，也就是把 x 改成 100。少了或多了星号，程序的行为完全不同：前者动指针，后者动数据。\n"
-        + "那什么时候必须用二级指针？当函数要修改调用者的「指针本身」时。回想上一关的结论：指针参数也是按值传递的，函数里写 p = NULL; 只改了副本。要让函数真的把调用者的 p 改成新地址（典型场景是函数内部 malloc 再把地址带回去），就得把 &p 传进去，形参写成 int **p，函数里写 *p = malloc(...)。\n"
+        + "分清两件常被写混的事。执行 *pp = &y; 改的是「被指向的那个指针」，也就是让一级指针 px 改指向 y；执行 **pp = 100; 改的是最终的那个变量，也就是把 x 改成 100。少了或多了星号，程序的行为完全不同：前者动指针，后者动数据。\n"
+        + "那什么时候必须用二级指针？当函数要修改调用者的「指针本身」时。回想第 35 关的结论：指针参数也是按值传递的，函数里写 p = NULL; 只改了副本。要让函数真的把调用者的 p 改成新地址（典型场景是函数内部动态申请内存再把新地址带回去——动态内存 malloc 会在第 39 关详细学习，这里先记住传址规律即可），就得把 &p 传进去，形参写成 int **p，函数里写 *p = ...。\n"
         + "命令行的 main 参数就是现成的例子：int main(int argc, char *argv[]) 里，argv 是「字符串指针的数组」，argv[0] 是程序名，argv[i] 是第 i 个参数；它等价于 char **argv。你有两个参数时，argv 元素各自指向一串字符——正好是「指针数组」这个模型。\n"
-        + "最后提一句外形相似、含义完全不同的两个声明：char *a[3] 是 3 个 char *（sizeof 是 24，本机）；char (*a)[3] 是「指向 3 个 char 的数组的指针」（sizeof 是 8）。区别只在那对括号，读的时候从里往外读：先看 a 和谁结合。",
+        + "最后提一句外形相似、含义完全不同的两个声明：const char *a[3] 是 3 个指针（sizeof 是 24，本机）；char (*a)[3] 是「指向 3 个 char 的数组的指针」（sizeof 是 8）。区别只在那对括号，读的时候从里往外读：先看 a 和谁结合。",
+      beginner: {
+        idea: "二级指针就是「存指针地址的指针」：一级指针 px 指着数据 x，二级指针 pp 指着 px。记住剥洋葱的规律：剥一层 *pp 拿到的是 px（能改 px 的指向），剥两层 **pp 才拿到最终的 x（能改 x 的数值）。指针数组 const char *words[] 则是把好几个字符串地址排成一排。",
+        read: [
+          "看 const char *words[3] 和 const char **p = words;：数组里存着 3 个字符串字面量的地址，p 指向这个数组的第 0 格。",
+          "看循环里的 *(p + i)：剥开一层指针，取出第 i 个字符串地址交给 %s 打印。",
+          "对照 **pp = 100; 和 *pp = &y;：前者连剥两层直接改了 x，后者只剥一层让 px 改指向 y，所以 x 仍是 100、*px 变成 2。"
+        ],
+        steps: [
+          "先声明 const char *words[3] = {\"Ann\", \"Bob\", \"Cid\"};（省略长度写成 words[] 或写 char * 也都可以）和 const char **p = words;。",
+          "用 for 循环三次，每次 printf(\"[%s]\", *(p + i));，循环结束后补一行 printf(\"\\n\");。",
+          "在 int x = 1, y = 2; 下方写 int *px = &x; 和 int **pp = &px;。",
+          "依次执行 **pp = 100; 和 *pp = &y;，最后一行 printf 验证输出 x = 100, y = 2, *px = 2。"
+        ],
+        pitfall: "最容易少写或多写一颗星：想改数据 x 必须写 **pp = 100;，少写一颗星成 *pp = 100; 会把整数 100 当地址赋给 px。另外，千万别把二维数组 char a[3][8] 强塞给 char **p，它们不是同一种类型。"
+      },
       example: {
         code: "#include <stdio.h>\n\n"
           + "int main(void) {\n"
-          + "    char *words[3] = {\"Ann\", \"Bob\", \"Cid\"};   /* 指针数组：3 个 char * */\n"
-          + "    char **p = words;                           /* 指向「指针」的指针 */\n"
+          + "    const char *words[3] = {\"Ann\", \"Bob\", \"Cid\"};   /* 指针数组：3 个 const char * */\n"
+          + "    const char **p = words;                           /* 指向「指针」的指针 */\n"
           + "    int i;\n"
           + "    int x = 1, y = 2;\n"
           + "    int *px = &x;\n"
@@ -564,21 +652,21 @@ window.C_MODULES.push({
           + "    return 0;\n"
           + "}",
         output: "[Ann][Bob][Cid]\nx = 100, *px = 100\nx = 100, y = 2, *px = 2\nsizeof(words) = 24, sizeof(p) = 8",
-        explain: "第 4 行的 words 是一个装着 3 个 char * 的数组，每个元素指向一个字符串字面量；第 5 行的 p 是 char **，它指向 words 的第一个元素。"
-          + "第 11 到 13 行用 *(p + i) 依次取出「第 i 个指针」，再交给 %s 打印。注意这里多了一层：p + i 得到的是 char **，解引用一次才得到 char *。"
+        explain: "第 4 行的 words 是一个装着 3 个 const char * 的数组，每个元素指向一个只读字符串字面量（与第 36 关习惯一致）；第 5 行的 p 是 const char **，它指向 words 的第一个元素。"
+          + "第 11 到 13 行用 *(p + i) 依次取出「第 i 个指针」，再交给 %s 打印。注意这里多了一层：p + i 得到的是 const char **，解引用一次才得到 const char *。"
           + "第 16 行 **pp = 100; 连剥两层：pp → px → x，所以改的是 x，第 17 行打印出 x = 100，*px 也是 100。"
           + "第 19 行 *pp = &y; 只剥一层：改的是 px 这个指针本身，让它改指向 y。x 仍然是 100，y 还是 2，而 *px 跟着 px 变成了 2——这行没有动任何数据。"
           + "最后一行对比 sizeof：words 是数组，占 3 × 8 = 24 字节；p 只是一个指针，8 字节。"
       },
       pitfalls: [
-        "把 `char *words[3]` 当成「能装 3 个字符的数组」：它是 3 个指针，sizeof 是 24；要装字符得写 char words[3]。",
+        "把 `const char *words[3]` 当成「能装 3 个字符的数组」：它是 3 个指针，sizeof 是 24；要装字符得写 char words[3]。",
         "用 `char **p` 去接二维字符数组 `char a[3][8]`：a 退化后是 char (*)[8]，类型不匹配，编译器会给出 incompatible pointer type 的警告，运行结果也不对。",
         "`*pp = 100;` 想让 x 变成 100：少了一层解引用，等于把地址设成 100，编译器会报整数与指针不匹配的错误；要改数据必须写 **pp = 100;。",
         "在函数里用 `void f(int *p)` 改调用者的指针本身：形参 p 是副本，函数里 p = malloc(...) 改不到外面，调用者的指针仍然是原来的值（还容易造成内存泄漏）——必须传 &p 并用 int ** 接收。",
         "以为指针数组的元素一定有内容：数组里的指针可以指向任何东西，也可以是 NULL，用之前要确保它指向有效数据。"
       ],
       takeaways: [
-        "char *words[3] 是指针数组（3 个 char *），退化成 char **",
+        "const char *words[3]（或 char *words[3]）是指针数组，退化成二级指针",
         "int **pp 存的是「指针的地址」；*pp 是一级指针，**pp 是最终的数据",
         "*pp = &y; 改指针的指向；**pp = 100; 改指向的数据",
         "函数要修改调用者的指针本身，必须传 &p、形参用二级指针"
@@ -607,7 +695,7 @@ window.C_MODULES.push({
           explain: "**pp 连剥两层：pp 指向 px，px 指向 x，所以最终改的是 x，C 对。A 描述的是 *pp 的效果（改指针本身）；B 是把 pp 自己当成数据；D 说错了——两级解引用是完全合法的写法。"
         },
         {
-          q: "要让函数把调用者的指针改成指向新申请的内存，形参应该怎么写？",
+          q: "要让函数把调用者的指针改成指向新申请的内存（动态内存 malloc 会在第 39 关详细学习），形参应该怎么写？",
           options: [
             "int *p，函数里写 p = malloc(...)",
             "int p[]，函数里直接赋值",
@@ -615,42 +703,42 @@ window.C_MODULES.push({
             "int **p，调用时传 &p，函数里写 *p = malloc(...)"
           ],
           answer: 3,
-          explain: "要改「指针本身」，就得拿到指针变量的地址，因此形参是二级指针，D 对。A 改的是形参副本，调用者的指针纹丝不动，而且新申请的内存地址丢失、造成泄漏；B 的数组形参同样退化成指针，道理相同；C 加了 const 后连内容都不该改，而且它是指向 int 的指针，类型也不对。"
+          explain: "要改「指针本身」，就得拿到指针变量的地址，因此形参是二级指针，D 对（malloc 动态申请内存的具体用法会在第 39 关展开，这里重点是理解二级指针的传址规律）。A 改的是形参副本，调用者的指针纹丝不动，而且新申请的内存地址丢失、造成泄漏；B 的数组形参同样退化成指针，道理相同；C 加了 const 后连内容都不该改，而且它是指向 int 的指针，类型也不对。"
         }
       ],
       passRatio: 0.8,
-      mission: "在 main 里写三段：① 定义指针数组 `char *words[3] = {\"Ann\", \"Bob\", \"Cid\"};`，用 `char **p = words;` 配合 for 循环打印成 `[Ann][Bob][Cid]`（打印语句用 printf(\"[%s]\", *(p + i)) 的风格）；② 定义 `int x = 1, y = 2;`、`int *px = &x;`、`int **pp = &px;`；③ 先用 `**pp = 100;` 改掉 x，再用 `*pp = &y;` 让 px 转向 y，最后打印 `x = 100, y = 2, *px = 2`。",
+      mission: "在 main 里写三段：① 定义指针数组 `const char *words[3] = {\"Ann\", \"Bob\", \"Cid\"};`（写成 `const char *words[]` 或 `char *words[3]` 也可），用 `const char **p = words;` 配合 for 循环打印成 `[Ann][Bob][Cid]`（打印语句用 printf(\"[%s]\", *(p + i)) 的风格）；② 定义 `int x = 1, y = 2;`、`int *px = &x;`、`int **pp = &px;`；③ 先用 `**pp = 100;` 改掉 x，再用 `*pp = &y;` 让 px 转向 y，最后打印 `x = 100, y = 2, *px = 2`。",
       starter: "#include <stdio.h>\n\n"
         + "int main(void) {\n"
-        + "    /* TODO: 指针数组与 char **p */\n\n"
+        + "    /* TODO: 指针数组与 const char **p */\n\n"
         + "    /* TODO: 用 *(p + i) 打印 [名字] */\n\n"
         + "    int x = 1, y = 2;\n"
         + "    /* TODO: px 与 pp，然后 **pp = 100; 与 *pp = &y; */\n\n"
         + "    printf(\"x = %d, y = %d, *px = %d\\n\", x, y, *px);\n"
         + "    return 0;\n"
         + "}",
-      hint: "写声明时从里往外读：char *words[3] 先看到 [3]，是数组，元素是 char *；int **pp 里的两个 * 表示「指向指针的指针」。动手之前先把三行写在纸上：pp 指向谁、pp 解引用一次是谁、解引用两次是谁，写清楚再敲代码。",
+      hint: "写声明时从里往外读：const char *words[3] 先看到 [3]，是数组，元素是指向只读字符串的指针；int **pp 里的两个 * 表示「指向指针的指针」。动手之前先把三行写在纸上：pp 指向谁、pp 解引用一次是谁、解引用两次是谁，写清楚再敲代码。",
       check: {
         include: ["stdio.h"],
         return0: true,
         seq: [
-          ["char", "*", "words", "[", "3", "]"],
-          ["char", "*", "*", "p", "=", "words"],
-          ["int", "*", "*", "pp", "=", "&", "px"],
+          ["char", "*", "words", "["],
+          ["char", "*", "*", "p"],
+          ["int", "*", "*", "pp"],
           ["*", "*", "pp", "=", "100"],
           ["*", "pp", "=", "&", "y"]
         ],
         calls: [["printf", "[%s]"], ["printf", "x = %d, y = %d, *px = %d"]],
         require: { array: true, pointer: true, for: true },
         minStatements: 8,
-        message: "需要 char *words[3]、char **p = words、int **pp = &px、**pp = 100;、*pp = &y; 这几处写法，以及 for 循环和两行指定格式的打印。",
+        message: "需要指针数组 words（如 const char *words[] 或 char *words[3]）、二级指针 p、int **pp、**pp = 100;、*pp = &y; 这几处写法，以及 for 循环和两行指定格式的打印。",
         ok: "指针数组、二级指针的两次解引用与改指向都写对了，模型已经建立起来。"
       },
       expectedOutput: "[Ann][Bob][Cid]\nx = 100, y = 2, *px = 2",
       solution: "#include <stdio.h>\n\n"
         + "int main(void) {\n"
-        + "    char *words[3] = {\"Ann\", \"Bob\", \"Cid\"};\n"
-        + "    char **p = words;\n"
+        + "    const char *words[3] = {\"Ann\", \"Bob\", \"Cid\"};\n"
+        + "    const char **p = words;\n"
         + "    int i;\n"
         + "    int x = 1, y = 2;\n"
         + "    int *px = &x;\n"
@@ -677,12 +765,31 @@ window.C_MODULES.push({
       minutes: 22,
       gist: "读懂 int (*fp)(int, int) 这种声明，会用 qsort 的比较函数，理解「回调」到底回什么。",
       lesson: "函数也在内存里，也有地址；函数名在表达式里就代表这个函数的入口地址。既然有地址，就能把它存进一个变量——这就是函数指针。\n"
-        + "声明语法是重点，括号不能省：int (*fp)(const void *, const void *); 读作「fp 是一个指针，指向『接收两个 const void *、返回 int』的函数」。去掉括号写成 int *fp(const void *, const void *); 意思完全变了：那是「一个函数，返回 int *」。读声明时从里往外读，先看 fp 和谁结合。\n"
+        + "先用三行最简单的热身例子建立直觉：\n"
+        + "1) 假设有普通函数 int add(int a, int b) { return a + b; }；\n"
+        + "2) 声明一个指向它的函数指针：int (*op)(int, int) = add; —— 括号把 * 和 op 绑在一起，表示 op 是一个指针，指向「接收两个 int、返回 int」的函数；\n"
+        + "3) 调用时和普通函数一样：op(3, 4) 得到 7；如果把 op 改成指向 sub，同一句 op(3, 4) 就会自动执行减法。\n"
+        + "记住这条括号规则，再看标准库更复杂的接口就不怕了：int (*fp)(const void *, const void *); 读作「fp 是一个指针，指向『接收两个 const void *、返回 int』的函数」。去掉括号写成 int *fp(const void *, const void *); 意思完全变了：那是「一个函数，返回 int *」。读声明时从里往外读，先看 fp 和谁结合。\n"
         + "赋值和调用都很自然：fp = cmp; 之后用 fp(a, b) 调用，等价于 (*fp)(a, b)；写 fp = &cmp; 也可以，函数名本来就会转换成地址。\n"
         + "函数指针最大的价值是回调：把「怎么做」作为参数交给别人，让别人在合适的时机调用。标准库的 qsort 就是典型：qsort(数组, 元素个数, 每个元素大小, 比较函数)。排序算法是固定的，比较规则由你提供，于是同一份 qsort 能排整数、字符串、结构体。\n"
         + "比较函数的接口是固定的：int cmp(const void *a, const void *b)。返回负数表示 a 应排在 b 前面，0 表示相等，正数表示 a 应排在 b 后面。因为参数是 void *（不知道具体类型），函数里第一步必须转回真实类型再用：int x = *(const int *)a;。\n"
         + "写比较函数有个小技巧：别写 return x - y;。虽然大多数情况能对，但两个很大的数相减会溢出 int，那属于未定义行为。稳妥写法是 return (x > y) - (x < y);，只用比较的结果做减法，永远只有 -1、0、1 三种可能。\n"
         + "最后是常见的错法：比较函数只返回 0 和 1（漏掉相等的 0 或负数），qsort 会把「相等」误判成「大于」，排序结果错乱；传参时写成 qsort(..., cmp()) 加了括号，那是「先调用 cmp 再把返回值传进去」，类型不匹配；忘了把 const void * 转成真实类型就解引用，编译期直接报错，因为 void 没有大小。",
+      beginner: {
+        idea: "函数也住在内存里、也有入口地址，函数指针就是「专门存函数地址的变量」。把它当参数传给 qsort 就叫回调：qsort 负责怎么排，你写的比较函数只负责回答「谁该排在前面」，从此同一套排序能排任何类型。",
+        read: [
+          "先看 cmp_asc：qsort 不知道数组元素类型，只能传 const void *，函数开头两行先把它们转成 const int * 再解引用取出 x 和 y。",
+          "看 return (x > y) - (x < y);：这是防溢出的三态比较写法，结果只会是 -1、0 或 1。",
+          "再看 main 里的 int (*fp)(const void *, const void *);：小括号把 * 和 fp 绑在一起表示指针，把 cmp_asc 赋给它再传给 qsort。"
+        ],
+        steps: [
+          "在 cmp_desc 里把 a、b 强转成 const int * 取出 x、y，返回 (x < y) - (x > y) 让大的排在前面。",
+          "在 main 里声明函数指针 int (*fp)(const void *, const void *) = cmp_desc;（或先声明再写 fp = cmp_desc;）。",
+          "调用 qsort(a, 6, sizeof(int), fp); 完成降序排序。",
+          "写 for 循环依次打印 \" %d\"，最后补一个换行，确认输出 desc: 9 7 5 3 2 1。"
+        ],
+        pitfall: "两个高频坑：声明函数指针时漏掉 (*fp) 的括号会变成「返回 int * 的函数」；传给 qsort 时千万别写成 cmp_desc() 带上小括号——带括号是立刻调用它，不带括号才是把函数地址传进去。"
+      },
       example: {
         code: "#include <stdio.h>\n#include <stdlib.h>\n\n"
           + "int cmp_asc(const void *a, const void *b) {\n"
@@ -791,15 +898,18 @@ window.C_MODULES.push({
         include: ["stdio.h", "stdlib.h"],
         return0: true,
         seq: [
-          ["int", "a", "[", "6", "]"],
+          ["int", "a", "["],
           ["int", "(", "*", "fp", ")"],
-          ["fp", "=", "cmp_desc"],
           ["qsort", "("]
+        ],
+        seqAny: [
+          ["=", "cmp_desc"],
+          ["=", "&", "cmp_desc"]
         ],
         calls: [["printf", "desc:"], ["printf", "%d"]],
         require: { funcs: ["cmp_desc"], pointer: true, for: true },
         minStatements: 8,
-        message: "需要题目指定的数组、`int (*fp)(...)` 形式的函数指针、fp = cmp_desc; 、qsort 调用、自己定义的 cmp_desc，以及 desc: 开头的打印。",
+        message: "需要题目指定的数组、`int (*fp)(...)` 形式的函数指针、让 fp 指向 cmp_desc（声明时初始化或单独赋值均可）、qsort 调用、自己定义的 cmp_desc，以及 desc: 开头的打印。",
         ok: "函数指针声明、回调传参与降序排序都对了，格式也符合要求。"
       },
       solution: "#include <stdio.h>\n#include <stdlib.h>\n\n"
@@ -839,6 +949,22 @@ window.C_MODULES.push({
         + "free(p) 把内存还给系统，必须和申请配对：申请一次、释放一次。free(NULL) 是安全的空操作，所以「忘写 if 判断就 free」通常没事；但重复释放同一块内存（double free）会破坏堆的管理结构，属于未定义行为。free 之后指针不会自动变成 NULL，它会变成悬空指针，所以释放后立刻 p = NULL; 是极有价值的习惯。\n"
         + "还有两条边界：只能 free 由 malloc/calloc/realloc 返回的地址，free 栈上数组的地址、或数组中间元素（p + 1）都是未定义行为；申请了却完全不释放就是内存泄漏，短命的小程序看不出来，长期运行的服务会一点点吃光内存。\n"
         + "最后是规模问题：malloc(n * sizeof(int)) 里的乘法在 n 极大时可能溢出 size_t，正规做法是先判断 n 是否合理。初学阶段至少要养成「申请后立刻检查 NULL」这一条。",
+      beginner: {
+        idea: "普通数组的大小在写代码时就锁死了，而堆内存（malloc / calloc / realloc）允许程序在运行时「按需租用」一块连续空间。记住铁律五步走：申请 → 判 NULL → 使用 → free 归还 → 指针置 NULL。",
+        read: [
+          "看第 6、7 行：malloc 按字节申请、内容是垃圾值；calloc 按「个数 + 单格字节」申请并自动清零。",
+          "看第 10 行：每次申请后立刻判断是不是 NULL，失败就清理并退出，绝不对空指针读写。",
+          "看第 27 到 33 行：realloc 扩容先用临时指针 bigger 接住，确认非 NULL 再赋回 a，新增的格子自己填初值。",
+          "看最后几行：free(a); 之后马上写 a = NULL;，防止误用已经归还的悬空指针。"
+        ],
+        steps: [
+          "用 int *a = malloc((size_t)n * sizeof(int)); 申请 6 个 int，并立刻写 if (a == NULL) 返回 1。",
+          "用 for 循环写入 1..6 的立方 (i + 1) * (i + 1) * (i + 1)，按 cubes: 1 8 27 64 125 216 打印。",
+          "用临时指针 int *bigger = realloc(a, (size_t)10 * sizeof(int)); 扩容，判 NULL 后再 a = bigger;，把下标 6..9 填 0 并打印 last = %d。",
+          "结束前写 free(a); 和 a = NULL;，再 return 0;。"
+        ],
+        pitfall: "最危险的写法是直接覆盖原指针 a = realloc(a, ...);：一旦扩容失败返回 NULL，原来那块还有效的内存地址就彻底丢了，既释放不掉又造成泄漏。另外，malloc 拿到的内存不是全 0，读之前必须自己写入。"
+      },
       example: {
         code: "#include <stdio.h>\n#include <stdlib.h>\n\n"
           + "int main(void) {\n"
@@ -885,7 +1011,7 @@ window.C_MODULES.push({
           + "第 10 行把两个返回值一起检查：只要有一个是 NULL 就清理现场退出。这里 free(a) 和 free(zeros) 可能收到 NULL，这是安全的——free(NULL) 什么也不做。"
           + "第 27 行是 realloc 的关键用法：先用临时指针 bigger 接结果，确认不为 NULL 之后再赋回 a。如果写成 a = realloc(a, ...)，一旦失败原地址就丢了。"
           + "第 35 行只把新增的 3 个位置填 0；realloc 保留原有内容（所以 a[0] 还是 1），但新扩展出来的区域内容不确定，必须自己初始化。"
-          + "第 40 到 43 行是收尾：按申请的反序释放每块内存，并立刻把指针置成 NULL。第 44 行打印的 a is NULL 就是在验证这个习惯——free 本身不会替你置空。"
+          + "第 40 到 43 行是收尾：按申请的顺序依次释放每块内存，并立刻把指针置成 NULL。第 44 行打印的 a is NULL 就是在验证这个习惯——free 本身不会替你置空。"
       },
       pitfalls: [
         "`p = realloc(p, new_size);` 直接覆盖 → realloc 失败返回 NULL 时原地址丢失，那块内存永远无法释放，造成内存泄漏；要用临时指针接住再判断。",
@@ -1167,7 +1293,7 @@ window.C_MODULES.push({
       title: "指针与 sizeof：数组、指针、传参退化",
       minutes: 18,
       gist: "分清 sizeof(数组) 与 sizeof(指针)，看懂函数参数里的 int arr[] 为什么骗人。",
-      lesson: "sizeof 是编译期运算符（对可变长数组除外），它给出的是「这个类型或对象占多少字节」，返回类型是 size_t（无符号整数类型）。所以 printf 时通常先写成 (int)sizeof(...) 配 %d，或者直接用 %zu——把 size_t 丢给 %d 属于格式符不匹配，是常见的低级错误。\n"
+      lesson: "sizeof 是编译期运算符（对可变长数组除外），它给出的是「这个类型或对象占多少字节」，返回类型是 size_t（无符号整数类型）。把 size_t 直接丢给 %d 属于格式符不匹配；虽然 C99 标准为 size_t 规定了 %zu，但要特别警惕 Windows 下 Dev-C++ 自带的 TDM-GCC 4.9.2（底层链接老版 MSVCRT）默认不支持 %zu，运行后会原样打印出字母 zu！因此在 Windows 练习和本课程里，一律先显式强转写成 (int)sizeof(...) 配 %d（或 (unsigned)sizeof(...) 配 %u），既无格式告警又不会踩 MSVCRT 的坑。\n"
         + "sizeof(数组) = 元素个数 × 单个元素大小。int a[6] 得到 24；char s[] = \"hello\" 得到 6（含结尾的 '\\0'）；数组作为 sizeof 的操作数时不会退化，这是「数组名会退化成指针」这条规则的重要例外。\n"
         + "sizeof(指针) 永远是一个地址的大小：在本机（64 位）是 8 字节，和它指向 int 还是 double 完全无关。所以 sizeof(p) 得到 8，sizeof(*p) 才等于它指向的类型大小。\n"
         + "关键在传参。函数参数写成 void f(int arr[])，看起来像数组，其实编译器把它当 int *arr——形参里的长度（哪怕写成 int arr[10]）会被完全忽略。所以函数内部 sizeof(arr) 是 8 而不是 40，元素个数必须另外传进来：void f(int arr[], int n)。\n"
@@ -1202,7 +1328,7 @@ window.C_MODULES.push({
       pitfalls: [
         "在函数里用 `sizeof(arr) / sizeof(arr[0])` 求元素个数 → 形参已退化成指针，算出 8 / 4 = 2 这种假答案；长度必须作为参数传进来。",
         "以为 `void f(int arr[10])` 里的 10 有意义 → 编译器完全忽略它，写成 int *arr 完全等价，函数里照样不知道长度。",
-        "用 %d 打印 sizeof 的结果 → sizeof 返回 size_t（无符号），格式符不匹配可能告警或输出错误；先 (int) 转换，或用 %zu。",
+        "用 %d 直接打印 sizeof，或在 Windows TDM-GCC 4.9.2 下误用 %zu → 直接用 %d 会因 size_t 类型不匹配而告警；而 Windows TDM-GCC 4.9.2（MSVCRT）默认不支持 %zu，运行后会原样打印出字母 zu！在 Windows 上务必强转成 (int)sizeof(...) 配 %d，或 (unsigned)sizeof(...) 配 %u。",
         "把 sizeof(指针) 当成它指向数据的大小 → sizeof(p) 是 8（地址大小），sizeof(*p) 才是元素大小。",
         "以为 sizeof 里的表达式会被求值 → sizeof(i++) 不会让 i 自增（可变长数组例外），不要用 sizeof 去执行任何有副作用的代码。"
       ],
@@ -1210,7 +1336,7 @@ window.C_MODULES.push({
         "sizeof(数组) 是总字节数，sizeof(指针) 只是地址大小（本机 8）",
         "数组作为 sizeof 的操作数时不退化，这是「数组名退化」的例外",
         "数组一旦传参就退化成指针，元素个数必须另外传",
-        "sizeof 返回 size_t，打印时用 (int) 转换或 %zu"
+        "sizeof 返回 size_t；Windows TDM-GCC 4.9.2 默认不支持 %zu（会打出 zu），务必强转为 (int)sizeof(...) 配 %d 或 (unsigned)sizeof(...) 配 %u"
       ],
       questions: [
         {
@@ -1266,8 +1392,8 @@ window.C_MODULES.push({
         include: ["stdio.h"],
         return0: true,
         seq: [
-          ["int", "a", "[", "4", "]"],
-          ["int", "*", "p", "=", "a"],
+          ["int", "a", "["],
+          ["int", "*", "p"],
           ["sizeof", "(", "a", ")"],
           ["sizeof", "(", "p", ")"]
         ],
@@ -1279,7 +1405,7 @@ window.C_MODULES.push({
         callCounts: [["printf", 3, 20]],
         require: { funcs: ["report"], pointer: true, array: true },
         minStatements: 8,
-        message: "需要 int a[4]、int *p = a、sizeof(a) 与 sizeof(p) 的打印、自己定义的 report 函数、在 main 里调用 report(a, 4)，以及总共 4 条以上 printf（其中一条在 report 里打印 inside: sizeof(arr) = %d, n = %d）。",
+        message: "需要数组 int a[4]（或 int a[]）、指针 int *p、sizeof(a) 与 sizeof(p) 的打印、自己定义的 report 函数、在 main 里调用 report(a, 4)，以及总共 4 条以上 printf（其中一条在 report 里打印 inside: sizeof(arr) = %d, n = %d）。",
         ok: "sizeof 的三种口径（数组、指针、形参退化）都验证到了，结构完全正确。"
       },
       solution: "#include <stdio.h>\n\n"
@@ -1309,6 +1435,7 @@ window.C_MODULES.push({
       lesson: "这一关把前面九关的东西拼成一个真实的小工具：一个能自动扩容的动态数组，加上一个自己实现的字符串复制函数。写完它，你对指针和内存的理解就成体系了。\n"
         + "动态数组的核心是「长度与容量分离」。count 表示当前存了几个元素，capacity 表示已经申请了几个位置。只有当 count == capacity（装满了）时才需要扩容：申请一块更大的内存，把数据搬过去。这样绝大多数 push 都不需要申请内存，效率很高。\n"
         + "扩容用 realloc(arr, new_cap * sizeof(int))。它可能原地扩展，也可能搬到新地址——所以函数必须把新的首地址返回给调用者，调用者必须用返回值更新自己的指针，否则就会拿着已经失效的旧地址继续用。\n"
+        + "这里还有一个 C 标准保证的便利特性：当 arr 是 NULL（空数组第一次扩容）时，realloc(NULL, size) 的行为被标准明确规定为与 malloc(size) 完全等价。正因为如此，首次申请和后续扩容可以共用同一行 realloc，不需要额外写 if (arr == NULL) 分支。\n"
         + "realloc 的失败处理是这一关的重点：失败时返回 NULL，而原来的内存仍然有效。所以函数里要写 int *tmp = realloc(...); if (tmp == NULL) return NULL;，绝不能写 arr = realloc(arr, ...)。调用者拿到 NULL 时，用原来的指针 free 掉再退出——「谁申请谁释放」的链条不能断。\n"
         + "为什么 push 的参数里有 int *count 和 int *capacity？因为函数要修改调用者的这两个变量、让调用者看到「现在存了几个」。这正是第 35 关的结论：C 按值传递，要改外面的变量就传地址，函数里写 (*count)++。注意括号——*count++ 的含义完全不同。\n"
         + "字符串复制 my_strcpy 用指针逐字符搬运：char *start = dest; 先记住起点，然后 while (*src != '\\0') { *dest = *src; dest++; src++; }，循环结束补上 *dest = '\\0';，最后 return start;。返回起点是为了对齐标准库 strcpy 的约定，也方便写成链式调用。\n"

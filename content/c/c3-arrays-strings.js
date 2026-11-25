@@ -123,11 +123,12 @@ window.C_MODULES.push({
         include: ["stdio.h"],
         noInclude: ["conio.h"],
         return0: true,
+        callsAnywhere: true,
         require: { array: true, for: true },
         calls: [["scanf", "%d"], ["printf", "a[%d]"]],
         forbid: ["gets"],
         minStatements: 6,
-        message: "本关需要：#include <stdio.h>、int main(void)、一个数组（形如 int a[5];）、for 循环、在 main 里用 scanf 读入整数、用 a[0] = 3 这样的格式输出，最后 return 0; 。",
+        message: "本关需要：#include <stdio.h>、int main(void)、一个数组（形如 int a[5];）、for 循环、用 scanf 读入整数、用 a[0] = 3 这样的格式输出，最后 return 0; 。",
         ok: "数组、循环、读入、输出都齐全，结构完全正确。"
       },
       input: "3 1 4 1 5\n",
@@ -629,7 +630,7 @@ window.C_MODULES.push({
       ],
       passRatio: 0.8,
       mission: "写一个程序，把一个字符串翻转过来（本关不允许用 strcpy、strcat 之类的库函数，只允许用 strlen 求长度）：\n"
-        + "1. 声明 char s[] = \"stressed\";（它的字母顺序正好前后对称，翻转后是 desserts）；\n"
+        + "1. 声明 char s[] = \"stressed\";（把它倒过来拼正好是另一个英文单词 desserts）；\n"
         + "2. 先输出两行：sizeof(s) = 9 和 strlen(s) = 8；\n"
         + "3. 用循环把 s 的字符倒着放进 char reversed[16];，最后自己补上结束符，然后输出 reversed = desserts；\n"
         + "4. 再输出一行 sizeof(reversed) = 16, strlen(reversed) = 8（两个值之间是逗号加空格）；\n"
@@ -651,11 +652,12 @@ window.C_MODULES.push({
         include: ["stdio.h", "string.h"],
         noInclude: ["conio.h"],
         return0: true,
+        callsAnywhere: true,
         require: { array: true, loop: true },
         calls: [["printf"], ["strlen"]],
         forbid: ["gets", "strcpy", "strcat"],
         minStatements: 8,
-        message: "本关需要：#include <stdio.h> 与 <string.h>、int main(void)、字符数组、循环、在 main 里调用 strlen 并打印结果，最后 return 0;；本关不要用 strcpy/strcat（自己写循环搬字符）。",
+        message: "本关需要：#include <stdio.h> 与 <string.h>、int main(void)、字符数组、循环、调用 strlen 并打印结果，最后 return 0;；本关不要用 strcpy/strcat（自己写循环搬字符）。",
         ok: "字符数组、循环、sizeof 与 strlen 的对比都齐了，结构完全正确。"
       },
       solution: "#include <stdio.h>\n"
@@ -700,6 +702,7 @@ window.C_MODULES.push({
         + "strlen(s) 返回 '\\0' 之前的字符个数（不含 '\\0'）。strcpy(dst, src) 把 src 连同结尾的 '\\0' 一起复制到 dst。strcat(dst, src) 从 dst 当前的 '\\0' 处开始把 src 接上去，并补上新的 '\\0'。strcmp(a, b) 按字符编码逐字符比较：返回负数表示 a 小于 b，0 表示完全相同，正数表示 a 大于 b——标准只保证符号，不保证具体数值，所以判断时永远写 strcmp(a, b) == 0 或 < 0 / > 0，不要写 == 1。\n"
         + "这里必须重点说清 strcpy 的风险：它完全不检查目标缓冲区有多大，只管一路写下去。如果 dst 装不下 src 的内容（包括结尾那个 '\\0'），多出来的字节就会写到数组外面——这叫缓冲区溢出，轻则破坏别的变量，重则让程序崩溃，也是很多安全漏洞的根源。使用规则只有一条：目标容量必须 ≥ strlen(src) + 1。strcat 同理，要保证 dst 的剩余空间装得下 strlen(src) + 1 个字节。\n"
         + "读别人的 C 代码时，看到 strcpy、strcat 就该本能地问一句：目标够大吗？源字符串的长度有没有可能超出预期？如果答案不确定，就应该换成带长度限制的写法（strncpy、snprintf 等，后面的模块会讲）。\n"
+        + "顺带讲清一个新手常疑惑的细节：用 scanf(\"%31s\", w1) 读入字符串时，w1 前面**不加 &**——因为数组名 w1 作为函数实参时会自动退化为指向首元素的指针（第 26 关学过），它本身就已经是地址了，再加 & 反而类型不匹配。另外，为什么要给 char w1[64] 配 %31s 而不是 %63s？因为后面要把两个单词和一个空格全部拼进 64 字节的 w1 里：每个单词最多读 31 个字符，31 + 1（空格）+ 31 + 1（结尾 '\\0'）正好等于 64 字节，这样无论输入多长，strcat 拼接后都绝对不会溢出。\n"
         + "另外几个细节：这几个函数都需要可写的目标数组，char *p; strcpy(p, \"hi\"); 这种写法是灾难——p 没有指向任何有效内存。字符串比较大小时也不能用 ==，那比较的是两个地址，而不是内容。",
       example: {
         code: "#include <stdio.h>\n"
@@ -796,7 +799,7 @@ window.C_MODULES.push({
         }
       ],
       passRatio: 0.8,
-      mission: "写一个程序：读入两个不含空白的单词（用 scanf(\"%31s\", w) 分别读进 char w[64];，宽度 31 是为了给结尾的 '\\0' 留位置。本机测试用：apple banana），然后\n"
+      mission: "写一个程序：读入两个不含空白的单词（用 scanf(\"%31s\", w1) 与 scanf(\"%31s\", w2) 分别读进 char w1[64] 和 char w2[64]——注意数组名本身会退化为首元素地址，所以不加 &；把每个单词限制在 31 个字符以内，是为了后面把两个单词加一个空格拼进 64 字节的 w1 时绝不溢出：31 + 1 + 31 + 1 = 64。本机测试用：apple banana），然后\n"
         + "1. 输出 w1 = apple 和 w2 = banana 两行；\n"
         + "2. 用 strcpy 把 w1 备份到 char backup[64];；\n"
         + "3. 用 strcmp 比较两个单词，按结果输出 order: w1 < w2、order: w1 == w2、order: w1 > w2 三者之一；\n"
@@ -838,7 +841,7 @@ window.C_MODULES.push({
         + "    char backup[64];\n"
         + "    int cmp;\n"
         + "\n"
-        + "    /* %31s：最多读 31 个字符，留一个字节给结尾的 '\\0' */\n"
+        + "    /* 数组名本身退化为首元素地址故不加 &；%31s 保证拼接后 31+1+31+1=64 字节绝不溢出 */\n"
         + "    if (scanf(\"%31s\", w1) != 1 || scanf(\"%31s\", w2) != 1) {\n"
         + "        return 1;\n"
         + "    }\n"
@@ -898,7 +901,9 @@ window.C_MODULES.push({
           + "    }\n"
           + "\n"
           + "    sub = strstr(text, \"example\");\n"
-          + "    printf(\"found \\\"example\\\" at index %d\\n\", (int)(sub - text));\n"
+          + "    if (sub != NULL) {\n"
+          + "        printf(\"found \\\"example\\\" at index %d\\n\", (int)(sub - text));\n"
+          + "    }\n"
           + "    printf(\"missing: %s\\n\", strstr(text, \"xyz\") == NULL ? \"not found\" : \"found\");\n"
           + "\n"
           + "    printf(\"tokens of \\\"%s\\\":\\n\", line);\n"
@@ -923,8 +928,8 @@ window.C_MODULES.push({
           + "count = 3\n"
           + "line after strtok = \"apple\"",
         explain: "第 12 行 strchr(text, '@') 找到 '@' 的位置；第 14 行用 %.*s 只打印前 (int)(at - text) 个字符——星号表示精度由参数给出，这样不改动原字符串也能只输出前半段。第 15 行的 at + 1 正好是 '@' 后面的全部内容。"
-          + "第 18 行 strstr 找到 \"example\" 并返回它的位置，两个指针相减就得到下标 5；第 20 行演示找不到子串时返回 NULL。"
-          + "第 23 行开始用 strtok：第一次传入字符数组 line 和分隔符 \",\"，之后第 27 行每次都传 NULL。结果里 count 是 3 而不是 4——因为 \"apple,banana,,cherry\" 中间有两个连续逗号，中间那一段是空的，被跳过了。"
+          + "第 18 行 strstr 找到 \"example\" 并返回它的位置，第 19 行先判断 sub != NULL 再把两个指针相减得到下标 5；第 22 行演示找不到子串时返回 NULL。"
+          + "第 25 行开始用 strtok：第一次传入字符数组 line 和分隔符 \",\"，之后第 29 行每次都传 NULL。结果里 count 是 3 而不是 4——因为 \"apple,banana,,cherry\" 中间有两个连续逗号，中间那一段是空的，被跳过了。"
           + "最后一行打印 line，只剩 \"apple\"：strtok 把遇到的分隔符都改写成了 '\\0'，原字符串确实被破坏了。"
       },
       pitfalls: [
@@ -932,7 +937,7 @@ window.C_MODULES.push({
         "strtok 之后还想用原字符串：分隔符已经被改写成 '\\0'，原串只剩第一段；需要原内容就提前备份一份。",
         "第二次调用又传了一遍原字符串：那样每次都从头开始，永远只能拿到第一段；正确做法是传 NULL。",
         "不判断 NULL 就直接使用 strchr/strstr 的返回值：找不到时它们返回 NULL，解引用会崩溃。",
-        "两个 strtok 循环嵌套：它内部用静态变量记录进度，嵌套会互相打乱；需要同时切分两处时要用 strtok_r 或自己写切分。",
+        "两个 strtok 循环嵌套：它内部用静态变量记录进度，嵌套会互相打乱；需要同时切分两处时，Linux/macOS（POSIX）下可用 strtok_r，Windows（含 TDM-GCC/MSVC）下对应的是 strtok_s，或者直接自己写切分循环。",
         "指望 strtok 保留空字段：连续的分隔符会被当成一个，\"a,,b\" 只会切出两段。"
       ],
       takeaways: [
@@ -1050,7 +1055,7 @@ window.C_MODULES.push({
         + "先说 scanf(\"%s\", buf)：它读到空白（空格、制表符、换行）就停，看起来方便，但它完全不知道 buf 有多大——输入比缓冲区长的部分会一直写下去，把后面的内存踩坏。要安全就得加宽度：scanf(\"%7s\", buf) 表示最多读 7 个字符。宽度必须比缓冲区小 1，因为还要给结尾的 '\\0' 留一个字节：char buf[8] 配 %7s。\n"
         + "更常用的安全读入是 fgets(buf, size, stdin)：它最多读 size - 1 个字符，读完一定在末尾补 '\\0'，所以永远不会写越界；读到文件结尾或出错时返回 NULL，因此标准写法是 if (fgets(buf, sizeof(buf), stdin) == NULL) { 处理结束 }。它和 scanf(\"%s\") 有两个行为差异：换行符会被读进缓冲区，以及它不会跳过开头的空白。想让字符串干净，就自己判断并去掉行尾的换行：len = strlen(buf); if (len > 0 && buf[len - 1] == '\\n') buf[len - 1] = '\\0';。\n"
         + "scanf 和 fgets 混用是新手最常踩的坑：scanf(\"%s\") 只吃掉了那个单词，这一行的换行符还留在输入缓冲区里。紧接着调用 fgets，它立刻读到那个换行就返回了——你会得到一个「空行」。解决办法是要么统一用 fgets 读整行再自己解析，要么在读之前把残留的字符读掉。\n"
-        + "还有一种情况必须处理：一行比缓冲区长。这时 fgets 只读走前 size - 1 个字符，结尾没有 '\\n'，而剩下的字符还留在输入缓冲区里，会被下一次读入当成新的一行。所以「读完结尾没有 '\\n'」正是判断截断的信号；发现截断后要把这一行剩下的字符读干净：while ((ch = getchar()) != '\\n' && ch != EOF) { }。\n"
+        + "还有一种情况必须处理：一行比缓冲区长。这时 fgets 只读走前 size - 1 个字符，结尾没有 '\\n'，而剩下的字符还留在输入缓冲区里，会被下一次读入当成新的一行。所以「读完结尾没有 '\\n'」正是判断截断的信号；发现截断后要把这一行剩下的字符读干净：while ((ch = getchar()) != '\\n' && ch != EOF) { }。特别注意：用来接 getchar() 返回值的变量 ch **必须声明成 int，绝不能用 char**——因为 getchar() 除了返回 0～255 的所有有效字节，还要能返回特殊的 EOF（通常是 -1）来表示输入结束；如果用 char 存，在 char 无符号的平台上永远不等于 EOF 会导致死循环，在 char 有符号的平台上则会把字节 0xFF 误判成 EOF。\n"
         + "最后是越界和「'\\0' 被吃掉」：数组下标只能到「长度 - 1」；当目标缓冲区装不下一个字符串（包括结尾的 '\\0'）时，那个 '\\0' 会被写到数组外面——数组里就没有结束符了，之后任何按字符串处理它的函数都会一路读下去，直到撞上一个碰巧为 0 的字节。所以做任何字符串操作之前，先确认一件事：目标空间 ≥ 内容长度 + 1。",
       example: {
         code: "#include <stdio.h>\n"
@@ -1161,7 +1166,7 @@ window.C_MODULES.push({
             "检查读完的字符串结尾有没有 '\\n'"
           ],
           answer: 3,
-          explain: "只要这一行完整读完了（缓冲区装得下），结尾一定带着 '\\n'；没读到 '\\n' 就说明缓冲区在读完整行之前就满了，剩下的字符还留在输入缓冲区里，要自己读掉。选项 A 错：返回 NULL 表示读到文件结尾或出错，和截断是两回事；选项 B、C 与长度无关。"
+          explain: "常规输入下，只要这一行完整读完且缓冲区装得下，结尾一定带着 '\\n'；没读到 '\\n' 通常说明缓冲区在读完整行之前就满了，剩下的字符还留在输入缓冲区里，要自己读掉。补充两个边界情况：一是文件最后一行末尾本身可能没有换行就遇到 EOF（此时后面并无残留字符，清理循环里的 ch != EOF 会立刻安全退出）；二是输入刚好填满 size - 1 个字符且紧跟着一个换行符时，那个 '\\n' 也会被留到下一次读，同样会被清理循环一并吃掉。选项 A 错：返回 NULL 表示一开始就读到文件结尾或出错，和截断是两回事；选项 B、C 与长度无关。"
         }
       ],
       passRatio: 0.8,
@@ -1181,16 +1186,17 @@ window.C_MODULES.push({
         + "    /* TODO 3: 输出 text: ... 与 length: ... */\n"
         + "    return 0;\n"
         + "}",
-      hint: "去掉换行的标准写法是：先 len = strlen(buf);，再判断 if (len > 0 && buf[len - 1] == '\\n')，成立就把那个位置改成 '\\0'。清理剩余字符用一个 while 循环配合 getchar()，读到 '\\n' 或者 EOF 就停——EOF 这个条件不能省，否则在文件结尾可能死循环。",
+      hint: "去掉换行的标准写法是：先 len = strlen(buf);，再判断 if (len > 0 && buf[len - 1] == '\\n')，成立就把那个位置改成 '\\0'。清理剩余字符用一个 while 循环配合 getchar()，读到 '\\n' 或者 EOF 就停——EOF 这个条件不能省，否则在文件结尾可能死循环，并且接收 getchar() 的变量 ch 必须保持 int（不能改成 char，否则装不下 EOF）。",
       check: {
         include: ["stdio.h", "string.h"],
         noInclude: ["conio.h"],
         return0: true,
+        callsAnywhere: true,
         require: { array: true, while: true },
         calls: [["fgets"], ["printf"], ["getchar"], ["strlen"]],
         forbid: ["gets", "scanf"],
         minStatements: 8,
-        message: "本关需要：#include <stdio.h> 与 <string.h>、int main(void)、char buf[32] 这样的数组、while 循环、在 main 里调用 fgets / strlen / getchar 并打印结果，最后 return 0;；本关不要使用 scanf 或 gets。",
+        message: "本关需要：#include <stdio.h> 与 <string.h>、int main(void)、char buf[32] 这样的数组、while 循环、调用 fgets / strlen / getchar 并打印结果，最后 return 0;；本关不要使用 scanf 或 gets。",
         ok: "fgets、换行处理、截断清理都齐全，结构完全正确。"
       },
       input: "0123456789012345678901234567890123456789\n",
@@ -1315,7 +1321,7 @@ window.C_MODULES.push({
           + "words = 5\n"
           + "longest = quick (len 5)",
         input: "  the quick   brown fox jumps \n",
-        explain: "第 18 行 fgets 读入整行，第 22、23 行去掉结尾的换行——'\\n' 本身也算空白，不去掉通常不影响计数，但去掉之后这一行更「干净」。"
+        explain: "第 18 行 fgets 读入整行，第 22、23 行必须去掉结尾的换行——因为本关自己写的 is_space() 只检查空格 ' ' 和制表符 '\\t'，并不把 '\\n' 当成空白；如果不提前去掉 '\\n'，末尾的 '\\n' 就会被当成普通字符黏在最后一个单词后面，甚至在行尾有空格时被单独算成一个额外的单词！"
           + "第 27 行开始的 while 是主循环：第 32 行先跳过单词之间的空白，如果已经走到行尾就在第 35 行结束；否则第 39 行记下单词起点 start，第 40 行一直走到这个单词的末尾，此时 i - start（第 43 行）就是这个单词的长度。"
           + "第 44 到 46 行做边界保护：单词比 word 数组还长时截断到 sizeof(word) - 1 个字符，保证不会写越界。"
           + "第 55 行用严格大于比较，所以长度相同时保留先出现的那个——示例里 quick、brown、jumps 都是 5 个字母，最后留下的是最先出现的 quick。"

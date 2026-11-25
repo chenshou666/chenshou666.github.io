@@ -657,7 +657,7 @@ window.C_MODULES.push({
         }
       ],
       passRatio: 0.8,
-      mission: "用 typedef 定义三种类型并各用一次：\n"
+      mission: "用 typedef 定义三种类型并各用一次（带不带标签均可，例如匿名 `typedef struct { ... } Task;` 也可以）：\n"
         + "1) typedef enum State { STATE_IDLE = 0, STATE_RUN = 1, STATE_DONE = 2 } State;\n"
         + "2) typedef struct Task { int id; State state; } Task;\n"
         + "3) typedef union Payload { int code; unsigned char bytes[4]; } Payload;\n"
@@ -681,19 +681,17 @@ window.C_MODULES.push({
         + "\n"
         + "    return 0;\n"
         + "}",
-      hint: "三个 typedef 都写在 main 之前，注意每个最后的分号；枚举写不写 = 0/1/2 都可以，显式写更容易对照。打印字节时把 unsigned char 强转成 int 再交给 %d，避免格式符不匹配的警告。",
+      hint: "三个 typedef 都写在 main 之前，注意每个最后的分号；带标签（typedef struct Task {...} Task;）和匿名（typedef struct {...} Task;）两种写法都可以，枚举写不写 = 0/1/2 也都行。打印字节时把 unsigned char 强转成 int 再交给 %d，避免格式符不匹配的警告。",
       check: {
         include: ["stdio.h"],
         return0: true,
         require: {
           typedef: true,
-          enum: "State",
-          struct: "Task",
           union: true
         },
         calls: [["printf","state"],["printf","bytes"],["printf","sizeof"]],
         minStatements: 6,
-        message: "需要用 typedef 定义 enum State、struct Task、union Payload，并打印含 state、bytes、sizeof 的行。",
+        message: "需要用 typedef 定义枚举 State、结构体 Task、共用体 Payload（带不带标签均可），并打印含 state、bytes、sizeof 的行。",
         ok: "三种自定义类型都用对了：枚举命名常量、union 共用内存、typedef 起别名。"
       },
       solution: "#include <stdio.h>\n"
@@ -742,16 +740,16 @@ window.C_MODULES.push({
       lesson: "程序里经常要表示一组互相独立、只有开/关两种状态的属性：文件权限（读、写、执行）、任务标记（已完成、已归档、已加星）。最自然的做法是用一个整数的不同二进制位来分别表示它们——一个 unsigned 就有 32 个开关。\n"
         + "约定是这样的：每个标志是“只有一位是 1”的数，用移位写出来最清楚：1u << 0 是 001，1u << 1 是 010，1u << 2 是 100（这里只画了低三位）。把它们按位或起来，就得到“同时打开几个开关”的集合：READ | WRITE 是 011，也就是 3。\n"
         + "四个动作要背下来：置位用 perm = perm | FLAG;（或 perm |= FLAG;），清位用 perm = perm & ~FLAG;，测试用 (perm & FLAG) != 0，翻转用 perm = perm ^ FLAG;。这里的 ~ 是按位取反：~FLAG 除了 FLAG 那一位是 0，其余全是 1，所以与原值相与就只清掉这一位，别的位不受影响。\n"
-        + "两个容易翻车的地方。第一是把“测试”写成相等比较：if (perm == FLAG_READ) 只有在“恰好只有读权限、其它位全是 0”时才成立，正确写法是 if ((perm & FLAG_READ) != 0)。第二是优先级：C 里 == 的优先级高于 &，所以 perm & FLAG == 0 实际会被解析成 perm & (FLAG == 0)，意思完全变了——写字运算时把每个子表达式都用括号括起来，是最省心的习惯。另外，&& 是逻辑与、& 是按位与，两者不可混用。\n"
+        + "两个容易翻车的地方。第一是把“测试”写成相等比较：if (perm == FLAG_READ) 只有在“恰好只有读权限、其它位全是 0”时才成立，正确写法是 if ((perm & FLAG_READ) != 0)。第二是优先级：C 里 == 的优先级高于 &，所以 perm & FLAG == 0 实际会被解析成 perm & (FLAG == 0)，意思完全变了——写位运算时把每个子表达式都用括号括起来，是最省心的习惯。另外，&& 是逻辑与、& 是按位与，两者不可混用。\n"
         + "最后认识一下位域（bit-field）：可以直接在结构体里声明“这个字段只占几位”，例如 struct PermBits { unsigned read : 1; unsigned write : 1; unsigned exec : 1; };。语法上像普通成员，但布局由实现决定：本机上一个位域结构体仍占 4 字节（一个 unsigned 存储单元），而且不能对位域成员取地址（&s.read 不合法）。它适合和硬件寄存器、协议格式打交道；日常用 unsigned 加移位更直观。",
       example: {
         code: "#include <stdio.h>\n"
           + "\n"
           + "/* 每个标志占一个二进制位，互不干扰 */\n"
           + "enum {\n"
-          + "    FLAG_READ = 1 << 0,   /* 001 */\n"
-          + "    FLAG_WRITE = 1 << 1,  /* 010 */\n"
-          + "    FLAG_EXEC = 1 << 2    /* 100 */\n"
+          + "    FLAG_READ = 1u << 0,   /* 001 */\n"
+          + "    FLAG_WRITE = 1u << 1,  /* 010 */\n"
+          + "    FLAG_EXEC = 1u << 2    /* 100 */\n"
           + "};\n"
           + "\n"
           + "/* 位域：把三个 1 位的字段放进一个 unsigned 里 */\n"
@@ -788,7 +786,7 @@ window.C_MODULES.push({
           + "1 0 1\n"
           + "read on = 1\n"
           + "sizeof PermBits = 4",
-        explain: "第 4～8 行用匿名 enum 定义三个标志，值分别是 1 << 0、1 << 1、1 << 2；注释里画出低三位，方便对照。第 11～15 行的 struct PermBits 用位域把三个 1 位字段放进一个 unsigned 存储单元。\n"
+        explain: "第 4～8 行用匿名 enum 定义三个标志，值分别是 1u << 0、1u << 1、1u << 2；注释里画出低三位，方便对照。第 11～15 行的 struct PermBits 用位域把三个 1 位字段放进一个 unsigned 存储单元。\n"
           + "第 17～22 行的 show 函数是本关的检查器：它用 (perm & FLAG) ? 1 : 0 把每个位的状态变成 0 或 1 打印出来，三个一组。main 里第 25 行用 READ | WRITE 组合出初始权限 011，第 27 行打印 1 1 0。\n"
           + "第 29 行 perm = perm | FLAG_EXEC 打开执行位，打印 1 1 1；第 32 行 perm = perm & ~FLAG_WRITE 清掉写位，打印 1 0 1。第 35 行演示“测试某一位”的标准写法：判断 (perm & FLAG_READ) != 0 得到 1。第 36 行打印位域结构体的大小，结果是 4——三个 1 位字段仍然占一个 unsigned 单元，说明位域并不意味着“一定只占 3 个二进制位”。"
       },
@@ -863,13 +861,13 @@ window.C_MODULES.push({
       check: {
         include: ["stdio.h"],
         return0: true,
-        seq: [["<<","0"],["|"]],
+        seqAny: [["|"], ["|="]],
         require: {
           if: true
         },
         calls: [["printf"]],
         minStatements: 8,
-        message: "需要用 1u << n 定义标志、用 | 置位、用 & ~ 清位、用 if 判断某一位，并打印 %d %d %d 形式的位状态。",
+        message: "需要定义标志位（在 main 里用 const 或在外部用 enum 均可）、用 | / |= 置位、用 & ~ 清位、用 if 判断某一位，并打印 %d %d %d 形式的位状态。",
         ok: "标志的定义、置位、清位和判断位都用对了。"
       },
       expectedOutput: "1 1 0\n1 1 1\n1 0 1\nread on",
@@ -1371,7 +1369,7 @@ window.C_MODULES.push({
         {
           q: "数组栈在空的时候执行 pop，为什么必须先判断 `top == 0`？",
           options: [
-            "因为不判断会写到 data[-1]，造成数组越界",
+            "因为不判断会读到 data[-1]，造成数组越界",
             "因为 C 会自动抛出异常",
             "因为 top 是只读变量，不能自减",
             "因为 pop 函数规定必须返回 0"
@@ -1544,13 +1542,13 @@ window.C_MODULES.push({
           + "\n"
           + "int list_add(StudentList *list, int id, int score) {\n"
           + "    if (list->count == list->capacity) {\n"
-          + "        int new_cap = list->capacity * 2;\n"
-          + "        Student *grown = realloc(list->items, sizeof(Student) * (size_t)new_cap);\n"
+          + "        int next = list->capacity ? list->capacity * 2 : 4;\n"
+          + "        Student *grown = realloc(list->items, sizeof(Student) * (size_t)next);\n"
           + "        if (grown == NULL) {\n"
           + "            return 0;\n"
           + "        }\n"
           + "        list->items = grown;\n"
-          + "        list->capacity = new_cap;\n"
+          + "        list->capacity = next;\n"
           + "    }\n"
           + "    list->items[list->count].id = id;\n"
           + "    list->items[list->count].score = score;\n"
@@ -1708,7 +1706,7 @@ window.C_MODULES.push({
         + "\n"
         + "    return 0;\n"
         + "}",
-      hint: "扩容时写 int new_cap = list->capacity * 2; Student *grown = realloc(...); 失败就返回 0。查找就是 for 循环比较 id。删除用一个内层循环把 j 位置的元素往前挪。统计先判 count == 0，再用一次遍历算 sum/best/worst，平均值用 sum * 10 / count 拆成整数和一位小数。",
+      hint: "扩容时先防 capacity == 0：int next = list->capacity ? list->capacity * 2 : 4; Student *grown = realloc(...); 失败就返回 0。查找就是 for 循环比较 id。删除用一个内层循环把 j 位置的元素往前挪。统计先判 count == 0，再用一次遍历算 sum/best/worst，平均值用 sum * 10 / count 拆成整数和一位小数。",
       check: {
         include: ["stdio.h","stdlib.h"],
         return0: true,
@@ -1788,13 +1786,13 @@ window.C_MODULES.push({
         + "}\n"
         + "\n"
         + "static int list_grow(StudentList *list) {\n"
-        + "    int new_cap = list->capacity * 2;\n"
-        + "    Student *grown = realloc(list->items, sizeof(Student) * (size_t)new_cap);\n"
+        + "    int next = list->capacity ? list->capacity * 2 : 4;\n"
+        + "    Student *grown = realloc(list->items, sizeof(Student) * (size_t)next);\n"
         + "    if (grown == NULL) {\n"
         + "        return 0;\n"
         + "    }\n"
         + "    list->items = grown;\n"
-        + "    list->capacity = new_cap;\n"
+        + "    list->capacity = next;\n"
         + "    return 1;\n"
         + "}\n"
         + "\n"

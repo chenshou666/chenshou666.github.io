@@ -2041,7 +2041,9 @@ window.C_MODULES.push({
           + "\n"
           + "    smallest = find_min(root);\n"
           + "    largest = find_max(root);\n"
-          + "    printf(\"min = %d, max = %d\\n\", smallest->value, largest->value);\n"
+          + "    if (smallest != NULL && largest != NULL) {\n"
+          + "        printf(\"min = %d, max = %d\\n\", smallest->value, largest->value);\n"
+          + "    }\n"
           + "\n"
           + "    printf(\"find %d: %s\\n\", target, bst_find(root, target) != NULL ? \"yes\" : \"no\");\n"
           + "\n"
@@ -2063,9 +2065,9 @@ window.C_MODULES.push({
           + "after delete 50: 20 30 40 60 70 80",
         explain: "这个例子依次插入 50、30、70、20、40、60、80，建出一棵比较平衡的 BST：根 50 的左子树是 30（带 20、40）、右子树是 70（带 60、80）。\n"
           + "inorder 打印 20 30 40 50 60 70 80——中序有序，这是 BST 最直接的验证方式。\n"
-          + "find_min / find_max 沿着左指针、右指针一路走到底，分别拿到最小值和最大值（20 和 80），不需要遍历整棵树。\n"
-          + "bst_find 是从根开始的一次定向行走：找 40 时 40 < 50 往左、40 > 30 往右，两步就命中；找 45 时最后走到 NULL，返回 NULL，打印 no。\n"
-          + "bst_delete(root, 50) 是这一关的重点：50 有两个孩子，属于第三种情况。代码先在右子树里找中序后继——70 → 60，60 就是后继。把 60 复制到根节点，然后到右子树里删掉原来的 60（它只有一个右孩子，属于第二种情况）。所以删除后的中序是 20 30 40 60 70 80，根变成了 60。\n"
+          + "find_min / find_max 沿着左指针、右指针一路走到底，分别拿到最小值和最大值（20 和 80），不需要遍历整棵树；打印前先判断 smallest != NULL && largest != NULL，防止空树时解引用空指针。\n"
+          + "bst_find 是从根开始的一次定向行走：找 40 时 40 < 50 往左、40 > 30 往右，两步就命中并返回节点指针，打印 yes（如果查找树里不存在的值，就会一路走到 NULL 并打印 no）。\n"
+          + "bst_delete(root, 50) 是这一关的重点：50 有两个孩子，属于第三种情况。代码先在右子树里找中序后继——70 → 60，60 就是后继。把 60 复制到根节点，然后到右子树里删掉原来的 60（60 没有孩子，是叶子节点，属于第一种情况，直接释放并返回 NULL）。所以删除后的中序是 20 30 40 60 70 80，根变成了 60。\n"
           + "最后 free_tree 按后序释放所有节点。"
       },
       pitfalls: [
@@ -2690,8 +2692,8 @@ window.C_MODULES.push({
         + "全排列是最好懂的例子：要生成 1..n 的所有排列，可以一位一位地填。填第 depth 位时，从 1..n 里挑一个「还没用过」的数字放进去，然后递归填下一位；回来之后把这个数字标记为未使用，好让别的分支也能用它。used[i] = 1 → 递归 → used[i] = 0 这三行就是完整的「选择—递归—撤销」，缺了最后一步，后面的分支全都会算错。\n"
         + "八皇后是回溯的经典题：在 n×n 棋盘上放 n 个皇后，任意两个不能在同一行、同一列、同一条对角线。按行放置可以保证行不冲突，于是只需要检查列和两条对角线。用三个标记数组能把冲突检查降到 O(1)：\n"
         + "col_used[col]：这一列有没有皇后；\n"
-        + "diag_down[row + col]：右下方向的对角线，row + col 相同的格子在同一条线上；\n"
-        + "diag_up[row - col + n]：左下方向的对角线，加偏移量是为了让下标非负。\n"
+        + "diag_anti[row + col]：右上—左下方向的副对角线（往下左移一步 row+1、col-1，和不变），row + col 相同的格子在同一条副对角线上；\n"
+        + "diag_main[row - col + n]：左上—右下方向的主对角线（往下右移一步 row+1、col+1，差不变），加偏移量 n 是为了让下标非负。\n"
         + "放置时把三个标记置 1，递归下一行，返回时全部置 0——同样是「选择、递归、撤销」。\n"
         + "剪枝是回溯的效率关键：不合法就 continue，整棵子树都不用展开。八皇后在 8×8 棋盘上要试的分支远多于 92 个解，剪枝之后搜索规模才可接受。\n"
         + "写回溯最容易错的两个地方：忘记撤销（状态被上一个分支污染），以及终止条件的「深度」和「下标」对不上（多一层或少一层）。调试时可以在递归入口打印当前状态，看清每一步的状态变化。\n"
@@ -2735,8 +2737,8 @@ window.C_MODULES.push({
           + "}\n"
           + "\n"
           + "static int col_used[MAXN];\n"
-          + "static int diag_down[MAXN * 2];    /* row + col 相同的格子在同一条对角线上 */\n"
-          + "static int diag_up[MAXN * 2];      /* row - col + n 相同的格子也在同一条对角线上 */\n"
+          + "static int diag_anti[MAXN * 2];    /* 副对角线（右上—左下）：row + col 相同 */\n"
+          + "static int diag_main[MAXN * 2];    /* 主对角线（左上—右下）：row - col + n 相同 */\n"
           + "static int queen_count = 0;\n"
           + "\n"
           + "/* 八皇后：一行一行放，每行只检查列和两条对角线有没有冲突 */\n"
@@ -2747,14 +2749,14 @@ window.C_MODULES.push({
           + "        return;\n"
           + "    }\n"
           + "    for (col = 0; col < n; col++) {\n"
-          + "        if (!col_used[col] && !diag_down[row + col] && !diag_up[row - col + n]) {\n"
+          + "        if (!col_used[col] && !diag_anti[row + col] && !diag_main[row - col + n]) {\n"
           + "            col_used[col] = 1;\n"
-          + "            diag_down[row + col] = 1;\n"
-          + "            diag_up[row - col + n] = 1;\n"
+          + "            diag_anti[row + col] = 1;\n"
+          + "            diag_main[row - col + n] = 1;\n"
           + "            queens(row + 1, n);\n"
           + "            col_used[col] = 0;\n"
-          + "            diag_down[row + col] = 0;\n"
-          + "            diag_up[row - col + n] = 0;\n"
+          + "            diag_anti[row + col] = 0;\n"
+          + "            diag_main[row - col + n] = 0;\n"
           + "        }\n"
           + "    }\n"
           + "}\n"
@@ -2804,7 +2806,7 @@ window.C_MODULES.push({
       pitfalls: [
         "忘记撤销 `used[i] = 0`：第一个分支的结果污染后面所有分支，输出的排列会缺很多。",
         "八皇后只检查列，忘了两条对角线 → 结果数量远大于正确答案。",
-        "diag_up 的下标不加偏移量：row - col 为负时数组越界，程序崩溃或输出乱码。",
+        "diag_main 的下标不加偏移量：row - col 为负时数组越界，程序崩溃或输出乱码。",
         "终止条件写成 `depth == n - 1`：少填一位，每组输出都少一个数字。",
         "全局计数器在多次求解之间没有清零 → 计数累加，答案翻倍。"
       ],
@@ -2832,14 +2834,14 @@ window.C_MODULES.push({
           options: [
             "同一行",
             "同一列",
-            "同一条「左下—右上」方向的对角线",
+            "同一条「左上—右下」方向的主对角线",
             "没有任何关系"
           ],
           answer: 2,
-          explain: "沿一个方向走一步是 row+1、col+1（row - col 不变），沿另一个方向走一步是 row+1、col-1（row + col 不变），所以 row - col 相同就是同一条对角线，C 对。A 错：同一行的 row 相同。B 错：同一列的 col 相同。D 错：这正是判断对角线冲突的依据。"
+          explain: "沿「左上—右下」主对角线走一步是 row+1、col+1（row - col 不变），沿「右上—左下」副对角线走一步是 row+1、col-1（row + col 不变），所以 row - col 相同就是同一条左上—右下主对角线，C 对。A 错：同一行的 row 相同。B 错：同一列的 col 相同。D 错：这正是判断对角线冲突的依据。"
         },
         {
-          q: "八皇后里 col_used、diag_down、diag_up 这三个数组的作用是？",
+          q: "八皇后里 col_used、diag_anti、diag_main 这三个数组的作用是？",
           options: [
             "记录每一行放了几个皇后",
             "保存每个皇后的编号",
@@ -2878,8 +2880,8 @@ window.C_MODULES.push({
         + "/* TODO: permute(n, depth)：填满就打印并计数，否则 for 1..n 选一个没用过的，递归后撤销 */\n"
         + "\n"
         + "static int col_used[MAXN];\n"
-        + "static int diag_down[MAXN * 2];\n"
-        + "static int diag_up[MAXN * 2];\n"
+        + "static int diag_anti[MAXN * 2];\n"
+        + "static int diag_main[MAXN * 2];\n"
         + "static int queen_count = 0;\n"
         + "\n"
         + "/* TODO: queens(row, n)：row == n 时计数；否则 for 每一列，检查三个标记后递归并撤销 */\n"
@@ -2898,7 +2900,7 @@ window.C_MODULES.push({
         + "\n"
         + "    return 0;\n"
         + "}",
-      hint: "permute 的三行核心是：used[i] = 1; chosen[depth] = i; permute(n, depth + 1); 紧接着写 used[i] = 0;。queens 里放皇后时三个标记一起置 1，递归后一起置 0；row == n 就是找到一个解。判断冲突的条件写成 !col_used[col] && !diag_down[row + col] && !diag_up[row - col + n]。",
+      hint: "permute 的三行核心是：used[i] = 1; chosen[depth] = i; permute(n, depth + 1); 紧接着写 used[i] = 0;。queens 里放皇后时三个标记一起置 1，递归后一起置 0；row == n 就是找到一个解。判断冲突的条件写成 !col_used[col] && !diag_anti[row + col] && !diag_main[row - col + n]。",
       check: {
         include: ["stdio.h"],
         return0: true,
@@ -2955,8 +2957,8 @@ window.C_MODULES.push({
           + "}\n"
           + "\n"
           + "static int col_used[MAXN];\n"
-          + "static int diag_down[MAXN * 2];\n"
-          + "static int diag_up[MAXN * 2];\n"
+          + "static int diag_anti[MAXN * 2];\n"
+          + "static int diag_main[MAXN * 2];\n"
           + "static int queen_count = 0;\n"
           + "\n"
           + "/* 八皇后：一行放一个皇后，列与两条对角线各用一个标记数组查冲突 */\n"
@@ -2967,14 +2969,14 @@ window.C_MODULES.push({
           + "        return;\n"
           + "    }\n"
           + "    for (col = 0; col < n; col++) {\n"
-          + "        if (!col_used[col] && !diag_down[row + col] && !diag_up[row - col + n]) {\n"
+          + "        if (!col_used[col] && !diag_anti[row + col] && !diag_main[row - col + n]) {\n"
           + "            col_used[col] = 1;\n"
-          + "            diag_down[row + col] = 1;\n"
-          + "            diag_up[row - col + n] = 1;\n"
+          + "            diag_anti[row + col] = 1;\n"
+          + "            diag_main[row - col + n] = 1;\n"
           + "            queens(row + 1, n);\n"
           + "            col_used[col] = 0;\n"
-          + "            diag_down[row + col] = 0;\n"
-          + "            diag_up[row - col + n] = 0;\n"
+          + "            diag_anti[row + col] = 0;\n"
+          + "            diag_main[row - col + n] = 0;\n"
           + "        }\n"
           + "    }\n"
           + "}\n"
@@ -3017,9 +3019,10 @@ window.C_MODULES.push({
         + "改完之后每个 n ≥ 2 只真正计算一次（n < 2 由提前返回处理，不再往下展开），整体 O(n) 时间、O(n) 空间，fib(40) 瞬间出结果。\n"
         + "把它倒过来写就是递推（自底向上）：从小到大依次算 fib[i] = fib[i-1] + fib[i-2]。两者结果一样，递推没有递归调用开销，还能把数组压缩成两个变量。\n"
         + "DP 的两个前提是：重叠子问题（同一个子问题被反复用到）和最优子结构（大问题的最优解能由子问题的最优解拼出来）。写 DP 的核心工作就两件事：定义状态、写转移方程。\n"
-        + "0-1 背包：n 件物品，每件有重量 w 和价值 v，背包容量 W，每件最多拿一次，求能装下的最大价值。定义 dp[j] 为「容量 j 能装下的最大价值」，转移就是「要么不拿第 i 件，要么拿它」：\n"
+        + "0-1 背包：n 件物品，每件有重量 w 和价值 v，背包容量 W，每件最多拿一次，求能装下的最大价值。初学时先想二维表最直觉：dp[i][j] 表示「只看前 i 件物品、容量为 j 时的最大价值」，转移就是「不拿第 i 件（直接沿用上一行 dp[i-1][j]）」和「拿第 i 件（看上一行左边 dp[i-1][j - w[i]] + v[i]）」取较大者。\n"
+        + "因为第 i 行只依赖上一行 dp[i-1] 中下标不大于 j 的格子，所以可以把二维表压成一行一维数组 dp[j]：\n"
         + "dp[j] = max(dp[j], dp[j - w[i]] + v[i])\n"
-        + "关键是容量 j 必须从大到小遍历。因为 dp[j - w[i]] 必须是「还没考虑第 i 件物品」时的旧值；从小到大更新会让第 i 件被重复拿进去，那算出来的就不是 0-1 背包而是完全背包。\n"
+        + "关键是压成一维后，容量 j 必须从大到小（从右往左）倒序遍历：算右边 dp[j] 时，左边较小的 dp[j - w[i]] 还没被本轮改写，里头正好还是「上一行（还没考虑第 i 件）」的旧值；如果从小到大正序更新，左边的 dp[j - w[i]] 已经被本轮改成了「拿过第 i 件」的新值，后面再用到它就会把同一件物品重复拿多次，算出来的就不是 0-1 背包而是完全背包。\n"
         + "最长公共子序列（LCS）：给两个字符串，求它们最长的公共子序列长度（子序列不要求连续）。定义 dp[i][j] 为「a 的前 i 个字符与 b 的前 j 个字符的 LCS 长度」，转移分两种情况：\n"
         + "a[i-1] == b[j-1] 时，这两个字符可以配对，dp[i][j] = dp[i-1][j-1] + 1；\n"
         + "否则这两个字符不可能同时出现在答案里，dp[i][j] = max(dp[i-1][j], dp[i][j-1])。\n"
@@ -3148,7 +3151,7 @@ window.C_MODULES.push({
           + "dp row: 0 1 1 4 5 7 8 9\n"
           + "lcs = 4",
         explain: "这个例子把三个 DP 入门题放在一个程序里，并且用调用次数把「重复计算」暴露出来。\n"
-          + "fib 是记忆化版本：memo_calls 在函数入口加一，先查 memo[n]，没有就算完存回去。fib_naive 是纯递归版本，只有 naive_calls 计数。先算 fib(n)、再算 fib(20)、最后 fib(40)，打印出的调用次数对比非常直观：记忆化下 fib(10) 一共 19 次调用、fib(20) 是 21 次，都在 2n 附近，每个状态只展开一次；纯递归的 fib(20) 却被调用了 21891 次，而且这个数字随 n 指数增长（n 每加 1 大约乘 1.6）。\n"
+          + "fib 是记忆化版本：memo_calls 在函数入口加一，先查 memo[n]，没有就算完存回去。fib_naive 是纯递归版本，只有 naive_calls 计数。先算 fib(10)、再算 fib(20)、最后 fib(40)，打印出的调用次数对比非常直观：从空表冷启动算 fib(10) 一共 19 次调用（2n - 1）；紧接着算 fib(20) 只花了 21 次调用，是因为前面的 fib(10) 已经把 memo[2..10] 预热填好了（如果从空表冷启动直接算 fib(20)，需要 39 次 ≈ 2n，同样每个状态只展开一次）；而纯递归的 fib(20) 却被调用了 21891 次，而且这个数字随 n 指数增长（n 每加 1 大约乘 1.6）。\n"
           + "knapsack 用一维数组：外层遍历物品，内层容量从 capacity 递减到 weight[i]。每轮用 take = dp[j - weight[i]] + value[i] 表示「拿这件物品」的收益，比 dp[j] 大就更新。函数结束后顺便把整行 dp 打印出来（0 1 1 4 5 7 8 9），可以看到每一格都是「容量不超过 j 时的最大价值」。\n"
           + "lcs_length 用 int dp[MAXL][MAXL] 这张表：第 0 行和第 0 列是边界（空串），其余格子按「字符相等取左上角加一，否则取左、上较大者」填。表填完，dp[la][lb] 就是答案 4。\n"
           + "注意 printf 之前先把结果和计数分别存进变量再输出——如果把 fib(n) 和 memo_calls 写在同一个 printf 的参数里，参数求值顺序是未指定的，打印出来的计数可能不对。"

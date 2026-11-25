@@ -87,7 +87,7 @@ window.C_MODULES.push({
           + "第 24 到 32 行的 tick 是本关的核心对照：local 是普通局部变量，每次进入函数都重新创建，所以三次调用打印的都是 local = 1；kept 前面加了 static，只初始化一次，于是依次变成 1、2、3。"
           + "第 46 行打印两个计数器：全局的 g_total 和静态的 s_total 都是 3，说明它们确实跨调用累加。"
           + "第 40、41 行连续调用两次 ok_address，第 48 行打印的两个指针相等（1），因为返回的始终是同一个静态对象的地址。"
-          + "第 50 到 55 行用 0/1 表达地址关系：相邻 int 元素相差 4 字节（array step in bytes = 4），同一个数组里下标大的元素地址更大（1），结构体成员保持声明顺序（1）。其中「同一数组内下标越大地址越大」是标准保证的；而比较两个不同结构体成员的地址，严格说 C 标准并不保护结果（标准只对同一数组内的指针关系作保证），只是绝大多数编译器的实际布局会按声明顺序排列——所以了解它、但真实代码不要依赖这个比较。"
+          + "第 50 到 55 行用 0/1 表达地址关系：相邻 int 元素相差 4 字节（array step in bytes = 4），同一个数组里下标大的元素地址更大（1），同一个结构体里后声明的成员地址更大（1）。这两条都是 ISO C11 标准明确保证的（§6.5.8p5 与 §6.7.2.1p15 规定：同一数组内后继元素地址更高，同一结构体内后声明的成员地址也高于先声明的成员）；标准真正禁止用 < / > 排序比较的，是指向两个不同、互不相关对象的指针。"
           + "第 57 到 65 行演示堆：malloc 申请 16 字节，检查返回值，写入并读出 7；堆上的对象和栈上的对象地址一定不同（打印 1），最后 free 掉，做到「申请了就要释放」。"
       },
       pitfalls: [
@@ -118,11 +118,11 @@ window.C_MODULES.push({
           explain: "局部变量是自动存储期，函数返回时它所在的栈帧就被回收，指针指向的对象已经不存在（悬空指针），之后读写都是未定义行为，所以 B 对。A 描述的是危险的巧合：那块内存可能一时还没被覆盖，看起来「能跑」。C 错：编译器通常只给一句 warning: function returns address of local variable，仍然会生成可执行文件。D 与问题无关：换类型并不改变存储期。"
         },
         {
-          q: "函数里写 static int kept = 0;，连续调用该函数三次，kept 会怎样变化？",
+          q: "函数里写 static int kept = 0; kept++;，连续调用该函数三次，kept 会怎样变化？",
           options: [
-            "每次都是 0，局部变量每次重新创建",
+            "每次都是 1，局部变量每次重新创建",
             "编译错误：static 不能写在函数内部",
-            "第一次是 0，第二次被重新初始化成 0",
+            "第一次是 1，第二次被重新初始化成 0",
             "依次变成 1、2、3：static 局部变量只初始化一次，值跨调用保留"
           ],
           answer: 3,
@@ -347,10 +347,11 @@ window.C_MODULES.push({
         include: ["stdio.h"],
         return0: true,
         require: { funcs: ["count_bits"] },
-        seq: [["|="], ["&="], ["~", "(", "1u", "<<", "0", ")"], ["unsigned", "char", "*"]],
+        seq: [["~"], ["unsigned", "char", "*"]],
+        seqAny: [["|="], ["|"]],
         calls: [["printf", "flags ="], ["printf", "bit4 ="], ["printf", "after clear ="], ["printf", "little endian ="], ["printf", "popcount"]],
         minStatements: 8,
-        message: "需要 #include <stdio.h>、自己定义的 count_bits()、用 |= 置位、&= ~(1u << 0) 清位、用 unsigned char * 查看字节序，以及输出 flags / bit4 / after clear / little endian / popcount 五行，最后 return 0; 。",
+        message: "需要 #include <stdio.h>、自己定义的 count_bits()、用按位或（|= 或 |）置位、用按位取反（~）清位、用 unsigned char * 查看字节序，以及输出 flags / bit4 / after clear / little endian / popcount 五行，最后 return 0; 。",
         ok: "置位、清位、取位和字节序判断都用对了，结构完整。"
       },
       expectedOutput: "flags = 17\nbit4 = 1\nafter clear = 16\nlittle endian = 1\npopcount(0x00FF) = 8",
@@ -523,10 +524,10 @@ window.C_MODULES.push({
         include: ["stdio.h"],
         return0: true,
         require: { if: true, array: true },
-        seq: [["scanf", "(", "%d", ",", "&", "index"], ["memcpy", "(", "&", "pi"]],
+        seq: [["scanf", "(", "%d", ",", "&"], ["memcpy", "("]],
         calls: [["printf", "in range"], ["printf", "refused"], ["printf", "UINT_MAX + 1"], ["printf", "as float"]],
         minStatements: 8,
-        message: "需要 #include <stdio.h>、int a[5] 与带 & 的 scanf、用 if 先判断下标是否在范围内、无符号回绕 UINT_MAX + 1、用 memcpy 做类型双关，以及 in range / refused / UINT_MAX + 1 / as float 这些输出，最后 return 0; 。",
+        message: "需要 #include <stdio.h>、int a[5] 与带 & 的 scanf(\"%d\", ...)、用 if 先判断下标是否在范围内、无符号回绕 UINT_MAX + 1、用 memcpy 做类型双关，以及 in range / refused / UINT_MAX + 1 / as float 这些输出，最后 return 0; 。",
         ok: "下标检查、回绕替代和类型双关都按标准写法完成，结构完整。"
       },
       input: "2",
@@ -690,7 +691,7 @@ window.C_MODULES.push({
         + "1) 定义文件作用域的 static int call_count = 0;，再写函数 static int next_id(void)：内部有 static int id = 100;，每次调用 id++、call_count++，返回 id；\n"
         + "2) 写 static int sum(const int *data, int n)：用 const 承诺只读，返回元素之和；\n"
         + "3) 写 static void copy_ints(int *restrict dst, const int *restrict src, int n)：用 restrict 承诺两块内存不重叠；\n"
-        + "4) 在 main 里准备 const int data[5] = {2, 4, 6, 8, 10};、int out[5] = {0, 0, 0, 0, 0}; 和 const int *p = data;，先调用 copy_ints(out, data, 5)，再依次打印三行：\n"
+        + "4) 在 main 里准备 const int data[5] = {2, 4, 6, 8, 10}; 和 int out[5] = {0, 0, 0, 0, 0};（可以直接传 data 给 sum(data, 5)，也可以先定义 const int *p = data; 再传 p），先调用 copy_ints(out, data, 5)，再依次打印三行：\n"
         + "sum = 30\n"
         + "out = 2 4 6 8 10\n"
         + "ids = 101 102, calls = 2\n"
@@ -717,10 +718,10 @@ window.C_MODULES.push({
         include: ["stdio.h"],
         return0: true,
         require: { funcs: ["next_id", "sum", "copy_ints"] },
-        seq: [["const", "int", "*", "p"], ["copy_ints", "(", "out"]],
-        calls: [["printf", "sum ="], ["printf", "out ="], ["printf", "ids ="]],
+        seq: [["copy_ints", "("]],
+        calls: [["sum"], ["next_id"], ["printf", "sum ="], ["printf", "out ="], ["printf", "ids ="]],
         minStatements: 8,
-        message: "需要 #include <stdio.h>、自己定义的 next_id() / sum() / copy_ints()、main 里的 const int *p、调用 copy_ints(out, ...)，以及输出 sum = / out = / ids = 三行，最后 return 0; 。",
+        message: "需要 #include <stdio.h>、自己定义的 next_id() / sum() / copy_ints()、在 main 里调用 copy_ints / sum / next_id，以及输出 sum = / out = / ids = 三行，最后 return 0; 。",
         ok: "const 参数、restrict 函数、static 的两种语境都用上了，结构完整。"
       },
       expectedOutput: "sum = 30\nout = 2 4 6 8 10\nids = 101 102, calls = 2",
@@ -917,20 +918,24 @@ window.C_MODULES.push({
       ],
       passRatio: 0.8,
       mission: "写一个完整的 C 程序，亲手量出「顺序」和「对齐」的影响：\n"
-        + "1) 用 typedef 定义两个成员相同、顺序不同的结构体：typedef struct { char tag; int value; char flag; } Wide; 和 typedef struct { int value; char tag; char flag; } Tight;；\n"
-        + "2) 打印一行：Wide: size = 12, offset(value) = 4, offset(flag) = 8（大小用 sizeof(Wide)，成员偏移用 offsetof(Wide, value) 和 offsetof(Wide, flag)，需要 #include <stddef.h>）；\n"
-        + "3) 打印一行：Tight: size = 8；\n"
-        + "4) 定义 int m[4][4]，用双层循环填成 m[i][j] = i * 4 + j；写两个函数 sum_row_major 与 sum_col_major，分别按行、按列求和，各打印一行（结果都是 120）；\n"
-        + "5) 写函数 same_block_hits(int m[N][N], int row_major)：按给定顺序遍历，统计相邻两次访问是否落在同一个 16 字节块里（用数组内部的字节偏移除以 16 得到块号），打印：same-block hits: row = 12, col = 0；\n"
-        + "6) 最后 return 0;。\n"
-        + "在本机编译运行，确认五行输出与上面一致。",
+        + "1) 用 typedef 定义两个成员相同、顺序不同的结构体：typedef struct { char tag; int value; char flag; } Wide; 和 typedef struct { int value; char tag; char flag; } Tight;（需要 #include <stddef.h> 供后面的 offsetof 使用）；\n"
+        + "2) 定义 int m[N][N]（N = 4），用双层循环填成 m[i][j] = i * N + j；写两个函数 sum_row_major 与 sum_col_major，分别按行、按列求和，先按顺序打印前两行：\n"
+        + "row-major sum = 120\n"
+        + "col-major sum = 120\n"
+        + "3) 写函数 same_block_hits(int m[N][N], int row_major)：按给定顺序遍历，统计相邻两次访问是否落在同一个 16 字节块里（用数组内部的字节偏移除以 BLOCK=16 得到块号），接着打印第三行：\n"
+        + "same-block hits: row = 12, col = 0\n"
+        + "4) 最后依次打印结构体布局的两行（大小用 (int)sizeof(...)，成员偏移用 (int)offsetof(Wide, value) 和 (int)offsetof(Wide, flag)）：\n"
+        + "Wide: size = 12, offset(value) = 4, offset(flag) = 8\n"
+        + "Tight: size = 8\n"
+        + "5) 最后 return 0;。\n"
+        + "在本机编译运行，确认五行输出按上述顺序与「运行结果比对」完全一致。",
       starter: "#include <stdio.h>\n"
         + "#include <stddef.h>\n\n"
         + "#define N 4\n"
         + "#define BLOCK 16\n\n"
         + "/* 1) 定义 Wide 和 Tight 两个 typedef 结构体 */\n\n"
-        + "/* 4) sum_row_major / sum_col_major */\n\n"
-        + "/* 5) same_block_hits：按 row_major 决定先走行还是先走列 */\n\n"
+        + "/* 2) sum_row_major / sum_col_major */\n\n"
+        + "/* 3) same_block_hits：按 row_major 决定先走行还是先走列 */\n\n"
         + "int main(void) {\n"
         + "    int m[N][N];\n"
         + "    int i, j;\n\n"

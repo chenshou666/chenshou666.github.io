@@ -287,7 +287,7 @@ window.C_MODULES.push({
       passRatio: 0.8,
       mission: "写一个单文件程序，练三件事：\n"
         + "1. 顶部用 #define VERSION 3 和 #if VERSION >= 3 把 MODE_NAME 定义成 \"v3\"，否则定义成 \"older\"；\n"
-        + "2. 用 #define DEBUG 1 作为调试开关，在 main 里用 #ifdef DEBUG / #else / #endif 包住那行调试输出（#else 分支里可以输出发布版提示）；\n"
+        + "2. 用 #define DEBUG 1 作为调试开关，在 main 里用 #ifdef DEBUG / #else / #endif（或 #if DEBUG / #else / #endif）包住那行调试输出（#else 分支里可以输出发布版提示）；\n"
         + "3. 按顺序输出三行：mode = v3、[debug] checks passed、result = 9（9 用 3 * 3 算出来）。\n"
         + "另外按守卫的习惯，在文件顶部用 #ifndef HTLAB_STATS_H / #define HTLAB_STATS_H / #endif 把常量区包起来——将来这个文件当头文件用时就需要它。\n"
         + "写完编译运行，把输出粘贴到「运行结果比对」。",
@@ -296,19 +296,20 @@ window.C_MODULES.push({
         + "/* TODO: 守卫 + VERSION + DEBUG + MODE_NAME */\n"
         + "\n"
         + "int main(void) {\n"
-        + "    /* TODO: 三行输出，第二行用 #ifdef DEBUG 包起来 */\n"
+        + "    /* TODO: 三行输出，第二行用 #ifdef DEBUG（或 #if DEBUG）包起来 */\n"
         + "\n"
         + "    return 0;\n"
         + "}",
-      hint: "每个预处理指令独占一行：#ifdef、#else、#endif 各写一行，别挤在一起。把 `#define DEBUG 1` 那一行注释掉再编译，第二行输出就消失了——这就是调试开关的用法（注意不能用 `#define DEBUG 0` 加 `#ifdef`，0 也算已定义）。",
+      hint: "每个预处理指令独占一行：#ifdef（或 #if）、#else、#endif 各写一行，别挤在一起。用 #ifdef DEBUG 时，把 `#define DEBUG 1` 注释掉就能关掉调试输出；用 #if DEBUG 时，改成 `#define DEBUG 0` 也能关掉。",
       check: {
         include: ["stdio.h"],
         return0: true,
-        seq: [["#","ifdef","DEBUG"],["#","else"],["#","endif"]],
+        seq: [["#","else"],["#","endif"]],
+        seqAny: [["#","ifdef","DEBUG"],["#","if","DEBUG"],["#","if","defined"]],
         calls: [["printf","mode = "],["printf","[debug] "],["printf","result = "]],
         callCounts: [["printf",3,6]],
         minStatements: 4,
-        message: "需要 #include <stdio.h>、main 里用 #ifdef DEBUG / #else / #endif 包住调试输出，并按顺序输出 mode、[debug]、result 三行。",
+        message: "需要 #include <stdio.h>、main 里用 #ifdef DEBUG（或 #if DEBUG）/ #else / #endif 包住调试输出，并按顺序输出 mode、[debug]、result 三行。",
         ok: "条件编译写法与三行输出都符合要求。"
       },
       expectedOutput: "mode = v3\n"
@@ -1331,6 +1332,9 @@ window.C_MODULES.push({
           + "}\n"
           + "\n"
           + "int max_score(const int *scores, int count) {\n"
+          + "    if (count <= 0) {\n"
+          + "        return 0;\n"
+          + "    }\n"
           + "    int best = scores[0];\n"
           + "    for (int i = 1; i < count; i++) {\n"
           + "        if (scores[i] > best) {\n"
@@ -1353,7 +1357,7 @@ window.C_MODULES.push({
         output: "total = 264\n"
           + "average = 66.00\n"
           + "max = 88",
-        explain: "这个单文件程序按多文件工程的顺序摆放：带 ===== 注释的三段分别是 grades.h（宏 MAX_SCORES / PASS_LINE 与函数声明）、grades.c（五个统计函数的定义）、main.c（准备数据并打印三行报告）。\n"
+        explain: "这个单文件程序按多文件工程的顺序摆放：带 ===== 注释的三段分别是 grades.h（宏 MAX_SCORES / PASS_LINE 与函数声明）、grades.c（三个统计函数的定义）、main.c（准备数据并打印三行报告）。\n"
           + "average_score 里的 count <= 0 判断是接口对调用者的保护；main 里 count = 4 与数组长度一致（真实工程里可以用 assert 或 sizeof 表达式确认）。\n"
           + "把它拆成三个文件时，要做的只是：把声明搬进 grades.h 并加上守卫，把函数定义搬进 grades.c 并在开头 #include \"grades.h\"，main 留在 main.c。逻辑一行都不用改。"
       },
@@ -1485,6 +1489,9 @@ window.C_MODULES.push({
           + "}\n"
           + "\n"
           + "int max_score(const int *scores, int count) {\n"
+          + "    if (count <= 0) {\n"
+          + "        return 0;\n"
+          + "    }\n"
           + "    int best = scores[0];\n"
           + "    for (int i = 1; i < count; i++) {\n"
           + "        if (scores[i] > best) {\n"
@@ -1495,6 +1502,9 @@ window.C_MODULES.push({
           + "}\n"
           + "\n"
           + "int min_score(const int *scores, int count) {\n"
+          + "    if (count <= 0) {\n"
+          + "        return 0;\n"
+          + "    }\n"
           + "    int worst = scores[0];\n"
           + "    for (int i = 1; i < count; i++) {\n"
           + "        if (scores[i] < worst) {\n"

@@ -68,7 +68,7 @@ window.C_MODULES.push({
           + "}",
         output: "lines after w + a = 3",
         explain: "这段程序把「打开—写—关闭」走了三遍，结构完全一样：fopen → 检查 NULL → 读写 → fclose。第一遍用 \"w\"，notes.txt 不存在就新建，fprintf 把 alpha、beta 两行写进去，fclose 把它们真正落到磁盘。第二遍用 \"a\"，gamma 被追加到已有两行的后面，原来的内容没有丢——把 \"a\" 换成 \"w\" 再运行一次，你就会看到文件只剩一行，这正是本关最要紧的区别。"
-          + "第三遍用 \"r\" 读回来：fgetc 一次读一个字符，读到文件尾返回 EOF。注意 ch 声明成了 int 而不是 char：EOF 是负整数（-1），只有 int 才装得下它，用 char 接会让循环永远不结束。每读到一个 '\\n' 说明读完了一行，最后数出 3 行。"
+          + "第三遍用 \"r\" 读回来：fgetc 一次读一个字符，读到文件尾返回 EOF（通常为 -1）。注意 ch 必须声明成 int 而不是 char：C 标准中 char 是否有符号由实现决定——在 char 为无符号的平台上，-1 被截断成 255，永远不等于 EOF 导致死循环；而在 Windows x86-64 等 char 为有符号的平台上，合法字节 0xFF 会被误判为 EOF（-1），导致文件被提前截断。每读到一个 '\\n' 说明读完了一行，最后数出 3 行。"
           + "末尾的 remove(\"notes.txt\") 把示例产生的临时文件删掉，这样反复运行不会在目录里堆垃圾。"
       },
       pitfalls: [
@@ -76,7 +76,7 @@ window.C_MODULES.push({
         "不检查 fopen 的返回值：文件不存在时 fp 是 NULL，紧接着的 fprintf(fp, …) 会直接崩溃（访问冲突），而错误现场离真正的原因很远。",
         "路径想当然：fopen(\"data.txt\", \"r\") 找的是「当前工作目录」下的 data.txt。IDE 里的工作目录常常是项目目录，直接双击 exe 时却是 exe 所在目录，于是同一个程序表现不一致。",
         "忘记 fclose：短程序看不出问题，一旦在循环里反复打开文件，很快会因为句柄耗尽而失败；程序崩溃退出时，缓冲区里的数据也会丢。",
-        "用 char 变量接 fgetc 的返回值：EOF（-1）装不下，循环条件永远成立，程序卡死或无限输出。必须写成 int ch; while ((ch = fgetc(fp)) != EOF)。"
+        "用 char 变量接 fgetc 的返回值：char 是否有符号由实现决定——在无符号 char 平台上，EOF（-1）被截断成 255，循环条件永远成立而死循环；在 Windows x86-64（有符号 char）平台上，合法字节 0xFF 会被误判成 EOF（-1）导致提前截断。必须写成 int ch; while ((ch = fgetc(fp)) != EOF)。"
       ],
       takeaways: [
         "fopen 返回 FILE *，失败返回 NULL，每次打开都要检查",
@@ -833,12 +833,12 @@ window.C_MODULES.push({
         + "    /* 1. \"wb\" 打开 data.bin，写 4 条记录（score = (id + 1) * 7） */\n"
         + "\n"
         + "    /* 2. \"rb\" 打开，用 fseek(fp, 0, SEEK_END) + ftell 求出 size */\n"
+        + "    printf(\"size = %ld\\n\", size);\n"
         + "\n"
         + "    /* 3. fseek 到下标 2 读出来：printf(\"record 2 score = %d\\n\", r.score); */\n"
         + "\n"
         + "    /* 4. rewind 后读第一条：printf(\"first id = %d\\n\", r.id); */\n"
         + "\n"
-        + "    printf(\"size = %ld\\n\", size);\n"
         + "    remove(\"data.bin\");\n"
         + "    return 0;\n"
         + "}",
@@ -1068,10 +1068,10 @@ window.C_MODULES.push({
         + "          和 errno changed = 1，再用 perror(\"missing.txt\") 说明原因 */\n"
         + "\n"
         + "    /* 3. \"r\" 打开 data.txt，用 while (fgets(...) != NULL) 数行数 */\n"
+        + "    printf(\"lines = %d\\n\", lines);\n"
         + "\n"
         + "    /* 4. 循环之后用 feof(fp) != 0 输出 feof = 1 */\n"
         + "\n"
-        + "    printf(\"lines = %d\\n\", lines);\n"
         + "    remove(\"data.txt\");\n"
         + "    return 0;\n"
         + "}",
@@ -1081,8 +1081,9 @@ window.C_MODULES.push({
         return0: true,
         require: { file: true, if: true, while: true },
         calls: [["fopen"], ["fclose"], ["fprintf"], ["perror"], ["fgets"], ["feof"], ["remove"], ["printf", "open failed = "], ["printf", "errno changed = "], ["printf", "lines = "], ["printf", "feof = "]],
+        forbidPattern: [["while\\s*\\(\\s*!\\s*feof\\s*\\(", "不要写 while (!feof(fp))，应直接检查读取函数返回值。"]],
         minStatements: 10,
-        message: "需要 #include <stdio.h> 和 <errno.h>，并在 main 里用上 fopen、fprintf、fgets、perror、feof、fclose、remove，还要有 if 与 while，最后 printf 输出 open failed = …、errno changed = …、lines = …、feof = … 四行。",
+        message: "需要 #include <stdio.h> 和 <errno.h>，并在 main 里用上 fopen、fprintf、fgets、perror、feof、fclose、remove，还要有 if 与 while（不要写 while (!feof(fp))），最后 printf 输出 open failed = …、errno changed = …、lines = …、feof = … 四行。",
         ok: "返回值检查、errno、perror 和正确的 EOF 判断都到位了。"
       },
       solution: "#include <stdio.h>\n"
