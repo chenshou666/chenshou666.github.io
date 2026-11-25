@@ -91,6 +91,33 @@ const PORTFOLIO_DATA={
     {title:"零依赖单目录",desc:"HTML + CSS + 4 个经典脚本，双击 index.html 即可游玩，不需要构建、后端或任何外部资源。"}
    ],
    stack:["Vanilla JavaScript","Canvas 2D","requestAnimationFrame","Touch / Keyboard Input","零依赖单目录"]
+  },
+  {
+   id:"mbti-test",
+   mark:"心",
+   kind:"心理互动测评",
+   name:"MBTI 人格光谱测试",
+   subtitle:"五幕情境剧场 · 60/30 题双模式 · 荣格八维与 16 型全档案",
+   summary:"把枯燥量表做成好玩的五幕「灵魂剧场」：情境共鸣卡与 A/B 两难对决交错呈现，配 7 级极光共振球、五声风铃音效、实时心理微评与幕间阶段洞察。采用正反双极严格均衡题库，支持 60 题完整版 / 30 题精测版、5 维百分比与边界融合识别、荣格八维认知功能推算、16 型全量图鉴百科、双人契合度实验室，以及 Canvas 高清人格海报一键保存与分享链接。",
+   badge:"新上线",
+   metrics:[
+    {v:"60 / 30 题",l:"完整 / 闪电双模式"},
+    {v:"32 型档案",l:"16 型 × A/T 变体"},
+    {v:"荣格八维",l:"认知功能与信度校验"},
+    {v:"高清海报",l:"双人契合 + 一键分享"}
+   ],
+   ctaLabel:"开始人格测试 ↗",
+   ctaHref:"works/mbti-test/index.html",
+   external:true,
+   stackChip:"Zero Dependency",
+   stackNote:"纯前端零依赖单目录作品（works/mbti-test/），采用经典脚本与 Web Audio / Canvas 2D 原生绘制，兼容 GitHub Pages 与双击 file:// 本地离线运行；所有作答仅在本地计算，不上传任何隐私数据。",
+   features:[
+    {title:"五幕情境剧场 · 答题不再无聊",desc:"将题目编排为 5 幕氛围章节，融合情境共鸣与 A/B 两难对决两种题型，配 7 级共振球、五声风铃合成音效、星尘粒子反馈、幕间微洞察与星盘揭晓动画。"},
+    {title:"心理测量学级准确度",desc:"5 维（E/I、S/N、T/F、J/P、A/T）严格正反均衡计分消除同意偏差，内置 60 题深度版与 30 题精测版，提供边界融合型提示与作答信度评分。"},
+    {title:"16 型完整深度百科 + 荣格八维",desc:"完整覆盖 4 大阵营 16 种人格：专属几何图腾、A/T 变体剖析、荣格八维认知功能栈、优势盲区、压力回血指南、职场方向与恋爱人际建议。"},
+    {title:"双人契合度实验室 & 高清海报导出",desc:"任意两型即时剖析思维共振、沟通顺畅度与相处避坑建议；支持 Canvas 2D 一键生成 1080p 高清 PNG 人格海报与纯静态 #r= 分享链接。"}
+   ],
+   stack:["Vanilla HTML/CSS/JS","Canvas 2D 海报与极光","Web Audio 五声合成","7 级双极加权量表","荣格八维推算","URL Hash 静态分享","file:// 离线运行"]
   }
  ],
 };
@@ -255,13 +282,15 @@ function renderWorkDetail(){
    +'<div class="pf-demo-list">'+demosHtml+'</div>'
   +'</section>':'')
   +'<section class="panel">'
-   +'<div class="challenge-head"><div class="challenge-label">技术栈与约束</div><span class="chip">'+(isLab?"Zero Build":"Single File")+'</span></div>'
+   +'<div class="challenge-head"><div class="challenge-label">技术栈与约束</div><span class="chip">'+esc(w.stackChip||(isLab?"Zero Build":"Single File"))+'</span></div>'
    +'<div class="pf-tags">'+tagsHtml+'</div>'
-   +'<p class="challenge-copy" style="margin-top:14px">'+(isLab
-     ?'全站不依赖任何打包工具、框架或 CDN，采用固定顺序加载的经典脚本与样式层，在 GitHub Pages 与本地 file:// 协议下均可完整运行。'
-     :(w.id==="code-cinema"
-       ?'四部短片均为独立单文件演示（works/*.html），通过统一播放器打开即可体验与切换；主站本身保持零外部依赖。'
-       :'纯前端零依赖单目录作品，打开即玩，支持桌面键盘与手机触控操作。'))+'</p>'
+   +'<p class="challenge-copy" style="margin-top:14px">'+(w.stackNote
+     ?esc(w.stackNote)
+     :(isLab
+       ?'全站不依赖任何打包工具、框架或 CDN，采用固定顺序加载的经典脚本与样式层，在 GitHub Pages 与本地 file:// 协议下均可完整运行。'
+       :(w.id==="code-cinema"
+         ?'四部短片均为独立单文件演示（works/*.html），通过统一播放器打开即可体验与切换；主站本身保持零外部依赖。'
+         :'纯前端零依赖单目录作品，打开即玩，支持桌面键盘与手机触控操作。')))+'</p>'
   +'</section>'
   +'<div class="footer-note">'+(isLab?'进入「学习工具」后，顶栏左侧随时可点「← 作品集」回到这里。':(w.id==="code-cinema"?'代码影院将在新标签页打开独立播放器，点顶部「← 作品集」或关闭标签页即可回来。':'作品将在新标签页打开，关闭标签页即可回到作品集。'))+'</div>';
 }

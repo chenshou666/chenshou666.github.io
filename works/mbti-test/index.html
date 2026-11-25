@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>MBTI 人格光谱测试 · 尘狩作品集</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg" />
+  <link rel="stylesheet" href="style.css?v=20261125" />
+</head>
+<body>
+  <canvas id="auroraCanvas" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="top-left">
+        <a class="pill-btn ghost" href="../../index.html">← 作品集</a>
+        <button class="brand-btn" id="brandHomeBtn" type="button" aria-label="返回测试首页">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-name">MBTI 人格光谱</span>
+        </button>
+      </div>
+      <nav class="top-nav" aria-label="功能导航">
+        <button class="nav-pill is-active" type="button" data-nav="home">人格测试</button>
+        <button class="nav-pill" type="button" data-nav="atlas">16 型图鉴</button>
+        <button class="nav-pill" type="button" data-nav="match">双人契合</button>
+      </nav>
+      <div class="top-right">
+        <button class="pill-btn ghost icon-pill" id="soundToggleBtn" type="button" title="开关互动音效" aria-pressed="true">
+          <span id="soundIcon" aria-hidden="true">🔊</span>
+          <span class="hide-sm">音效</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app" class="app-shell" aria-live="polite"></main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- 经典脚本按依赖顺序加载（兼容 GitHub Pages 与 file:// 双击离线运行） -->
+  <script src="js/questions.js?v=20261125"></script>
+  <script src="js/types-data.js?v=20261125"></script>
+  <script src="js/audio-fx.js?v=20261125"></script>
+  <script src="js/engine.js?v=20261125"></script>
+  <script src="js/app.js?v=20261125"></script>
+</body>
+</html>

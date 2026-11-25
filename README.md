@@ -16,6 +16,7 @@
 | **学习工具** | 互动闯关学习站 | C 语言 86 关 + 英语四级 62 关，共 148 关；内置 C 代码结构检查、本机运行输出逐行比对、46 段离线音频、口语录音自评与存档码跨设备迁移 | 首页作品卡 / `index.html` |
 | **代码影院 · Code Cinema** | 代码生成影像 | 4 部零图片/零音频素材、由 WebGL/GLSL + Web Audio 实时生成的短片与视觉诗（《墨韵山河》《PURE CODE CINEMA》《万物同构》《纯代码视界》），支持录制导出 | [统一播放器](works/player.html) |
 | **游戏 · 小游戏合集** | Canvas 2D 小游戏 | 第一部《火柴人训练营 · 疾风忍刀》：零依赖横屏动作格斗，4 技能连招、可自定义键位与手机触摸布局 | [在线试玩](works/stickman-training/index.html) |
+| **MBTI 人格光谱测试** | 心理互动测评 | 五幕情境剧场（60/30 题双模式、7 级双极均衡量表、五声风铃音效）、荣格八维认知功能、16 型全量图鉴、双人契合度实验室与高清海报 PNG 导出 | [开始测试](works/mbti-test/index.html) |
 
 ---
 
@@ -69,7 +70,8 @@ chenshou666.github.io/
 │  ├─ pure-code-cinema.html    PURE CODE CINEMA（生成式电影引擎，零外部依赖）
 │  ├─ isomorphism.html         万物同构 · ISOMORPHISM（1080p60 光学视觉诗，零外部依赖）
 │  ├─ zero-pixels.html         纯代码视界 · ZERO PIXELS（实时生成影院，零外部依赖）
-│  └─ stickman-training/       作品「游戏」第一部：火柴人训练营（横屏 Canvas 2D 格斗小游戏）
+│  ├─ stickman-training/       作品「游戏」第一部：火柴人训练营（横屏 Canvas 2D 格斗小游戏）
+│  └─ mbti-test/               作品「MBTI 人格光谱测试」：五幕剧场测评、16 型图鉴、双人契合与海报导出
 ├─ assets/
 │  ├─ favicon.svg              站点图标（SVG）
 │  ├─ ht-lab.ico               站点图标（ICO）
