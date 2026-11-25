@@ -201,7 +201,7 @@ render()
 ## 9. 开屏动画引擎（`css/09-splash.css` + `js/10-splash.js`）
 
 - **模式优先级**：URL 参数 `?splash=cinema|classic|off`（别名 `new`→`cinema`、`legacy`→`classic`） > `localStorage["cquest.appearance.v1"].splashMode` > 默认 `cinema`。
-- **新版（`cinema` · 极光棱镜）**：Canvas 2D 粒子汇流与极光呼吸光井 + 双轨 SVG 折射星环 + 液态玻璃 `HT` 徽章斜向扫光 + 品牌与三作品胶囊浮现 + 极光进度条，约 2.38s 后光学溶解退出并彻底释放 rAF 与 DOM，零后台开销。
+- **新版（`cinema` · 极光棱镜）**：Canvas 2D 粒子汇流与极光呼吸光井 + 双轨 SVG 折射星环 + 液态玻璃 `HT` 徽章斜向扫光 + 品牌文字浮现 + 极光进度条，约 2.38s 后光学溶解退出并彻底释放 rAF 与 DOM，零后台开销。
 - **旧版（`classic` · 经典简洁）**：还原原有极简 `HT` 玻璃卡片开屏（约 1.4s），并修复了早期的 `.final-logo` 残留问题。
 - **交互与无障碍**：支持按钮跳过、`ESC` / `Enter` / `Space` 与点击背景跳过；`prefers-reduced-motion: reduce` 下自动关闭粒子与复杂动画并快速淡出；`<noscript>` 下自动隐藏开屏防阻塞。
 - **重播接口**：`window.HTSplash.replay(mode)` 可随时重建舞台重播指定模式。

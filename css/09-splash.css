@@ -357,39 +357,6 @@ body:not(.splash-active) .splash-screen:not(.is-replaying) {
   animation: splashTextRise 0.68s cubic-bezier(0.16, 1, 0.3, 1) 0.68s forwards;
 }
 
-/* 三大作品星标胶囊 */
-.splash-works-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 2px;
-}
-
-.splash-pill {
-  padding: 4px 11px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.6px;
-  color: rgba(224, 242, 254, 0.86);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.splash-screen.is-ready[data-splash-mode="cinema"] .splash-pill:nth-child(1) {
-  animation: splashTextRise 0.52s cubic-bezier(0.16, 1, 0.3, 1) 0.86s forwards;
-}
-.splash-screen.is-ready[data-splash-mode="cinema"] .splash-pill:nth-child(2) {
-  animation: splashTextRise 0.52s cubic-bezier(0.16, 1, 0.3, 1) 0.96s forwards;
-}
-.splash-screen.is-ready[data-splash-mode="cinema"] .splash-pill:nth-child(3) {
-  animation: splashTextRise 0.52s cubic-bezier(0.16, 1, 0.3, 1) 1.06s forwards;
-}
-
 /* 极光流光进度细线 */
 .splash-bar {
   position: relative;
@@ -487,7 +454,6 @@ body:not(.splash-active) .splash-screen:not(.is-replaying) {
 .splash-screen[data-splash-mode="classic"] .splash-pulse,
 .splash-screen[data-splash-mode="classic"] .splash-sheen,
 .splash-screen[data-splash-mode="classic"] .splash-brand-block,
-.splash-screen[data-splash-mode="classic"] .splash-works-row,
 .splash-screen[data-splash-mode="classic"] .splash-bar,
 .splash-screen[data-splash-mode="classic"] .splash-skip-key {
   display: none !important;
@@ -613,10 +579,6 @@ body:not(.splash-active) .splash-screen:not(.is-replaying) {
     font-size: 22px;
     gap: 9px;
   }
-  .splash-pill {
-    font-size: 10.5px;
-    padding: 3px 9px;
-  }
   .splash-skip {
     right: 16px;
     bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -645,9 +607,6 @@ body:not(.splash-active) .splash-screen:not(.is-replaying) {
   .splash-code {
     font-size: 26px;
   }
-  .splash-works-row {
-    display: none;
-  }
 }
 
 /* ==========================================================================
@@ -664,7 +623,6 @@ body:not(.splash-active) .splash-screen:not(.is-replaying) {
   .splash-mark,
   .splash-eyebrow,
   .splash-title,
-  .splash-pill,
   .splash-bar,
   .splash-bar-fill {
     opacity: 1 !important;
