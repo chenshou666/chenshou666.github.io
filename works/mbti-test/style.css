@@ -251,6 +251,8 @@ a {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.09);
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: var(--ink-2);
@@ -399,6 +401,87 @@ a {
   margin-top: 20px;
 }
 
+.mode-grid.mode-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* 边界自适应决胜校准横幅 & 6 档球 */
+.tb-banner {
+  margin-bottom: 14px;
+  padding: 16px 20px;
+  border-radius: var(--r-l);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.16), rgba(56, 189, 248, 0.12));
+  border: 1px solid rgba(251, 191, 36, 0.42);
+}
+
+.tb-banner strong {
+  font-size: 15px;
+  color: #fde68a;
+}
+
+.tb-banner p {
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.orb-row.orb-row-6 {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* 相邻第二候选人格对照卡片 */
+.runner-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.runner-card {
+  padding: 18px 20px;
+  border-radius: var(--r-m);
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+}
+
+.runner-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.runner-code {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--amber);
+}
+
+.runner-meta {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.runner-meta code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.09);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.runner-tip {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
 .mode-card {
   position: relative;
   display: flex;
@@ -530,6 +613,7 @@ a {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 14px;
 }
@@ -1680,6 +1764,7 @@ a {
 /* ==================== 响应式适配（平板 & 手机 390px） ==================== */
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; }
+  .mode-grid.mode-grid-3 { grid-template-columns: 1fr; }
   .feature-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .group-preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .atlas-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }

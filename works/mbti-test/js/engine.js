@@ -1,6 +1,11 @@
 /* ============================================================================
- * engine.js — MBTI 心理测量计分引擎 · 八维推算 · 信度评估 · 双人契合度 · 海报生成
- * 零外部依赖，纯函数可被 Node 直接校验测试
+ * engine.js — MBTI 专业级心理测量引擎（V2 零偏向高精度版）
+ * 核心能力：
+ *   1. 三档模式（pro: 90题 / standard: 60题 / quick: 30题），正反权重严格 0.00 对称
+ *   2. 自适应边界决胜加试（Tie-breaker）：极近 50% 维度动态追加无中立 A/B 校准题
+ *   3. 荣格八维认知功能双源融合（4 字母功能栈 + 题目直测功能信号）
+ *   4. 相邻第二候选人格对照（边界型自动计算最接近替代类型与差异解析）
+ *   5. 正反逻辑一致性信度体检 + 256 对双人契合度 + 1080p Canvas 高清海报
  * ========================================================================== */
 (function (global) {
   "use strict";
@@ -14,16 +19,40 @@
     AT: ["A", "T"]
   };
 
+  var AXIS_DIFF_TIPS = {
+    EI: {
+      name: "能量流向（E / I）",
+      tip: "两者核心差别在于「高压或疲惫后的回血方式」：E 型常在互动与表达中提神，I 型更需要彻底独处的静默时段来恢复满电。"
+    },
+    SN: {
+      name: "认知透镜（S / N）",
+      tip: "两者核心差别在于「信息第一落点」：S 型优先抓牢眼前具体事实、质感与成熟经验，N 型优先捕捉抽象规律、隐喻与未来可能。"
+    },
+    TF: {
+      name: "决策天平（T / F）",
+      tip: "两者核心差别在于「冲突时的第一标尺」：T 型倾向先对齐客观逻辑与统一标准，F 型倾向先照顾价值认同与相关人的真实感受。"
+    },
+    JP: {
+      name: "生活节拍（J / P）",
+      tip: "两者核心差别在于「对未定状态的感受」：J 型在尽早定案与清晰节点中感到安心，P 型在保留选择弹性与随境调整中更有活力。"
+    }
+  };
+
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
   }
 
+  function normalizeMode(mode) {
+    if (mode === "quick") return "quick";
+    if (mode === "pro") return "pro";
+    return "standard"; // 兼容旧 "full" -> 60 题标准版
+  }
+
   function getQuestionsForMode(mode, allQuestions) {
     var src = allQuestions || global.MBTI_QUESTIONS || [];
-    if (mode === "quick") {
-      return src.filter(function (q) { return !!q.quick; });
-    }
-    return src.slice();
+    var m = normalizeMode(mode);
+    var maxTier = m === "quick" ? 1 : (m === "standard" ? 2 : 3);
+    return src.filter(function (q) { return (q.tier || 1) <= maxTier; });
   }
 
   function strengthLabel(dominantPct) {
@@ -33,8 +62,8 @@
     return "边界融合";
   }
 
-  // 根据 4 字母类型 + 实测 5 维百分比推算荣格八维认知功能能量（0-100）
-  function computeCognitiveFunctions(typeCode, dims, typesMap) {
+  // 根据 4 字母类型 + 实测 5 维百分比 + 题目直测功能信号，融合计算荣格八维（0-100）
+  function computeCognitiveFunctions(typeCode, dims, typesMap, fnSignals) {
     var types = typesMap || global.MBTI_TYPES || {};
     var profile = types[typeCode];
     var stack = profile ? profile.stack : ["Ni", "Te", "Fi", "Se"];
@@ -46,7 +75,6 @@
     };
     var shadow = stack.map(function (fn) { return oppMap[fn]; });
 
-    // 基础位阶权重（主导 → 辅助 → 第三 → 劣势 + 4 个阴影功能）
     var baseScores = {};
     var primaryWeights = [84, 71, 56, 40];
     var shadowWeights = [52, 46, 35, 30];
@@ -55,7 +83,6 @@
       baseScores[shadow[i]] = shadowWeights[i];
     }
 
-    // 用实测维度倾向强度对对应功能做细腻调制
     var ePct = dims.EI ? dims.EI.leftPct : 50;
     var iPct = 100 - ePct;
     var sPct = dims.SN ? dims.SN.leftPct : 50;
@@ -76,25 +103,123 @@
 
     var allOrder = ["Ni", "Ne", "Si", "Se", "Ti", "Te", "Fi", "Fe"];
     var scores = {};
+    var hasDirect = !!(fnSignals && fnSignals.hasData);
+
     for (var j = 0; j < allOrder.length; j++) {
       var code = allOrder[j];
-      scores[code] = Math.round(clamp((baseScores[code] || 45) + (mod[code] || 0), 18, 98));
+      var structural = clamp((baseScores[code] || 45) + (mod[code] || 0), 18, 96);
+      if (hasDirect && fnSignals.max[code] > 0) {
+        // 直测信号映射到 20~95 区间，按 35% 权重融入，保留实测个体差异
+        var normSig = clamp(50 + (fnSignals.raw[code] / fnSignals.max[code]) * 45, 18, 96);
+        scores[code] = Math.round(clamp(structural * 0.65 + normSig * 0.35, 18, 98));
+      } else {
+        scores[code] = Math.round(structural);
+      }
     }
 
-    // 确保主导功能视觉上不低于劣势功能
-    if (scores[stack[0]] < scores[stack[1]]) scores[stack[0]] = Math.min(98, scores[stack[1]] + 4);
+    // 确保主导功能视觉位序不低于劣势功能
+    if (scores[stack[0]] < scores[stack[3]] + 6) {
+      scores[stack[0]] = Math.min(98, scores[stack[3]] + 6);
+    }
 
     return {
       stack: stack,
       shadow: shadow,
-      scores: scores
+      scores: scores,
+      hasDirectSignals: hasDirect
     };
   }
 
-  // 主计分函数
+  // 检测需要边界自适应校准（Tie-breaker）的维度，返回待追加的高区分度双面题
+  function getTiebreakQuestions(answers, questions, tiebreakersPool) {
+    var qs = questions || [];
+    var pool = tiebreakersPool || global.MBTI_TIEBREAKERS || [];
+    var rawMap = { EI: 0, SN: 0, TF: 0, JP: 0, AT: 0 };
+    var maxMap = { EI: 0, SN: 0, TF: 0, JP: 0, AT: 0 };
+    var hashSeed = 0;
+
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      if (!Object.prototype.hasOwnProperty.call(answers, q.id)) continue;
+      var v = clamp(Math.round(Number(answers[q.id]) || 0), -3, 3);
+      var w = q.weight || 1;
+      rawMap[q.dim] += v * q.pole * w;
+      maxMap[q.dim] += 3 * w;
+      hashSeed += (i + 1) * (v + 4);
+    }
+
+    var selected = [];
+    for (var d = 0; d < DIM_ORDER.length; d++) {
+      var dimId = DIM_ORDER[d];
+      var ratio = maxMap[dimId] > 0 ? rawMap[dimId] / maxMap[dimId] : 0;
+      // |ratio| < 0.055 相当于原始百分比落在 47.25% ~ 52.75%（极近 50/50 边界）
+      if (Math.abs(ratio) < 0.055) {
+        var candidates = pool.filter(function (tb) { return tb.dim === dimId; });
+        if (candidates.length > 0) {
+          // 按作答哈希交替选取 +1 / -1 题，消除左/右位置偏差
+          var pick = candidates[(Math.abs(hashSeed) + d) % candidates.length];
+          selected.push(pick);
+        }
+      }
+    }
+    return selected;
+  }
+
+  // 计算相邻第二候选人格（当四核心维度存在接近中线的维度时展示对照）
+  function computeRunnerUps(type4, identity, dims, typesMap) {
+    var types = typesMap || global.MBTI_TYPES || {};
+    var coreDims = ["EI", "SN", "TF", "JP"];
+    var ranked = coreDims.map(function (id, idx) {
+      return { id: id, idx: idx, dom: dims[id].dominantPct, dimObj: dims[id] };
+    }).sort(function (a, b) {
+      return a.dom - b.dom;
+    });
+
+    var list = [];
+    for (var i = 0; i < ranked.length; i++) {
+      var item = ranked[i];
+      // 所有 <=58% 的边界维都会生成候选；若都不 <=58% 但最接近的一维 <=64%，也给出 1 个最接近参照
+      if (item.dom <= 58 || (i === 0 && item.dom <= 64)) {
+        var chars = type4.split("");
+        var poles = POLE_MAP[item.id];
+        var flipped = chars[item.idx] === poles[0] ? poles[1] : poles[0];
+        chars[item.idx] = flipped;
+        var altCode = chars.join("");
+        var altProf = types[altCode];
+        var mainProf = types[type4];
+        if (!altProf || !mainProf) continue;
+
+        var margin = item.dom - (100 - item.dom); // 2% ~ 28%
+        var similarity = Math.round(clamp(97 - margin * 1.05, 68, 96));
+        var axisInfo = AXIS_DIFF_TIPS[item.id];
+        list.push({
+          code: altCode,
+          fullCode: altCode + "-" + identity,
+          name: altProf.name,
+          en: altProf.en,
+          dimId: item.id,
+          axisName: axisInfo ? axisInfo.name : item.id,
+          fromPole: item.dimObj.winner,
+          toPole: flipped,
+          marginPct: margin,
+          similarity: similarity,
+          mainStack: mainProf.stack.slice(0, 2).join(" → "),
+          altStack: altProf.stack.slice(0, 2).join(" → "),
+          tip: axisInfo ? axisInfo.tip : ""
+        });
+      }
+      if (list.length >= 2) break;
+    }
+    return list;
+  }
+
+  // 主计分函数（支持主测题库 + 可选边界决胜加试题）
   function calculateResult(answers, questions, meta) {
-    var qs = questions || global.MBTI_QUESTIONS || [];
+    var mainQs = questions || global.MBTI_QUESTIONS || [];
+    var extraQs = (meta && meta.tiebreakQuestions) ? meta.tiebreakQuestions : [];
+    var allQs = mainQs.concat(extraQs);
     var typesMap = global.MBTI_TYPES || {};
+
     var buckets = {};
     for (var d = 0; d < DIM_ORDER.length; d++) {
       buckets[DIM_ORDER[d]] = {
@@ -102,18 +227,25 @@
         maxAbs: 0,
         answered: 0,
         posVals: [],
-        negVals: []
+        negVals: [],
+        coreRaw: 0, // 仅统计最高权重题（>=1.20）与决胜题，作为极端平局二次破平
+        tiebroken: false
       };
     }
+
+    var fnRaw = { Ni: 0, Ne: 0, Si: 0, Se: 0, Ti: 0, Te: 0, Fi: 0, Fe: 0 };
+    var fnMax = { Ni: 0, Ne: 0, Si: 0, Se: 0, Ti: 0, Te: 0, Fi: 0, Fe: 0 };
+    var hasFnData = false;
 
     var answeredCount = 0;
     var neutralCount = 0;
     var extremeCount = 0;
     var leftPressCount = 0;
     var rightPressCount = 0;
+    var tiebreakAnswered = 0;
 
-    for (var i = 0; i < qs.length; i++) {
-      var q = qs[i];
+    for (var i = 0; i < allQs.length; i++) {
+      var q = allQs[i];
       if (!Object.prototype.hasOwnProperty.call(answers, q.id)) continue;
       var val = Number(answers[q.id]);
       if (isNaN(val)) continue;
@@ -122,18 +254,40 @@
       var b = buckets[q.dim];
       if (!b) continue;
 
+      var isTiebreak = i >= mainQs.length;
+      if (isTiebreak) {
+        tiebreakAnswered++;
+        b.tiebroken = true;
+      }
+
       answeredCount++;
-      if (val === 0) neutralCount++;
-      if (Math.abs(val) === 3) extremeCount++;
-      if (val > 0) leftPressCount++;
-      if (val < 0) rightPressCount++;
+      if (!isTiebreak) {
+        if (val === 0) neutralCount++;
+        if (Math.abs(val) === 3) extremeCount++;
+        if (val > 0) leftPressCount++;
+        if (val < 0) rightPressCount++;
+      }
 
       var contrib = val * q.pole * w;
       b.raw += contrib;
       b.maxAbs += 3 * w;
       b.answered += 1;
-      if (q.pole > 0) b.posVals.push(val);
-      else b.negVals.push(-val); // 反向题取负后与正向题同向，便于测内部一致性
+      if (w >= 1.20 || isTiebreak) b.coreRaw += contrib;
+
+      if (!isTiebreak) {
+        if (q.pole > 0) b.posVals.push(val);
+        else b.negVals.push(-val);
+      }
+
+      // 采集荣格认知功能直测信号
+      if (q.fnPos && q.fnNeg) {
+        hasFnData = true;
+        var absW = 3 * w;
+        fnMax[q.fnPos] += absW;
+        fnMax[q.fnNeg] += absW;
+        fnRaw[q.fnPos] += contrib;
+        fnRaw[q.fnNeg] -= contrib;
+      }
     }
 
     var dims = {};
@@ -143,30 +297,30 @@
     for (var k = 0; k < DIM_ORDER.length; k++) {
       var dimId = DIM_ORDER[k];
       var bk = buckets[dimId];
-      // ratio ∈ [-1, +1]；>0 偏向首极，<0 偏向次极
       var ratio = bk.maxAbs > 0 ? bk.raw / bk.maxAbs : 0;
       var leftPct = Math.round(clamp(50 + ratio * 50, 1, 99));
       var rightPct = 100 - leftPct;
       var poles = POLE_MAP[dimId];
-      // 恰好 50/50 时用微小正负 raw 决定（默认首极仅在 raw >= 0）
-      var isLeft = bk.raw >= 0;
-      if (leftPct === 50 && !isLeft) {
-        leftPct = 49;
-        rightPct = 51;
-      } else if (leftPct === 50 && isLeft) {
-        leftPct = 51;
-        rightPct = 49;
+
+      // 破平：先看总 raw，若完全为 0 看核心高权重题 coreRaw
+      var effectiveRaw = Math.abs(bk.raw) > 1e-6 ? bk.raw : bk.coreRaw;
+      var isLeft = effectiveRaw >= 0;
+      if (leftPct === 50) {
+        leftPct = isLeft ? 51 : 49;
+        rightPct = 100 - leftPct;
       }
       var winner = isLeft ? poles[0] : poles[1];
       var dominantPct = isLeft ? leftPct : rightPct;
       var borderline = dominantPct <= 55;
 
-      // 计算同维度内部一致性（正向题均值 vs 反向题取反均值之接近度）
+      // 计算单维正反逻辑一致性（Cronbach 方向检验）
+      var dimConsistency = 0.85;
       if (bk.posVals.length > 0 && bk.negVals.length > 0) {
         var meanP = bk.posVals.reduce(function (a, c) { return a + c; }, 0) / bk.posVals.length;
         var meanN = bk.negVals.reduce(function (a, c) { return a + c; }, 0) / bk.negVals.length;
         var diff = Math.abs(meanP - meanN); // 0 ~ 6
-        consistencySum += clamp(1 - diff / 4.2, 0.15, 1);
+        dimConsistency = clamp(1 - diff / 4.2, 0.15, 1);
+        consistencySum += dimConsistency;
         consistencyDimCount++;
       }
 
@@ -180,26 +334,34 @@
         dominantPct: dominantPct,
         strength: strengthLabel(dominantPct),
         borderline: borderline,
+        tiebroken: bk.tiebroken,
+        consistencyPct: Math.round(dimConsistency * 100),
         answered: bk.answered
       };
     }
 
     var type4 = dims.EI.winner + dims.SN.winner + dims.TF.winner + dims.JP.winner;
-    var identity = dims.AT.winner; // "A" 或 "T"
+    var identity = dims.AT.winner;
     var fullCode = type4 + "-" + identity;
 
-    // 评估作答信度
-    var neutralRatio = answeredCount ? neutralCount / answeredCount : 0;
-    var oneSideBias = answeredCount ? Math.abs(leftPressCount - rightPressCount) / answeredCount : 0;
-    var internalConsistency = consistencyDimCount ? consistencySum / consistencyDimCount : 0.8;
+    // 专业信度评估
+    var mainAnswered = Math.max(1, answeredCount - tiebreakAnswered);
+    var neutralRatio = neutralCount / mainAnswered;
+    var oneSideBias = Math.abs(leftPressCount - rightPressCount) / mainAnswered;
+    var internalConsistency = consistencyDimCount ? consistencySum / consistencyDimCount : 0.82;
     var elapsedSec = meta && meta.elapsedSec ? meta.elapsedSec : 0;
-    var avgSec = answeredCount && elapsedSec ? elapsedSec / answeredCount : 4;
+    var avgSec = elapsedSec ? elapsedSec / answeredCount : 4;
+
+    var modeResolved = normalizeMode(meta && meta.mode ? meta.mode : (mainQs.length >= 80 ? "pro" : (mainQs.length <= 35 ? "quick" : "standard")));
+    // 90 题拥有更高的统计抽样稳定性微幅加分
+    var lengthBonus = modeResolved === "pro" ? 3 : (modeResolved === "quick" ? -3 : 0);
 
     var reliabilityScore = Math.round(
       clamp(
         internalConsistency * 72 +
         (1 - clamp(neutralRatio * 1.4, 0, 1)) * 18 +
-        (1 - clamp(Math.max(0, oneSideBias - 0.35) * 1.5, 0, 1)) * 10 -
+        (1 - clamp(Math.max(0, oneSideBias - 0.35) * 1.5, 0, 1)) * 10 +
+        lengthBonus -
         (elapsedSec > 0 && avgSec < 1.1 ? 12 : 0),
         38,
         99
@@ -207,21 +369,27 @@
     );
 
     var warnings = [];
-    if (neutralRatio >= 0.4) {
-      warnings.push("你在超过 40% 的题目选择了中立项，部分维度可能更接近边界态。");
+    if (neutralRatio >= 0.38) {
+      warnings.push("超过 38% 的题目选择了中立项，建议查看下方「相邻候选人格对照」综合参考。");
     }
-    if (oneSideBias >= 0.72 && answeredCount >= 20) {
-      warnings.push("答题偏向屏幕同一侧的比例较高（由于题库正反交替，这可能降低部分维度的锐度）。");
+    if (oneSideBias >= 0.72 && mainAnswered >= 20) {
+      warnings.push("答题点选屏幕同一侧的比例较高（由于题库正反严格交替，这会拉低区分锐度）。");
     }
-    if (elapsedSec > 0 && avgSec < 1.2 && answeredCount >= 20) {
-      warnings.push("本次答题节奏飞快，若有兴趣可以放慢脚步按第一直觉复测对比。");
+    if (internalConsistency < 0.62 && mainAnswered >= 20) {
+      warnings.push("部分同维度的正反向题目作答存在拉扯，说明你处于跨场景灵活切换状态，可重点看各维百分比。");
+    }
+    if (elapsedSec > 0 && avgSec < 1.2 && mainAnswered >= 20) {
+      warnings.push("本次答题速度极快，若有空可以放慢节奏按第一直觉复测验证。");
     }
 
-    var reliabilityGrade = reliabilityScore >= 85 ? "极高" : (reliabilityScore >= 72 ? "良好" : (reliabilityScore >= 58 ? "中等" : "偏低"));
-    var functions = computeCognitiveFunctions(type4, dims, typesMap);
-
-    // 找出所有边界维度
+    var reliabilityGrade = reliabilityScore >= 86 ? "专业级高信度" : (reliabilityScore >= 74 ? "良好" : (reliabilityScore >= 60 ? "中等" : "偏低"));
+    var functions = computeCognitiveFunctions(type4, dims, typesMap, {
+      hasData: hasFnData,
+      raw: fnRaw,
+      max: fnMax
+    });
     var borderlineDims = DIM_ORDER.filter(function (id) { return dims[id].borderline; });
+    var runnerUps = computeRunnerUps(type4, identity, dims, typesMap);
 
     return {
       code: type4,
@@ -229,15 +397,18 @@
       fullCode: fullCode,
       dims: dims,
       functions: functions,
-      mode: (meta && meta.mode) || (qs.length <= 35 ? "quick" : "full"),
+      runnerUps: runnerUps,
+      mode: modeResolved,
       answeredCount: answeredCount,
-      totalCount: qs.length,
+      totalCount: allQs.length,
+      tiebreakCount: tiebreakAnswered,
       elapsedSec: elapsedSec,
       reliability: {
         score: reliabilityScore,
         grade: reliabilityGrade,
+        consistencyPct: Math.round(internalConsistency * 100),
         neutralPct: Math.round(neutralRatio * 100),
-        extremePct: answeredCount ? Math.round((extremeCount / answeredCount) * 100) : 0,
+        extremePct: Math.round((extremeCount / mainAnswered) * 100),
         warnings: warnings
       },
       borderlineDims: borderlineDims,
@@ -245,54 +416,36 @@
     };
   }
 
-  // 每幕完成后的趣味阶段洞察（不剧透 4 字母，仅提供氛围线索）
-  function buildChapterInsight(chapterIndex, answers, questions) {
+  // 零方向剧透的盲测幕间里程碑（杜绝锚定效应，仅反馈进度、节奏与心理测量冷知识）
+  function buildChapterMilestone(chapterIndex, answers, questions) {
     var qs = questions || [];
-    var sub = {};
     var count = 0;
-    var dec = 0;
+    var strongCount = 0;
+    var neutralCount = 0;
     for (var i = 0; i < qs.length; i++) {
       var q = qs[i];
       if (Object.prototype.hasOwnProperty.call(answers, q.id)) {
         var v = Number(answers[q.id]);
         count++;
-        if (Math.abs(v) >= 2) dec++;
-        sub[q.dim] = (sub[q.dim] || 0) + v * q.pole * (q.weight || 1);
+        if (Math.abs(v) >= 2) strongCount++;
+        if (v === 0) neutralCount++;
       }
     }
-    var decPct = count ? Math.round((dec / count) * 100) : 50;
-    var lines = [];
+    var strongPct = count ? Math.round((strongCount / count) * 100) : 50;
+    var neutralPct = count ? Math.round((neutralCount / count) * 100) : 0;
 
-    if (chapterIndex === 1) {
-      lines.push((sub.EI || 0) >= 0
-        ? "你的能量星图闪烁出「向外辐射」的活跃电弧，世界和人群似乎是你不小的灵感源泉。"
-        : "你的能量磁场呈现出沉静的「内聚深海」质感，独处和深度对话更能让你电力满格。");
-    } else if (chapterIndex === 2) {
-      lines.push((sub.SN || 0) >= 0
-        ? "你对现实质地、可靠细节和此时此地的真实触感拥有敏锐雷达。"
-        : "你的感知透镜正不断捕捉抽象规律与隐藏连线，思维自带「跳跃望远镜」属性。");
-    } else if (chapterIndex === 3) {
-      lines.push((sub.TF || 0) >= 0
-        ? "面对两难岔路口，你的第一把标尺偏向清澈利落的因果逻辑与客观公平。"
-        : "你的决策罗盘带着细腻温热的共情磁场，人与人的真实感受在你心里分量极重。");
-    } else if (chapterIndex === 4) {
-      lines.push((sub.JP || 0) >= 0
-        ? "你欣赏清晰可控的航线与落袋为安的秩序感，事情有交代才会让心彻底踏实。"
-        : "你的生活节拍偏爱风的自由度——保留弹性与随时拐进惊喜小巷的权力让你如鱼得水。");
+    var paceNote;
+    if (strongPct >= 62) {
+      paceNote = "目前作答风格：态度鲜明果断（深度档位占比 " + strongPct + "%），光谱轮廓正在高速显影。";
+    } else if (neutralPct >= 35) {
+      paceNote = "目前作答风格：审慎保留灰度（中立档占比 " + neutralPct + "%），后续遇到略微倾向的题可放心轻偏一档。";
     } else {
-      lines.push("全部 5 幕心理切面已采集完毕！你的独特人格光谱正准备点亮星盘。");
+      paceNote = "目前作答风格：直觉流畅、分寸细腻，正反向一致度正在后台静默校验中。";
     }
 
-    var paceNote = decPct >= 65
-      ? "目前你的立场果断度高达 " + decPct + "%，轮廓相当鲜明！"
-      : (decPct <= 30
-        ? "目前你展现出极高的辩证与灰度视角，性格底色细腻多面。"
-        : "目前果断与留白兼具，信号采集非常稳定。");
-
     return {
-      clue: lines[0],
-      paceNote: paceNote,
-      answered: count
+      answered: count,
+      paceNote: paceNote
     };
   }
 
@@ -312,22 +465,16 @@
     var isAlly = (a.relationships.allies.indexOf(codeB) >= 0) || (b.relationships.allies.indexOf(codeA) >= 0);
     var isMirror = codeA === codeB;
 
-    // 4 个细分子分数（0 - 100）
-    // 1. 思维共振（N/S 一致权重最高）
     var mindScore = sameN ? 91 : 64;
     if (a.group === b.group) mindScore = Math.min(97, mindScore + 5);
     if (isSoulmate) mindScore = Math.min(98, mindScore + 6);
 
-    // 2. 沟通顺畅度（N/S + T/F）
-    var commScore = 66 + (sameN ? 16 : 0) + (sameT ? 11 : 6) + (isSoulmate ? 5 : 0);
-    commScore = clamp(commScore, 58, 97);
+    var commScore = clamp(66 + (sameN ? 16 : 0) + (sameT ? 11 : 6) + (isSoulmate ? 5 : 0), 58, 97);
 
-    // 3. 生活节拍（J/P 与 E/I 平衡）
     var rhythmScore = (sameJ ? 88 : 72) + (sameE ? 4 : 7);
     if (isSoulmate && !sameJ) rhythmScore += 7;
     rhythmScore = clamp(rhythmScore, 60, 96);
 
-    // 4. 互补张力与新鲜感
     var diffCount = (sameE ? 0 : 1) + (sameN ? 0 : 1) + (sameT ? 0 : 1) + (sameJ ? 0 : 1);
     var sparkScore = diffCount === 2 ? 93 : (diffCount === 3 ? 89 : (diffCount === 1 ? 82 : (diffCount === 4 ? 86 : 78)));
     if (isSoulmate) sparkScore = Math.max(sparkScore, 95);
@@ -411,7 +558,7 @@
     };
   }
 
-  // URL Hash 编解码（支持纯静态分享结果，无需后端）
+  // URL Hash 编解码
   function encodeResultHash(res) {
     if (!res || !res.dims) return "";
     return "#r=" + encodeURIComponent(res.fullCode) +
@@ -419,7 +566,8 @@
       "&s=" + res.dims.SN.leftPct +
       "&t=" + res.dims.TF.leftPct +
       "&j=" + res.dims.JP.leftPct +
-      "&a=" + res.dims.AT.leftPct;
+      "&a=" + res.dims.AT.leftPct +
+      "&m=" + encodeURIComponent(res.mode || "standard");
   }
 
   function decodeResultHash(hashStr, typesMap) {
@@ -457,7 +605,6 @@
       var leftPct = specs[j][1];
       var winner = specs[j][2];
       var poles = POLE_MAP[dimId];
-      // 保障 winner 与 pct 方向一致
       if (winner === poles[0] && leftPct < 51) leftPct = 51;
       if (winner === poles[1] && leftPct > 49) leftPct = 49;
       var rightPct = 100 - leftPct;
@@ -474,6 +621,8 @@
         dominantPct: dom,
         strength: strengthLabel(dom),
         borderline: bl,
+        tiebroken: false,
+        consistencyPct: 92,
         answered: 12
       };
     }
@@ -483,18 +632,20 @@
       identity: idt,
       fullCode: code4 + "-" + idt,
       dims: dims,
-      functions: computeCognitiveFunctions(code4, dims, types),
+      functions: computeCognitiveFunctions(code4, dims, types, null),
+      runnerUps: computeRunnerUps(code4, idt, dims, types),
       mode: "shared",
-      answeredCount: 60,
-      totalCount: 60,
+      answeredCount: 90,
+      totalCount: 90,
+      tiebreakCount: 0,
       elapsedSec: 0,
-      reliability: { score: 92, grade: "分享档案", neutralPct: 0, extremePct: 0, warnings: [] },
+      reliability: { score: 92, grade: "分享档案", consistencyPct: 92, neutralPct: 0, extremePct: 0, warnings: [] },
       borderlineDims: borderlineDims,
       isShared: true
     };
   }
 
-  // 纯 Canvas 2D 绘制高清人格分享海报（1080 × 1560，零外部依赖）
+  // Canvas 2D 高清人格分享海报（1080 × 1560）
   function roundRectPath(ctx, x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -538,7 +689,6 @@
     canvas.height = H;
     var ctx = canvas.getContext("2d");
 
-    // 1. 深空底色 + 极光渐变光晕
     ctx.fillStyle = "#060913";
     ctx.fillRect(0, 0, W, H);
 
@@ -554,7 +704,6 @@
     ctx.fillStyle = g2;
     ctx.fillRect(0, 0, W, H);
 
-    // 细微星点装饰
     for (var s = 0; s < 55; s++) {
       var sx = ((s * 197) % W);
       var sy = ((s * 313) % H);
@@ -565,7 +714,6 @@
       ctx.fill();
     }
 
-    // 2. 主玻璃卡片容器
     roundRectPath(ctx, 56, 56, W - 112, H - 112, 42);
     var cardGrad = ctx.createLinearGradient(56, 56, W - 56, H - 56);
     cardGrad.addColorStop(0, "rgba(255,255,255,0.11)");
@@ -579,12 +727,11 @@
 
     var fontStack = '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif';
 
-    // 顶栏标签
     ctx.fillStyle = "rgba(226,236,255,0.72)";
     ctx.font = "600 24px " + fontStack;
-    ctx.fillText("MBTI 人格光谱档案 · SPECTRUM REPORT", 108, 134);
+    var modeBadge = result.mode === "pro" ? "90 题专业版" : (result.mode === "quick" ? "30 题精测版" : "60 题标准版");
+    ctx.fillText("MBTI 人格光谱档案 · " + modeBadge, 108, 134);
 
-    // 阵营胶囊
     var grpText = (group ? group.name : profile.group) + " · 稀有度 " + profile.rarity;
     ctx.font = "600 22px " + fontStack;
     var grpW = ctx.measureText(grpText).width + 44;
@@ -597,7 +744,6 @@
     ctx.fillStyle = "#ffffff";
     ctx.fillText(grpText, W - 108 - grpW + 22, 133);
 
-    // 超大渐变 MBTI 代码
     var codeGrad = ctx.createLinearGradient(108, 180, 560, 290);
     codeGrad.addColorStop(0, "#ffffff");
     codeGrad.addColorStop(0.55, profile.accent);
@@ -606,18 +752,15 @@
     ctx.font = "800 124px " + fontStack;
     ctx.fillText(result.fullCode, 104, 298);
 
-    // 称号 + 英文
     ctx.fillStyle = "#ffffff";
     ctx.font = "700 44px " + fontStack;
     ctx.fillText(profile.name + " · " + profile.en, 108, 368);
 
-    // 变体副标
     var idtLabel = result.identity === "A" ? "果断稳态型（Assertive）" : "谨慎精进型（Turbulent）";
     ctx.fillStyle = "rgba(226,236,255,0.76)";
     ctx.font = "500 26px " + fontStack;
-    ctx.fillText(idtLabel, 108, 414);
+    ctx.fillText(idtLabel + " · 信度 " + (result.reliability ? result.reliability.score : 92) + "/100", 108, 414);
 
-    // 座右铭卡片
     roundRectPath(ctx, 104, 452, W - 208, 120, 24);
     ctx.fillStyle = "rgba(255,255,255,0.065)";
     ctx.fill();
@@ -631,7 +774,6 @@
       ctx.fillText(mottoLines[ml], 136, 502 + ml * 42);
     }
 
-    // 关键词胶囊
     var kx = 104;
     var ky = 608;
     ctx.font = "600 23px " + fontStack;
@@ -653,7 +795,6 @@
       kx += tw + 14;
     }
 
-    // 5 大维度光谱条
     var barStartY = ky + 96;
     ctx.fillStyle = "rgba(226,236,255,0.78)";
     ctx.font = "700 26px " + fontStack;
@@ -677,7 +818,6 @@
       var riW = ctx.measureText(rightInfo).width;
       ctx.fillText(rightInfo, W - 108 - riW, yPos);
 
-      // 轨道
       var trackX = 108;
       var trackY = yPos + 16;
       var trackW = W - 216;
@@ -686,7 +826,6 @@
       ctx.fillStyle = "rgba(255,255,255,0.1)";
       ctx.fill();
 
-      // 填充条（从获胜端亮起）
       var fillW = Math.max(24, Math.round((trackW * dObj.dominantPct) / 100));
       var fillX = isLeft ? trackX : (trackX + trackW - fillW);
       var bGrad = ctx.createLinearGradient(fillX, trackY, fillX + fillW, trackY);
@@ -699,7 +838,6 @@
       yPos += 78;
     }
 
-    // 荣格四核心认知功能栈
     var fnY = yPos + 22;
     ctx.fillStyle = "rgba(226,236,255,0.78)";
     ctx.font = "700 26px " + fontStack;
@@ -734,7 +872,6 @@
       ctx.fillText(fm.name, bx + 20, by + 110);
     }
 
-    // 底部落款
     ctx.strokeStyle = "rgba(255,255,255,0.14)";
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -757,10 +894,13 @@
 
   global.MBTI_ENGINE = {
     DIM_ORDER: DIM_ORDER,
+    normalizeMode: normalizeMode,
     getQuestionsForMode: getQuestionsForMode,
+    getTiebreakQuestions: getTiebreakQuestions,
     calculateResult: calculateResult,
     computeCognitiveFunctions: computeCognitiveFunctions,
-    buildChapterInsight: buildChapterInsight,
+    computeRunnerUps: computeRunnerUps,
+    buildChapterMilestone: buildChapterMilestone,
     computeCompatibility: computeCompatibility,
     encodeResultHash: encodeResultHash,
     decodeResultHash: decodeResultHash,
