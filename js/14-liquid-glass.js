@@ -333,7 +333,7 @@
       + '<label class="ui-tune-row"><span>背景速度</span><input type="range" min="0.2" max="2.5" step="0.1" data-tune="bgSpeed"><output data-out="bgSpeed"></output></label>'
       + '<label class="ui-tune-row"><span>背景亮度</span><input type="range" min="20" max="100" step="5" data-tune="bgBright"><output data-out="bgBright"></output></label>'
       + '<label class="ui-tune-row ui-tune-check"><span>背景动画</span><input type="checkbox" data-tune="bgAnim"><output data-out="bgAnim"></output></label>'
-      + '<label class="ui-tune-row ui-tune-select-row"><span>开屏动画</span><select class="ui-tune-select" data-tune="splashMode"><option value="cinema">极光棱镜（新版）</option><option value="classic">经典简洁（旧版）</option><option value="off">关闭开屏</option></select></label>'
+      + '<label class="ui-tune-row ui-tune-select-row"><span>开屏动画</span><select class="ui-tune-select" data-tune="splashMode"><option value="cinema">极光跃迁（新版）</option><option value="classic">经典简洁（旧版）</option><option value="off">关闭开屏</option></select></label>'
       + '<div class="ui-tune-actions"><button class="btn btn-ghost btn-small" type="button" data-tune="replay-splash">▶ 重播开屏</button><button class="btn btn-ghost btn-small" type="button" data-tune="reset">恢复默认</button><button class="btn btn-primary btn-small" type="button" data-tune="close">完成</button></div>';
     document.body.appendChild(tunePanel);
     return tunePanel;

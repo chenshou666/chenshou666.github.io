@@ -70,7 +70,6 @@
   rgba(17, 23, 44, 0.9) 0%,
   rgba(12, 17, 33, 0.82) 52%,
   rgba(19, 25, 48, 0.88) 100%);
-  view-transition-name: none;
 }
 /* ==========================================================================
  * 1. 设计令牌
@@ -1560,82 +1559,91 @@ audio {
   padding-bottom: 168px !important;
 }
 /* ==========================================================================
- * 13. 高级页面切换动画（降级 CSS 动画，纯视觉；js/15-ui-motion.js 负责触发）
+ * 13. 零基础拆解卡片（renderBeginnerGuide，供新手快速抓住主干）
  * ========================================================================== */
-/* 只快照内容区，避免整页（极光画布）被冻结重绘 */
-#view {
-  view-transition-name: ht-view;
+.beginner-guide {
+  margin: 18px 0 8px;
+  padding: 18px 20px;
+  border-radius: var(--ui-r-l);
+  background:
+    radial-gradient(100% 120% at 0% 0%, rgba(56, 189, 248, 0.14), transparent 58%),
+    rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  display: grid;
+  gap: 14px;
 }
-::view-transition-old(ht-view),
-::view-transition-new(ht-view) {
-  animation-duration: 0.52s;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-fill-mode: both;
-  mix-blend-mode: normal;
+.guide-heading {
+  font-size: 12px;
+  font-weight: 760;
+  letter-spacing: 1.4px;
+  color: #7dd3fc;
 }
-/* 前进：旧页面上移淡出 → 新页面从下方弹入 */
-::view-transition-old(ht-view) {
-  animation-name: ui-vt-out-forward;
-  animation-duration: 0.3s;
-  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+.guide-idea {
+  padding: 12px 14px;
+  border-radius: var(--ui-r-m);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(125, 211, 252, 0.22);
 }
-::view-transition-new(ht-view) {
-  animation-name: ui-vt-in-forward;
+.guide-idea p {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #f0f9ff !important;
 }
-/* 后退：方向反转 */
-html[data-anim-dir="back"]::view-transition-old(ht-view) {
-  animation-name: ui-vt-out-back;
+.guide-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
-html[data-anim-dir="back"]::view-transition-new(ht-view) {
-  animation-name: ui-vt-in-back;
+.guide-card {
+  padding: 14px 16px;
+  border-radius: var(--ui-r-m);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
-@keyframes ui-vt-out-forward {
-  to {
-    opacity: 0;
-    transform: translateY(-14px) scale(0.992);
-    filter: blur(10px);
-  }
+.guide-card h3 {
+  font-size: 13px;
+  font-weight: 740;
+  color: #ffffff !important;
+  margin-bottom: 8px;
 }
-@keyframes ui-vt-in-forward {
-  from {
-    opacity: 0;
-    transform: translateY(22px) scale(1.006);
-    filter: blur(12px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
+.guide-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: rgba(226, 236, 255, 0.88);
 }
-@keyframes ui-vt-out-back {
-  to {
-    opacity: 0;
-    transform: translateY(14px) scale(0.992);
-    filter: blur(10px);
-  }
+.guide-pitfall {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--ui-r-s);
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: #fef3c7;
 }
-@keyframes ui-vt-in-back {
-  from {
-    opacity: 0;
-    transform: translateY(-22px) scale(1.006);
-    filter: blur(12px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
+.guide-pitfall strong {
+  flex-shrink: 0;
+  color: #fbbf24 !important;
 }
-/* —— 降级动画（浏览器不支持 View Transitions 时）—— */
+
+/* ==========================================================================
+ * 14. 页面切换动画、Dock 自动隐藏与涟漪宿主（js/15-ui-motion.js 触发）
+ * ========================================================================== */
 #view.ui-page-in {
-  animation: ui-page-in 0.5s var(--ui-ease) both;
+  animation: ui-page-in 0.48s var(--ui-ease) both;
 }
 @keyframes ui-page-in {
   from {
     opacity: 0;
-    transform: translateY(18px);
-    filter: blur(8px);
+    transform: translateY(16px);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
@@ -1644,8 +1652,8 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
   }
 }
 #view > .ui-stagger {
-  animation: ui-item-in 0.55s var(--ui-ease) both;
-  animation-delay: calc(var(--i, 0) * 46ms);
+  animation: ui-item-in 0.52s var(--ui-ease) both;
+  animation-delay: calc(var(--i, 0) * 44ms);
 }
 @keyframes ui-item-in {
   from {
@@ -1657,7 +1665,6 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
     transform: none;
   }
 }
-/* Dock 图标弹跳（切换页面时） */
 .nav-btn.dock-bounce .nav-icon {
   animation: dock-bounce 0.62s var(--ui-spring) both;
 }
@@ -1667,7 +1674,6 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
   65% { transform: translateY(1px) scale(0.96); }
   100% { transform: translateY(0) scale(1); }
 }
-/* 弹窗：背景淡入 + 卡片弹簧入场 */
 .modal-backdrop:not([hidden]) {
   animation: ui-backdrop-in 0.26s ease both;
 }
@@ -1694,7 +1700,6 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
     transform: none;
   }
 }
-/* 通关悬浮条：从下方滑入 */
 .next-bar {
   animation: ui-bar-in 0.55s var(--ui-spring) both;
 }
@@ -1708,39 +1713,32 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
     transform: translate(-50%, 0) scale(1);
   }
 }
-/* 卡片按压反馈（无 backdrop-filter 的元素才位移，避免玻璃重采样闪烁） */
 .level-card:active,
 .option:active {
   transform: scale(0.985);
 }
-/* 减弱动效：全部关闭 */
-/* ==========================================================================
- * 17. Dock 自动隐藏：向下滚动收起（不再挡住内容/导航），向上滚动或靠近底部滑出
- * ========================================================================== */
 .sidebar {
+  z-index: 130 !important;
   transition:
-  transform 0.5s var(--ui-spring),
-  opacity 0.32s var(--ui-ease),
-  box-shadow 0.3s var(--ui-ease);
+    transform 0.5s var(--ui-spring),
+    opacity 0.32s var(--ui-ease),
+    box-shadow 0.3s var(--ui-ease);
 }
 .sidebar.dock-hidden {
   transform: translate(-50%, 150%) !important;
   opacity: 0 !important;
   pointer-events: none !important;
 }
-/* ==========================================================================
- * 18. 页面切换期间不遮挡 Dock / 顶栏：只让 #view 参与 View Transition
- * ========================================================================== */
-::view-transition,
-::view-transition-group(*),
-::view-transition-image-pair(*),
-::view-transition-old(*),
-::view-transition-new(*) {
-  pointer-events: none !important;
+.topbar {
+  z-index: 120 !important;
 }
-/* ==========================================================================
- * 19. 点击涟漪宿主（js/14-liquid-glass.js 注入 .glass-ripple）
- * ========================================================================== */
+#view {
+  position: relative;
+  z-index: 1;
+}
+.app {
+  isolation: isolate;
+}
 .btn,
 .nav-btn,
 .option,
@@ -1752,177 +1750,8 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
 }
 
 /* ==========================================================================
- * 响应式 / 无障碍（媒体查询统一收口到末尾）
+ * 15. 个人作品集（尘狩）与导航分区
  * ========================================================================== */
-
-@media (max-width: 900px) {
-  .app {
-    padding: 96px 16px 128px;
-  }
-  .hero {
-    grid-template-columns: 1fr;
-  }
-  .lesson-layout {
-    grid-template-columns: 1fr;
-  }
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-  .topbar {
-    height: 56px; padding: 0 10px 0 16px; width: calc(100vw - 24px);
-  }
-  .top-title {
-    display: none;
-  }
-  .top-right {
-    width: 100%; justify-content: flex-end; gap: 6px;
-  }
-  .top-right .btn {
-    height: 34px; padding: 0 12px; font-size: 11.5px;
-  }
-}
-
-@media (max-width: 620px) {
-  .app {
-    padding: 92px 12px 124px;
-  }
-  .sidebar {
-    padding: 8px 10px; gap: 2px; bottom: 12px;
-  }
-  .nav-btn {
-    width: 62px; padding: 7px 4px 5px; font-size: 9.5px;
-  }
-  .nav-icon {
-    width: 22px; height: 22px;
-  }
-  .nav-icon svg {
-    width: 19px; height: 19px;
-  }
-  .page-header {
-    flex-direction: column; align-items: flex-start; gap: 10px;
-  }
-  .page-header h1 {
-    font-size: clamp(22px, 7vw, 30px);
-  }
-  .panel, .hero-main, .hero-progress, .course-route, .summary-hero {
-    padding: 18px; border-radius: 22px;
-  }
-  .course-card {
-    grid-template-columns: 52px minmax(0,1fr); padding: 18px; border-radius: 22px;
-  }
-  .course-card-icon {
-    width: 52px; height: 52px; border-radius: 16px; font-size: 20px;
-  }
-  .course-card-go {
-    display: none;
-  }
-  .level-grid {
-    grid-template-columns: 1fr;
-  }
-  .level-card {
-    border-radius: 16px;
-  }
-  .lesson-copy {
-    font-size: 13.5px;
-  }
-  .btn {
-    padding: 10px 16px; font-size: 12.5px;
-  }
-  .next-bar {
-    bottom: 96px; padding: 8px 12px;
-  }
-  .toast {
-    bottom: 100px;
-  }
-  .app {
-    padding-bottom: 150px !important;
-  }
-  .topbar {
-    padding: 0 8px;
-    height: 54px;
-  }
-  .top-right {
-    width: 100%;
-    justify-content: space-between;
-    gap: 4px;
-  }
-  .top-right .btn {
-    height: 32px;
-    padding: 0 10px;
-    font-size: 10.5px;
-  }
-  .top-right .streak {
-    display: none !important;
-  }
-  .sidebar {
-    max-width: calc(100vw - 16px) !important;
-    padding: 7px 7px !important;
-    gap: 0 !important;
-    bottom: 10px !important;
-  }
-  .sidebar .nav {
-    width: 100%;
-    justify-content: space-between;
-    gap: 1px;
-  }
-  .nav-btn {
-    flex: 1 1 0 !important;
-    width: auto !important;
-    min-width: 0 !important;
-    padding: 6px 2px 4px !important;
-    font-size: 9px !important;
-    border-radius: 16px;
-  }
-  .nav-btn > span:last-child {
-    display: block;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .nav-icon {
-    width: 20px; height: 20px;
-  }
-  .nav-icon svg {
-    width: 18px; height: 18px;
-  }
-  .toast {
-    bottom: 150px;
-  }
-  /* 手机 Dock 只留图标（iOS 风格），点击有 tooltip 导航 */
-
-  .top-right {
-    justify-content: center;
-  }
-  .sidebar.dock-hidden {
-    transform: translate(-50%, 160%) !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important; transition: none !important; scroll-behavior: auto !important;
-  }
-  ::view-transition-old(ht-view),
-  ::view-transition-new(ht-view),
-  #view.ui-page-in,
-  #view > .ui-stagger,
-  .nav-btn.dock-bounce .nav-icon,
-  .modal-backdrop,
-  .reset-dialog,
-  .victory-overlay,
-  .victory-card,
-  .next-bar {
-    animation: none !important;
-  }
-}
-
-/* ==========================================================================
- * 16. 个人作品集（尘狩）
- *     沿用 --ui-* / --r-* 令牌；不给带 backdrop-filter 的元素加 transform 动画
- * ========================================================================== */
-
-/* —— 顶栏左侧分区与返回作品集入口 —— */
 .top-left {
   display: flex;
   align-items: center;
@@ -1955,8 +1784,20 @@ html[data-anim-dir="back"]::view-transition-new(ht-view) {
 body[data-zone="portfolio"] .reset-button {
   display: none !important;
 }
+.nav-btn[data-page="author"] {
+  display: none;
+}
+body[data-zone="portfolio"] .nav-btn[data-page="author"] {
+  display: flex;
+}
+body[data-zone="portfolio"] .nav-btn[data-page="courses"],
+body[data-zone="portfolio"] .nav-btn[data-page="practice"],
+body[data-zone="portfolio"] .nav-btn[data-page="summary"],
+body[data-zone="portfolio"] .nav-btn[data-page="project"],
+body[data-zone="portfolio"] .nav-btn[data-page="about"] {
+  display: none !important;
+}
 
-/* —— 作品集首页 Hero —— */
 .pf-hero {
   padding: 32px 34px;
   border-radius: var(--r-xl, var(--ui-r-xl));
@@ -1999,7 +1840,6 @@ body[data-zone="portfolio"] .reset-button {
   margin-top: 4px;
 }
 
-/* —— 精选作品大卡（学习工具） —— */
 .pf-work-card {
   display: grid;
   grid-template-columns: 88px minmax(0, 1fr);
@@ -2009,6 +1849,9 @@ body[data-zone="portfolio"] .reset-button {
   border-radius: var(--r-xl, var(--ui-r-xl));
   transition: background 0.32s var(--ui-ease), border-color 0.32s var(--ui-ease),
     box-shadow 0.32s var(--ui-ease);
+}
+.pf-work-card + .pf-work-card {
+  margin-top: 16px;
 }
 .pf-work-card:hover {
   background: var(--ui-glass-dark-strong) !important;
@@ -2054,8 +1897,6 @@ body[data-zone="portfolio"] .reset-button {
   line-height: 1.85;
   color: var(--ui-ink-2);
 }
-
-/* 4 项指标条（无 backdrop-filter，避免嵌套模糊掉帧） */
 .pf-work-metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2081,8 +1922,6 @@ body[data-zone="portfolio"] .reset-button {
   font-size: 11px;
   color: var(--ui-ink-2);
 }
-
-/* 进度汇总 */
 .pf-work-progress {
   display: grid;
   gap: 8px;
@@ -2101,8 +1940,6 @@ body[data-zone="portfolio"] .reset-button {
   color: var(--ui-ink-2);
   font-variant-numeric: tabular-nums;
 }
-
-/* 底部关于与联系条 */
 .pf-about-strip {
   margin-top: 18px;
   display: flex;
@@ -2115,7 +1952,6 @@ body[data-zone="portfolio"] .reset-button {
   margin-bottom: 6px;
 }
 
-/* —— 作品详情页（学习工具） —— */
 .pf-detail-hero {
   background:
     radial-gradient(120% 100% at 10% -12%, rgba(56, 189, 248, 0.24), transparent 56%),
@@ -2154,7 +1990,6 @@ body[data-zone="portfolio"] .reset-button {
   font-size: 14px;
   font-weight: 740;
 }
-
 .pf-feature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
@@ -2178,8 +2013,6 @@ body[data-zone="portfolio"] .reset-button {
   line-height: 1.75;
   color: var(--ui-ink-2);
 }
-
-/* 技术栈 / 技能标签 */
 .pf-tags {
   display: flex;
   flex-wrap: wrap;
@@ -2198,7 +2031,6 @@ body[data-zone="portfolio"] .reset-button {
   line-height: 1.2;
 }
 
-/* —— 关于作者页 —— */
 .pf-author-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
@@ -2226,10 +2058,198 @@ body[data-zone="portfolio"] .reset-button {
   margin-top: 14px;
 }
 
-/* —— 响应式适配（覆盖前置 @media 中旧的顶栏假设） —— */
+.pf-demo-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+}
+.pf-demo-item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.pf-demo-index {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #bae6fd;
+  line-height: 1.1;
+}
+.pf-demo-body {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+.pf-demo-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pf-demo-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--ui-ink);
+}
+.pf-demo-sub {
+  font-size: 12px;
+  color: var(--ui-ink-3);
+}
+.pf-demo-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.75;
+  color: rgba(232, 240, 255, 0.86);
+}
+.pf-demo-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+ * 16. 界面外观调节面板（顶部「⚙ 外观」按钮打开）
+ * ========================================================================== */
+.ui-tune {
+  position: fixed;
+  top: 92px;
+  right: 20px;
+  width: 320px;
+  max-height: calc(100dvh - 120px);
+  overflow: auto;
+  z-index: 360;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 22px;
+  background: rgba(9, 14, 27, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 26px 60px -18px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  color: var(--ui-ink);
+}
+.ui-tune[hidden],
+.ui-tune-btn[hidden] {
+  display: none;
+}
+.ui-tune-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ui-tune-head h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--ui-ink);
+}
+.ui-tune-close {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ui-ink-2);
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  font-family: inherit;
+}
+.ui-tune-row {
+  display: grid;
+  grid-template-columns: 68px 1fr 46px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--ui-ink-2);
+}
+.ui-tune-row input[type="range"] {
+  width: 100%;
+  accent-color: #38bdf8;
+}
+.ui-tune-row output {
+  text-align: right;
+  font-size: 11px;
+  color: var(--ui-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.ui-tune-check {
+  grid-template-columns: 1fr auto auto;
+}
+.ui-tune-select-row {
+  grid-template-columns: 68px 1fr;
+}
+.ui-tune-select {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--ui-ink);
+  font-size: 12px;
+  cursor: pointer;
+}
+.ui-tune-select option {
+  background: #0b1224;
+  color: #ffffff;
+}
+.ui-tune-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 2px;
+}
+.ui-tune-actions .btn-small {
+  padding: 6px 11px;
+  font-size: 11px;
+}
+.ui-tune-actions [data-tune="replay-splash"] {
+  margin-right: auto;
+}
+
+/* ==========================================================================
+ * 17. 响应式与无障碍（全文件所有 @media 统一收口于此，无重复覆盖）
+ * ========================================================================== */
 @media (max-width: 900px) {
+  .app {
+    padding: 96px 16px 128px;
+  }
+  .hero,
+  .lesson-layout,
+  .summary-grid,
+  .pf-course-summary,
+  .pf-author-grid,
+  .guide-columns {
+    grid-template-columns: 1fr;
+  }
+  .topbar {
+    height: 56px;
+    padding: 0 10px 0 16px;
+    width: calc(100vw - 24px);
+  }
   .top-left {
     gap: 8px;
+  }
+  .top-title {
+    display: none;
+  }
+  body[data-zone="portfolio"] .top-title {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 1.2px;
   }
   .top-back-btn {
     height: 34px;
@@ -2239,12 +2259,13 @@ body[data-zone="portfolio"] .reset-button {
   .top-right {
     width: auto;
     justify-content: flex-end;
+    gap: 6px;
     margin-left: auto;
   }
-  body[data-zone="portfolio"] .top-title {
-    display: block;
-    font-size: 12px;
-    letter-spacing: 1.2px;
+  .top-right .btn {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 11.5px;
   }
   .pf-work-card {
     grid-template-columns: 1fr;
@@ -2259,14 +2280,14 @@ body[data-zone="portfolio"] .reset-button {
   .pf-work-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .pf-course-summary,
-  .pf-author-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 620px) {
+  .app {
+    padding: 92px 12px 150px !important;
+  }
   .topbar {
+    height: 54px;
     gap: 8px;
     padding: 0 10px;
   }
@@ -2281,11 +2302,106 @@ body[data-zone="portfolio"] .reset-button {
     gap: 6px;
     margin-left: auto;
   }
+  .top-right .btn {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 10.5px;
+  }
+  .top-right .streak {
+    display: none !important;
+  }
   body[data-zone="portfolio"] .top-left {
     justify-content: center;
   }
   body[data-zone="portfolio"] .top-right {
     display: none;
+  }
+  .sidebar {
+    max-width: calc(100vw - 16px) !important;
+    padding: 7px 7px !important;
+    gap: 0 !important;
+    bottom: 10px !important;
+  }
+  .sidebar .nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 1px;
+  }
+  .sidebar.dock-hidden {
+    transform: translate(-50%, 160%) !important;
+  }
+  .nav-btn {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 6px 2px 4px !important;
+    font-size: 9px !important;
+    border-radius: 16px;
+  }
+  .nav-btn > span:last-child {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .nav-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .page-header h1 {
+    font-size: clamp(22px, 7vw, 30px);
+  }
+  .panel,
+  .hero-main,
+  .hero-progress,
+  .course-route,
+  .summary-hero {
+    padding: 18px;
+    border-radius: 22px;
+  }
+  .course-card {
+    grid-template-columns: 52px minmax(0, 1fr);
+    padding: 18px;
+    border-radius: 22px;
+  }
+  .course-card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    font-size: 20px;
+  }
+  .course-card-go {
+    display: none;
+  }
+  .level-grid {
+    grid-template-columns: 1fr;
+  }
+  .level-card {
+    border-radius: 16px;
+  }
+  .lesson-copy {
+    font-size: 13.5px;
+  }
+  .btn {
+    padding: 10px 16px;
+    font-size: 12.5px;
+  }
+  .next-bar {
+    bottom: 96px;
+    padding: 8px 12px;
+  }
+  .toast {
+    bottom: 150px;
   }
   .pf-hero {
     padding: 20px 18px;
@@ -2338,90 +2454,6 @@ body[data-zone="portfolio"] .reset-button {
     font-size: 11px;
     padding: 5px 10px;
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pf-work-card,
-  .top-back-btn {
-    transition: none !important;
-  }
-}
-
-/* ==========================================================================
- * 多作品：作品卡之间的间距（作品集新增第二个作品时有序列出）
- * ========================================================================== */
-.pf-work-card + .pf-work-card {
-  margin-top: 16px;
-}
-
-/* ==========================================================================
- * 系列作品（代码影院）：详情页的逐部体验列表
- * ========================================================================== */
-.pf-demo-list {
-  display: grid;
-  gap: 14px;
-  margin-top: 6px;
-}
-
-.pf-demo-item {
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 16px;
-  padding: 18px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.pf-demo-index {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #bae6fd;
-  line-height: 1.1;
-}
-
-.pf-demo-body {
-  min-width: 0;
-  display: grid;
-  gap: 8px;
-}
-
-.pf-demo-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.pf-demo-head h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 750;
-  color: var(--ui-ink);
-}
-
-.pf-demo-sub {
-  font-size: 12px;
-  color: var(--ui-ink-3);
-}
-
-.pf-demo-desc {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.75;
-  color: rgba(232, 240, 255, 0.86);
-}
-
-.pf-demo-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 620px) {
   .pf-demo-item {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -2430,169 +2462,6 @@ body[data-zone="portfolio"] .reset-button {
   .pf-demo-index {
     font-size: 16px;
   }
-}
-
-/* ==========================================================================
- * 导航分区：作品集页面只显示「作品集 / 关于作者」，
- *           进入 学习工具（学习站）后才显示学习课程 / 继续挑战 / 总结 / 项目 / 关于许可
- * ========================================================================== */
-.nav-btn[data-page="author"] {
-  display: none;
-}
-
-body[data-zone="portfolio"] .nav-btn[data-page="author"] {
-  display: flex;
-}
-
-body[data-zone="portfolio"] .nav-btn[data-page="courses"],
-body[data-zone="portfolio"] .nav-btn[data-page="practice"],
-body[data-zone="portfolio"] .nav-btn[data-page="summary"],
-body[data-zone="portfolio"] .nav-btn[data-page="project"],
-body[data-zone="portfolio"] .nav-btn[data-page="about"] {
-  display: none !important;
-}
-
-/* ==========================================================================
- * 全局层级：Dock / 顶栏永远在最上层（内容、动画、装饰层都不能盖住导航）
- * ========================================================================== */
-.sidebar {
-  z-index: 130 !important;
-}
-.topbar {
-  z-index: 120 !important;
-}
-#view {
-  position: relative;
-  z-index: 1;
-}
-.app {
-  isolation: isolate;
-}
-
-/* ==========================================================================
- * 界面外观调节面板（顶部「⚙ 外观」按钮打开）
- * ========================================================================== */
-.ui-tune {
-  position: fixed;
-  top: 92px;
-  right: 20px;
-  width: 320px;
-  max-height: calc(100dvh - 120px);
-  overflow: auto;
-  z-index: 360;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border-radius: 22px;
-  background: rgba(9, 14, 27, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 26px 60px -18px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  color: var(--ui-ink);
-}
-
-.ui-tune[hidden] {
-  display: none;
-}
-
-.ui-tune-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.ui-tune-head h3 {
-  margin: 0;
-  font-size: 13px;
-  letter-spacing: 1px;
-  color: var(--ui-ink);
-}
-
-.ui-tune-close {
-  appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--ui-ink-2);
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 12px;
-  line-height: 1;
-  font-family: inherit;
-}
-
-.ui-tune-row {
-  display: grid;
-  grid-template-columns: 68px 1fr 46px;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--ui-ink-2);
-}
-
-.ui-tune-row input[type="range"] {
-  width: 100%;
-  accent-color: #38bdf8;
-}
-
-.ui-tune-row output {
-  text-align: right;
-  font-size: 11px;
-  color: var(--ui-ink-3);
-  font-variant-numeric: tabular-nums;
-}
-
-.ui-tune-check {
-  grid-template-columns: 1fr auto auto;
-}
-
-.ui-tune-select-row {
-  grid-template-columns: 68px 1fr;
-}
-
-.ui-tune-select {
-  width: 100%;
-  height: 32px;
-  padding: 0 10px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--ui-ink);
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.ui-tune-select option {
-  background: #0b1224;
-  color: #ffffff;
-}
-
-.ui-tune-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 2px;
-}
-
-.ui-tune-actions .btn-small {
-  padding: 6px 11px;
-  font-size: 11px;
-}
-
-.ui-tune-actions [data-tune="replay-splash"] {
-  margin-right: auto;
-}
-
-.ui-tune-btn[hidden] {
-  display: none;
-}
-
-@media (max-width: 620px) {
   .ui-tune {
     top: auto;
     left: 10px;
@@ -2601,5 +2470,13 @@ body[data-zone="portfolio"] .nav-btn[data-page="about"] {
     width: auto;
     max-height: 62dvh;
     border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
