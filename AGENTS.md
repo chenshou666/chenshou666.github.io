@@ -100,7 +100,7 @@ AGENTS.md / README.md  维护须知 / 使用者说明
 ## 提交、部署与回退
 
 - 本仓库就是发布仓库：提交并 push 到 `main` 后，GitHub Pages 自动构建发布（无需额外命令；`.nojekyll` 已关闭 Jekyll）。
-- 大改前应为当前基线创建 Git Tag 或备份分支（现存原始基线：`v1.0-legacy` / `backup/legacy-v1`，回退步骤见 [docs/ROLLBACK.md](docs/ROLLBACK.md)）。
+- 大改前可为关键版本打 Git Tag（历史原始基线标签 `v1.0-legacy` 保留在 Git 标签中，分支保持干净仅留 `main`，回退步骤见 [docs/ROLLBACK.md](docs/ROLLBACK.md)）。
 - 提交前：`git status` 只包含预期文件；不要提交 `.verify/` 报告、截图、浏览器 profile、临时脚本、`.bak` 备份。
 - 提交信息用中文、一句话说明改动范围（如 `feat:`、`ui:`、`fix:`、`docs:`、`chore:`）。
 - 部署后线上验证：打开 https://chenshou666.github.io/ 强刷，检查开屏动画、作品集与学习站主要页面及手机宽度。

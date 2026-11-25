@@ -201,8 +201,8 @@ render()
 ## 9. 开屏动画引擎（`css/09-splash.css` + `js/10-splash.js`）
 
 - **模式优先级**：URL 参数 `?splash=cinema|classic|off`（别名 `new`→`cinema`、`legacy`→`classic`） > `localStorage["cquest.appearance.v1"].splashMode` > 默认 `cinema`。
-- **新版（`cinema` · 极光棱镜）**：Canvas 2D 粒子汇流与极光呼吸光井 + 双轨 SVG 折射星环 + 液态玻璃 `HT` 徽章斜向扫光 + 品牌文字浮现 + 极光进度条，约 2.38s 后光学溶解退出并彻底释放 rAF 与 DOM，零后台开销。
-- **旧版（`classic` · 经典简洁）**：还原原有极简 `HT` 玻璃卡片开屏（约 1.4s），并修复了早期的 `.final-logo` 残留问题。
+- **新版（`cinema` · 极光跃迁纯动画）**：零冗余文字；Canvas 2D 超空间光流旋入 + 水平激光切光 + 双色差冲击波 + 三轨陀螺仪 SVG 星环 + 双反向轨道彗星 + 液态玻璃 `HT` 核心扫光，约 2.15s 后光学跃迁溶解退出并彻底释放 rAF 与 DOM，零后台开销。
+- **旧版（`classic` · 经典简洁）**：还原原有极简 `HT` 玻璃卡片开屏（约 1.35s）。
 - **交互与无障碍**：支持按钮跳过、`ESC` / `Enter` / `Space` 与点击背景跳过；`prefers-reduced-motion: reduce` 下自动关闭粒子与复杂动画并快速淡出；`<noscript>` 下自动隐藏开屏防阻塞。
 - **重播接口**：`window.HTSplash.replay(mode)` 可随时重建舞台重播指定模式。
 
@@ -213,4 +213,7 @@ render()
 3. **单一全局作用域**：新增顶层 `const`/`let` 前全仓排查重名，防止 `SyntaxError` 导致整页白屏。
 4. **避免给 `backdrop-filter` 元素做 `transform` 动画**：防止浏览器重采样闪烁。
 5. **`works/ink-mist-3d.html` 例外说明**：该独立作品为单文件演示，内部带外部字体/Tailwind 链接，不影响主站零依赖约束；其余三部代码影院与火柴人训练营均为零依赖离线运行。
-6. **已知历史行为**：`js/06` 的 `pickAnswer()` 在客观题全对达标时会调用 `completeTask()`，排查 C 关卡直通逻辑时需注意该分支；`renderBeginnerGuide()` 为保留扩展钩子，当前关卡数据未启用 `beginner` 字段。
+6. **课程与引擎特性说明**：
+   - C 语言 L1–L24 与 L33–L39 已启用 `beginner` 零基础四栏拆解卡片（`renderBeginnerGuide()` + `.beginner-guide`），示例代码存在 `example.input` 时自动展示测试输入；
+   - `js/08-c-checker.js` 支持 `bool` 与 `<stdint.h>` 定宽整数、`forbidPattern` 反模式拦截与函数体级真递归检测；
+   - `js/06-cet4-engine.js` 支持弯引号归一化、`stem*` 词干匹配、多倒计时同步（`.task-timer-badge`）与后答快问自动触发通关。
