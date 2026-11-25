@@ -6,21 +6,57 @@
 <meta name="theme-color" content="#111a31">
 <title>尘狩 · 作品集 / 学习工具</title>
 <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+<link rel="shortcut icon" href="./assets/ht-lab.ico">
 <!--
   学习工具 · 静态学习网站入口（纯前端、无构建步骤）
   CSS / JS 已从本文件拆出，目录说明与修改指南见：AGENTS.md、docs/ARCHITECTURE.md
   CSS 与 JS 的加载顺序 = 功能依赖顺序；调整顺序、拆分或合并文件前请先读文档。
 -->
 <!-- 样式：按编号顺序加载（后面的文件会覆盖前面的规则，顺序有意义） -->
-<!-- 全新 UI（唯一界面）：08-liquid-glass.css = 液态玻璃材质；10-ui.css = 界面层（必须最后加载） -->
+<!-- 08 = 液态玻璃材质；09 = 独立开屏动画层；10 = 唯一界面层（必须最后加载） -->
 <link rel="stylesheet" href="./css/08-liquid-glass.css">
+<link rel="stylesheet" href="./css/09-splash.css">
 <link rel="stylesheet" href="./css/10-ui.css">
+<noscript><style>body.splash-active{overflow:auto!important}#splash-screen{display:none!important}</style></noscript>
 </head>
 <body class="splash-active" data-zone="portfolio">
-<div class="splash-screen" id="splash-screen" role="status" aria-label="学习工具 正在启动">
-  <button class="splash-skip" id="splash-skip" type="button">跳过动画 <span aria-hidden="true">↗</span></button>
+<div class="splash-screen" id="splash-screen" data-splash-mode="cinema" role="status" aria-label="尘狩作品集与学习工具 正在启动">
+  <canvas class="splash-canvas" aria-hidden="true"></canvas>
+  <div class="splash-grain" aria-hidden="true"></div>
+  <button class="splash-skip" id="splash-skip" type="button">跳过动画 <span class="splash-skip-key" aria-hidden="true">ESC</span><span aria-hidden="true">↗</span></button>
   <div class="splash-content">
-    <div class="splash-logo-stage" aria-hidden="true"><div class="splash-orbit"></div><div class="splash-mark"><span class="splash-code">HT</span></div></div>
+    <div class="splash-logo-stage" aria-hidden="true">
+      <div class="splash-aura"></div>
+      <svg class="splash-rings" viewBox="0 0 220 220">
+        <defs>
+          <linearGradient id="splashRingGradA" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.95"/>
+            <stop offset="50%" stop-color="#818cf8" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#c084fc" stop-opacity="0.9"/>
+          </linearGradient>
+          <linearGradient id="splashRingGradB" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#bae6fd" stop-opacity="0.9"/>
+            <stop offset="55%" stop-color="#34d399" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#a855f7" stop-opacity="0.85"/>
+          </linearGradient>
+        </defs>
+        <circle class="splash-ring-outer" cx="110" cy="110" r="98"/>
+        <circle class="splash-ring-inner" cx="110" cy="110" r="76"/>
+        <g class="splash-orbit-beacon"><circle cx="110" cy="12" r="3.4" fill="#bae6fd"/><circle cx="110" cy="12" r="8" fill="#38bdf8" fill-opacity="0.28"/></g>
+      </svg>
+      <div class="splash-pulse"></div>
+      <div class="splash-mark"><span class="splash-mark-arc"></span><span class="splash-sheen"></span><span class="splash-code">HT</span></div>
+    </div>
+    <div class="splash-brand-block">
+      <div class="splash-eyebrow">CHENSHOU · PORTFOLIO</div>
+      <div class="splash-title"><span>尘狩</span><span class="splash-title-sep" aria-hidden="true"></span><span class="splash-title-sub">学习工具</span></div>
+      <div class="splash-works-row" aria-hidden="true">
+        <span class="splash-pill">学习工具</span>
+        <span class="splash-pill">代码影院</span>
+        <span class="splash-pill">小游戏</span>
+      </div>
+    </div>
+    <div class="splash-bar" aria-hidden="true"><span class="splash-bar-fill"></span></div>
   </div>
 </div>
 <div class="app">

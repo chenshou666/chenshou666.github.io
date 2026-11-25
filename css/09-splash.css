@@ -1,0 +1,675 @@
+/*!
+ * 09-splash.css — 尘狩 · 作品集 / 学习工具 独立开屏动画层
+ * ---------------------------------------------------------------------------
+ * 加载顺序：位于 css/08-liquid-glass.css 之后、css/10-ui.css 之前。
+ * 支持两种模式（由 js/10-splash.js 切换 data-splash-mode，并可在顶栏「⚙ 外观」实时切换/重播）：
+ *   · cinema  新版「极光棱镜」液态玻璃开屏（默认）：深空粒子汇流 + 双轨折射光环 + 液态玻璃 HT 徽章扫光 + 品牌浮现
+ *   · classic 旧版「经典简洁」HT 玻璃徽章开屏：随时可无损切回旧版观感
+ * 约束：
+ *   · 零外部依赖 / 零外链字体，兼容 file:// 与 GitHub Pages
+ *   · 不对主站 .app 内带 backdrop-filter 的卡片做 transform 位移动画（避免重采样闪烁）
+ *   · 完整遵循 prefers-reduced-motion: reduce
+ * ---------------------------------------------------------------------------
+ */
+
+body.splash-active {
+  overflow: hidden;
+}
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(64% 52% at 24% 22%, rgba(56, 189, 248, 0.2), transparent 66%),
+    radial-gradient(58% 48% at 78% 76%, rgba(168, 85, 247, 0.2), transparent 66%),
+    radial-gradient(44% 40% at 50% 50%, rgba(129, 140, 248, 0.12), transparent 72%),
+    linear-gradient(165deg, #040712 0%, #080f22 52%, #0c152e 100%);
+  user-select: none;
+  -webkit-user-select: none;
+  transition:
+    opacity 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.56s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 退出时的光学溶解过渡（避免硬切与闪烁） */
+.splash-screen.is-leaving {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.splash-screen.is-leaving .splash-content {
+  transform: scale(1.055);
+  opacity: 0;
+  filter: blur(8px);
+}
+
+body:not(.splash-active) .splash-screen:not(.is-replaying) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* 背景粒子极光画布 & 光学颗粒 */
+.splash-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.splash-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.65) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+/* 中央舞台 */
+.splash-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+  text-align: center;
+  transition:
+    transform 0.54s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.46s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.54s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+ * 新版：极光棱镜开屏（cinema）
+ * ========================================================================== */
+.splash-logo-stage {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+}
+
+/* 背部极光晕染 */
+.splash-aura {
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(56, 189, 248, 0.48),
+    rgba(129, 140, 248, 0.42),
+    rgba(168, 85, 247, 0.45),
+    rgba(52, 211, 153, 0.36),
+    rgba(56, 189, 248, 0.48)
+  );
+  filter: blur(34px);
+  opacity: 0;
+  transform: scale(0.55);
+  pointer-events: none;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-aura {
+  animation:
+    splashAuraBloom 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards,
+    splashAuraSpin 9s linear 0.2s infinite;
+}
+
+/* 双层几何折射星环（SVG） */
+.splash-rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.splash-ring-outer {
+  fill: none;
+  stroke: url(#splashRingGradA);
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-dasharray: 12 8 42 10 88 12;
+  opacity: 0;
+  transform-origin: 110px 110px;
+}
+
+.splash-ring-inner {
+  fill: none;
+  stroke: url(#splashRingGradB);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-dasharray: 460;
+  stroke-dashoffset: 460;
+  opacity: 0;
+  transform-origin: 110px 110px;
+}
+
+.splash-orbit-beacon {
+  transform-origin: 110px 110px;
+  opacity: 0;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-ring-outer {
+  animation:
+    splashRingOuterIn 1.05s cubic-bezier(0.16, 1, 0.3, 1) 0.14s forwards,
+    splashOrbitCW 18s linear 0.14s infinite;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-ring-inner {
+  animation:
+    splashRingDraw 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.22s forwards,
+    splashOrbitCCW 13s linear 0.22s infinite;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-orbit-beacon {
+  animation:
+    splashFadeIn 0.45s ease 0.4s forwards,
+    splashOrbitCW 4.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) 0.35s infinite;
+}
+
+/* 冲击扩散光环（徽章落位瞬间脉冲） */
+.splash-pulse {
+  position: absolute;
+  width: 116px;
+  height: 116px;
+  border-radius: 32px;
+  border: 1.5px solid rgba(186, 230, 253, 0.65);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-pulse {
+  animation: splashPulseWave 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.68s forwards;
+}
+
+/* 液态玻璃 HT 主徽章 */
+.splash-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 116px;
+  height: 116px;
+  border-radius: 30px;
+  background: linear-gradient(
+    140deg,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0.08) 48%,
+    rgba(56, 189, 248, 0.16) 100%
+  );
+  backdrop-filter: blur(26px) saturate(210%) brightness(1.08);
+  -webkit-backdrop-filter: blur(26px) saturate(210%) brightness(1.08);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow:
+    0 28px 64px -14px rgba(0, 0, 0, 0.68),
+    0 0 42px -10px rgba(56, 189, 248, 0.45),
+    inset 0 1.8px 2px rgba(255, 255, 255, 0.8),
+    inset 1.4px 0 1.6px rgba(255, 255, 255, 0.55),
+    inset 0 -1.8px 2.4px rgba(168, 85, 247, 0.32);
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.74);
+  filter: blur(10px);
+}
+
+/* 色散折射描边 */
+.splash-mark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(125, 211, 252, 0.6) 28%,
+    rgba(255, 255, 255, 0.08) 55%,
+    rgba(192, 132, 252, 0.55) 82%,
+    rgba(255, 255, 255, 0.78) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 斜向液态镜面扫光 */
+.splash-sheen {
+  position: absolute;
+  top: -35%;
+  left: -90%;
+  width: 72%;
+  height: 170%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 32%,
+    rgba(255, 255, 255, 0.62) 50%,
+    rgba(186, 230, 253, 0.25) 62%,
+    transparent 100%
+  );
+  transform: skewX(-22deg);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-mark {
+  animation: splashMarkEnter 0.86s cubic-bezier(0.16, 1, 0.3, 1) 0.16s forwards;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-sheen {
+  animation: splashSheenSweep 1.05s cubic-bezier(0.25, 0.8, 0.25, 1) 0.62s forwards;
+}
+
+.splash-code {
+  position: relative;
+  z-index: 1;
+  font-size: 38px;
+  font-weight: 850;
+  letter-spacing: -1.4px;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 56%, #93c5fd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 14px rgba(56, 189, 248, 0.45));
+}
+
+/* 顶部反光微弧 */
+.splash-mark-arc {
+  position: absolute;
+  top: 9px;
+  left: 14px;
+  width: 44px;
+  height: 14px;
+  border-top: 2px solid rgba(255, 255, 255, 0.58);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.72;
+}
+
+/* 品牌文字区 */
+.splash-brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.splash-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 3.6px;
+  text-transform: uppercase;
+  color: rgba(186, 230, 253, 0.76);
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.splash-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(22px, 3.2vw, 30px);
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 4px 24px rgba(56, 189, 248, 0.25);
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.splash-title-sep {
+  width: 1px;
+  height: 18px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+}
+
+.splash-title-sub {
+  font-size: 0.62em;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  color: rgba(226, 236, 255, 0.86);
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-eyebrow {
+  animation: splashTextRise 0.62s cubic-bezier(0.16, 1, 0.3, 1) 0.54s forwards;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-title {
+  animation: splashTextRise 0.68s cubic-bezier(0.16, 1, 0.3, 1) 0.68s forwards;
+}
+
+/* 三大作品星标胶囊 */
+.splash-works-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.splash-pill {
+  padding: 4px 11px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: rgba(224, 242, 254, 0.86);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-pill:nth-child(1) {
+  animation: splashTextRise 0.52s cubic-bezier(0.16, 1, 0.3, 1) 0.86s forwards;
+}
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-pill:nth-child(2) {
+  animation: splashTextRise 0.52s cubic-bezier(0.16, 1, 0.3, 1) 0.96s forwards;
+}
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-pill:nth-child(3) {
+  animation: splashTextRise 0.52s cubic-bezier(0.16, 1, 0.3, 1) 1.06s forwards;
+}
+
+/* 极光流光进度细线 */
+.splash-bar {
+  position: relative;
+  width: 148px;
+  height: 2.5px;
+  margin-top: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  opacity: 0;
+}
+
+.splash-bar-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #38bdf8 0%, #818cf8 55%, #c084fc 100%);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.85);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-bar {
+  animation: splashFadeIn 0.36s ease 0.36s forwards;
+}
+
+.splash-screen.is-ready[data-splash-mode="cinema"] .splash-bar-fill {
+  animation: splashBarProgress 1.95s cubic-bezier(0.22, 0.9, 0.32, 1) 0.32s forwards;
+}
+
+/* 跳过按钮 */
+.splash-skip {
+  position: fixed;
+  right: 24px;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  z-index: 520;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.11);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow:
+    0 10px 28px -10px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition:
+    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.splash-screen.can-skip .splash-skip {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.splash-skip:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(186, 230, 253, 0.55);
+}
+
+.splash-skip:active {
+  transform: scale(0.96);
+}
+
+.splash-skip-key {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(226, 236, 255, 0.78);
+  font-weight: 650;
+}
+
+/* ==========================================================================
+ * 旧版：经典简洁开屏（classic，可在「⚙ 外观」或 ?splash=classic 一键切回）
+ * ========================================================================== */
+.splash-screen[data-splash-mode="classic"] .splash-canvas,
+.splash-screen[data-splash-mode="classic"] .splash-grain,
+.splash-screen[data-splash-mode="classic"] .splash-aura,
+.splash-screen[data-splash-mode="classic"] .splash-rings,
+.splash-screen[data-splash-mode="classic"] .splash-pulse,
+.splash-screen[data-splash-mode="classic"] .splash-sheen,
+.splash-screen[data-splash-mode="classic"] .splash-brand-block,
+.splash-screen[data-splash-mode="classic"] .splash-works-row,
+.splash-screen[data-splash-mode="classic"] .splash-bar,
+.splash-screen[data-splash-mode="classic"] .splash-skip-key {
+  display: none !important;
+}
+
+.splash-screen[data-splash-mode="classic"] .splash-logo-stage {
+  width: 156px;
+  height: 156px;
+}
+
+.splash-screen[data-splash-mode="classic"] .splash-mark {
+  width: 128px;
+  height: 128px;
+  opacity: 1;
+  transform: none;
+  filter: none;
+  animation: splashClassicBreath 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.splash-screen[data-splash-mode="classic"] .splash-code {
+  font-size: 34px;
+  letter-spacing: 1px;
+}
+
+/* ==========================================================================
+ * 关键帧
+ * ========================================================================== */
+@keyframes splashAuraBloom {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 0.72; transform: scale(1); }
+}
+
+@keyframes splashAuraSpin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes splashRingOuterIn {
+  0% { opacity: 0; transform: scale(0.72); }
+  100% { opacity: 0.78; transform: scale(1); }
+}
+
+@keyframes splashRingDraw {
+  0% { opacity: 0.1; stroke-dashoffset: 460; }
+  100% { opacity: 0.92; stroke-dashoffset: 110; }
+}
+
+@keyframes splashOrbitCW {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes splashOrbitCCW {
+  from { rotate: 0deg; }
+  to { rotate: -360deg; }
+}
+
+@keyframes splashPulseWave {
+  0% { opacity: 0.72; transform: scale(1); }
+  100% { opacity: 0; transform: scale(2.05); }
+}
+
+@keyframes splashMarkEnter {
+  0% { opacity: 0; transform: scale(0.72); filter: blur(12px); }
+  65% { opacity: 1; transform: scale(1.035); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes splashSheenSweep {
+  0% { left: -95%; opacity: 0; }
+  18% { opacity: 1; }
+  85% { opacity: 0.9; }
+  100% { left: 145%; opacity: 0; }
+}
+
+@keyframes splashTextRise {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes splashFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes splashBarProgress {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+@keyframes splashClassicBreath {
+  0% { opacity: 0; transform: scale(0.92); }
+  45% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+ * 移动端与矮屏适配
+ * ========================================================================== */
+@media (max-width: 620px) {
+  .splash-content {
+    gap: 16px;
+    padding: 20px 16px;
+  }
+  .splash-logo-stage {
+    width: 176px;
+    height: 176px;
+  }
+  .splash-mark,
+  .splash-pulse {
+    width: 96px;
+    height: 96px;
+    border-radius: 26px;
+  }
+  .splash-code {
+    font-size: 31px;
+  }
+  .splash-eyebrow {
+    font-size: 9.5px;
+    letter-spacing: 2.8px;
+  }
+  .splash-title {
+    font-size: 22px;
+    gap: 9px;
+  }
+  .splash-pill {
+    font-size: 10.5px;
+    padding: 3px 9px;
+  }
+  .splash-skip {
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    padding: 8px 14px;
+    font-size: 11.5px;
+  }
+  .splash-skip-key {
+    display: none;
+  }
+}
+
+@media (max-height: 540px) {
+  .splash-content {
+    gap: 10px;
+  }
+  .splash-logo-stage {
+    width: 140px;
+    height: 140px;
+  }
+  .splash-mark,
+  .splash-pulse {
+    width: 80px;
+    height: 80px;
+    border-radius: 22px;
+  }
+  .splash-code {
+    font-size: 26px;
+  }
+  .splash-works-row {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+ * 减弱动效（无障碍）
+ * ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .splash-canvas,
+  .splash-aura,
+  .splash-rings,
+  .splash-pulse,
+  .splash-sheen {
+    display: none !important;
+  }
+  .splash-mark,
+  .splash-eyebrow,
+  .splash-title,
+  .splash-pill,
+  .splash-bar,
+  .splash-bar-fill {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
+}

@@ -11,7 +11,7 @@
  *   · 把 .liquid-glass 类动态打到站点组件上（材质来自 08 css）
  *   · 每次页面重渲染后重新打标（包一层 window.render + MutationObserver）
  *
- * 加载顺序 14：在 10-splash.js 之后加载
+ * 加载顺序 11/12（文件名 14）：在 10-splash.js 之后加载
  * 关闭皮肤（去掉 html[data-skin="liquid-glass"]）后本脚本自动不工作
  * ========================================================================== */
 (function () {
@@ -270,7 +270,8 @@
     glare: 38,
     bgSpeed: coarsePointer ? 2.2 : 1.0,
     bgBright: 55,
-    bgAnim: true
+    bgAnim: true,
+    splashMode: "cinema"
   };
   var appearance = (function () {
     var a = {}, k;
@@ -282,6 +283,9 @@
         for (k in a) if (o[k] !== undefined && o[k] !== null) a[k] = o[k];
       }
     } catch (e) {}
+    if (window.HTSplash && window.HTSplash.normalizeMode) {
+      a.splashMode = window.HTSplash.normalizeMode(a.splashMode);
+    }
     return a;
   })();
 
@@ -292,7 +296,8 @@
     glare: function (v) { return (v / 100).toFixed(2); },
     bgSpeed: function (v) { return "×" + Number(v).toFixed(1); },
     bgBright: function (v) { return v + "%"; },
-    bgAnim: function (v) { return v ? "开" : "关"; }
+    bgAnim: function (v) { return v ? "开" : "关"; },
+    splashMode: function (v) { return v === "classic" ? "旧版" : (v === "off" ? "关闭" : "新版"); }
   };
 
   function applyAppearance() {
@@ -328,7 +333,8 @@
       + '<label class="ui-tune-row"><span>背景速度</span><input type="range" min="0.2" max="2.5" step="0.1" data-tune="bgSpeed"><output data-out="bgSpeed"></output></label>'
       + '<label class="ui-tune-row"><span>背景亮度</span><input type="range" min="20" max="100" step="5" data-tune="bgBright"><output data-out="bgBright"></output></label>'
       + '<label class="ui-tune-row ui-tune-check"><span>背景动画</span><input type="checkbox" data-tune="bgAnim"><output data-out="bgAnim"></output></label>'
-      + '<div class="ui-tune-actions"><button class="btn btn-ghost btn-small" type="button" data-tune="reset">恢复默认</button><button class="btn btn-primary btn-small" type="button" data-tune="close">完成</button></div>';
+      + '<label class="ui-tune-row ui-tune-select-row"><span>开屏动画</span><select class="ui-tune-select" data-tune="splashMode"><option value="cinema">极光棱镜（新版）</option><option value="classic">经典简洁（旧版）</option><option value="off">关闭开屏</option></select></label>'
+      + '<div class="ui-tune-actions"><button class="btn btn-ghost btn-small" type="button" data-tune="replay-splash">▶ 重播开屏</button><button class="btn btn-ghost btn-small" type="button" data-tune="reset">恢复默认</button><button class="btn btn-primary btn-small" type="button" data-tune="close">完成</button></div>';
     document.body.appendChild(tunePanel);
     return tunePanel;
   }
@@ -338,8 +344,10 @@
     var inputs = panel.querySelectorAll("[data-tune]");
     for (var i = 0; i < inputs.length; i++) {
       var k = inputs[i].getAttribute("data-tune");
-      if (k === "reset" || k === "close") continue;
-      if (inputs[i].type === "checkbox") {
+      if (k === "reset" || k === "close" || k === "replay-splash") continue;
+      if (inputs[i].tagName === "SELECT") {
+        inputs[i].value = appearance[k] || "cinema";
+      } else if (inputs[i].type === "checkbox") {
         inputs[i].checked = !!appearance[k];
         var out = inputs[i].parentNode.querySelector('[data-out="' + k + '"]');
         if (out) out.textContent = TUNE_FMT[k](appearance[k]);
@@ -373,6 +381,13 @@
     if (!action) return;
     var k = action.getAttribute("data-tune");
     if (k === "close") { openTunePanel(false); return; }
+    if (k === "replay-splash") {
+      openTunePanel(false);
+      if (window.HTSplash && window.HTSplash.replay) {
+        window.HTSplash.replay(appearance.splashMode === "off" ? "cinema" : appearance.splashMode);
+      }
+      return;
+    }
     if (k === "reset") {
       var kk;
       for (kk in APPEARANCE_DEFAULTS) appearance[kk] = APPEARANCE_DEFAULTS[kk];
@@ -381,18 +396,22 @@
     }
   });
 
-  document.addEventListener("input", function (e) {
+  function onTuneFieldChange(e) {
     var t = e.target;
     if (!t || !t.getAttribute) return;
     var k = t.getAttribute("data-tune");
     if (!k || !(k in APPEARANCE_DEFAULTS)) return;
-    if (t.type === "checkbox") appearance[k] = t.checked;
+    if (t.tagName === "SELECT") appearance[k] = t.value;
+    else if (t.type === "checkbox") appearance[k] = t.checked;
     else appearance[k] = Number(t.value);
     applyAppearance();
     saveAppearance();
     var out = t.parentNode.querySelector('[data-out="' + k + '"]');
     if (out) out.textContent = TUNE_FMT[k](appearance[k]);
-  });
+  }
+
+  document.addEventListener("input", onTuneFieldChange);
+  document.addEventListener("change", onTuneFieldChange);
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && tunePanel && !tunePanel.hidden) openTunePanel(false);
