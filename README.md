@@ -1,15 +1,33 @@
-# 尘狩 · 个人作品集（学习工具）
+# 尘狩 · 个人作品集 & 学习工具
 
-> 这是「尘狩」的个人作品网站。核心作品 **学习工具** 是一个纯静态闯关式学习站：C 语言 86 关 + 英语四级 62 关，共 148 关。
-> 首页为作品集（作品卡 / 关于作者 / 联系方式），点进作品即可进入完整学习功能。
+> 在线访问：**https://chenshou666.github.io/**
+> 纯静态、零构建、零后端、双击 `index.html` 即可离线运行。
 
-![status](https://img.shields.io/badge/静态-零依赖-38bdf8)
+![status](https://img.shields.io/badge/纯静态-零依赖-38bdf8)
+![pages](https://img.shields.io/badge/GitHub%20Pages-在线托管-818cf8)
+![offline](https://img.shields.io/badge/file%3A%2F%2F-离线可用-34d399)
 
-原文案与课程说明如下。
+---
 
-面向自学的**闯关式学习网页**：纯静态、零后端，双击 `index.html` 就能用，学习进度只保存在访问者自己的浏览器里。
+## 在线作品一览
 
-## 现有课程
+| 作品 | 类型 | 亮点简介 | 入口 |
+| --- | --- | --- | --- |
+| **学习工具** | 互动闯关学习站 | C 语言 86 关 + 英语四级 62 关，共 148 关；内置 C 代码结构检查、本机运行输出逐行比对、46 段离线音频、口语录音自评与存档码跨设备迁移 | 首页作品卡 / `index.html` |
+| **代码影院 · Code Cinema** | 代码生成影像 | 4 部零图片/零音频素材、由 WebGL/GLSL + Web Audio 实时生成的短片与视觉诗（《墨韵山河》《PURE CODE CINEMA》《万物同构》《纯代码视界》），支持录制导出 | [统一播放器](works/player.html) |
+| **游戏 · 小游戏合集** | Canvas 2D 小游戏 | 第一部《火柴人训练营 · 疾风忍刀》：零依赖横屏动作格斗，4 技能连招、可自定义键位与手机触摸布局 | [在线试玩](works/stickman-training/index.html) |
+
+---
+
+## 开屏动画与版本回退
+
+- **全新「极光棱镜」液态玻璃开屏**（默认）：粒子汇流画布 + 双轨 SVG 折射星环 + 液态玻璃 `HT` 徽章扫光 + 极光进度线，支持点击 / `ESC` / 按钮随时跳过，自动遵循系统「减弱动效」设置。
+- **随时切回旧版开屏**：点击顶栏 **「⚙ 外观」** → 在「开屏动画」里切换 **极光棱镜（新版） / 经典简洁（旧版） / 关闭开屏**，或点击 **「▶ 重播开屏」** 即时对比；也支持通过 URL 参数 `?splash=classic` / `?splash=cinema` / `?splash=off` 预览。
+- **整站退回旧版本**：整理前的原始快照已完整保存为 Git 分支 **`backup/legacy-v1`** 和标签 **`v1.0-legacy`**，详见 **[docs/ROLLBACK.md](docs/ROLLBACK.md)**（支持 GitHub 网页端一键切回或 Git 命令行回退）。
+
+---
+
+## 现有课程（学习工具）
 
 | 课程 | 关卡 | 内容 |
 | --- | --- | --- |
@@ -18,92 +36,82 @@
 
 两门课的进度、学习点与统计各自独立保存；进入「学习课程」页选择课程，进入后是这门课自己的学习路线。
 
+---
+
 ## 目录结构
 
+```text
+chenshou666.github.io/
+├─ index.html                  唯一页面壳：资源引用顺序 + 静态 DOM（开屏 / 顶栏 / 底部 Dock / #view / 弹窗）
+├─ css/                        3 个样式文件，按编号顺序加载（10 必须最后）
+│  ├─ 08-liquid-glass.css      液态玻璃材质层（极光画布、.liquid-glass 材质与色散描边、点击涟漪）
+│  ├─ 09-splash.css            独立开屏动画层（极光棱镜新版 / 经典简洁旧版 / 移动端与无障碍适配）
+│  └─ 10-ui.css                唯一界面层（顶栏 / 底部 Dock / 作品集 / 课程 / 关卡 / 外观面板 / 响应式）
+├─ js/                         12 个经典脚本，按编号顺序加载（共享全局作用域，非 ES Module）
+│  ├─ 01-course-registry.js    课程注册表（COURSES / 关卡汇总 / 进度存储键）
+│  ├─ 02-app-core.js           状态与 localStorage、主题、编辑器工具、密码弹窗、统计
+│  ├─ 03-lesson-format.js      讲义富文本排版、页面切换 switchPage、顶栏标题
+│  ├─ 04-progress-backup.js    进度 JSON 导出/导入、HT1 存档码与 #save= 分享链接
+│  ├─ 05-views.js              页面渲染路由（作品集首页 / 详情 / 作者 / 课程 / 路线 / 关卡 / 关于）
+│  ├─ 06-cet4-engine.js        英语四级任务引擎（听力/阅读/写作/翻译/口语/模考、录音、判分）
+│  ├─ 07-project-and-summary.js 7 天项目支线、学习总结页、关卡入口
+│  ├─ 08-c-checker.js          C 语言代码词法/语法检查器、运行输出比对、通关判定
+│  ├─ 09-events.js             全局事件委托、代码编辑器快捷键（末尾执行首次 render）
+│  ├─ 10-splash.js             开屏动画引擎（粒子极光画布、模式切换、window.HTSplash.replay）
+│  ├─ 14-liquid-glass.js       液态玻璃视觉引擎（极光背景、光标高光、涟漪、「⚙ 外观」调节面板）
+│  └─ 15-ui-motion.js          页面切换入场动画、错峰入场、Dock 弹跳与滚动自动收起
+├─ content/                    课程数据（经典脚本，先于 js/ 加载）
+│  ├─ c/                       C 语言 11 个模块（c0–c10，共 86 关）
+│  └─ cet4/                    英语四级 7 个模块（按 index.html 加载顺序即路线顺序，共 62 关）
+├─ works/                      独立作品目录
+│  ├─ player.html              「代码影院」统一播放器（顶部返回作品集 + 4 部切换 + 影院横屏模式）
+│  ├─ ink-mist-3d.html         墨韵山河 · INK & MIST（3D 水墨微电影）
+│  ├─ pure-code-cinema.html    PURE CODE CINEMA（生成式电影引擎，零外部依赖）
+│  ├─ isomorphism.html         万物同构 · ISOMORPHISM（1080p60 光学视觉诗，零外部依赖）
+│  ├─ zero-pixels.html         纯代码视界 · ZERO PIXELS（实时生成影院，零外部依赖）
+│  └─ stickman-training/       作品「游戏」第一部：火柴人训练营（横屏 Canvas 2D 格斗小游戏）
+├─ assets/
+│  ├─ favicon.svg              站点图标（SVG）
+│  ├─ ht-lab.ico               站点图标（ICO）
+│  └─ audio/cet4/              英语四级音频（46 段 mp3 + 作者维护用 manifest*/dialogue* JSON）
+├─ docs/
+│  ├─ ARCHITECTURE.md          完整架构地图（加载顺序、路由、子系统、全局符号、存储键与约束）
+│  ├─ CONTENT-GUIDE.md         课程内容编写指南（关卡 schema、check 规格、音频与数量同步）
+│  ├─ AI-HANDOFF.md            把项目交给其他 AI 修改时的交接提示词与验收清单
+│  └─ ROLLBACK.md              版本里程碑与一键退回旧版本指南
+├─ AGENTS.md                   给维护者 / AI 编码代理的仓库硬规则与速查表
+├─ README.md                   本文件
+├─ LICENSE                     版权与使用许可
+├─ .gitignore                  忽略本地验证输出与系统垃圾文件
+└─ .nojekyll                   关闭 GitHub Pages 的 Jekyll 处理（保留）
 ```
-index.html                  唯一页面：head 里的资源引用 + 页面 shell DOM（样式、脚本、课程数据都在外部文件）
-css/                        2 个样式文件，按顺序加载（08 材质 → 10 界面层，10 必须最后）
-  08-liquid-glass.css         液态玻璃材质（精简自 showcase：极光画布 / .liquid-glass 材质与色散描边 / 点击涟漪）
-  10-ui.css                   全新界面层（唯一 UI）：悬浮胶囊顶栏 + 底部 Dock + 玻璃组件 + 深色可读性 + 手机端
-                              （同上下文重复规则已合并，@media 统一收口到文件末尾）
-js/                         12 个应用脚本，按编号顺序加载（编号 = 依赖顺序，共享同一个全局作用域）
-  01-course-registry.js       课程注册表（COURSES / 关卡汇总 / 进度存储键）
-  02-app-core.js              状态与 localStorage、主题、编辑器、密码弹窗、统计
-  03-lesson-format.js         讲义排版、页面切换
-  04-progress-backup.js       进度导出/导入、存档码/存档链接
-  05-views.js                 渲染路由与各页面（课程页、路线、关于、继续、C 关卡页）
-  06-cet4-engine.js           英语四级任务引擎（听力/阅读/写作/翻译/口语/模考、录音、判分）
-  07-project-and-summary.js   7 天项目、学习总结页、关卡入口
-  08-c-checker.js             C 语言代码检查器、运行结果比对、通关判定
-  09-events.js                全局事件委托、编辑器快捷键（末尾首次渲染）
-  10-splash.js                开屏动画
-  14-liquid-glass.js          液态玻璃引擎（极光画布 / 光标高光 / 点击涟漪；纯视觉，不改业务）
-  15-ui-motion.js             高级页面切换动画（View Transitions 前进/后退出入 + 错峰入场 + Dock 弹跳；纯视觉）
-content/
-  c/                        C 语言课程内容（每个模块一个 JS 数据文件，按模块号命名）
-    c0-getting-started.js   模块 0 · 起步上路（8 关）
-    c1-control-flow.js      模块 1 · 流程控制（8 关）
-    c2-functions.js         模块 2 · 函数与程序结构（8 关）
-    c3-arrays-strings.js    模块 3 · 数组与字符串（8 关）
-    c4-pointers-memory.js   模块 4 · 指针与内存（10 关）
-    c5-types-ds.js          模块 5 · 自定义类型与数据结构（8 关）
-    c6-file-io.js           模块 6 · 文件与输入输出（6 关）
-    c7-engineering.js       模块 7 · 预处理器与工程实践（8 关）
-    c8-algorithms.js        模块 8 · 数据结构与算法（10 关）
-    c9-systems.js           模块 9 · 系统与底层（6 关）
-    c10-projects.js         模块 10 · 综合项目（6 关）
-  cet4/                     英语四级课程内容（每个模块一个 JS 数据文件）
-    m0-foundation.js        模块 0 · 地基（8 关）
-    m1-listening.js         模块 1 · 听力（12 关）
-    m3-reading.js           模块 3 · 阅读（14 关）
-    m4-writing.js           模块 4 · 写作（8 关）
-    m5-translation.js       模块 5 · 翻译（8 关）
-    m2-speaking.js          模块 2 · 口语（10 关）
-    m6-mock.js              模块 6 · 全真模考（2 关）
-    （index.html 中的 script 顺序 = 学习路线顺序：地基 → 听力 → 阅读 → 写作 → 翻译 → 口语 → 模考）
-works/                       作品「代码影院」的 4 部独立演示（单文件、双击即播；不在主站零依赖范围内）
-  ink-mist-3d.html           墨韵山河 · INK & MIST（3D 水墨微电影；自带 Tailwind/字体 CDN）
-  pure-code-cinema.html      PURE CODE CINEMA（生成式电影引擎，零外部依赖）
-  isomorphism.html           万物同构 · ISOMORPHISM（1080p60 光学视觉诗，零外部依赖）
-  zero-pixels.html           纯代码视界 · ZERO PIXELS（实时生成影院，零外部依赖）
-  player.html                统一播放器：顶部「← 作品集」返回 + 四部作品一键切换（手机友好）
-  stickman-training/         作品「游戏」第一部的源码：火柴人训练营（横屏 Canvas 格斗小游戏）
-assets/
-  favicon.svg               站点图标（SVG）
-  ht-lab.ico                站点图标（ICO）
-  audio/cet4/               英语四级音频（听力材料与口语示范，共 46 段 mp3）
-    manifest*.json          单声道音频清单：文本 ↔ 文件对应关系（作者校验用，页面不加载）
-    dialogue*.json          多角色对话清单：分段音色与文本（作者校验用，页面不加载）
-docs/
-  ARCHITECTURE.md           架构说明：加载顺序、子系统、存储键、全局符号、约束
-  CONTENT-GUIDE.md          内容编写指南：关卡数据格式、加关卡/模块/音频、数量同步
-  AI-HANDOFF.md             把项目交给其他 AI 的交接说明：三种方式、可复制提示词、验收清单
-AGENTS.md                   给维护者 / AI 编码代理的仓库须知（先读这个）
-README.md                   本文件
-.gitignore                  忽略本地验证输出（.verify/）与系统垃圾文件
-.nojekyll                   GitHub Pages 配置（关闭 Jekyll 处理，保留）
-LICENSE                     版权与使用许可
-```
+
+---
 
 ## 本地使用
 
-直接双击 `index.html` 即可（`file://` 下录音功能可用，浏览器会询问麦克风权限）。
+直接双击 `index.html` 即可在浏览器中完整使用（`file://` 协议下录音功能可用，浏览器会询问麦克风权限）。
 
-若偏好本地服务器：
+若偏好本地 HTTP 服务预览：
 
 ```bash
 python -m http.server 8000
 # 然后访问 http://localhost:8000
 ```
 
+---
+
 ## 开发与维护
 
-本站没有构建步骤：改完文件刷新浏览器即可。仓库内的文档与工具：
+本站没有构建步骤：改完文件刷新浏览器即可。仓库内的文档索引：
 
-- **`AGENTS.md`**——维护者/AI 编码代理必读：加载顺序与全局作用域约定、常见任务对应文件、验证与部署流程。
-- **`docs/ARCHITECTURE.md`**——架构地图：页面生命周期、加载顺序、各子系统、localStorage 键、数据流、已知约束。
-- **`docs/CONTENT-GUIDE.md`**——课程内容编写指南：C / 四级关卡的数据格式、`check` 检查规格、如何加关卡/模块/音频、需要同步的数量文案。
-- **`docs/AI-HANDOFF.md`**——想把网站交给其他 AI（Gemini / ChatGPT / Claude / Cursor 等）修改时，先给它这份：交接方式、可直接复制的提示词、禁止事项、验收清单。
+- **`AGENTS.md`**——维护者/AI 编码代理必读：硬性规则、加载顺序、常见任务对应文件、验证与部署流程。
+- **`docs/ARCHITECTURE.md`**——架构地图：页面生命周期、加载顺序、各子系统、localStorage 键、数据流与约束。
+- **`docs/CONTENT-GUIDE.md`**——课程内容编写指南：C / 四级关卡的数据格式、`check` 检查规格、加关卡/模块/音频。
+- **`docs/AI-HANDOFF.md`**——把网站交给其他 AI 修改时的交接方式、提示词模板与验收清单。
+- **`docs/ROLLBACK.md`**——版本记录与退回旧版本（`v1.0-legacy` / `backup/legacy-v1`）的操作指南。
+
+---
 
 ## 音频与作者素材
 
@@ -115,15 +123,21 @@ python -m http.server 8000
 - `assets/audio/cet4/dialogue*.json`：多角色对话清单，记录每个文件的分段音色与文本，配合生成记录与拼接结果。
 - 这些 JSON 只在内容维护时使用，页面运行时不加载。
 
+---
+
 ## 部署
 
-任意静态托管即可，例如 GitHub Pages：把本目录内容推送到仓库（`.nojekyll` 已就位）。
+任意静态托管即可，例如 GitHub Pages：推送到 `main` 分支根目录即可自动构建发布（`.nojekyll` 已就位）。
+
+---
 
 ## 说明
 
 - 无账号、无后端；进度、代码草稿与录音都只存在访问者本机浏览器，刷新或换设备都不会同步。
 - 页面内的「重置密码」只是本地防误操作的开关，**不能**作为公开网站的访问控制手段。
 - 英语四级题目为按考试大纲自编的仿真题，不是历年真题；音频为合成语音，最终请以真题材料为准。
+
+---
 
 ## 版权与使用许可
 

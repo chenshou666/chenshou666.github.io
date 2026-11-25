@@ -222,9 +222,6 @@
   var normalHint = document.getElementById("pfHint");
   var cinemaTip = document.getElementById("pfCinemaTip");
 
-  var autoModeDone = false;
-  var manualPortrait = false;
-
   function find(id) {
     for (var i = 0; i < WORKS.length; i++) if (WORKS[i].id === id) return WORKS[i];
     return WORKS[0];
@@ -257,10 +254,6 @@
     }
   }
 
-  function isPortraitPhone() {
-    return window.innerWidth <= 900 && window.innerHeight > window.innerWidth;
-  }
-
   function render(id, keepMode) {
     current = find(id);
     normalTitle.textContent = "代码影院 · " + current.name;
@@ -290,11 +283,9 @@
   });
 
   document.getElementById("pfCinemaBtn").addEventListener("click", function () {
-    manualPortrait = false;
     setMode(true);
   });
   document.getElementById("pfPortraitBtn").addEventListener("click", function () {
-    manualPortrait = true;
     setMode(false);
   });
   document.getElementById("pfNextBtn").addEventListener("click", function () {
@@ -313,9 +304,8 @@
     }, 220);
   });
 
-  /* 首次进入：竖屏手机直接进影院模式，保证画面完整 */
+  /* 首次进入：默认竖屏显示；需要横屏铺满时点顶部「⛶ 影院」 */
   render(current.id);
-  autoModeDone = true;
 
   window.setTimeout(function () { normalHint.classList.add("hide"); }, 4200);
 })();

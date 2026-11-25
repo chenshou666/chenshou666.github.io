@@ -8,7 +8,7 @@
  *   3. 底部 Dock 图标点击弹跳 + 方向感知（前进/后退不同动效）
  *   4. 仅在「页面/关卡真的切换」时播放，答题重渲染不打扰
  *
- * 加载顺序：15，必须在 14-liquid-glass.js 之后（14 负责高光/涟漪）
+ * 加载顺序 12/12（文件名 15）：必须在 14-liquid-glass.js 之后（14 负责高光/涟漪）
  * 关闭：移除本文件引用即可，站点逻辑完全不受影响
  * ========================================================================== */
 (function () {
@@ -25,7 +25,7 @@
      造成「导航键被挡、点了没反应」。页面切换改用下面的 ui-page-in 入场动画。 */
   var supportsVT = false;
 
-  var PAGE_ORDER = { courses: 0, map: 1, practice: 2, summary: 3, project: 4, about: 5 };
+  var PAGE_ORDER = { home: -3, work: -2, author: -1, courses: 0, map: 1, practice: 2, summary: 3, project: 4, about: 5 };
   var lastKey = null;
   var inRender = false;
 

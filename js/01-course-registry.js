@@ -1,6 +1,6 @@
 /* ============================================================================
  * 01-course-registry.js — 课程注册表：把 content/c、content/cet4 的数据汇总成关卡列表，定义 COURSES 与进度存储键
- * 加载顺序 1/13：依赖：所有 content/*.js 已先加载，提供 window.C_MODULES / window.CET4_MODULES
+ * 加载顺序 1/12：依赖：所有 content/*.js 已先加载，提供 window.C_MODULES / window.CET4_MODULES
  * 注意：本站是经典 <script>（非 ES Module），所有 js/ 文件共享同一个全局作用域，
  *       编号即加载顺序；调整顺序或拆合并文件前请先读 docs/ARCHITECTURE.md。
  * ========================================================================== */
