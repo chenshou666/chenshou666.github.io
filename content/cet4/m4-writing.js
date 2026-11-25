@@ -14,7 +14,7 @@
 window.CET4_MODULES = window.CET4_MODULES || [];
 window.CET4_MODULES.push({
   id: "m4",
-  name: "模块 4 · 写作",
+  name: "模块 3 · 写作",
   levels: [
     {
       id: 501,
@@ -75,11 +75,11 @@ window.CET4_MODULES.push({
       placeholder: "Nowadays, ... In my opinion, ...",
       minWords: 90,
       points: [
-        ["time management", "manag"],
+        ["time management", "manage", "managing", "management", "manag*"],
         ["important", "importance", "essential", "crucial", "vital", "significant", "necessary"],
         ["first", "firstly", "to begin with", "to start with", "for one thing", "one reason", "on the one hand"],
-        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what’s more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
-        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "summar", "last but not least", "finally", "in the end"]
+        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
+        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "in summary", "summary", "summarize", "summarise", "last but not least", "finally", "in the end"]
       ],
       sample: "The Importance of Time Management\n\nNowadays, many college students complain that they never have enough time. In my opinion, learning to manage time is one of the most important skills in university life.\n\nFirst, good time management makes study more efficient. When students arrange their tasks in order, they can finish their homework earlier and still have time to rest. Second, it helps reduce stress. A student who plans the week ahead will not stay up late before an exam, and this habit is much healthier than working under pressure.\n\nIn conclusion, time management is important for both our studies and our health. I suggest that every student should make a simple weekly plan and check it every Sunday evening. With a little practice, we can all use our time much better."
     },
@@ -142,12 +142,12 @@ window.CET4_MODULES.push({
       points: [
         ["part-time", "part time"],
         ["nowadays", "in recent years", "at present", "these days", "today", "currently", "with the development"],
-        ["in my opinion", "in my view", "as far as i am concerned", "as far as i'm concerned", "as far as i’m concerned", "from my perspective", "i believe", "i think", "personally"],
+        ["in my opinion", "in my view", "as far as i am concerned", "as far as i'm concerned", "from my perspective", "i believe", "i think", "personally"],
         ["first", "firstly", "to begin with", "to start with", "for one thing", "one reason", "on the one hand"],
-        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what’s more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
-        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "summar", "last but not least", "finally", "in the end"]
+        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
+        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "in summary", "summary", "summarize", "summarise", "last but not least", "finally", "in the end"]
       ],
-      sample: "Should College Students Take Part-Time Jobs?\n\nNowadays, an increasing number of college students take part-time jobs while they are studying. In my view, this trend is beneficial as long as students keep a balance between work and study.\n\nFirst, part-time jobs give students real work experience. For example, a student who works in a coffee shop learns how to deal with customers and how to stay calm when the shop is busy. Second, such jobs help students understand the value of money. Many of them begin to plan their spending more carefully after they receive their first salary.\n\nTo sum up, part-time jobs can be a helpful part of college life. I suggest that students should choose jobs that are close to their campus and never let work take up the time they need for study."
+      sample: "Should College Students Take Part-Time Jobs?\n\nNowadays, an increasing number of college students take part-time jobs while they are studying. In my view, this trend is beneficial as long as students keep a balance between work and study.\n\nFirst, part-time jobs give students real work experience. For example, a student who works in a coffee shop learns how to deal with customers and how to stay calm when the shop is busy. Second, such jobs help students understand the value of money. Many of them begin to plan their spending more carefully after they receive their first pay.\n\nTo sum up, part-time jobs can be a helpful part of college life. I suggest that students should choose jobs that are close to their campus and never let work take up the time they need for study."
     },
     {
       id: 503,
@@ -202,14 +202,14 @@ window.CET4_MODULES.push({
       placeholder: "Nowadays, ... First, ... For example, ...",
       minWords: 100,
       points: [
-        ["exercise", "sports", "physical activity", "workout", "work out"],
+        ["exercise", "exercising", "sports", "sport", "physical activity", "workout", "work out"],
         ["for example", "for instance", "such as", "to illustrate", "an example of"],
         ["health", "healthy", "fit", "fitness", "ill", "disease", "sick", "energy"],
         ["first", "firstly", "to begin with", "to start with", "for one thing", "one reason", "on the one hand"],
-        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what’s more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
-        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "overall", "summar", "last but not least", "finally", "in the end"]
+        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
+        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "in summary", "summary", "summarize", "summarise", "last but not least", "finally", "in the end"]
       ],
-      sample: "Why We Should Exercise Every Day\n\nNowadays, many students spend most of their day sitting in classrooms or in front of a screen. In my opinion, taking regular exercise is one of the best habits we can build at college.\n\nFirst, exercise keeps us healthy. For example, a friend of mine used to catch a cold every month, but since he started running three times a week, he has hardly been ill. Second, exercise also improves our mood and our memory. Students who play basketball for an hour often find it easier to concentrate when they go back to their books.\n\nTo sum up, regular exercise benefits both our body and our mind. I suggest that we should set a fixed time for sports every week and treat it as part of our study plan."
+      sample: "Why We Should Exercise Every Day\n\nNowadays, many students spend most of their day sitting in classrooms or in front of a screen. In my opinion, taking regular exercise is one of the best habits we can build at college.\n\nRegular exercise brings both physical and mental benefits. First, exercise keeps us healthy. For example, a friend of mine used to catch a cold every month, but since he started running three times a week, he has hardly been ill. Second, exercise also improves our mood and our memory. Students who play basketball for an hour often find it easier to concentrate when they go back to their books.\n\nTo sum up, regular exercise benefits both our body and our mind. I suggest that we should set a fixed time for sports every week and treat it as part of our study plan."
     },
     {
       id: 504,
@@ -254,16 +254,17 @@ window.CET4_MODULES.push({
           explain: "pay attention to 是固定搭配，to 不能换成 on 或 for。attention 也不能和 take 搭配——可以说 take care of、take notice of，但没有 take attention to 这种说法。"
         }
       ],
-      prompt: "以 “The Value of Teamwork” 为题写一篇短文，重点练结尾段。\n要求：\n① 开头段：现象 + 观点各一句；\n② 第二段：First … / Second … 两条理由，各跟一句说明；\n③ 结尾段（2–3 句）：用 In conclusion / To sum up 开头，先换个说法重申观点，再给一条建议（I suggest / We should …），最后可以顺带说一句未来的影响。\n写够 100 词（考试要求 120–180 词）。",
+      prompt: "以 “The Value of Teamwork” 为题写一篇短文，重点练结尾段。\n要求：\n① 开头段：现象 + 观点各一句；\n② 第二段：First … / Second … 两条理由，各跟一句说明；\n③ 结尾段（2–3 句）：用 In conclusion / To sum up 开头，先换个说法重申观点，再给一条建议（I suggest / We should …），最后补一句对未来影响的展望（如 will / in the future / hope）。\n写够 100 词（考试要求 120–180 词）。",
       placeholder: "In conclusion, ... I suggest that ...",
       minWords: 100,
+      maxWords: 180,
       points: [
-        ["teamwork", "team work", "group work", "work together", "cooperat"],
+        ["teamwork", "team work", "group work", "work together", "cooperate", "cooperation", "cooperative"],
         ["important", "importance", "essential", "crucial", "vital", "valuable", "significant", "necessary", "worth"],
-        ["first", "firstly", "to begin with", "to start with", "one reason", "second", "secondly", "in addition", "moreover", "besides", "what's more", "what’s more", "what is more", "also", "another"],
-        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "summar", "last but not least", "finally", "in the end"],
+        ["first", "firstly", "to begin with", "to start with", "one reason", "second", "secondly", "in addition", "moreover", "besides", "what's more", "what is more", "also", "another"],
+        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "in summary", "summary", "summarize", "summarise", "last but not least", "finally", "in the end"],
         ["suggest", "should", "advice", "advise", "recommend", "it is better to", "had better", "need to"],
-        ["future", "will", "hope", "look forward", "coming years"]
+        ["future", "will", "hope", "look forward", "coming years", "long run", "rest of our lives"]
       ],
       sample: "The Value of Teamwork\n\nNowadays, group work is common in almost every course at college. In my opinion, learning to work in a team is as important as what we learn from textbooks.\n\nFirst, teamwork lets us finish a large task in a shorter time. When four students share the work, each of them can focus on the part he or she does best. Second, teamwork teaches us how to listen. In a group discussion, we have to explain our ideas clearly and also accept better ideas from others.\n\nIn conclusion, teamwork is valuable for both our study and our future career. I suggest that every student should take at least one group project seriously and learn to cooperate with people who think differently. If we can do this at college, we will work more smoothly with our colleagues in the future."
     },
@@ -329,14 +330,15 @@ window.CET4_MODULES.push({
       prompt: "以 “Volunteering: A Rewarding Experience” 为题写一篇短文，全文至少用 3 处升级表达。\n要求：\n① 升级词从本关替换表里挑（beneficial / rewarding / valuable / essential / significant / a growing number of 等），并且要放得进句子；\n② 第一段用现象 + 观点，观点句里至少出现一个升级词；\n③ 第二段用 First … / Second … 给两条理由，其中一条用句子升级（如 play a vital role in）；\n④ 第三段用 To sum up / In conclusion 收尾并给建议。\n写够 100 词（考试要求 120–180 词）。",
       placeholder: "Nowadays, ... rewarding ...",
       minWords: 100,
+      maxWords: 180,
       points: [
-        ["volunteer", "community service", "voluntary work", "help others", "helping others", "help"],
-        ["beneficial", "rewarding", "valuable", "meaningful", "remarkable", "significant", "essential", "crucial", "outstanding", "impressive", "worthwhile", "invaluable", "a growing number of"],
+        ["volunteer", "volunteering", "volunteers", "community service", "voluntary work", "help others", "helping others", "help"],
+        ["beneficial", "rewarding", "valuable", "meaningful", "remarkable", "significant", "essential", "crucial", "vital", "practical", "effective", "considerable", "outstanding", "impressive", "worthwhile", "invaluable", "a growing number of"],
         ["first", "firstly", "to begin with", "to start with", "for one thing", "one reason", "on the one hand"],
-        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what’s more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
-        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "summar", "last but not least", "finally", "in the end"]
+        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
+        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "in summary", "summary", "summarize", "summarise", "last but not least", "finally", "in the end"]
       ],
-      sample: "Volunteering: A Rewarding Experience\n\nNowadays, an increasing number of college students spend their weekends on volunteer work. In my view, volunteering is a rewarding experience that is worth trying at least once during our college years.\n\nFirst, volunteering gives us valuable chances to use what we have learned in class. For example, students who help at a community library can practice their communication skills while they serve real readers. Second, it helps us understand the world outside the campus. When we work with elderly people or children, we begin to see problems that textbooks never mention.\n\nTo sum up, volunteering is beneficial to both the community and the students themselves. I strongly suggest that every student should spend a few hours each month on such work, because it makes us more thoughtful and more confident."
+      sample: "Volunteering: A Rewarding Experience\n\nNowadays, a growing number of college students spend their weekends on volunteer work. In my view, volunteering is a rewarding experience that is worth trying at least once during our college years.\n\nFirst, volunteering gives us valuable chances to use what we have learned in class. For example, students who volunteer at a community library can practice their communication skills while they help real readers. Second, volunteering plays a vital role in helping us understand the world outside the campus. When we work with elderly people or children, we begin to see problems that textbooks never mention.\n\nTo sum up, volunteering is beneficial to both the community and the students themselves. I strongly suggest that every student should spend a few hours each month on such work, because it makes us more thoughtful and more confident."
     },
     {
       id: 506,
@@ -390,13 +392,14 @@ window.CET4_MODULES.push({
       prompt: "以 “Online Shopping: Convenience and Problems” 为题写一篇短文，重点练逻辑衔接：四类连接词各至少用一次。\n要求：\n① 转折（however / although / on the other hand）至少 1 处，标点要正确；\n② 因果（because / as a result / therefore）至少 1 处；\n③ 递进（moreover / in addition / besides）至少 1 处；\n④ 举例（for example / such as）至少 1 处；\n⑤ 三段式：现象 + 观点 → 便利与问题 → In conclusion 收尾 + 建议。\n写够 110 词（考试要求 120–180 词）。",
       placeholder: "Nowadays, ... However, ... As a result, ...",
       minWords: 110,
+      maxWords: 180,
       points: [
-        ["online shopping", "shopping online", "online store", "the internet", "online"],
+        ["online shopping", "shopping online", "online store", "online stores", "the internet", "online"],
         ["however", "nevertheless", "yet", "although", "on the other hand", "in contrast", "while"],
         ["because", "therefore", "as a result", "consequently", "thus", "since", "for this reason", "result in", "lead to", "due to"],
-        ["moreover", "furthermore", "in addition", "besides", "what's more", "what’s more", "what is more", "also", "not only", "as well as"],
+        ["moreover", "furthermore", "in addition", "besides", "what's more", "what is more", "also", "not only", "as well as"],
         ["for example", "for instance", "such as", "to illustrate"],
-        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "summar", "last but not least", "finally", "in the end"]
+        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "in summary", "summary", "summarize", "summarise", "last but not least", "finally", "in the end"]
       ],
       sample: "Online Shopping: Convenience and Problems\n\nNowadays, online shopping has become part of our daily life. In my opinion, it makes life much easier, although it also brings new problems that we should not ignore.\n\nOnline shopping is convenient because we can buy almost anything without leaving home. Moreover, the price is often lower than in a real shop, and the goods arrive within a few days. However, there are also real risks. For example, some sellers show beautiful pictures but send poor products, and returning them can take a long time. As a result, many students lose money simply because they trust the photos too much.\n\nIn conclusion, online shopping is worth using, but we should check the reviews and the return policy before we pay. If we stay careful, we can enjoy the convenience and avoid most of the trouble."
     },
@@ -452,13 +455,14 @@ window.CET4_MODULES.push({
       prompt: "以 “Why We Learn English” 为题写一篇短文，写完对照本关的 12 条清单自查一遍。\n要求：\n① 正文里不要出现这 12 条错误中的任何一条（特别留意 there be 句型、knowledge 的搭配、because/so 与 although/but 不同时用）；\n② 第一段用 Nowadays + In my opinion 引出话题和观点；\n③ 第二段用 First … / Second … 给两条理由，并用 For example 举一个例子；\n④ 第三段用 In conclusion 收尾，再给一条建议。\n写够 120 词（这就是考试要求的下限）。",
       placeholder: "Nowadays, ... In my opinion, ...",
       minWords: 120,
+      maxWords: 180,
       points: [
         ["english"],
         ["important", "importance", "essential", "crucial", "necessary", "significant", "useful", "helpful", "worthwhile", "valuable"],
         ["first", "firstly", "to begin with", "to start with", "for one thing", "one reason", "on the one hand"],
-        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what’s more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
+        ["second", "secondly", "in addition", "moreover", "besides", "what's more", "what is more", "furthermore", "on the other hand", "also", "another", "additionally"],
         ["for example", "for instance", "such as", "to illustrate"],
-        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "summar", "last but not least", "finally", "in the end"]
+        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "in summary", "summary", "summarize", "summarise", "last but not least", "finally", "in the end"]
       ],
       sample: "Why We Learn English\n\nNowadays, English is not just a subject in the classroom; it is a tool we use every day. In my opinion, learning English well is essential for college students.\n\nFirst, English opens the door to more knowledge. For example, most papers on science and technology are written in English, so students who read English well can gain new knowledge much faster than those who cannot. Second, English helps us make friends around the world. When I talk with a student from another country, I find that we share many interests, and my English improves each time we chat.\n\nIn conclusion, learning English is worthwhile for both our study and our social life. I suggest that we should read one short English article every day and write down three new words from it."
     },
@@ -467,7 +471,7 @@ window.CET4_MODULES.push({
       title: "限时实战：30 分钟写完 120–180 词",
       minutes: 35,
       gist: "把前面七关的东西合起来用一次：审题、写作、检查，全程限时。",
-      lesson: "限时实战：30 分钟写 120–180 词。时间这样分：\n· 2–3 分钟审题：确定话题、写几段、要不要给观点；在草稿区写下三段的关键词（不用写完整句）。\n· 22–24 分钟写作：按第一段 2–3 句、第二段 5–6 句、第三段 2–3 句的节奏往下写。写不出来就先写简单句，别停下来纠结一个词。\n· 3–5 分钟检查：优先看硬伤——主谓一致、时态、单复数、拼写、连接词的标点。\n时间不够时的应急做法：\n· 还差字数：在主体段补一个具体例子（一句话就够），不要加空话；\n· 想不起高级词：用最简单的词把意思写清楚，比写错一个难词划算；\n· 结尾没时间写：写两句也算——In conclusion, … 加一句 I suggest that …。\n整篇的骨架（把七关的内容合起来）：\n第一段：Nowadays, … . In my opinion, … .\n第二段：First, … . For example, … . Second, … . Moreover, … .\n第三段：In conclusion, … . I suggest that we should … .\n考前一周最值得做的准备：\n① 背熟三类开头（现象 / 观点 / 图表）；\n② 四类连接词各记 2 个；\n③ 准备 8–10 个升级词，并且各写一句自己的话；\n④ 至少完整限时写过 3 篇。\n最后提醒：模板只借结构和连接词。整段照抄模板、内容全是空话，阅卷老师一眼就能看出来，反而更容易低分。",
+      lesson: "限时实战：30 分钟写 120–180 词。时间这样分：\n· 2–3 分钟审题：确定话题、写几段、要不要给观点；在草稿区写下三段的关键词（不用写完整句）。\n· 22–24 分钟写作：按第一段 2–3 句、第二段 5–6 句、第三段 2–3 句的节奏往下写。写不出来就先写简单句，别停下来纠结一个词。\n· 3–5 分钟检查：优先看硬伤——主谓一致、时态、单复数、拼写、连接词的标点。\n时间不够时的应急做法：\n· 还差字数：在主体段补一个具体例子（一句话就够），不要加空话；\n· 想不起高级词：用最简单的词把意思写清楚，比写错一个难词划算；\n· 结尾没时间写：写两句也算——In conclusion, … 加一句 I suggest that …。\n整篇的骨架（把七关的内容合起来）：\n第一段：Nowadays, … . In my opinion, … .\n第二段：First, … . For example, … . Second, … . Moreover, … .\n第三段：In conclusion, … . I suggest that we should … .\n拓展提醒：四级有时也会考应用文（书信、建议信、通知等）。遇到这类题目，只需加上称呼（如 Dear …,）和落款（如 Yours sincerely, / Li Ming），正文依然沿用三段式：第一段交代写信或通知的目的，第二段分两条写具体内容或建议，第三段表达感谢或期待回复。\n考前一周最值得做的准备：\n① 背熟三类开头（现象 / 观点 / 图表）；\n② 四类连接词各记 2 个；\n③ 准备 8–10 个升级词，并且各写一句自己的话；\n④ 至少完整限时写过 3 篇。\n最后提醒：模板只借结构和连接词。整段照抄模板、内容全是空话，阅卷老师一眼就能看出来，反而更容易低分。",
       usage: "限时写作练的是「在压力下把话说清楚」的能力：考试、面试笔试、工作中的紧急邮件，都要求你在有限时间里交出结构完整的东西。",
       takeaways: [
         "30 分钟分三段用：2–3 分钟审题、22–24 分钟写作、3–5 分钟检查",
@@ -515,15 +519,16 @@ window.CET4_MODULES.push({
       prompt: "限时任务：30 分钟内写一篇 120–180 词的短文，题目 “The Benefits of Reading”。\n要求：\n① 三段式：现象 + 观点 → 两条理由（各带说明，其中一条要有 For example 的具体例子）→ In conclusion 收尾 + 一条建议；\n② 至少用 2 处连接词（however / moreover / as a result 等），标点要正确；\n③ 留 3–5 分钟检查主谓一致、时态、单复数、拼写。\n时间提示：右上角有 35 分钟倒计时（写作 30 分钟 + 检查 5 分钟）。写完后可以对照参考范文，看自己的结构差在哪里。",
       placeholder: "Nowadays, ... In my opinion, ...",
       minWords: 120,
+      maxWords: 180,
       points: [
-        ["reading", "read books", "read more", "book"],
-        ["benefit", "advantage", "helpful", "helps", "useful", "valuable", "improve", "enrich", "broaden", "rewarding"],
-        ["knowledge", "vocabulary", "horizon", "skill", "information", "experience", "wisdom", "language"],
+        ["reading", "read books", "read more", "book", "books", "read"],
+        ["benefit", "benefits", "beneficial", "advantage", "advantages", "helpful", "help", "helps", "useful", "valuable", "improve", "improves", "enrich", "enriches", "broaden", "broadens", "rewarding"],
+        ["knowledge", "vocabulary", "horizon", "horizons", "skill", "skills", "information", "experience", "wisdom", "language"],
         ["for example", "for instance", "such as", "to illustrate"],
-        ["however", "moreover", "furthermore", "in addition", "besides", "therefore", "what's more", "what’s more", "what is more", "as a result", "on the other hand", "first", "second", "finally", "also"],
-        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "summar", "last but not least", "finally", "in the end"]
+        ["however", "moreover", "furthermore", "in addition", "besides", "therefore", "what's more", "what is more", "as a result", "on the other hand", "nevertheless", "consequently", "thus", "although"],
+        ["in conclusion", "to sum up", "all in all", "in short", "in a word", "to conclude", "overall", "in summary", "summary", "summarize", "summarise", "last but not least", "finally", "in the end"]
       ],
-      sample: "The Benefits of Reading\n\nNowadays, many students spend their free time on short videos instead of books. In my opinion, reading is still one of the most valuable habits a college student can keep.\n\nFirst, reading broadens our knowledge. Through books, we can travel to places we have never visited and understand lives that are completely different from our own. Second, reading improves our language skills. For example, students who read English novels for twenty minutes a day often write better essays, because they meet useful expressions again and again in real contexts.\n\nIn conclusion, reading benefits us in both knowledge and language skills. I suggest that we should keep a book on the desk and read a few pages every night before we sleep. In this way, we can build the habit without taking up too much of our time."
+      sample: "The Benefits of Reading\n\nNowadays, many students spend their free time on short videos instead of books. However, in my opinion, reading is still one of the most valuable habits a college student can keep.\n\nFirst, reading broadens our knowledge. Through books, we can travel to places we have never visited and understand lives that are completely different from our own. Second, reading improves our language skills. For example, students who read English novels for twenty minutes a day often write better essays; moreover, they pick up useful expressions naturally in real contexts.\n\nIn conclusion, reading benefits us in both knowledge and language skills. I suggest that we should keep a book on the desk and read a few pages every night before we sleep. In this way, we can build the habit without taking up too much of our time."
     }
   ]
 });

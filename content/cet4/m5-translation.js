@@ -15,7 +15,7 @@
 window.CET4_MODULES = window.CET4_MODULES || [];
 window.CET4_MODULES.push({
   id: "m5",
-  name: "模块 5 · 翻译",
+  name: "模块 4 · 翻译",
   levels: [
     {
       id: 601,
@@ -45,7 +45,7 @@ window.CET4_MODULES.push({
         ["it takes", "takes me", "i spend"],
         ["more convenient than", "more convenient"]
       ],
-      sample: "I get up at seven every morning.\nI have breakfast first, and then I go to school by bike.\nIt takes me about twenty minutes to get from my home to school.\nI think going to school by bike is more convenient than taking a bus, and it is also a good way to get some exercise.\nOn weekends, I often play ball games with my friends in the park.",
+      sample: "I get up at seven every morning.\nI have breakfast first, and then I go to school by bike.\nIt takes me about twenty minutes to get from my home to school.\nGoing to school by bike is more convenient than taking a bus, and it is also a good way to get some exercise.\nOn weekends, I often play sports with my friends in the park.",
       questions: [
         {
           q: "四级翻译部分考的是什么？",
@@ -112,13 +112,13 @@ window.CET4_MODULES.push({
       minWords: 55,
       points: [
         ["used to be", "was once", "in the past", "was poor in the past"],
-        ["dirt tracks", "dirt track", "dirt roads", "dirt road", "unpaved roads", "muddy roads"],
+        ["dirt tracks", "dirt track", "dirt roads", "dirt road", "dirt", "unpaved roads", "unpaved", "muddy roads", "muddy", "narrow"],
         ["rainy days", "rainy day", "when it rained", "on wet days"],
         ["detour", "long way", "longer route", "long distance"],
-        ["paved road", "paved roads", "paved a road", "paved the road", "asphalt road", "tarmac road"],
-        ["as a result", "so the children", "so they", "therefore", "that's why", "this meant"]
+        ["paved road", "paved roads", "paved a road", "paved the road", "paved", "asphalt road", "tarmac road", "wide", "new road", "smooth road"],
+        ["as a result", "so", "because", "therefore", "that's why", "this meant"]
       ],
-      sample: "Our village used to be very poor.\nThe roads were dirt tracks, and on rainy days they were too muddy to walk on.\nAs a result, the children had to take a long detour to school.\nLater, the government built a paved road and a new school at the entrance to the village.\nNow the children can get to school in ten minutes, and their parents no longer have to worry about rainy days.",
+      sample: "Our village used to be very poor.\nThe roads were dirt tracks, and on rainy days they were too muddy to walk on.\nAs a result, the children had to take a long detour to school.\nLater, the government built a paved road and a new school at the entrance to the village.\nNow the children can walk to school in ten minutes, and their parents no longer have to worry about rainy days.",
       questions: [
         {
           q: "下面哪一句在英语里是错的？",
@@ -178,9 +178,9 @@ window.CET4_MODULES.push({
         ["it is said that", "it's said that", "is said to", "people say that", "they say that"],
         ["was built", "been built", "was constructed", "was completed", "dates back"],
         ["it is believed that", "people believe that", "is believed to", "was designed by", "designed by a local craftsman"],
-        ["although it has survived", "although it survived", "despite many floods", "many floods", "several floods"],
+        ["although it has survived", "although it survived", "despite many floods", "many floods", "multiple floods", "numerous floods", "several floods", "a number of floods", "floods"],
         ["thousands of tourists", "thousands of visitors", "thousands of people"],
-        ["have been well preserved", "has been well preserved", "are well preserved", "is well preserved", "have been protected", "are well protected"]
+        ["have been well preserved", "has been well preserved", "are well preserved", "is well preserved", "well preserved", "preserved", "have been well protected", "have been protected", "are well protected", "well protected", "protected"]
       ],
       sample: "It is said that this bridge was built more than five hundred years ago and that it was the longest stone bridge of its time.\nIt is believed that it was designed by a local craftsman.\nAlthough it has survived many floods, it still stands strong today.\nThousands of tourists visit it every year, and the stone carvings on the bridge have been well preserved.",
       questions: [
@@ -241,7 +241,7 @@ window.CET4_MODULES.push({
           transcript: "the Spring Festival\nthe Mid-Autumn Festival\nthe Dragon Boat Festival\nfamily reunion\nlucky money\nred envelopes\nmooncakes\ndumplings\npaper cutting\nsilk\nporcelain\nembroidery\nThe festival is a symbol of good luck.\nThese skills have been passed down from generation to generation."
         }
       ],
-      audioTip: "先跟读两遍再动笔：couplets、porcelain、embroidery 这几个词读顺了，写的时候就不容易拼错。",
+      audioTip: "先跟读两遍再动笔：reunion、porcelain、embroidery 这几个词读顺了，写的时候就不容易拼错。",
       passRatio: 0.8,
       source: "春节是中国最重要的传统节日之一。节日期间，人们赶回家与家人团聚，门上贴着红色的对联，孩子们会收到装着压岁钱的红包。年夜饭上通常有饺子，因为它象征着好运。如今，越来越多的外国人也选择在春节期间来中国旅游，体验这一传统。",
       prompt: "把下面这段中文译成英文（不少于 60 词）。要求：① 节日名称首字母大写、前面加 the；② 尽量用上 one of the most important… 和 a symbol of… 这两个句型；③ 注意单复数与冠词。",
@@ -253,7 +253,7 @@ window.CET4_MODULES.push({
         ["reunite with their families", "family reunion", "reunite", "get together with their families", "get together"],
         ["red couplets", "couplets", "couplet", "spring couplets"],
         ["lucky money", "red envelopes", "red envelope", "red packets", "red packet"],
-        ["a symbol of good luck", "symbol of good luck", "symbolize good luck", "symbolizes good luck", "stand for good luck", "symbol of luck"],
+        ["a symbol of good luck", "symbol of good luck", "symbolize good luck", "symbolizes good luck", "symbolise good luck", "symbolises good luck", "symbolize", "symbolizes", "symbolise", "symbolises", "represent", "represents", "stand for", "stands for", "symbol of luck"],
         ["more and more foreigners", "increasing number of foreigners", "an increasing number of foreigners", "growing number of foreigners", "a growing number of foreigners", "more and more foreign tourists", "an increasing number of foreign tourists"]
       ],
       sample: "The Spring Festival is one of the most important traditional festivals in China.\nDuring the festival, people go home to reunite with their families.\nRed couplets are put up on the doors, and children receive red envelopes containing lucky money.\nDumplings are usually served at the New Year's Eve dinner, because they are a symbol of good luck.\nToday, more and more foreigners choose to travel to China during the Spring Festival to experience this tradition.",
@@ -318,7 +318,7 @@ window.CET4_MODULES.push({
         ["scan a qr code", "scan the qr code", "scanning a qr code", "qr code", "scan the code"],
         ["not only", "not just", "not merely"],
         ["traffic congestion", "traffic jams", "traffic pressure", "the pressure on city traffic", "traffic problems"],
-        ["only if", "as long as", "only when"]
+        ["only if", "as long as", "only when", "only by", "only through", "can only"]
       ],
       sample: "In recent years, more and more Chinese people have chosen to travel by shared bike.\nRiders scan a QR code with their phones to unlock a bike, which is both convenient and cheap.\nShared bikes not only reduce car exhaust but also ease traffic congestion in cities.\nHowever, parking them at random has created new problems.\nExperts believe that our cities can become greener only if everyone works together.",
       questions: [
@@ -390,10 +390,10 @@ window.CET4_MODULES.push({
         ["21,000 kilometres", "21,000 km", "21000 kilometres", "21000 km", "21,000 kilometers", "21000 kilometers", "twenty-one thousand kilometres", "twenty-one thousand kilometers"],
         ["the longest wall in the world", "the world's longest wall", "longest wall in the world"],
         ["from all over", "from all directions", "from every corner", "from around the world"],
-        ["ten million", "10 million"],
-        ["rapid changes", "changing rapidly", "change rapidly", "changes rapidly", "changing fast", "with each passing day"]
+        ["ten million", "10 million", "10,000,000", "10000000"],
+        ["rapid changes", "changing rapidly", "change rapidly", "changes rapidly", "changing fast", "with each passing day", "rapidly", "dramatically", "changing", "changed", "fast"]
       ],
-      sample: "China has a long history of more than five thousand years.\nThe Great Wall, about 21,000 kilometres long, is the longest wall in the world.\nEvery year, it attracts more than ten million visitors from all over the world.\nIn recent years, China has seen rapid changes, and more and more families choose to travel during their holidays.",
+      sample: "China has a long history of more than five thousand years.\nThe Great Wall, about 21,000 kilometres long, is the longest wall in the world.\nEvery year, it attracts more than ten million visitors from all over the world.\nIn recent years, Chinese people's lives have been changing rapidly, and more and more families choose to travel during their holidays.",
       questions: [
         {
           q: "「三千万」用英语怎么表达？",
@@ -452,7 +452,7 @@ window.CET4_MODULES.push({
         ["the library will be closed", "will be closed", "will not be open", "will be shut"],
         ["system upgrade", "system update", "upgrading its system", "upgrade of the system"],
         ["self-service book return machine", "self-service", "self service", "book return machine", "machine for returning books"],
-        ["sorry for any inconvenience", "apologize for any inconvenience", "apologise for any inconvenience", "sorry for the inconvenience", "inconvenience caused"],
+        ["sorry for any inconvenience", "apologize for any inconvenience", "apologise for any inconvenience", "sorry for the inconvenience", "inconvenience caused", "thank you for your understanding", "apologize", "apologise", "inconvenience"],
         ["second-year student", "sophomore", "second year student", "second-year"],
         ["majoring in English", "major in English", "my major is English", "I major in English"],
         ["make more friends", "make new friends", "meet more friends", "get to know more friends"]
@@ -525,13 +525,13 @@ window.CET4_MODULES.push({
       minWords: 90,
       points: [
         ["the national drink", "national drink", "national beverage"],
-        ["for thousands of years", "thousands of years", "have been drinking"],
+        ["for thousands of years", "thousands of years", "several thousand", "have been drinking"],
         ["it is said that", "it's said that", "legend has it that", "according to legend", "tea is said to have been"],
-        ["was first discovered", "first discovered", "was discovered accidentally"],
+        ["was first discovered", "first discovered", "was discovered accidentally", "accidentally", "by chance"],
         ["the Tea-Horse Road", "Tea-Horse Road", "tea horse road", "ancient tea road", "ancient road for tea trade"],
-        ["not only a drink but also", "not only a drink, but also", "not only a beverage but also", "not only is it a drink", "more than a drink", "not just a drink"],
-        ["has spread all over the world", "has spread around the world", "spread all over the world", "is popular all over the world"],
-        ["more and more people", "an increasing number of people", "a growing number of people"]
+        ["not only a drink but also", "not only a drink, but also", "not only a beverage but also", "not only is it a drink", "not only", "more than a drink", "not just a drink"],
+        ["has spread all over the world", "has spread around the world", "spread all over the world", "is popular all over the world", "worldwide", "across the world", "throughout the world", "all over the world", "around the world"],
+        ["more and more people", "an increasing number of people", "a growing number of people", "increasingly popular", "more and more popular"]
       ],
       sample: "Tea is the national drink of China, and the Chinese have been drinking it for thousands of years.\nIt is said that tea was first discovered accidentally by an ancient emperor.\nAfter the Tang Dynasty, drinking tea gradually became a popular custom, and the Tea-Horse Road carried tea leaves to different parts of the country.\nToday, tea is not only a drink but also a way of life: when friends get together, they often chat over a cup of tea.\nIn many cities, teahouses are still places where people meet up and talk things over.\nChinese tea culture has spread all over the world and is enjoyed by more and more people.",
       questions: [

@@ -19,13 +19,13 @@ window.CET4_MODULES.push({
       title: "听力怎么听：先抓场景，再抓细节",
       minutes: 15,
       gist: "四级听力只播一遍 —— 学会用场景词预判，再用转折词锁定答案。",
-      lesson: "四级听力一共 25 题、占 248.5 分，和阅读并列，是四大板块里分值最高的两块之一；而且每段只播一遍。它分三类：短篇新闻 3 段（7 题）、长对话 2 篇（8 题）、听力篇章 3 篇（10 题）。\n好消息是：听力不要求你听懂每个词，考的是抓关键信息。做法只有三步。\n第一步，播放前抢读选项：把选项里重复出现的词圈出来，预判场景（校园、机场、餐厅、办公室），场景一旦定下来，很多词会自动“跳”出来。\n第二步，播放时盯住疑问词：问时间就抓数字，问原因就抓 because / so / the reason is，问建议就抓 why not / you'd better / should。\n第三步，听到转折词立刻警觉：but、however、actually、instead 后面往往就是答案；选项里的原词既可能是答案，也可能是陷阱——判断标准是「这句话有没有回答问题」，而不是「有没有听到原词」。本关第 5、6 题的正确项恰好保留了原词，第 1 题则是同义替换（go ahead ≈ 请便、坐吧）。\n练法：第一遍绝不看原文，做完题再点「显示原文」逐句对照，把没听出来的地方标出来，跟着示范音频读两遍 —— 这一步最能涨分。",
+      lesson: "四级听力一共 25 题、占 248.5 分，和阅读并列，是四大板块里分值最高的两块之一；而且每段只播一遍。它分三类：短篇新闻 3 段（7 题）、长对话 2 篇（8 题）、听力篇章 3 篇（10 题）。\n好消息是：听力不要求你听懂每个词，考的是抓关键信息。做法只有三步。\n第一步，播放前抢读选项：把选项里重复出现的词圈出来，预判场景（校园、机场、餐厅、办公室），场景一旦定下来，很多词会自动“跳”出来。\n第二步，播放时盯住疑问词：问时间就抓数字，问原因就抓 because / so / the reason is，问建议就抓 why not / you'd better / should。\n第三步，听到转折词立刻警觉：but、however、actually、instead 后面往往就是答案；选项里的原词既可能是视听一致的正确答案，也可能是答非所问的干扰，判断标准是「这句话有没有回答题干所问」。此外，正确答案也常通过同义替换出现（比如音频说 postpone the meeting，选项可能换成 put off 或 pushed back）。\n练法：第一遍绝不看原文，做完题再点「显示原文」逐句对照，把没听出来的地方标出来，跟着示范音频读两遍 —— 这一步最能涨分。",
       usage: "这套方法在日常里同样管用：机场广播、餐厅点单、课堂通知、同事交代事情，靠的都是“抓关键信息”而不是逐词听懂。",
       takeaways: [
         "四级听力 25 题、只播一遍，与阅读并列分值最高",
         "听前抢读选项，用场景词预判内容",
         "but / however / actually 之后常常就是答案",
-        "选项和音频原词一致时先怀疑，正确答案多为同义替换",
+        "原词既可能是视听一致的正确答案，也可能是答非所问的干扰，关键看是否回答了题干所问",
         "第一遍裸听，第二遍再对照原文跟读"
       ],
       type: "listen",
@@ -93,7 +93,7 @@ window.CET4_MODULES.push({
       title: "短对话：数字与时间",
       minutes: 15,
       gist: "数字题的难点不是听不懂数字，而是听到好几个数字之后不知道该选哪一个。",
-      lesson: "数字题有三个台阶：听懂数字 → 听懂数字修饰的是什么 → 判断题目问的是哪一个。绝大多数人卡在第三步，本关就练第三步。\n① 抢读选项时先分类：选项全是钱（dollar）、全是时刻（nine forty / ten five）、还是全是数量（two / three days）。分好类之后，播放时只盯这一类，其他数字自动降级成背景音。\n② 边听边在选项旁做小记号：听到 twelve 就在 twelve 旁边点一下；听到 half price 就写「÷2」；听到 on the house 就写「0」。数字题几乎都要算一步，不记就一定会算错。\n③ 三个高频价格表达：half price 半价；on the house 店家请客、免费；for free 免费。听到它们，价格就要变。\n④ 时间题的固定套路是「先给一个旧时间，再给一个新时间」：delayed by an hour、pushed back、brought forward。题目问「原定」还是「现在」，答案完全不同，所以疑问词一定要听清。\n⑤ 数字前面的词决定它算不算数：each 是「每个」，要乘数量；in total、altogether 是「已经算好的总数」，不用再算。",
+      lesson: "（考试说明：四级自 2016 年改革后已取消独立短对话，但短对话里的数字、地点、建议句式仍高频出现在长对话与短篇新闻中，因此第 202–204 关用作进入真题题型前的听力微技能热身。）\n数字题有三个台阶：听懂数字 → 听懂数字修饰的是什么 → 判断题目问的是哪一个。绝大多数人卡在第三步，本关就练第三步。\n① 抢读选项时先分类：选项全是钱（dollars / pounds）、全是时刻（如 eight fifteen / ten oh-five；日常地道口语中 10:05 通常读作 ten oh-five 或 five past ten）、还是全是数量（如 two / three days）。分好类之后，播放时只盯这一类，其他数字自动降级成背景音。\n② 边听边在选项旁做小记号：听到原价数字就在旁边点一下；听到打折或半价（half price / 20% off）就写算式；听到免费（for free / on the house）就写「0」。数字题几乎都要算一步，不记就容易算错。\n③ 三个高频价格表达：half price 半价；on the house 店家请客、免费；for free 免费。听到它们，最终价格就要变。\n④ 时间题的固定套路是「先给一个旧时间，再给一个新时间」：delayed by an hour、pushed back、brought forward。题目问「原定」还是「现在」，答案完全不同，所以疑问词一定要听清。\n⑤ 数字前后的词决定它算不算数：each 是「每个」，要乘数量；in total、altogether 是「已经算好的总数」，不用再算。",
       usage: "价格、时刻、数量是日常里最需要一次就听懂的信息：点单、赶车、约时间，听错一个数字的代价最大。",
       takeaways: [
         "数字题先按「钱 / 时刻 / 数量」给选项分类，只听一类",
@@ -102,7 +102,7 @@ window.CET4_MODULES.push({
         "each 要乘数量，in total 是已经算好的总数"
       ],
       type: "listen",
-      audioTip: "先裸听一遍做题，第二遍再点「显示原文」核对数字：把每个数字和它修饰的对象一起抄下来。",
+      audioTip: "先裸听一遍做题，第二遍再点「显示原文」核对数字：把每个数字和它修饰的对象一起抄下来。（注：第 2 段音频中将 10:05 读作了 ten five，日常地道英语口语的标准读法是 ten oh-five 或 five past ten。）",
       taskTitle: "听力理解",
       taskCopy: "共 5 题，答对 4 题（80%）即可通关。数字题建议边听边在纸上写记号，别靠脑子记。",
       passRatio: 0.8,
@@ -143,7 +143,7 @@ window.CET4_MODULES.push({
         },
         {
           q: "Which train does the woman decide to take?",
-          options: ["The nine fifteen train.", "The nine forty train.", "The ten thirty-five train.", "The ten five train."],
+          options: ["The nine fifteen train.", "The nine forty train.", "The ten thirty-five train.", "The 10:05 express train."],
           answer: 3,
           explain: "她说 “the express would get me there at ten thirty-five. I'll take that one.” —— 她选的是十点零五发的快车。十点三十五不是一个发车时间，而是快车到达机场的时间，把它当成「一班车」就是本题最像样的干扰项；九点十五已经开走，九点四十是慢车。"
         },
@@ -160,7 +160,7 @@ window.CET4_MODULES.push({
       title: "短对话：地点与场景词",
       minutes: 15,
       gist: "一个场景词就能点亮整个画面。先定场景，再听人去哪儿，最后听准方位。",
-      lesson: "地点题不需要听懂每个词：抓住「场景词」，一个词就能点亮整个场景，剩下的内容大脑会自动补全。\n四组必背场景词：\n① 校园：dormitory 宿舍、lecture hall 讲堂、seminar 研讨课、tutor 导师、department office 系办公室、reading room 阅览室、canteen 食堂。\n② 机场：check in 办理登机、boarding 登机、gate 登机口、delayed 延误、passport 护照、luggage 行李。\n③ 餐厅：menu 菜单、order 点菜、bill 账单、reservation 预订、takeaway 外卖。\n④ 医院与药店：appointment 预约、prescription 处方、pharmacy 药店、medicine 药、cold 感冒。\n听地点题按这个顺序走：先抓一个场景词定下场景，再听「人最后往哪儿去了」——moved to、ended up in、went over to 后面跟的地点往往才是答案，前面提到的地点常常是「本来打算去」的干扰项。\n还要记住一组方位词：next to / beside 挨着，opposite 在……对面，on the second floor 在二楼，just past 过了……就是。地点题考的是精确位置，不是大致方向，所以这一组词不能听个大概。",
+      lesson: "（考试说明：四级自 2016 年起已取消独立短对话，本关继续用短对话训练长对话与新闻里必备的「场景词与方位词」定位微技能。）\n地点题不需要听懂每个词：抓住「场景词」，一个词就能点亮整个场景，剩下的内容大脑会自动补全。\n四组必背场景词：\n① 校园：dormitory 宿舍、lecture hall 讲堂、seminar 研讨课、tutor 导师、department office 系办公室、reading room 阅览室、canteen 食堂。\n② 机场：check in 办理登机、boarding 登机、gate 登机口、delayed 延误、passport 护照、luggage 行李。\n③ 餐厅：menu 菜单、order 点菜、bill 账单、reservation 预订、takeaway 外卖。\n④ 医院与药店：appointment 预约、prescription 处方、pharmacy 药店、medicine 药、cold 感冒。\n听地点题按这个顺序走：先抓一个场景词定下场景，再听「人最后往哪儿去了」——moved to、ended up in、went over to 后面跟的地点往往才是答案，前面提到的地点常常是「本来打算去」的干扰项。\n还要记住一组方位词：next to / beside 挨着，opposite 在……对面，on the second floor 在二楼，just past 过了……就是。地点题考的是精确位置，不是大致方向，所以这一组词不能听个大概。",
       usage: "问路、找登机口、在陌生商场里找药店，靠的都是抓场景词和方位词的能力。",
       takeaways: [
         "一个场景词就能定下整段对话的背景，先定场景再听细节",
@@ -200,7 +200,7 @@ window.CET4_MODULES.push({
           q: "Why did the man leave his dormitory?",
           options: ["His roommate had visitors.", "The dormitory was closed for cleaning.", "He wanted to buy a coffee.", "His roommate was ill."],
           answer: 0,
-          explain: "原句 “my roommate had friends over” —— have friends over 就是「有朋友过来」，也就是室友有客人。宿舍并没有关门；买咖啡是他到了咖啡馆之后顺带提到的事，不是他离开宿舍的原因。"
+          explain: "原句 “my roommate had friends over” —— have friends over 就是「有朋友过来」，室友带了客人来宿舍，他没法安心看书才离开。宿舍并没有关门，室友也没生病；他最后虽然去了咖啡馆，但也只是为了找安静地方看书，音频里并未提到他想买咖啡。"
         },
         {
           q: "Where does the second conversation most probably take place?",
@@ -227,7 +227,7 @@ window.CET4_MODULES.push({
       title: "短对话：建议与请求",
       minutes: 15,
       gist: "Why not / You'd better / How about 一听就知道是建议；Would you mind 后面才是请求。",
-      lesson: "建议和请求是短对话里出现频率最高的一类，句式非常固定，听到开头就能预判后面。\n一、建议（让对方去做某事）：\n· Why not + 动词原形？／ Why don't you…？「为什么不……呢」，语气最轻。\n· You'd better + 动词原形「你最好……」，语气较强，后面常跟一个不好的后果。\n· How about / What about + 名词或动名词？「……怎么样」，用来推出另一个选项。\n· Shall we…？／ Let's…「我们一起……吧」。\n· If I were you, I'd…「换成我就……」，用虚拟语气提建议。\n二、请求（想从对方那里得到东西）：\n· Would you mind if I…？「你介意我……吗」，注意回答 No 才是同意。\n· Could you possibly…？／ I was wondering if you could… 是最委婉的请求。\n· Would you mind doing…？后面接动名词，不接 to do。\n三、考场套路：一个人常常一口气提好几条建议，题目问 first suggestion 时答案就是第一条；接着被建议的人会明确表态（That would save me. / That works.），表态指向的那一条才是「最后决定」。所以 first、also、or 这些顺序词必须听见。\n四、还有一个经典陷阱：题目问「他同意了吗」，而回答里出现 I'm afraid…、Actually…，多半是委婉拒绝，正确答案往往是「对方改成了另一件事」。",
+      lesson: "（考试说明：四级自 2016 年起已取消独立短对话，本关作为微技能热身最后一关，专门练熟长对话里高频出现的「建议与请求」句式。）\n建议和请求是短对话里出现频率最高的一类，句式非常固定，听到开头就能预判后面。\n一、建议（让对方去做某事）：\n· Why not + 动词原形？／ Why don't you…？「为什么不……呢」，语气最轻。\n· You'd better + 动词原形「你最好……」，语气较强，后面常跟一个不好的后果。\n· How about / What about + 名词或动名词？「……怎么样」，用来推出另一个选项。\n· Shall we…？／ Let's…「我们一起……吧」。\n· If I were you, I'd…「换成我就……」，用虚拟语气提建议。\n二、请求（想从对方那里得到东西）：\n· Would you mind if I…？「你介意我……吗」，注意回答 No 才是同意。\n· Could you possibly…？／ I was wondering if you could… 是最委婉的请求。\n· Would you mind doing…？后面接动名词，不接 to do。\n三、考场套路：一个人常常一口气提好几条建议，题目问 first suggestion 时答案就是第一条；接着被建议的人会明确表态（That sounds good. / That works.），表态指向的那一条才是「最后决定」。所以 first、also、or 这些顺序词必须听见。\n四、还有一个经典陷阱：题目问「他同意了吗」，而回答里出现 I'm afraid…、Actually…，多半是委婉拒绝，正确答案往往是「对方改成了另一件事」。",
       usage: "同事、老师、客服之间的每一次沟通几乎都在提建议和提请求；听懂 Why not 和 Would you mind，回应才不会答反。",
       takeaways: [
         "Why not / You'd better / How about 都是建议，只是语气强弱不同",
@@ -294,13 +294,13 @@ window.CET4_MODULES.push({
       title: "长对话（一）：校园场景",
       minutes: 18,
       gist: "长对话每篇 4 题，答案按对话顺序出现 —— 用「顺序听」代替「听懂每一句」。",
-      lesson: "长对话是四级听力的第二块，2 篇共 8 题，每篇 4 题，长度在 10 轮以上。它比短对话好拿分，因为话题更完整，但必须换一套听法。\n一、听前十几秒做一张「地图」：如果选项里反复出现 course、form、library、textbook，就在草稿纸上写下这几个词，它们就是四个路标，听到哪个词就抬头。\n二、长对话的信息是严格按顺序出现的：第 1 题的答案几乎总在前两三句，第 4 题的答案几乎总在最后几句。一旦发现已经听到第 3 题的内容，说明第 1 题漏了——果断放弃，跟上新的，绝不回头。\n三、长对话最爱考三类信息：\n· 问题与原因：学生说 “It's timetabled at eight… I keep missing the first ten minutes.”，问的就是「为什么要换课」。听到 I keep、because、so 就要留心。\n· 规则与建议：“the rule is that you can change courses during the first two weeks only”“Shall I move you there instead of dropping the course?”——这类句子本身往往就是题目。\n· 条件与时间点：“if you have overdue books…”“before Friday”，听力里的条件和截止时间几乎必考。\n四、校园场景高频词：timetable 课表、seminar 研讨课、tutor 导师、signature 签名、register for a course 选课注册、overdue 逾期的、renew（图书）续借、student card 学生证。",
+      lesson: "长对话是四级听力的第二块，2 篇共 8 题，每篇 4 题，长度在 10 轮以上。它比单轮对话话题更完整，但必须换一套听法。\n一、听前十几秒做一张「地图」：扫读四道题的选项，把反复出现的主题词（比如 lab、application、dorm、card）标出来，它们就是四个路标，听到哪个词就抬头。\n二、长对话的信息是严格按顺序出现的：第 1 题的答案几乎总在前两三句，第 4 题的答案几乎总在最后几句。一旦发现已经听到第 3 题的内容，说明第 1 题漏了——果断放弃，跟上新的，绝不回头。\n三、长对话最爱考三类信息：\n· 问题与原因：比如说话人抱怨 “The lab is fully booked on Tuesdays, so I can't finish the experiment.”，听到 I keep、because、so 就要留心「为什么要做某件事」。\n· 规则与建议：例如 “The policy is that applications must be submitted online.” 或 “Shall we switch you to the afternoon group instead?”——规则说明与替代建议本身往往就是题目。\n· 条件与时间点：例如 “unless you bring your ID card” 或 “by next Monday”，听力里的条件和截止时间几乎必考。\n四、校园场景高频词：timetable 课表、seminar 研讨课、tutor 导师、signature 签名、register for a course 选课注册、overdue 逾期的、renew（图书）续借、student card 学生证。",
       usage: "在办公室办手续、跟导师沟通、处理选课和借书，信息量大又只讲一遍，靠的就是「按顺序听」和「抓条件句」。",
       takeaways: [
         "长对话每篇 4 题，答案按对话顺序出现，漏了就放手",
         "选项里重复出现的词就是路标词，听到就抬头",
         "规则句（the rule is…）和建议句（Shall I…）往往就是题目本身",
-        "条件与时间点几乎必考：overdue / before Friday"
+        "条件与时间点几乎必考：if / unless / before + 截止日期"
       ],
       type: "listen",
       audioTip: "第一遍边听边在纸上写「她在办什么手续」；第二遍再核对条件句和截止时间。",
@@ -348,13 +348,13 @@ window.CET4_MODULES.push({
       title: "长对话（二）：职场与面试",
       minutes: 18,
       gist: "面试对话有固定结构：身份 → 经历 → 动机 → 条件 → 确认，对着结构听就不慌。",
-      lesson: "面试类长对话的结构非常稳定，听的时候按这个结构对号入座，比逐句硬听省力得多：\n① 开场：问候 + 确认身份（I see you're in your second year…）。\n② 岗位与经历：What did you do before? / Have you done any work of this kind before? 这一段几乎必出一道题，答案就是那段经历，重点听动词：helped、planned、answered。\n③ 动机：Why did you apply to us rather than…? 问「为什么选我们」。答案通常有两点，音频会用 two reasons 明确提示，两点都要记住，题目很可能只问其中一点。\n④ 条件与安排：时长（ten weeks）、开始时间（the first of July）、报酬（twelve dollars an hour）、通知方式（email by the end of next week）。这一段是数字最密集的地方。\n⑤ 结尾确认：Are you free to start on…? 应聘者的回答里常常藏着「另一个时间」（my last exam is on the twenty-eighth of June），它是最常见的干扰数字。\n职场高频词：internship 实习、apply for 申请、campaign（推广）活动、social media 社交媒体、work from home 远程办公、by the end of next week 下周末之前、an hour（计时工资）每小时。",
+      lesson: "面试类长对话的结构非常稳定，听的时候按这个结构对号入座，比逐句硬听省力得多：\n① 开场：问候 + 确认身份或求职方向（如 I see you're majoring in computer science…）。\n② 岗位与经历：面试官常问 What experience do you have? / Have you done similar work before? 这一段几乎必出一道题，答案就是那段经历，重点听动词：organised、assisted、managed。\n③ 动机：面试官问 Why did you apply to us? 应聘者常会用 first / second 或 two reasons 给出两点理由，两点都要记住，题目可能合在一起考，也可能只问其中一点。\n④ 条件与安排：常见要素包括时长（如 six months）、开始时间（如 15 August）、薪资待遇（如 per hour / per month）和通知方式（如 call you on Monday）。这一段数字最密集，要分清每个数字对应哪件事。\n⑤ 结尾确认：面试官确认入职时间时，应聘者常顺带提到「另一个时间」（比如毕业答辩、课程结束或搬家日期），它往往是最常见的干扰数字。\n职场高频词：internship 实习、apply for 申请、campaign（推广）活动、social media 社交媒体、work from home 远程办公、by the end of next week 下周末之前、an hour（计时工资）每小时。",
       usage: "面试和被面试时，对方真正在问的就是「你做过什么」「为什么选我们」「什么时候能来」；听懂这三句，回答就不会跑偏。",
       takeaways: [
         "面试长对话按「身份 → 经历 → 动机 → 条件 → 确认」五步走",
-        "经历题听到动词就等于听到答案：helped / planned / answered",
-        "two reasons 是明确信号词，两点都要记住",
-        "时间题要分清「通知时间」「考试结束时间」「入职时间」"
+        "经历题重点抓动作动词：具体做了什么、负责什么",
+        "听到 first / second 或 two reasons 时，两点理由都要记住",
+        "时间题要分清不同事件各自对应的日期（通知 / 截止 / 入职）"
       ],
       type: "listen",
       audioTip: "第一遍只记结构（走到第几步了）；第二遍把四类数字抄下来：时长、工资、通知时间、入职时间。",
@@ -402,7 +402,7 @@ window.CET4_MODULES.push({
       title: "长对话（三）：态度与观点",
       minutes: 18,
       gist: "态度题不考细节，考「这个人到底怎么想」；重点永远在 I agree that…, but… 的 but 之后。",
-      lesson: "态度题不考细节，考的是「这个人到底怎么想」。它有两个特点：选项多是形容词或立场句，而音频里很少直接出现这些词。\n一、先把选项读成三类：支持（positive）、反对（negative）、犹豫（not sure / maybe）。听的时候只要判断说话人落在哪一类，就能先排掉一半选项。\n二、抓态度信号词：\n· 支持：I think it's great. / That's a fair point. / Exactly.\n· 反对：I'm not sure that's a good idea. / I'm afraid… / My worry is… / The problem is…\n· 部分同意：I agree that…, but… / Maybe, still… / Not completely.\n三、注意「先同意、后转折」这个最常见的话术：I agree that we need more study space. My worry is the noise. —— 前半句是让步，but / my worry is 后面才是真实立场。听到 I agree that 先别急着选「支持」。\n四、分清是谁在说话。本题里男士支持、女士有顾虑；一旦把人称听混，两个选项都会看起来像对的，这是态度题最常见的失分方式。\n五、态度题的答案常常在最后两轮：题干里出现 at the end、finally，就一定听到最后再选，因为对话中间人可能改变主意。",
+      lesson: "态度题不考细节，考的是「这个人到底怎么想」。它有两个特点：选项多是形容词或立场句，而音频里很少直接出现这些词。\n一、先把选项读成三类：支持（positive）、反对（negative）、犹豫（not sure / maybe）。听的时候只要判断说话人落在哪一类，就能先排掉一半选项。\n二、抓态度信号词：\n· 支持：I think it's great. / That's a fair point. / I'm in favour of it.\n· 反对或担忧：I'm not sure that's a good idea. / I'm afraid… / My concern is… / The problem is…\n· 部分同意：I agree that…, but… / Maybe, still… / Not completely.\n三、注意「先同意、后转折」这个最常见的话术：比如 “I agree that the new policy saves money, but my concern is the service quality.” —— 前半句是让步，but / my concern is 后面才是真实立场。听到 I agree that 先别急着选「支持」。\n四、分清是谁在说话：长对话里男女双方常常立场不同（一方赞成、一方有顾虑）；一旦把人称听混，两个选项都会看起来像对的，这是态度题最常见的失分方式。\n五、态度题的答案常常在最后两轮：题干里出现 at the end、finally，就一定听到最后再选，因为对话中间人可能改变主意。",
       usage: "开会、谈合作、和朋友商量事情时，听懂「他是同意还是在委婉反对」，比听懂每一个词都重要。",
       takeaways: [
         "态度题先把选项分成「支持 / 反对 / 犹豫」三类",
@@ -411,7 +411,7 @@ window.CET4_MODULES.push({
         "题干出现 at the end，答案就在最后两轮"
       ],
       type: "listen",
-      audioTip: "第一遍每听完一轮就在纸上写「男：支持 / 女：顾虑」；第二遍再核对最后两轮的结论。",
+      audioTip: "第一遍在纸上分两栏记「男方立场 / 女方立场」（支持、反对还是保留意见）；第二遍再核对最后两轮的结论。",
       taskTitle: "听力理解",
       taskCopy: "共 4 题，答对 3 题（75%）即可通关。边听边记「谁是什么态度」，两栏就够。",
       passRatio: 0.75,
@@ -456,7 +456,7 @@ window.CET4_MODULES.push({
       title: "听力篇章（一）：主旨题",
       minutes: 18,
       gist: "主旨句固定在开头和结尾；中间的细节再生动，也撑不起「全文在说什么」。",
-      lesson: "听力篇章是四级听力的第三块，3 篇共 10 题，材料最长、语速最稳，也是最容易「听懂了却选错」的地方。主旨题的做法和细节题完全不同。\n一、先认题干：出现 mainly about、main idea、best title、purpose，问的就是「整篇在说什么」，答案必须能盖住全文。\n二、答案位置是固定的：第一句 + 最后一句。英语篇章习惯「开门见山 + 结尾重申」。本关音频的第一句就点出「很多人以为熬夜复习最好」，中间是研究数据，最后用研究者的一句话收尾。听的时候第一句和最后一句必须完整听懂。\n三、三个干扰项的固定套路，读完选项就能先排掉：\n· 太窄：只概括了中间某一个例子（比如只剩下「小睡二十分钟」）。\n· 太宽：跑到文章主题之外（比如去谈「考试这种方式好不好」）。\n· 太绝对：出现 always、never、only、must，而原文只是说 usually、often、about。\n四、笔记法：篇章不要记句子，只记三个词——谁、做了什么、结论是什么。主旨题的答案，就是把这三个词连起来的那句话。",
+      lesson: "听力篇章是四级听力的第三块，3 篇共 10 题，材料最长、语速最稳，也是最容易「听懂了却选错」的地方。主旨题的做法和细节题完全不同。\n一、先认题干：出现 mainly about、main idea、best title、purpose，问的就是「整篇在说什么」，答案必须能盖住全文。\n二、答案位置高度集中：第一句 + 最后一句。英语篇章习惯「开门见山 + 结尾重申」——比如开头先提出一个常见误区或核心话题，中间用研究数据或例子展开，最后用一句话总结观点或建议。听的时候第一句和最后一句必须完整听懂。\n三、三个干扰项的固定套路，读完选项就能先排掉：\n· 太窄：只概括了中间某一个例子（比如整篇讲城市骑行如何缓解拥堵，选项却只提「头盔价格」）。\n· 太宽：跑到文章主题之外（比如去谈「现代交通工具发展史」）。\n· 太绝对：出现 always、never、only、must，而原文只是说 usually、often、about。\n四、笔记法：篇章不要记句子，只记三个词——谁、做了什么、结论是什么。主旨题的答案，就是把这三个词连起来的那句话。",
       usage: "听讲座、听英文播客、听同事汇报，第一句和最后一句永远是重点，中间的例子可以放过。",
       takeaways: [
         "主旨题看 mainly about / best title 这类题干",
@@ -467,7 +467,7 @@ window.CET4_MODULES.push({
       type: "listen",
       audioTip: "第一遍只记三个词（谁 / 做了什么 / 结论）；第二遍对照原文，看自己记的三个词对不对。",
       taskTitle: "听力理解",
-      taskCopy: "共 5 题，答对 4 题（80%）即可通关。语速是 -8%，适合跟读，听不懂就多听两遍。",
+      taskCopy: "共 5 题，答对 4 题（80%）即可通关。语速略慢于真题原速，适合跟读，听不懂就多听两遍。",
       passRatio: 0.8,
       audio: [
         {
@@ -516,12 +516,12 @@ window.CET4_MODULES.push({
       title: "听力篇章（二）：细节题",
       minutes: 18,
       gist: "细节题考的是数字、钱、条件和否定；记数字时必须连「它修饰什么」一起记。",
-      lesson: "细节题是听力篇章里数量最多的题型，答案是原文里的某一句话，问 when、how many、how much、why、where 这些具体信息。\n一、听前圈「不同点」：四个选项都是钱数，这题就考钱；都是时间，就考时间。听的时候只盯那一类词，其余内容放心放掉。\n二、答案位置和题号有关：第 1 题的信息一般在开头两句，最后一题的信息一般在结尾两句。听到后面的内容就说明前面漏了，立刻放手。\n三、三种必须动笔记的信息：\n· 数字与单位：twelve lockers、three days、one dollar。数字一定要连单位记下来——本关第一题就用「十二个柜子里的三个」来干扰「一共三个」。\n· 收费与条件：free for the first year、if you do not collect it in time。「服务免费」和「逾期要收费」是两件事，听力最爱把它们放在同一段里。\n· 否定与例外：however、but、only、if 后面的内容往往是出题点。\n四、只做一件事就够了：听到数字、时间、钱和条件句，立刻在选项旁写一个词，不要指望靠记忆。",
+      lesson: "细节题是听力篇章里数量最多的题型，答案是原文里的某一句话，问 when、how many、how much、why、where 这些具体信息。\n一、听前圈「不同点」：四个选项都是钱数，这题就考钱；都是时间，就考时间。听的时候只盯那一类词，其余内容放心放掉。\n二、答案位置和题号有关：第 1 题的信息一般在开头两句，最后一题的信息一般在结尾两句。听到后面的内容就说明前面漏了，立刻放手。\n三、三种必须动笔记的信息：\n· 数字与单位：比如一篇介绍共享单车的音频里同时出现「全市 50 个站点（including 10 near parks）」「免费骑 30 分钟」「超时收 2 元」。数字一定要连对象一起记，谨防拿「部分数量」混淆「总数」。\n· 收费与条件：例如「基础服务免费」和「超时/违约要收费」是两件事，听力最爱把它们放在同一段里设坑。\n· 否定与例外：however、but、only、if 后面的内容往往是出题点。\n四、只做一件事就够了：听到数字、时间、钱和条件句，立刻在选项旁写一个词，不要指望靠记忆。",
       usage: "看公告、听通知、查规定时，真正决定你能不能办成事的就是这些细节：几天内取、要不要钱、几点关门。",
       takeaways: [
         "细节题先圈选项里的不同点，只听那一类词",
-        "数字要连单位一起记，「三个 / 十二个」是常见干扰",
-        "「免费」与「逾期收费」这类对比信息最爱出题",
+        "数字要连单位和对象一起记，谨防「部分」与「总数」混淆",
+        "「基础免费」与「附加/逾期收费」这类对比信息最爱出题",
         "however、but、only、if 后面几乎必是考点"
       ],
       type: "listen",
@@ -576,7 +576,7 @@ window.CET4_MODULES.push({
       title: "听力篇章（三）：推断题",
       minutes: 20,
       gist: "推断题只推一步：身份、下一步动作、态度。多推一步，答案必错。",
-      lesson: "推断题的答案不会直接出现在音频里，需要你往前走一步。题干通常是 What can we learn about…?、What will the speaker do next?、Who is the speaker?、What is the speaker's attitude…?。\n一、推断题只有三种「合理的一步」，超出这三种就一定是错的：\n· 从身份和场景推：听到 this office、our working hours、your team leader、sick days，就能推出「说话人是管理者，听众是员工」。\n· 从时间和计划推：Next week I will send round… 推出「下周会收到材料」。\n· 从用词和语气推态度：results were better than we expected、Nobody asked to go back、we will find a way to make it work，推出说话人对新安排有信心。\n二、推断题的两个禁区：\n· 不要把常识当答案。「早高峰很堵」听起来很有道理，但音频没提，就不能选。\n· 不要推得太远。原文说「下周发意见表」，选项说「下周开始执行新工时」，多走一步就是错的。\n三、做题顺序：先看选项。如果四个选项讲的都是「谁在说 / 接下来做什么 / 说话人怎么看」，这一段就一定会考推断，听的时候重点记「结论句」和「将来的动作」（next week、from June）。",
+      lesson: "推断题的答案不会直接出现在音频里，需要你往前走一步。题干通常是 What can we learn about…?、What will the speaker do next?、Who is the speaker?、What is the speaker's attitude…?。\n一、推断题只有三种「合理的一步」，超出这三种就一定是错的：\n· 从身份和场景推：比如听到 your final paper、the reading list、during my office hours，就能推出「说话人是老师，听众是学生」。\n· 从时间和计划推：比如听到 Tomorrow we will post the schedule online，就能推出「明天能在网上查到安排」。\n· 从用词和语气推态度：听到 encouraging progress、highly effective、worth continuing 这类正向评价，就能推出说话人持支持或有信心的态度。\n二、推断题的两个禁区：\n· 不要把常识当答案。比如音频谈社区回收站，选项说「塑料污染会危害海洋生物」——常识上没错，但音频没提，就不能选。\n· 不要推得太远。原文说「下周公布试行方案的讨论稿」，选项说「下周正式施行新规」，多走一步就是错的。\n三、做题顺序：先看选项。如果四个选项讲的都是「谁在说 / 接下来做什么 / 说话人怎么看」，这一段就一定会考推断，听的时候重点记「场景线索词」「结论句」和「将来的动作」（如 next week、from next month）。",
       usage: "听别人汇报时，真正要判断的往往是「他是赞成还是反对」「这事下一步怎么走」，说出来那句话只是线索。",
       takeaways: [
         "推断题只推一步：身份、下一步动作、态度",
@@ -636,7 +636,7 @@ window.CET4_MODULES.push({
       title: "短篇新闻：导语抓取法",
       minutes: 20,
       gist: "新闻是倒金字塔：第一句就是摘要，抓住它，一分钟的音频就变成十秒钟的信息。",
-      lesson: "短篇新闻是四级听力最前面的一块，3 篇共 7 题，语速偏快、信息密度大，但它有一条非常好用的规律：导语（第一句）里几乎包含全部要点。\n一、新闻的写法是「倒金字塔」：最重要的事实在第一句，后面依次补充细节和背景。第一句通常同时回答四个问题：\nwho（谁）+ what happened（发生了什么）+ where（在哪儿）+ when（什么时候）。\n例：A fire broke out in a clothing factory on the edge of the city late last night.\n谁：一家服装厂｜什么：起火｜哪儿：城边｜何时：昨晚深夜。\n二、所以新闻题的做法是：第一句必须完整听懂。哪怕后面跟不上，主旨题的分数也已经拿到了。\n三、听到第一句之后，立刻在心里问「接下来会补什么」，通常只补这三样：\n· 伤亡与损失：nobody was injured、the damage is expected to cost…\n· 原因与调查：the fire had started in a store room、an investigation will begin…\n· 各方反应：officials say…、Some parents, however, say…\n四、新闻高频词：break out（火灾、战争）爆发、be under control 得到控制、injured 受伤的、investigation 调查、officials 官员、be expected to 预计。",
+      lesson: "短篇新闻是四级听力最前面的一块，3 篇共 7 题，语速偏快、信息密度大，但它有一条非常好用的规律：导语（第一句）里几乎包含全部要点。\n一、新闻的写法是「倒金字塔」：最重要的事实在第一句，后面依次补充细节和背景。第一句通常同时回答四个问题：\nwho（谁）+ what happened（发生了什么）+ where（在哪儿）+ when（什么时候）。\n例：Heavy snow forced the main airport in the capital to close for six hours yesterday morning.\n谁：首都主要机场｜什么：因大雪被迫关闭六小时｜哪儿：首都｜何时：昨天上午。\n二、所以新闻题的做法是：第一句必须完整听懂。哪怕后面跟不上，主旨题的分数也已经拿到了。\n三、听到第一句之后，立刻在心里问「接下来会补什么」，通常只补这三样：\n· 伤亡与损失：如是否有人受伤（no injuries were reported）、经济损失或受影响人数。\n· 原因与调查：如事故起因、何时恢复、是否展开调查（officials have launched a review…）。\n· 各方反应：如官方表态（city officials say…）以及转折引出的不同声音（local residents, however, argue…）。\n四、新闻高频词：break out（火灾、战争）爆发、be under control 得到控制、injured 受伤的、investigation 调查、officials 官员、be expected to 预计。",
       usage: "刷英文新闻、听英文广播时，第一句就是整条新闻的摘要；抓住导语，你就能在几秒钟内判断这条新闻要不要继续听。",
       takeaways: [
         "新闻用倒金字塔结构，第一句就是全文摘要",
@@ -676,7 +676,7 @@ window.CET4_MODULES.push({
           q: "How long did it take the firefighters to control the fire?",
           options: ["About half an hour.", "About two hours.", "About six hours.", "About two days."],
           answer: 1,
-          explain: "原文 “firefighters brought the fire under control within two hours” —— 两小时之内控制住火势。这条新闻里还有 two hundred thousand dollars（损失金额）和 late last night（时间），都是带着 two 的信息，必须听清数字修饰的对象。"
+          explain: "原文 “firefighters brought the fire under control within two hours” —— 两小时之内控制住火势。这条新闻里另有一处也带着 two：two hundred thousand dollars（预计损失金额），此外干扰项还把 two hours 改成了 two days，所以必须听清数字后面的单位和修饰对象。"
         },
         {
           q: "What will begin this morning?",
@@ -702,19 +702,19 @@ window.CET4_MODULES.push({
       id: 212,
       title: "同义替换与干扰项套路：限时冲刺",
       minutes: 25,
-      gist: "正确答案多是同义替换，照抄原词的多半是陷阱；再加 15 分钟倒计时练纪律。",
-      lesson: "四级听力的正确答案很少是「你听到的那个词」。出题人会把音频里的说法换成另一种说法，这就是同义替换；而把原词原句直接搬进选项的，往往是陷阱。这一关把最常见的套路一次讲完。\n一、同义替换的四种常见形式（例子散在前面几关的音频里，本关负责归类）：\n· 短语换短语：No such luck → 没抢到票；on the house → 免费。\n· 数字换说法：half the price → 便宜一半；quarter past five 与 closes at six → 中间还剩四十五分钟。\n· 具体换概括：sold out → 买不到；renew online → 书没逾期、不用还。\n· 句子换态度：results were better than we expected → 说话人有信心。\n二、干扰项的五个套路，做完题一定要回头认一遍：\n① 原词陷阱：选项照抄音频里的词，但答的不是题目问的那件事（听到某个数字，就跳到含这个数字却答非所问的选项）。\n② 数字干扰：一段话里出现好几个数字，分别修饰不同的东西。\n③ 部分正确：前半句对、后半句错（座位差 + 半价是一组，改成「座位更好」就全错了）。\n④ 张冠李戴：把 A 的说法安到 B 头上，把官方的数字当成市民的抱怨。\n⑤ 答非所问：选项内容音频里确实出现过，但它回答不了题干问的那个问题。\n三、限时冲刺的做法：本关有 15 分钟倒计时。考场上 25 题总共只有约 25 分钟，平均每题不到一分钟。听到不确认的题，先选一个、做个小记号，绝不回头纠结——把时间留给下一题，这是听力拿分最重要的一条纪律。",
+      gist: "原词既可能是视听一致的正确答案，也可能是答非所问的干扰，关键看是否回答了题干所问；再加 15 分钟倒计时练考场纪律。",
+      lesson: "四级听力里，正确答案常通过「同义替换」出现（把音频里的说法换一种表达），有时也会保留原词（视听一致）。原词既可能是视听一致的正确答案，也可能是答非所问的干扰，判断的关键永远是「有没有回答题干所问」。这一关把最常见的替换方式与干扰套路一次讲完。\n一、同义替换的四种常见形式（例子来自前面几关的音频，本关负责归类）：\n· 短语换短语：on the house → 免费（第 202 关）；have friends over → 有客人来访（第 203 关）。\n· 数字换说法：half price → 便宜一半；先给现在时刻与关门时刻，要求自己心算剩余时间。\n· 具体换概括：renewed them online → 书已续借、没有逾期（第 205 关）；pushed back by thirty minutes → 推迟了（第 201 关）。\n· 句子换态度：results were better than we expected → 说话人对新安排有信心（第 210 关）。\n二、干扰项的五个套路，做完题一定要回头认一遍：\n① 原词陷阱：选项照抄音频里的词，但答的不是题目问的那件事（听到某个数字，就跳到含这个数字却答非所问的选项）。\n② 数字干扰：一段话里出现好几个数字，分别修饰不同的对象或时间点。\n③ 部分正确或完全相反：前半句对、后半句错，或者把正反关系整体说反——只要有关键信息与原文不符，整个选项就作废。\n④ 张冠李戴：把 A 的说法安到 B 头上，把官方的数字当成市民的抱怨。\n⑤ 答非所问：选项内容音频里确实出现过，但它回答不了题干问的那个问题。\n三、限时冲刺的做法：考场上 25 题总共约 25 分钟，平均每题约 1 分钟。本关设 15 分钟倒计时（含听音、作答与复盘），建议第一遍按考场节奏尽量在 6–8 分钟内选完：听到不确认的题，先选一个、绝不回头纠结——把时间留给下一题，这是听力拿分最重要的一条纪律。",
       usage: "真实对话里没人会重复你的用词；同义替换听得懂，才算是真的听懂了英语，而不是听懂了那几个单词。",
       takeaways: [
-        "正确答案多为同义替换，照抄原词的选项要警惕",
-        "干扰项五套路：原词、数字、部分正确、张冠李戴、答非所问",
-        "数字要连对象一起记：二十分钟、四十五分钟、一半价钱",
-        "限时模式下不回头纠结，先选一个做记号"
+        "原词既可能是视听一致的正确答案，也可能是答非所问的干扰，关键看是否回答了题干所问",
+        "干扰项五套路：原词陷阱、数字干扰、部分正确/完全相反、张冠李戴、答非所问",
+        "数字和时间要连对象一起记，遇到两个时刻常需简单加减",
+        "限时模式下不回头纠结，先选一个继续跟上"
       ],
       type: "listen",
       audioTip: "限时模式下先按考场节奏做一遍；复盘时再逐题问自己「这一题的同义替换是什么、干扰项属于哪一套路」。",
       taskTitle: "限时冲刺",
-      taskCopy: "共 6 题，限时 15 分钟，答对 5 题（80%）即可通关。倒计时结束前请把答案都选上。",
+      taskCopy: "共 6 题，限时 15 分钟（含听音、作答与复盘，建议 6–8 分钟内完成首轮作答），答对 5 题（80% 以上）即可通关。倒计时结束前请把答案都选上。",
       passRatio: 0.8,
       timeLimit: 15,
       audio: [
@@ -722,7 +722,7 @@ window.CET4_MODULES.push({
           file: "212-1.mp3",
           label: "短对话",
           voice: "女声 + 男声",
-          hint: "注意 No such luck、half the price 这类替换说法",
+          hint: "注意口语习惯表达、价格变化和剩余时间的换算",
           transcript: "W: Did you manage to get a ticket for Friday's concert?\nM: No such luck. They sold out in twenty minutes. Still, I'm not too upset — I have a lot of reading to do anyway.\nW: Well, they've added a second show on Sunday afternoon. The seats aren't as good, but they're half the price.\nM: Half price? Then I'll take two. My sister has been asking me to go with her for weeks.\nW: You'd better hurry, though. The box office closes at six, and it's already quarter past five.\nM: Right. I'll book online on my way home."
         },
         {
@@ -744,7 +744,7 @@ window.CET4_MODULES.push({
           q: "What does the woman say about the Sunday show?",
           options: ["It has been cancelled.", "The seats are better and the tickets cost more.", "The tickets are half price but the seats are not as good.", "It will be held on Friday evening instead."],
           answer: 2,
-          explain: "她说 “they've added a second show on Sunday afternoon. The seats aren't as good, but they're half the price.” —— 便宜一半，但座位差一些。B 把两个信息都反过来说了，属于「部分正确」的典型改法：只要有一个信息被改动，整个选项就作废。"
+          explain: "她说 “they've added a second show on Sunday afternoon. The seats aren't as good, but they're half the price.” —— 便宜一半，但座位差一些。B 把两个信息都说反了（座位更好、票价更贵），属于「完全相反」的干扰；只要关键事实与原文不符，整个选项就作废。"
         },
         {
           q: "Why does the man decide to buy two tickets?",

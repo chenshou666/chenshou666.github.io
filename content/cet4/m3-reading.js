@@ -14,14 +14,14 @@
 window.CET4_MODULES = window.CET4_MODULES || [];
 window.CET4_MODULES.push({
   id: "m3",
-  name: "模块 3 · 阅读",
+  name: "模块 2 · 阅读",
   levels: [
     {
       id: 401,
       title: "阅读题型与时间分配",
       minutes: 12,
       gist: "阅读占 35%、共 40 分钟，但三部分的分量差四倍——先把时间分对，再谈技巧。",
-      lesson: "四级阅读占 35%（248.5 分），和听力并列最高。阅读和翻译合起来有 70 分钟，其中阅读一般给自己 40 分钟，翻译留 30 分钟。阅读由三部分组成，但三部分的分量完全不同：\n① 选词填空（Section A）：一篇 200 词左右的短文挖 10 个空，从 15 个备选词里选 10 个填进去。10 题，占 5%，每题 3.55 分，是性价比最低的一块。\n② 长篇阅读匹配（Section B）：一篇约 1000 词的长文，分成 A–O 共 15 段；后面 10 个句子，每句对应一个段落。10 题，占 10%，每题 7.1 分。\n③ 仔细阅读（Section C）：2 篇，每篇 300–400 词，各带 5 道选择题。10 题，占 20%，每题 14.2 分——一道仔细阅读等于四道选词填空。\n时间怎么分：8 分钟给选词填空，12 分钟给长篇匹配，20 分钟给仔细阅读（每篇 8–10 分钟）。也可以把顺序换成「仔细阅读 → 长篇匹配 → 选词填空」，先把最值钱的分拿到手；关键是在开考前就定好顺序，不要做到一半随意换。\n不会做时的止损原则：四级答错不倒扣分，所以任何一题都不要空着；长篇匹配来不及，就抓人名、数字、大写词快速定位，不要逐段精读；选词填空放到最后做，按词性猜一个也比留空强。",
+      lesson: "四级阅读占 35%（248.5 分），和听力并列最高。阅读和翻译合起来有 70 分钟，其中阅读一般给自己 40 分钟，翻译留 30 分钟。阅读由三部分组成，但三部分的分量完全不同：\n① 选词填空（Section A）：一篇 200 词左右的短文挖 10 个空，从 15 个备选词里选 10 个填进去。10 题，占 5%，每题 3.55 分，是性价比最低的一块。\n② 长篇阅读匹配（Section B）：一篇约 1000 词的长文，分成约 10–15 段（A–J 至 A–O 不等）；后面 10 个句子，每句对应一个段落。10 题，占 10%，每题 7.1 分。\n③ 仔细阅读（Section C）：2 篇，每篇 300–400 词，各带 5 道选择题。10 题，占 20%，每题 14.2 分——一道仔细阅读等于四道选词填空。\n时间怎么分：8 分钟给选词填空，12 分钟给长篇匹配，20 分钟给仔细阅读（每篇 8–10 分钟）。也可以把顺序换成「仔细阅读 → 长篇匹配 → 选词填空」，先把最值钱的分拿到手；关键是在开考前就定好顺序，不要做到一半随意换。\n不会做时的止损原则：四级答错不倒扣分，所以任何一题都不要空着；长篇匹配来不及，就抓人名、数字、大写词快速定位，不要逐段精读；选词填空放到最后做，按词性猜一个也比留空强。",
       usage: "读英文说明书、报告或长文时，先判断「哪一部分值得花时间」，用的是同一套本事。",
       takeaways: [
         "阅读占 35%（248.5 分），一般给自己 40 分钟",
@@ -32,10 +32,10 @@ window.CET4_MODULES.push({
       ],
       type: "read",
       taskTitle: "题型与时间实测",
-      taskCopy: "先读这篇备考指南，再回答 6 道题；做完对照解析，把三部分的分值和时间分配记牢。答对 5 题（75%）即可通关。",
+      taskCopy: "先读这篇备考指南，再回答 6 道题；做完对照解析，把三部分的分值和时间分配记牢。答对 5 题（80% 以上）即可通关。",
       passageLabel: "阅读材料",
       passageTag: "备考指南",
-      passage: "A Guide to the Reading Paper\n\nReading makes up 35% of your CET-4 score, the same share as listening, and you have forty minutes to finish it. The paper has three sections, and they are not worth the same.\n\nSection A, word selection, gives you a short text of about 200 words with ten blanks. Fifteen words are listed, and you choose ten of them. It carries 5% of the total, so each blank is worth only 3.55 points.\n\nSection B, long matching, is a text of about 1,000 words divided into fifteen paragraphs, marked A to O. Ten statements follow, and you match each statement to the paragraph that contains the information. It carries 10%, or 7.1 points per statement.\n\nSection C, careful reading, has two passages of about 300 to 400 words, with five questions on each. It carries 20%, which is 14.2 points per question — four times the value of a blank in Section A.\n\nA sensible plan is eight minutes for Section A, twelve for Section B and twenty for Section C. Many teachers advise starting with Section C, because its questions are worth the most and the answers are easy to find once the passage has been read carefully. Whichever order you choose, decide it before the test begins.\n\nIf you run short of time, remember two things: never leave a question unanswered, because there is no penalty for a wrong answer; and when you are guessing in Section B, look for names, numbers and capital letters first, as they are the quickest way back to the right paragraph.",
+      passage: "A Guide to the Reading Paper\n\nReading makes up 35% of your CET-4 score, the same share as listening, and you have forty minutes to finish it. The paper has three sections, and they are not worth the same.\n\nSection A, word selection, gives you a short text of about 200 words with ten blanks. Fifteen words are listed, and you choose ten of them. It carries 5% of the total, so each blank is worth only 3.55 points.\n\nSection B, long matching, is a text of about 1,000 words divided into roughly ten to fifteen paragraphs (marked A to J, or up to A to O). Ten statements follow, and you match each statement to the paragraph that contains the information. It carries 10%, or 7.1 points per statement.\n\nSection C, careful reading, has two passages of about 300 to 400 words, with five questions on each. It carries 20%, which is 14.2 points per question — four times the value of a blank in Section A.\n\nA sensible plan is eight minutes for Section A, twelve for Section B and twenty for Section C. Many teachers advise starting with Section C, because its questions are worth the most and the answers are easy to find once the passage has been read carefully. Whichever order you choose, decide it before the test begins.\n\nIf you run short of time, remember two things: never leave a question unanswered, because there is no penalty for a wrong answer; and when you are guessing in Section B, look for names, numbers and capital letters first, as they are the quickest way back to the right paragraph.",
       passRatio: 0.75,
       questions: [
         {
@@ -59,7 +59,7 @@ window.CET4_MODULES.push({
             "Because its questions are worth the most points"
           ],
           answer: 3,
-          explain: "原文：Many teachers advise starting with Section C, because its questions are worth the most. 理由就是分值最高（每题 14.2 分）。试卷顺序其实是 A→B→C，所以「最先印」是错的；Section C 恰恰最需要仔细读，最后一项也是无中生有。"
+          explain: "原文：Many teachers advise starting with Section C, because its questions are worth the most. 理由就是分值最高（每题 14.2 分），所以选 D。A 项错在试卷印刷顺序其实是 A→B→C，不是 C 排在最前；B 项错在 Section C 有两篇 300–400 词的文章，最短的是 Section A（约 200 词）；C 项错在 Section C 是「仔细阅读」，恰恰最需要精读。"
         },
         {
           q: "What does the guide advise if you run short of time?",
@@ -96,17 +96,17 @@ window.CET4_MODULES.push({
       title: "选词填空（一）：先判词性再看语境",
       minutes: 15,
       gist: "每个空需要的词性是固定的——把词性对上，10 个空能先拿下六七个。",
-      lesson: "选词填空（Section A）看着最难，其实最讲套路：15 个备选词里，名词、动词、形容词、副词各有几个，而每个空需要的词性几乎是确定的。\n① 先判词性，再看词义：看空格缺什么。以 -tion / -ment / -ness / -ity 结尾的多是名词；以 -ly 结尾的多是副词；以 -able / -ful / -ive / -ous 结尾的多是形容词。\n② 记牢四个语法位置：冠词（a / the）、形容词、介词后面，多半是名词；情态动词（can / will / must）、助动词、不定式 to 后面，是动词原形；系动词（be / seem / become）后面、名词前面，是形容词；修饰动词或形容词、或单独放句首作状语的，是副词。\n③ 最后才看语境：同一词性里可能有两三个词都「像」，这时才用上下文（褒贬、搭配、单复数、时态）排除。\n两个容易丢分的细节：词库里给的是原形，填进句子后要注意主谓一致和时态；名词要注意单复数（前面有 two hundred 这类词时通常用复数）。\n做题顺序：先做词性最明确、语境最清楚的空，用掉的词划掉，难空留到最后用排除法。真题里常有 2–3 个空是「送分」，别在难空上卡住整段时间。",
+      lesson: "选词填空（Section A）看着最难，其实最讲套路：15 个备选词里，名词、动词、形容词、副词各有几个，而每个空需要的词性几乎是确定的。\n① 先判词性，再看词义：看空格缺什么。以 -tion / -ment / -ness / -ity 结尾的多是名词；以 -ly 结尾的多是副词；以 -able / -ful / -ive / -ous 结尾的多是形容词。\n② 记牢四个语法位置：冠词（a / the）、形容词、介词后面，多半是名词；情态动词（can / will / must）、助动词、不定式 to 后面，是动词原形；系动词（be / seem / become）后面、名词前面，是形容词；修饰动词或形容词、或单独放句首作状语的，是副词。\n③ 最后才看语境：同一词性里可能有两三个词都「像」，这时才用上下文（褒贬、搭配、单复数、时态）排除。\n两个必须牢记的考试真相：四级 Section A 词库里的 15 个词都已经做好了词形变化（如 -s / -ed / -ing / 复数形式），考场上只需填涂对应字母 A–O，绝不需要自己变形；正因如此，词库里现成的词尾反而是最强语法线索——看到主语是三单、前面有 two hundred 等复数提示，或空格需要过去分词/动名词时，直接用已有词尾形态去匹配空格，就能瞬间缩小范围。\n做题顺序：先做词性最明确、语境最清楚的空，用掉的词划掉，难空留到最后用排除法。真题里常有 2–3 个空是「送分」，别在难空上卡住整段时间。",
       usage: "填英文表格、改简历、写邮件时判断「这里该放名词还是动词」，靠的就是同一套语法位置感。",
       takeaways: [
         "先判词性，再看词义，最后才用语境排除",
         "冠词 / 形容词 / 介词后面是名词；to、情态动词后面是动词原形",
         "系动词后、名词前是形容词；修饰动词的是副词",
-        "填回去以后注意单复数、主谓一致和时态"
+        "词库 15 词已做好词形变化，考场只涂字母 A–O；善用已有词尾（-s / -ed / -ing）匹配语法"
       ],
       type: "read",
       taskTitle: "判词性填空",
-      taskCopy: "短文里有 5 个空，每题给出 4 个词，选出最合适的一个。真实考试的 Section A 是从 15 个词里选 10 个，本关先把「判词性」这一步练熟。答对 4 题（75%）即可通关。",
+      taskCopy: "短文里有 5 个空，每题给出 4 个词，选出最合适的一个。真实考试的 Section A 是从 15 个词里选 10 个，本关先把「判词性」这一步练熟。答对 4 题（80%）即可通关。",
       passageLabel: "选词填空短文",
       passageTag: "含 5 个空",
       passage: "The university has announced plans to ① ______ a new study centre beside the main library. The building will ② ______ about two hundred desks, a quiet reading room and four small rooms for group discussion. A survey last year found that the library was always full before examinations, and the vice-chancellor calls the project a ③ ______ response to that problem.\n\nThe centre will not be a silent place: students may talk in the group rooms, although they must keep their voices ④ ______. Staff will manage the booking system online, so that nobody has to queue at the door.\n\nThe work is expected to take fourteen months. During that period the car park behind the library will close, and students who drive to campus will be asked to park at the sports centre instead. The university says that the new building will ⑤ ______ the pressure on the library rather than replace it, and that the reading room will stay open until midnight during the exam weeks.",
@@ -140,7 +140,7 @@ window.CET4_MODULES.push({
           q: "Blank ⑤ — 'the new building will ______ the pressure on the library rather than replace it.' Which word fits best?",
           options: ["reduction", "less", "reduce", "fewer"],
           answer: 2,
-          explain: "will 后面需要动词原形，reduce the pressure（减轻压力）搭配也通顺。reduction 是名词，less 和 fewer 是限定词（fewer 只能修饰可数名词复数），都不能作谓语。这道题的四个选项是同根词，考的就是「位置决定词性」，不是词义辨析。"
+          explain: "will 后面需要动词原形，reduce the pressure（减轻压力）搭配也通顺。reduction 是名词，less 和 fewer 是限定词（fewer 只能修饰可数名词复数），都不能作谓语。这四个选项是语义相近但词性不同的易混词（其中 reduce / reduction 是同根词），考的就是「位置决定词性」，先判词性即可迅速排除。"
         }
       ]
     },
@@ -149,17 +149,17 @@ window.CET4_MODULES.push({
       title: "选词填空（二）：固定搭配与语法位置",
       minutes: 15,
       gist: "四个选项词性相同时，胜负手就是搭配和语法位置：介词后接动名词，搭配要连介词一起背。",
-      lesson: "上一关靠词性就能排掉大部分选项；这一关的空，四个选项往往是同一个词性，只能靠搭配和语法位置来分。\n① 固定搭配（最高频的失分点）：make a decision、take part in、play a part in、in charge of、be aware of、depend on、keen on doing、look forward to doing、have an effect on、be responsible for。看到空格前后有介词，先想搭配，不要先想词义。\n② 语法位置：介词后面接动名词（keen on working，不是 keen on work）；形容词后面接不定式（easy to use）；情态动词和 to 后面接动词原形；主语是第三人称单数时，谓语要加 -s。\n③ 时态信号词：by the time / before + 过去的动作，主句常用过去完成（had done）；since / so far / already 常用现在完成；主句是过去时，宾语从句一般也退到过去。\n④ 填完必读一遍：把选好的词填回原句默读，语法和意思是否都通顺，很多错误一读就露出来了。\n搭配题的本质是「这个动词或形容词长期和哪个介词一起出现」，所以背单词时请把介词一起背进去。",
+      lesson: "上一关靠词性就能排掉大部分选项；这一关的空，四个选项往往是同一个词性，只能靠搭配和语法位置来分。\n① 固定搭配（最高频的失分点）：make a decision、take part in、play a part in、in charge of、be aware of、depend on、keen on doing、look forward to doing、have an effect on、be responsible for。看到空格前后有介词，先想搭配，不要先想词义。\n② 语法位置：介词后面接动名词（keen on working，不是 keen on work）；形容词后面接不定式（easy to use）；情态动词和 to 后面接动词原形；主语是第三人称单数时，谓语要匹配带 -s 的形式。\n③ 时态信号词：by the time / before + 过去的动作，主句常用过去完成（had done）；since / so far / already 常用现在完成；主句是过去时，宾语从句一般也退到过去。\n④ 填完必读一遍：把选好的词填回原句默读，语法和意思是否都通顺，很多错误一读就露出来了。\n搭配题的本质是「这个动词或形容词长期和哪个介词一起出现」，所以背单词时请把介词一起背进去。",
       usage: "写英文邮件时，apply for、in charge of、have an effect on 这些搭配用对了，对方才会觉得你的英语是「顺」的。",
       takeaways: [
         "搭配要连介词一起背：take part in / in charge of / keen on doing",
         "介词后面必须接动名词",
-        "比例 1:1 记忆：play a part in 有冠词，take part in 没有",
+        "对比记忆：play a part in 有冠词，take part in 没有",
         "by the time + 过去动作，主句用过去完成"
       ],
       type: "read",
       taskTitle: "搭配与语法填空",
-      taskCopy: "短文里有 5 个空，每题 4 个选项词性相同，靠搭配和语法位置来定。答对 4 题（75%）即可通关。",
+      taskCopy: "短文里有 5 个空，每题 4 个选项词性相同，靠搭配和语法位置来定。答对 4 题（80%）即可通关。",
       passageLabel: "选词填空短文",
       passageTag: "含 5 个空",
       passage: "Last September, our department was asked to ① ______ part in a city-wide reading programme. Nobody in the team had organised an event of this size before, so the manager put one of the younger staff ② ______ charge of the schedule.\n\nThe first week was difficult. By the time permission to use the town hall arrived, we ③ ______ already lost ten days, and the posters had not been printed.\n\nWhat saved us was the volunteers. Most of them were students who were keen ④ ______ working with children, and several had experience of running reading clubs at school. They took over the afternoon sessions, which freed the rest of us to deal with the paperwork.\n\nThe programme ended in December, and the manager says it had a real ⑤ ______ on the way the department works with local schools. Only thirty people came to the first session; by the final week, we were turning families away, and she wants to run the programme again next year.",
@@ -193,7 +193,7 @@ window.CET4_MODULES.push({
           q: "Blank ⑤ — 'the manager says it had a real ______ on the way the department works with local schools.' Which word fits best?",
           options: ["affect", "effect", "effort", "effective"],
           answer: 1,
-          explain: "have an effect on sth 是「对……有影响」的固定搭配，effect 是名词，能放在冠词 a 和形容词 real 后面。affect 是动词（读音重音也不同），不能跟在 a real 后面；effort 意思是「努力」，和 on 搭配不通；effective 是形容词，不能被冠词 a 直接修饰。effect / affect 只差一个字母，是四级最高频的一对形近词。"
+          explain: "have an effect on sth 是「对……有影响」的固定搭配，effect 是名词，能放在冠词 a 和形容词 real 后面。affect 主要是动词，不能跟在 a real 后面（两者重音都在第二个音节：/əˈfekt/ 与 /ɪˈfekt/，主要区别在词性和开头元音）；effort 意思是「努力」，和 on 搭配不通；effective 是形容词，不能被冠词 a 直接修饰。effect / affect 只差一个字母，是四级最高频的一对形近词。"
         }
       ]
     },
@@ -202,7 +202,7 @@ window.CET4_MODULES.push({
       title: "长篇阅读匹配（一）：关键词定位",
       minutes: 18,
       gist: "长篇匹配考的不是读懂，而是找到：先读题干圈关键词，再回原文扫读定位。",
-      lesson: "长篇匹配（Section B）考的不是读懂，而是「找到」。10 个句子各对应一个段落，段落用 A 到 O 标好，你要做的是拿着句子去文章里找位置。\n① 先读题干，不读文章：通读一篇 1000 词的长文要七八分钟，而读完 10 个句子只要两分钟。读题干时圈 2–3 个关键词，优先圈不会被改写的词——人名、地名、机构名、数字、年份、百分比，以及专业名词。\n② 回原文扫读（scanning）：眼睛只找关键词的形状，不要逐句翻译。找到那一段后，再把整句读一遍确认意思真的对得上——同一段里出现同一个词、但讲的是另一件事，是这类题最常见的陷阱。\n③ 顺序不固定，先易后难：先把有数字、有专名的题做掉，会很顺。多数情况下一个段落只对应一个句子，做完可以做个记号缩小范围；但官方指令写明 You may choose a paragraph more than once（同一段可以被选多次），所以做过记号的段落不要彻底排除。\n④ 别用做仔细阅读的方式做长篇匹配：仔细阅读要读懂，长篇匹配要快找。用逐句翻译的方式做匹配题，一定做不完。",
+      lesson: "长篇匹配（Section B）考的不是读懂，而是「找到」。10 个句子各对应一个段落，文章通常分成约 10–15 段（A–J 至 A–O 不等），你要做的是拿着句子去文章里找位置。\n① 先读题干，不读文章：通读一篇 1000 词的长文要七八分钟，而读完 10 个句子只要两分钟。读题干时圈 2–3 个关键词，优先圈不会被改写的词——人名、地名、机构名、数字、年份、百分比，以及专业名词。\n② 回原文扫读（scanning）：眼睛只找关键词的形状，不要逐句翻译。找到那一段后，再把整句读一遍确认意思真的对得上——同一段里出现同一个词、但讲的是另一件事，是这类题最常见的陷阱。\n③ 顺序不固定，先易后难：先把有数字、有专名的题做掉，会很顺。多数情况下一个段落只对应一个句子，做完可以做个记号缩小范围；但官方指令写明 You may choose a paragraph more than once（同一段可以被选多次），所以做过记号的段落不要彻底排除。\n④ 别用做仔细阅读的方式做长篇匹配：仔细阅读要读懂，长篇匹配要快找。用逐句翻译的方式做匹配题，一定做不完。",
       usage: "在英文报告、合同、产品手册里快速找到某一项条款或参数，用的就是同一套扫读定位能力。",
       takeaways: [
         "先读题干圈关键词（数字、专名、术语），再回原文扫读",
@@ -212,7 +212,7 @@ window.CET4_MODULES.push({
       ],
       type: "read",
       taskTitle: "段落信息匹配",
-      taskCopy: "下面这篇材料分成 A–E 段。读 5 个句子，判断每句的信息出自哪一段。答对 4 题（75%）即可通关。",
+      taskCopy: "下面这篇材料分成 A–E 段。读 5 个句子，判断每句的信息出自哪一段。答对 4 题（80%）即可通关。",
       passageLabel: "长篇阅读材料",
       passageTag: "段落 A–E",
       passage: "A. Fairford is a small town on the River Ash. Until three years ago, its riverbank was one of the worst places in the region for plastic waste: volunteers once filled more than two hundred bags with bottles, wrappers and plastic in a single morning. Most of that rubbish, the council found, came from shops in the town centre, which handed out plastic bags free of charge with every purchase.\n\nB. In March 2023 the council passed a rule that no shop in the town may give away a plastic bag. Customers who want a bag must pay five pence for a paper one, and the money goes into a fund for cleaning the river. Shops that break the rule are fined fifty pounds. The council admits that the rule is unusual for a town of this size, but says it had no choice after two years of failed campaigns.\n\nC. The change was not as painful as shopkeepers had feared. The baker on Market Street said that most of her customers now bring their own bags, and that she spends less on packaging than she did before. Two hardware shops complained that paper bags are three times as expensive as plastic ones, but both agreed that customers had stopped arguing about the five pence after the first month.\n\nD. The results have been easy to measure. In the first year, the amount of plastic in the town's bins fell by 40%, and the river fund collected more than twelve thousand pounds, which paid for three new clean-up boats. The council's environment officer says the riverbank is now clean enough for the primary school to use it for science lessons.\n\nE. Not everyone is satisfied. The owner of a small grocery said the rule had cost him about two hundred pounds a year in extra packaging, and that the council had offered him no help at all. The council has promised to look at the problem, but it has also announced that from next spring the rule will cover plastic forks, cups and straws as well.",
@@ -265,7 +265,7 @@ window.CET4_MODULES.push({
       ],
       type: "read",
       taskTitle: "同义替换匹配",
-      taskCopy: "题干不会照抄原文，请用同义替换来判断。5 道题，答对 4 题（75%）即可通关。",
+      taskCopy: "题干不会照抄原文，请用同义替换来判断。5 道题，答对 4 题（80%）即可通关。",
       passageLabel: "长篇阅读材料",
       passageTag: "段落 A–E",
       passage: "A. Northgate Design, a small company that produces websites for hotels, began a four-day week in January. Its forty-two members of staff now work thirty-two hours instead of forty, and they keep the same pay. The managing director says the idea came from a book she read on holiday, and that few companies in the same industry have tried anything similar.\n\nB. Six months later, the figures look good. The amount of work completed has risen by twelve per cent, and every project has been finished on time. Managers say the gain came from cutting meetings: the company now holds two short meetings a week instead of a long one every morning.\n\nC. Running costs have also gone down. Because the office is closed on Fridays, the company uses less electricity, and printing has almost stopped. The money saved, about nine thousand pounds a year, is being put into a training fund for junior designers.\n\nD. The staff are the clearest winners. In a survey, most said they sleep better and spend more time with their families; none said they wanted to return to five days. Days lost to illness fell by a third, which the managing director describes as the most surprising result of the year.\n\nE. Not everybody is happy. Two hotel clients complained that they could not reach anyone at Northgate on Fridays, and one moved to another company. Northgate has since kept a telephone line open on Fridays, with two designers on duty, and it has announced that the trial will continue for another year.",
@@ -322,7 +322,7 @@ window.CET4_MODULES.push({
       taskCopy: "先自己读一遍材料，再作答。6 道题全部是细节题，答案都能在原文里逐句验证。答对 5 题（80%）即可通关。",
       passageLabel: "阅读材料",
       passageTag: "仔细阅读",
-      passage: "Two years ago, the old railway line between Harrow and Beckton carried its last freight train. The track had been unused for a decade, and the council had to decide whether to sell the land or turn it into something useful. After a public meeting that lasted four hours, it chose a cycle path.\n\nThe work cost £2.3 million, most of which came from a national fund for green transport rather than from local taxes. Builders kept the original stone bridges and planted wild flowers along the edges; the path is twelve kilometres long and three metres wide, wide enough for two cyclists to pass each other comfortably.\n\nSince it opened in April, the path has been busier than anyone expected. A counter fixed to a lamp post near the Beckton end recorded 120,000 journeys in the first six months — more than double the council's estimate. On weekdays most users are commuters cycling to the station; at weekends, families arrive with children and picnics.\n\nShopkeepers in Beckton say the path has changed their trade. The café next to the old station now opens at seven in the morning instead of nine, and a bicycle repair shop opened in a former ticket office in June. Both owners say that weekend customers spend more than the commuters they used to serve.\n\nThe council is already planning a second path, this time along the canal to the north. Its transport officer warns, however, that the money is harder to find now, and that the next project will have to be built in stages. She also points out that the first path has not reduced car traffic in the town centre as much as the council had hoped: most of the new cyclists, surveys suggest, used to walk or take the bus.",
+      passage: "Ten years ago, the old railway line between Harrow and Beckton carried its last freight train. After the track had been unused for a decade, the council had to decide whether to sell the land or turn it into something useful. Following a public meeting that lasted four hours, it chose a cycle path.\n\nThe work cost £2.3 million, most of which came from a national fund for green transport rather than from local taxes. Builders kept the original stone bridges and planted wild flowers along the edges; the path is twelve kilometres long and three metres wide, wide enough for two cyclists to pass each other comfortably.\n\nSince it opened in April, the path has been busier than anyone expected. A counter fixed to a lamp post near the Beckton end recorded 120,000 journeys in the first six months — more than double the council's estimate. On weekdays most users are commuters cycling to the station; at weekends, families arrive with children and picnics.\n\nShopkeepers in Beckton say the path has changed their trade. The café next to the old station now opens at seven in the morning instead of nine, and a bicycle repair shop opened in a former ticket office in June. Both owners say that weekend customers spend more than the commuters they used to serve.\n\nThe council is already planning a second path, this time along the canal to the north. Its transport officer warns, however, that the money is harder to find now, and that the next project will have to be built in stages. She also points out that the first path has not reduced car traffic in the town centre as much as the council had hoped: most of the new cyclists, surveys suggest, used to walk or take the bus.",
       passRatio: 0.8,
       questions: [
         {
@@ -486,7 +486,7 @@ window.CET4_MODULES.push({
             "Planting trees works only when cities plan for their long-term care."
           ],
           answer: 3,
-          explain: "全文的骨架是：城市爱承诺种树（首段）→ 承诺容易守住难，缺的是浇水和养护的钱（第二段）→ 种在哪里也有讲究（第三段）→ 做得好的城市把种树当成三十年的事（第四段）→ 需要的不是一百万棵树，而是比市长任期更长的计划（尾段）。所以 D 覆盖全文。A 太极端（原文说 None of this means that planting trees is a bad idea）；B、C 都只是文中一个细节。"
+          explain: "全文的骨架是：城市爱承诺种树（首段）→ 承诺容易守住难，缺的是浇水和养护的钱（第二段）→ 种在哪里也有讲究（第三段）→ 做得好的城市把种树当成三十年的事（第四段）→ 需要的不是一百万棵树，而是比市长任期更长的计划（尾段）。所以 D 覆盖全文。A 太极端（原文说 None of this means that planting trees is a bad idea）；B 与第二段正好相反（第二段指出廉价速生树种每年都要修剪且遮荫很少，并非最佳选择）；C 歪曲了第三段原意（第三段说的是富裕社区的树存活率更高，并未说「树的数量更多」），且无法概括全文。"
         },
         {
           q: "Which of the following would be the best title for the passage?",
@@ -838,13 +838,13 @@ window.CET4_MODULES.push({
           q: "The word 'novel' in paragraph 2 is closest in meaning to ______.",
           options: ["based on a story", "well known", "expensive", "new and unusual"],
           answer: 3,
-          explain: "The first idea was a novel one. 这里的 novel 是形容词，作表语，意思是「新颖的、不寻常的」；如果是「小说」，它就该作名词，而且这句话也讲不通。文章最后一段的 the novelty goes（新鲜感过去）也印证了这层意思。看词性，是区分 novel（小说 / 新颖的）最快的方法。"
+          explain: "The first idea was a novel one. 这里的 novel 是形容词，作定语修饰代词 one（整个名词短语 a novel one 作表语），意思是「新颖的、不寻常的」；如果是「小说」，它应作名词，而且这句话也讲不通。文章最后一段的 the novelty goes（新鲜感过去）也印证了这层意思。看词性和句子成分，是区分 novel（小说 / 新颖的）最快的方法。"
         },
         {
           q: "'The practice has divided the staff' — the word 'practice' here means ______.",
           options: ["a usual way of doing things", "a training session", "a legal document", "a medical office"],
           answer: 0,
-          explain: "practice 在这里指前面描述的那种做法：让普通人来挑选展品、给每件展品配一段个人说明。它是「惯例、做法」的意思，作不可数或可数名词均可。B 项是「练习、训练」，C 项是「（律师）业务」，D 项是「诊所」——三个都是 practice 的常见义项，但都套不进上下文。"
+          explain: "practice 在这里指前面描述的那种做法：让普通人来挑选展品、给每件展品配一段个人说明。它是「惯例、做法」的意思，作不可数或可数名词均可。B 项指「练习、训练」，D 项指「诊所（医生执业机构）」，虽属 practice 的常见义项但都不合语境；C 项 a legal document 是「法律文件」（并非 practice 的词义），同样可以排除。"
         },
         {
           q: "'There is a fine line between making a collection friendly and making it silly' — the word 'fine' here means ______.",
@@ -901,7 +901,7 @@ window.CET4_MODULES.push({
           transcript: "LIBRARY NOTICE\nWeekend opening hours in November\n\nBecause of building work on the second floor, the library will open at 10:00 am on Saturdays and Sundays during November instead of 8:30 am. The ground-floor reading room and the self-service machines are not affected, and they will stay open until 10:00 pm as usual.\n\nBooks borrowed before 1 November may be kept for six weeks. Please use the returns box outside the main door when the library is closed.\n\nWe apologise for the noise and thank you for your patience.\nLibrary Services"
         }
       ],
-      audioTip: "先裸听一遍做题，再点「显示原文」核对自己漏掉了哪个关键点（时间 / 地点 / 人物 / 动作）。",
+      audioTip: "本关阅读材料已完整展示，可配合音频跟读邮件与通知，感受职场英文书面语的节奏与信息组织。",
       passRatio: 0.8,
       questions: [
         {
@@ -913,7 +913,7 @@ window.CET4_MODULES.push({
             "To ask participants to pay for lunch"
           ],
           answer: 0,
-          explain: "邮件第三句：I am writing to confirm two changes.（我来确认两处变更。）后面两段正好是 First… Second… 两处变更（地点、自带电脑）。英文邮件的写作目的通常就在开头一两句，先读这一段，能省下大量时间。B、C、D 原文都没有依据。"
+          explain: "邮件第 2 句：I am writing to confirm two changes.（我来确认两处变更。）后面两段正好是 First… Second… 两处变更（地点、自带电脑）。英文邮件的写作目的通常就在开头一两句，先读这一段，能省下大量时间。B、C、D 原文都没有依据。"
         },
         {
           q: "Where will the conference now be held?",

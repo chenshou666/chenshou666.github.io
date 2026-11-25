@@ -13,7 +13,7 @@
 window.CET4_MODULES = window.CET4_MODULES || [];
 window.CET4_MODULES.push({
   id: "m2",
-  name: "模块 2 · 口语",
+  name: "模块 5 · 口语",
   levels: [
     {
       id: 301,
@@ -275,7 +275,7 @@ window.CET4_MODULES.push({
             "So, straight ahead and then left at the second set of traffic lights? Thank you."
           ],
           answer: 3,
-          explain: "D 用 So,…? 复述一遍，既能确认，也给了对方纠正的机会，是问路时最稳的一步。B 不是地道英语（repeat 本身已含「再说一次」）；C 过于直接；A 会让对方重新解释一遍，白白浪费时间。"
+          explain: "D 用 So,…? 复述一遍，既能确认，也给了对方纠正的机会，是问路时最稳的一步。B 既不地道也不礼貌，缺少委婉请求的情态动词框架与宾语（正确、礼貌的说法是 Could you say that again, please?）；C 过于直接；A 会让对方重新解释一遍，白白浪费时间。"
         }
       ]
     },
@@ -285,7 +285,7 @@ window.CET4_MODULES.push({
       minutes: 20,
       gist: "把时间、地点、座位、行李四件事说明白，出行就不慌。",
       lesson: "出行场景的关键是「说清楚时间、地点、座位和行李」。\n① 交通：买票说 I'd like a return ticket to Bath, please.（英式 return 是往返票，美式说 round trip，单程英式是 single、美式是 one way）。问站台和换乘：Which platform does the train leave from? / Do I need to change trains? / How many stops is it? 打车说 Could you take me to the airport, please? / Please drop me at Terminal 2.\n② 机场：值机说 I'd like to check in for the flight to Boston.；要座位说 Could I have an aisle seat, please?（aisle 是靠过道，window 是靠窗）；行李说 I have one suitcase to check in. Is it within the weight limit?；问登机口 Which gate is it?；问延误 Is the flight delayed? / How long is the delay?\n③ 酒店：入住说 I have a reservation under the name Li. / I booked a double room for two nights.；问早餐 Is breakfast included?；问 Wi-Fi Could you tell me the Wi-Fi password?；退房说 I'd like to check out.，想寄存行李说 Could I leave my luggage here until this afternoon?\n两个高频错误：一是 check in 是办理登机或入住，check out 是退房结账，别混用；二是「住酒店」是 stay at a hotel，不是 live in a hotel——live 指的是长期居住。另外 I want a window seat. 不算错，但在柜台前说 Could I have a window seat, please? 会顺耳得多。",
-      usage: "自助旅行、出差、接送朋友，从买票、值机到入住退房，这一关的句子几乎能一路用下来。",
+      usage: "自助旅行、出差、接送朋友，从买票、值机到入住退房，这一关的句子几乎能一路用下来（示范录音为方便连贯跟读，将机场值机与酒店前台入住两段柜台用语串在一起，实际出行时分别在不同柜台使用）。",
       takeaways: [
         "往返票英式 return ticket、美式 round trip；单程 single / one way",
         "要座位说 Could I have an aisle seat, please?（aisle 过道，window 靠窗）",
@@ -296,7 +296,7 @@ window.CET4_MODULES.push({
       type: "speak",
       taskTitle: "跟读与自评",
       taskCopy: "先听示范（值机 + 酒店入住），再按「订票 → 值机 → 入住 → 退房」串一遍；录音回放，最后勾完自评清单。",
-      prompt: "跟着示范音频跟读值机和酒店入住的句子，注意 I'd like to… 和 Could I have…, please? 的礼貌句式；再按订票、值机、入住、退房四个环节各说两句，录一段自己的出行对话。",
+      prompt: "跟着示范音频跟读值机和酒店入住的句子（注：示范录音为方便连贯跟读，把机场值机和酒店入住两段常用柜台用语串在了一起，真实场景中分别在机场和酒店使用），注意 I'd like to… 和 Could I have…, please? 的礼貌句式；再按订票、值机、入住、退房四个环节各说两句，录一段自己的出行对话。",
       model: {
         file: "304-1.mp3",
         voice: "女声",
@@ -528,7 +528,7 @@ window.CET4_MODULES.push({
             "Could you clarify when we need to hand in the report?"
           ],
           answer: 3,
-          explain: "D 用 Could you clarify… 礼貌地把要求说清楚，信息也完整。A 缺谓语，是残句；B、C 都是命令句，对老师说不合适。"
+          explain: "D 用 Could you clarify… 礼貌地把要求说清楚，信息也完整。A 缺助动词（do / should），正确写法为 When should we hand in the report?；B、C 都是命令句，对老师说不合适。"
         },
         {
           q: "想在老师的 office hours 去问问题，最得体的说法是？",
@@ -583,7 +583,7 @@ window.CET4_MODULES.push({
             "Could I add something here?"
           ],
           answer: 3,
-          explain: "D 是开会时标准的「我补充一句」，既礼貌又明确。B 太直白，像在抢话；A、C 是命令句，语法也不对。"
+          explain: "D 是开会时标准的「我补充一句」，既礼貌又明确。B 太直白，像在抢话；A 项虽然语法正确，但作为祈使句语气过于生硬、不礼貌；C 项语法有误。"
         },
         {
           q: "汇报进度时，下面哪句既说明困难又不显得推卸责任？",
@@ -721,22 +721,22 @@ window.CET4_MODULES.push({
     },
     {
       id: 309,
-      title: "四级口语选考题型（自我介绍 / 朗读 / 问答 / 陈述）",
+      title: "四级口语选考题型（自我介绍 / 朗读 / 问答 / 陈述 / 互动）",
       minutes: 25,
       gist: "五个部分、约 10 分钟：先弄清流程和每部分的时间，再按时间准备内容。",
-      lesson: "四级口语（CET-SET4）是自愿报名的选考项目，不参加不影响笔试成绩；成绩自 2023 年 5 月考次起报告为「优秀 / 良好 / 合格」三个级别，不显示分数，不合格不在成绩报告单上显示；口试不单独发成绩报告单，等级和笔试成绩在同一张成绩报告单上分栏显示。\n考试是机考，一般两人一组，一共五个部分，各部分时间合计约 10 分钟：\n· Part 1 自我介绍：按考官指令作简短的自我介绍，每位考生发言 20 秒。\n· Part 2 短文朗读：准备 45 秒后，朗读一篇 120 词左右的短文，朗读时间 1 分钟。\n· Part 3 简短回答：回答 2 个与朗读短文有关的问题，每位考生发言 40 秒（两题合计）。\n· Part 4 个人陈述：准备 45 秒后，根据所给提示作陈述，每位考生发言 1 分钟。\n· Part 5 两人互动：准备 1 分钟后，根据设定的情景和任务和另一位考生交谈 3 分钟。\n各部分的应对要点：\n① 自我介绍 20 秒大约能说 30–40 词，四句话就够：名字 → 学校或专业 → 一个具体细节 → 一句收尾。\n② 朗读考的是流利和意群停顿，不是速度；读错了不要回头重读，接着往下读，回头重读会打乱整段的节奏。\n③ 简短回答要先给结论、再补一句原因，两题合计 40 秒，一句话答完太单薄。\n④ 个人陈述 1 分钟大约 100–130 词，用「观点 + 两个理由 + 一个例子」的结构最稳。\n⑤ 两人互动是两个人一起完成 3 分钟，不是各说各的：多问 What do you think? / Shall we…?，把话递过去。全程沉默超过几秒，或者一个人说满 3 分钟，是最常见的失分点。",
-      usage: "打算报口语考试的同学可以直接照这个流程准备；不打算考的同学，这一关的四项练习（短介绍、朗读、快问快答、1 分钟陈述）也是任何面试和课堂展示的基本功。",
+      lesson: "四级口语（CET-SET4）是自愿报名的选考项目，不参加不影响笔试成绩；成绩自 2023 年 5 月考次起报告为「优秀 / 良好 / 合格」三个级别，不显示分数，不合格不在成绩报告单上显示；口试不单独发成绩报告单，等级和笔试成绩在同一张成绩报告单上分栏显示。\n考试是机考，一般两人一组，一共五个部分，各部分时间合计约 10 分钟：\n· Part 1 自我介绍：按考官指令作简短的自我介绍，每位考生发言 20 秒。\n· Part 2 短文朗读：准备 45 秒后，朗读一篇 120 词左右的短文，朗读时间 1 分钟。\n· Part 3 简短回答：回答 2 个与朗读短文有关的问题，每位考生发言 40 秒（两题合计）。\n· Part 4 个人陈述：准备 45 秒后，根据所给提示作陈述，每位考生发言 1 分钟。\n· Part 5 两人互动（Pair Discussion）：准备 1 分钟后，根据设定的情景和任务与另一位考生合作交谈 3 分钟。\n各部分的应对要点：\n① 自我介绍 20 秒大约能说 30–40 词，四句话就够：名字 → 学校或专业 → 一个具体细节 → 一句收尾。\n② 朗读考的是流利和意群停顿，不是速度；读错了不要回头重读，接着往下读，回头重读会打乱整段的节奏。\n③ 简短回答要先给结论、再补一句原因，两题合计 40 秒，一句话答完太单薄。\n④ 个人陈述 1 分钟大约 100–130 词，用「观点 + 两个理由 + 一个例子」的结构最稳。\n⑤ Part 5 两人互动（Pair Discussion）是两人共同完成 3 分钟对话，不是各说各的：先简短表达自己的想法，再主动递话（What do you think? / Shall we…? / Do you agree?），并回应搭档的观点（That's a good idea, and we could also…）。全程沉默超过几秒，或者一个人说满 3 分钟，是最常见的失分点。",
+      usage: "打算报口语考试的同学可以直接照这个流程准备；不打算考的同学，这一关的五项练习（短介绍、朗读、快问快答、1 分钟陈述、两人互动讨论）也是任何面试和课堂展示的基本功。",
       takeaways: [
-        "CET-SET4 是选考，成绩分 A、B、C、D 四等，不显示分数",
-        "五个部分：自我介绍 20 秒 / 短文朗读（准备 45 秒 + 朗读 1 分钟）/ 简短回答 40 秒 / 个人陈述（准备 45 秒 + 陈述 1 分钟）/ 两人互动 3 分钟",
+        "CET-SET4 为选考，2023 年 5 月起成绩分为优秀、良好、合格三个等级（不合格不显示），不给具体分数",
+        "五个部分：自我介绍 20 秒 / 短文朗读（准备 45 秒 + 朗读 1 分钟）/ 简短回答 40 秒 / 个人陈述（准备 45 秒 + 陈述 1 分钟）/ 两人互动（Pair Discussion）3 分钟",
         "自我介绍 20 秒约 30–40 词，四句话结构最稳",
         "朗读读错不要回头重读，保持流利和意群停顿",
-        "两人互动要一问一答，别一个人说满 3 分钟"
+        "两人互动（Pair Discussion）要一问一答、主动递话，别一个人说满 3 分钟"
       ],
       type: "speak",
       taskTitle: "跟读与自评",
       taskCopy: "先听示范的 20 秒自我介绍模板，再按各部分的时间要求各练一次；录音回放，最后勾完自评清单。",
-      prompt: "先跟着示范音频跟读 20 秒自我介绍模板，再计时录一段自己的版本（控制在 20 秒左右）；然后按考试的节奏，各练一次 1 分钟朗读和 1 分钟个人陈述。",
+      prompt: "先跟着示范音频跟读 20 秒自我介绍模板，再计时录一段自己的版本（控制在 20 秒左右）；然后按考试的节奏，各练一次 1 分钟朗读、1 分钟个人陈述，以及 Part 5 两人互动（Pair Discussion）的开场与递话。",
       model: {
         file: "309-1.mp3",
         voice: "女声",
@@ -746,7 +746,8 @@ window.CET4_MODULES.push({
         "我跟着示范音频读了一遍 20 秒自我介绍模板（约 30–40 词的量）",
         "我计时录了一段自我介绍，时长控制在 20 秒左右",
         "我找了一段 120 词左右的英文短文，按「准备 45 秒 + 朗读 1 分钟」的节奏试了一次",
-        "我按 1 分钟个人陈述的要求，用「观点 + 两个理由」说了一段并计时"
+        "我按 1 分钟个人陈述的要求，用「观点 + 两个理由」说了一段并计时",
+        "我模拟了一次 Part 5 两人互动（Pair Discussion），练习用 What do you think? / Shall we…? 把话递给搭档并回应对方观点"
       ],
       passRatio: 0.8,
       questions: [
@@ -799,11 +800,11 @@ window.CET4_MODULES.push({
           options: [
             "准备一篇 200 词的自我介绍背熟",
             "只说 My name is Li Ming. Thank you.",
-            "准备 45–55 词的四句话：名字、身份、一个具体细节、收尾",
+            "准备 30–40 词的四句话：名字、身份、一个具体细节、收尾",
             "背一段课文当作自我介绍"
           ],
           answer: 2,
-          explain: "20 秒大约能说 45–55 词，四句话的结构最稳，内容也够。A 太长，考场上一定说不完；B 信息太少，考官无从了解你的表达能力；D 与题目要求无关。"
+          explain: "20 秒大约能说 30–40 词，四句话的结构最稳，内容也够。A 太长，考场上一定说不完；B 信息太少，考官无从了解你的表达能力；D 与题目要求无关。"
         }
       ]
     },

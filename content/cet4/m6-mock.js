@@ -18,12 +18,12 @@ window.CET4_MODULES.push({
     {
       id: 701,
       title: "全真模考（一）：听力 + 阅读",
-      minutes: 60,
+      minutes: 70,
       gist: "4 段听力 + 2 篇阅读，25 题一次做完，倒计时 70 分钟，按答对率判分。",
-      lesson: "本关是一次完整的“听力 + 阅读”模考：25 题、倒计时 70 分钟，节奏与考场一致（听力约 25 分钟 + 阅读约 40 分钟 + 检查）。听力和阅读合计占四级 70% 的分值，这两块练顺了，就拿下四级七成的分值，425 分参考线也就有底了。\n\n【考场时间分配表（70 分钟）】\n① 0–3 分钟：抢读四段听力的选项，圈出重复出现的词，预判场景（校园约定、课程申请、课堂讲座、城市新闻）。\n② 3–26 分钟：听力作答（15 题）。四级听力一共 25 题、只播一遍，每段之间不留答题时间，所以必须“边听边选”，不要等音频结束再回头找。\n③ 26–48 分钟：仔细阅读 6 题。先看题干划关键词，再回原文定位；答案一定是原文某一句的同义替换，不是照抄。\n④ 48–62 分钟：科普短文 4 题。先读首段和每段首句，抓住“它是什么、有什么用、代价是什么”三件事，再回原文找细节。\n⑤ 62–70 分钟：检查。只复查“拿不准”的题，不要重读全文——模考交卷后才给答案，检查时只复查「拿不准」的题，不要重读全文（时间不够）。\n\n【题型说明】自 2016 年 6 月考次起，四级听力不再有单独的「短对话」，现行结构是短篇新闻 3 段 7 题 + 长对话 2 篇 8 题 + 听力篇章 3 篇 10 题。本关把对话理解作为热身保留，重点仍在长对话、篇章与新闻。\n\n【三条考场铁律】\n① 听力：but / however / actually / in fact 之后几乎必出答案；数字题先听清题目问的是“全部”还是“部分”（六周的课程、只参加三周）。\n② 阅读：正确项很少照抄原文，而是换一种说法（output had not fallen at all → stayed the same）；照抄原文原词的选项反而常常是陷阱。\n③ 主旨题看首末段和反复出现的词；态度题抓住作者的让步词（careful not to promise too much、however、even so）——作者主动承认了限制，态度就是“认可，但谨慎”。\n\n本关的答案解析写得比平时短，只点“依据在哪、陷阱在哪”；考场上你没有时间读长解析，训练的是自己回原文找依据的习惯。",
+      lesson: "本关为听力 + 阅读客观题专项限时模考，共 25 题、倒计时 70 分钟（听力约 25 分钟 + 阅读约 40 分钟 + 检查）。听力和阅读合计占四级 70% 的分值，这两块练顺了，就拿下四级七成的分值，425 分参考线也就有底了。\n【真考顺序提醒】真实四级考场顺序为：写作 30 分钟 → 听力 25 分钟（播完随即收答题卡 1，写作与听力均无法回查）→ 阅读 40 分钟 + 翻译 30 分钟（共用 70 分钟与答题卡 2）。本关先集中训练听力 + 阅读客观题，下一关再练写作 + 翻译。\n\n【本关时间分配表（70 分钟）】\n① 0–3 分钟：抢读四段听力的选项，圈出重复出现的词，预判场景（校园约定、课程申请、课堂讲座、城市新闻）。\n② 3–26 分钟：听力作答（15 题）。四级听力一共 25 题、只播一遍，每段之间不留答题时间，所以必须“边听边选”，不要等音频结束再回头找。\n③ 26–48 分钟：仔细阅读 6 题。先看题干划关键词，再回原文定位；答案一定是原文某一句的同义替换，不是照抄。\n④ 48–62 分钟：科普短文 4 题。先读首段和每段首句，抓住“它是什么、有什么用、代价是什么”三件事，再回原文找细节。\n⑤ 62–70 分钟：检查。模考交卷后才统一给答案，检查时只复查“拿不准”的题，不要重读全文（时间不够）。\n\n【题型说明】自 2016 年 6 月考次起，四级听力不再有单独的「短对话」，现行结构是短篇新闻 3 段 7 题 + 长对话 2 篇 8 题 + 听力篇章 3 篇 10 题。本关把对话理解作为热身保留，重点仍在长对话、篇章与新闻。\n\n【三条考场铁律】\n① 听力：but / however / actually / in fact 之后几乎必出答案；数字题先听清题目问的是“全部”还是“部分”（六周的课程、只参加三周）。\n② 阅读：正确项很少照抄原文，而是换一种说法（output had not fallen at all → stayed the same）；照抄原文原词的选项反而常常是陷阱。\n③ 主旨题看首末段和反复出现的词；态度题抓住作者的让步词（careful not to promise too much、however、even so）——作者主动承认了限制，态度就是“认可，但谨慎”。\n\n本关的答案解析写得比平时短，只点“依据在哪、陷阱在哪”；考场上你没有时间读长解析，训练的是自己回原文找依据的习惯。",
       usage: "这套节奏直接对应真实场景：开会前先看议程再听人讲，面试前先读职位描述再去面谈，出国前先看机场指示牌再找登机口——先预判、再定位，永远比从头到尾硬听硬读省力。",
       takeaways: [
-        "考场顺序：听力约 25 分钟 → 阅读约 40 分钟；四级听力 25 题只播一遍，必须边听边选",
+        "真考顺序：写作 30 分钟 → 听力 25 分钟（随即收答题卡 1）→ 阅读 40 分钟 + 翻译 30 分钟；听力只播一遍，必须边听边选",
         "听力答案多落在转折词之后；数字题先分清问的是全部还是部分",
         "阅读正确项多为同义替换，照抄原文的选项要警惕",
         "主旨看首末段，态度看让步词（careful not to promise too much / however / even so）",
@@ -112,7 +112,7 @@ window.CET4_MODULES.push({
           explain: "男士说 “Send me a short email saying why you'd like to join, and I'll put your name on the list.” —— 写一封短信说明想参加的理由。C 是拿后文 “Two students usually drop out” 设的陷阱：那是男士说明候补名单通常能排上，并不是让她去找那两个学生。"
         },
         {
-          q: "【听力 2 · 长对话】What does the man say will be difficult for the woman at first?",
+          q: "【听力 2 · 长对话】What do the speakers say will be difficult for the woman at first?",
           options: ["Working in pairs with someone she does not know.", "Reading a map on the coast.", "Cooking for the other students.", "Getting up early in the morning."],
           answer: 3,
           explain: "男士说 “you'll need to be up before six most mornings”，女士的反应是 “Before six? That will take some getting used to.”，男士又补了一句 “Everyone says that in the first week.” —— 三句合起来说明“早起”是她一开始会觉得难的事。B 正相反：女士说自己去年上过地图课，所以看地图对她是容易的；A、C 原文没有依据。"
@@ -154,7 +154,7 @@ window.CET4_MODULES.push({
           explain: "新闻原句：“The city council says the longer hours will be paid for by a small increase in parking charges, and that the money for new books will not be touched.” —— 靠小幅提高停车费，而且明确说不动买书的钱，所以 B 正好说反了。A、D 新闻都没有提。"
         },
         {
-          q: "【听力 4 · 新闻】What else will library staff do in the evening?",
+          q: "【听力 4 · 新闻】What else will library staff do?",
           options: ["Give free classes in basic computer skills.", "Read stories to children every evening.", "Keep a reading room open for exam students.", "Collect books that are returned late."],
           answer: 0,
           explain: "新闻原句：“Library staff will also run free classes in basic computer skills twice a week.” —— run classes 就是“开课”，与选项的 give classes 同义。其余三项都是拿图书馆的常见服务编出来的，新闻里没有依据。"
@@ -211,7 +211,7 @@ window.CET4_MODULES.push({
           q: "【阅读 · 第二篇】Why does the author say that planting trees is “not a quick fix”?",
           options: ["Because young trees cost more than light-coloured surfaces.", "Because trees cannot survive in a city.", "Because a young tree needs many years before it gives full shade.", "Because residents do not want trees on their streets."],
           answer: 2,
-          explain: "第三段紧接着解释：“A young tree may take fifteen years to provide the shade of a mature one” —— 小树要十五年才能提供大树那样的遮阴效果，所以不是立竿见影的办法。所以选 C：小树要十五年才能长到成熟树那样的遮阴效果，种树不是「立竿见影」的办法。A 项原文没有比较过成本；B 项太绝对，原文只说干旱城市的小树要浇好几年水才能自己存活，并不是活不下来；D 项与原文相反，居民是主动报告树木问题的一方。"
+          explain: "第三段紧接着解释：“A young tree may take fifteen years to provide the shade of a mature one” —— 小树要十五年才能长到成熟树那样的遮阴效果，所以种树不是「立竿见影」的办法，选 C。A 项原文没有比较过成本；B 项太绝对，原文只说干旱城市的小树要浇好几年水才能自己存活，并不是活不下来；D 项与原文相反，居民是主动报告树木问题的一方。"
         },
         {
           q: "【阅读 · 第二篇】What is the main idea of the passage?",
@@ -226,7 +226,7 @@ window.CET4_MODULES.push({
       title: "全真模考（二）：写作 + 翻译",
       minutes: 60,
       gist: "60 分钟内完成一篇 120–180 词作文和一段 140–160 汉字的翻译，按考场时间分配走。",
-      lesson: "本关是模考的第二场：写作 + 翻译，倒计时 60 分钟——考场就是这个节奏，写作 30 分钟、翻译 30 分钟。写作占 15%、翻译占 15%，两题合计 30%，是四块里最容易“练一练就涨分”的部分，因为它们有确定的评分点：结构清楚、要点齐全、错误少。\n\n【考场时间分配表（60 分钟）】\n① 0–3 分钟（写作审题）：读题 + 列三行提纲——我的观点、两条理由、一句结论。\n② 3–25 分钟（写作成文）：按“引出观点 → 理由一（带例子）→ 理由二 → 结论”写四段，每段 3–4 句。\n③ 25–30 分钟（写作检查）：只改三类错误——时态、主谓一致、拼写。\n④ 30–35 分钟（翻译读题）：把中文读两遍，划出主干（谁 + 做什么 + 结果），长句拆成两句。\n⑤ 35–55 分钟（翻译成文）：先写主干，再补修饰；不会的词用简单词替换（“高铁”不会写 high-speed train，就写 fast train）。\n⑥ 55–60 分钟（翻译检查）：名词单复数、冠词、介词——中式英语最常丢分的三处。\n\n【写作四段骨架（背下来，考场上直接套）】\n① 引出：Nowadays, … plays an important part in … / In my view, …\n② 理由一：The first reason is … For example, …\n③ 理由二：The second reason is … What is more, …\n④ 结论：In short, … / Therefore, we should …\n注意：骨架只是架子，每段必须有自己的内容（具体的例子、具体的做法），否则会被判成“空话连篇”。\n\n【翻译三条铁律】\n① 先主干后修饰：中文一句话套三层，英文先写出“主语 + 谓语 + 宾语”，再挂时间、地点、原因。\n② 用有把握的词：翻译考的是准确和通顺，不是炫技；“票价仍然偏高”写 ticket prices are still too high 就够了。\n③ 警惕中式搭配：价格用 high 不用 expensive（The price is high. 但 The ticket is expensive.）；人 spend（花钱），物 cost（值多少钱）。",
+      lesson: "本关是写作 + 翻译主观题专项限时模考，倒计时 60 分钟（写作 30 分钟 + 翻译 30 分钟）。写作占 15%、翻译占 15%，两题合计 30%，是四块里最容易“练一练就涨分”的部分，因为它们有确定的评分点：结构清楚、要点齐全、错误少。\n【真考顺序提醒】真实四级考场并不是把写作和翻译连着做：考场顺序为写作 30 分钟（开考先写）→ 听力 25 分钟（播完随即收答题卡 1，写作无法回改）→ 阅读 40 分钟 + 翻译 30 分钟（共用 70 分钟与答题卡 2）。本关把两道主观输出题合在一场 60 分钟里集中演练，帮你稳住考场计时节奏。\n\n【本关时间分配表（60 分钟）】\n① 0–3 分钟（写作审题）：读题 + 列三行提纲——我的观点、两条理由、一句结论。\n② 3–25 分钟（写作成文）：按“引出观点 → 理由一（带例子）→ 理由二 → 结论”写四段，每段 3–4 句。\n③ 25–30 分钟（写作检查）：只改三类错误——时态、主谓一致、拼写。\n④ 30–35 分钟（翻译读题）：把中文读两遍，划出主干（谁 + 做什么 + 结果），长句拆成两句。\n⑤ 35–55 分钟（翻译成文）：先写主干，再补修饰；不会的词用简单词替换（“高铁”不会写 high-speed train，就写 fast train）。\n⑥ 55–60 分钟（翻译检查）：名词单复数、冠词、介词——中式英语最常丢分的三处。\n\n【写作四段骨架（背下来，考场上直接套）】\n① 引出：Nowadays, … plays an important part in … / In my view, …\n② 理由一：The first reason is … For example, …\n③ 理由二：The second reason is … What is more, …\n④ 结论：In short, … / Therefore, we should …\n注意：骨架只是架子，每段必须有自己的内容（具体的例子、具体的做法），否则会被判成“空话连篇”。\n\n【翻译三条铁律】\n① 先主干后修饰：中文一句话套三层，英文先写出“主语 + 谓语 + 宾语”，再挂时间、地点、原因。\n② 用有把握的词：翻译考的是准确和通顺，不是炫技；“票价仍然偏高”写 ticket prices are still too high 就够了。\n③ 警惕中式搭配：价格用 high 不用 expensive（The price is high. 但 The ticket is expensive.）；人 spend（花钱），物 cost（值多少钱）。",
       usage: "写作练的是把观点讲清楚，翻译练的是把中文说准确——写英文邮件、做产品介绍、给外国同事解释一段流程，用的都是这两件事：先说结论，再给理由，最后落到一句能执行的话。",
       takeaways: [
         "写作 120–180 词、建议 30 分钟；四段式：引出观点 → 两条理由 → 结论",
@@ -246,37 +246,38 @@ window.CET4_MODULES.push({
       minWords: 200,
       points: [
         ["in my view", "in my opinion", "as far as i", "i believe", "from my perspective", "nowadays"],
-        ["the first reason", "first of all", "firstly", "to begin with", "one reason", "the main reason"],
-        ["for example", "for instance", "such as", "as an example", "my own experience", "last term"],
-        ["in short", "in conclusion", "to sum up", "all in all", "in a word", "finally"],
-        ["high-speed", "high speed", "bullet train", "railway", "rail"],
-        ["price", "prices", "fare", "fares", "ticket"]
+        ["the first reason", "first", "firstly", "first of all", "to begin with", "one reason", "the main reason"],
+        ["for example", "for instance", "such as", "as an example", "take", "my own experience"],
+        ["in short", "in conclusion", "to sum up", "all in all", "in a word", "in summary", "finally"],
+        ["high-speed", "high speed", "fast train", "fast trains", "bullet train", "railway", "rail"],
+        ["price", "prices", "fare", "fares", "ticket", "tickets"],
+        ["teamwork", "team work", "cooperation", "cooperate", "working together", "work together", "work with others"]
       ],
-      sample: "【参考范文 · 作文（170 词）】\nTeamwork is a skill that university students will still be using long after they have forgotten the details of a lecture. In my view, learning to work with others matters at least as much as learning to work alone.\nThe first reason is practical. Most jobs are too large for one person: a hospital ward or a newsroom depends on people who can share a task, explain their part clearly and keep their promises. A student who has never worked in a group may finish a report alone, but will struggle on the first day at work.\nThe second reason is personal. Working with others shows us what we do not know. When I prepared a group presentation last term, my partner asked a question I could not answer, and that question taught me more than the reading I had done.\nIn short, teamwork is not a soft skill but a basic one. Students should look for chances to practise it, starting with the group tasks on their own campus.\n\n【参考译文】\nChina's high-speed railway has developed rapidly over the past decade or so. Today, travelling by high-speed train has become the first choice for many people: it is cheaper than flying, much faster than an ordinary train, and the stations are usually located in the city centre. High-speed rail has not only shortened the distance between cities but also changed the way people live — some people live in a small city but work in a big one, and going home at the weekend takes just over an hour. Of course, building high-speed lines requires huge investment, and ticket prices are still too high for some people. On the whole, it has made travel simpler and given more places a chance to develop.",
+      sample: "【参考范文 · 作文（172 词）】\nTeamwork is a skill that university students will still be using long after they have forgotten the details of a lecture. In my view, learning to work with others matters at least as much as learning to work alone.\nThe first reason is practical. Most jobs are too large for one person: a hospital ward or a newsroom depends on people who can share a task, explain their part clearly and keep their promises. A student who has never worked in a group may finish a report alone, but will struggle on the first day at work.\nThe second reason is personal. Working with others shows us what we do not know. For example, when I prepared a group presentation last term, my partner asked a question I could not answer, and that question taught me more than the reading I had done.\nIn short, teamwork is not a soft skill but a basic one. Students should look for chances to practise it, starting with the group tasks on their own campus.\n\n【参考译文】\nChina's high-speed railway has developed rapidly over the past decade or so. Today, travelling by high-speed train has become the first choice for many people: it is cheaper than flying, much faster than an ordinary train, and the stations are usually located in the city centre. High-speed rail has not only shortened the distance between cities but also changed the way people live — some people live in a small city but work in a big one, and going home at the weekend takes just over an hour. Of course, building high-speed lines requires huge investment, and ticket prices are still too high for some people. On the whole, it has made travel simpler and given more places a chance to develop.",
       questions: [
         {
-          q: "「它比普通火车快得多」中的「快得多」，正确的译法是？",
+          q: "「地铁比公交车快得多」中的「快得多」，正确的译法是？",
           options: ["more fast than", "much faster than", "very faster than", "more faster than"],
           answer: 1,
-          explain: "比较级前表示“得多”要用 much（也可用 far、a lot），不能用 very；faster 本身已经是比较级，前面不能再加 more（more faster 是典型的“双重比较级”错误），more fast 则连比较级都没构成。整句可译为：It is much faster than an ordinary train."
+          explain: "比较级前表示“得多”要用 much（也可用 far、a lot），不能用 very；faster 本身已经是比较级，前面不能再加 more（more faster 是典型的“双重比较级”错误），more fast 则连比较级都没构成。整句可译为：The subway is much faster than the bus."
         },
         {
-          q: "「车站通常位于市中心」中的「位于」，下面哪种译法正确？",
-          options: ["The stations locate in the city centre.", "The stations are lain in the city centre.", "The stations lie on the city centre.", "The stations are located in the city centre."],
+          q: "「新博物馆位于市中心」中的「位于」，下面哪种译法正确？",
+          options: ["The new museum locates in the city centre.", "The new museum is lain in the city centre.", "The new museum lies on the city centre.", "The new museum is located in the city centre."],
           answer: 3,
-          explain: "be located in 是“位于”最常用的固定表达。locate 是及物动词，不能单独说 The station locates in…（要用被动 is located，或换成 lies in / stands in）；lain 是 lie（躺）的过去分词，用在这里既不是被动也不合逻辑；lie on 表示“位于（边界、河畔）”，市中心要用 lie in。"
+          explain: "be located in 是“位于”最常用的固定表达。locate 是及物动词，不能单独说 The new museum locates in…（要用被动 is located，或换成 lies in / stands in）；lain 是 lie（躺）的过去分词，用在这里既不是被动也不合逻辑；lie on 表示“位于（边界、河畔）”，市中心要用 lie in。"
         },
         {
-          q: "「高铁不仅缩短了城市之间的距离，也改变了人们的生活方式。」下面哪一种译法语法正确？",
-          options: ["High-speed rail has not only shortened the distance between cities but also changed the way people live.", "High-speed rail not only has shortened the distance between cities, and also changed the way people live.", "Not only high-speed rail shortened the distance between cities, but also changed the way people live.", "High-speed rail not only shortened the distance between cities but also has changed people's life way."],
+          q: "「互联网不仅拓宽了我们的视野，也改变了我们的交流方式。」下面哪一种译法语法正确？",
+          options: ["The Internet has not only broadened our horizons but also changed the way we communicate.", "The Internet not only has broadened our horizons, and also changed the way we communicate.", "Not only the Internet broadened our horizons, but also changed the way we communicate.", "The Internet not only broadened our horizons but also has changed our communicate way."],
           answer: 0,
-          explain: "not only … but also … 必须保持结构与时态平行。A 里两个动词共用 has（has shortened / (has) changed），最平衡。B 用 and also 接在 not only 后面，搭配错误；C 把 Not only 放在句首却没有倒装，后半句还缺主语；D 有两处错：时态不平行（前面是一般过去 shortened，后面却是现在完成 has changed），而且“生活方式”不能直译成 life way，应说 the way people live 或 lifestyle。"
+          explain: "not only … but also … 必须保持结构与时态平行。A 里两个过去分词共用 has（has broadened / (has) changed），最平衡。B 用 and also 接在 not only 后面，搭配错误；C 把 Not only 放在句首却没有倒装，后半句还缺主语；D 有两处错：时态不平行（前面是一般过去 broadened，后面却是现在完成 has changed），而且“交流方式”不能直译成 communicate way，应说 the way we communicate。"
         },
         {
-          q: "「票价对部分人来说仍然偏高」下面哪种译法最恰当？",
-          options: ["The ticket price is still high to some people.", "The ticket price is still expensive for some people.", "Ticket prices are still too high for some people.", "The price of tickets still costs some people much."],
+          q: "「这场音乐会的票价对学生来说仍然偏高。」下面哪种译法最恰当？",
+          options: ["The concert ticket price is still high to students.", "The concert ticket price is still expensive for students.", "Ticket prices for the concert are still too high for students.", "The price of the concert tickets still costs students much."],
           answer: 2,
-          explain: "中文的“（价格）高”对应英文的 high，不能说 The price is expensive——expensive 形容的是东西本身（The ticket is expensive.）。A 的介词错：对某人来说用 for some people，不用 to；D 有两处问题：cost 的主语应该是东西而不是价格（The ticket costs me 100 yuan.），而且 much 在肯定句里不自然，通常说 a lot。"
+          explain: "中文的“（价格）高”对应英文的 high，不能说 The price is expensive——expensive 形容的是东西本身（The concert tickets are expensive.）。A 的介词错：对某人来说用 for students，不用 to；D 有两处问题：cost 的主语应该是东西而不是价格（The ticket costs me 200 yuan.），而且 much 在肯定句里不自然，通常说 a lot。"
         }
       ]
     }

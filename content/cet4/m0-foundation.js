@@ -15,7 +15,7 @@ window.CET4_MODULES.push({
       title: "四级是什么：把它学成「能用」的英语",
       minutes: 12,
       gist: "先搞清 710 分怎么分布，再规划一条从零补起的路线。",
-      lesson: "四级（CET-4）总分 710 分。官方不设及格线，成绩采用常模参照；425 分是大家常用的参考线，也是报考六级与口语的常见门槛（以中国教育考试网 cet.neea.edu.cn 的说明为准，本站核对时间 2026-10）。它考四块：写作 15%、听力 35%、阅读 35%、翻译 15%，一共 125 分钟。听力 25 题只播一遍；阅读由选词填空、长篇匹配、仔细阅读组成；写作要求 120–180 词；翻译是把 140–160 个汉字的中文段落译成英文。\n为什么基础薄弱也来得及：四级要求约 4500 词，其中大部分是中学已经学过、只是换了用法和搭配的词，真正全新的不到 1500 个；而听力和阅读合起来占 70%，靠方法和熟练度就能明显提分，不像写作那样吃长期功底。\n更重要的是，四级的话题——校园、求职、交通、环保、科技、文化——和真实生活几乎完全重合。所以本课程每一关都会写清「这个能力能用在哪里」：练听力是为了听懂机场广播和会议，练写作是为了写邮件，练翻译是为了看懂说明书和公告。",
+      lesson: "四级（CET-4）总分 710 分。官方不设及格线，成绩采用常模参照；425 分是大家常用的参考线，也是报考六级笔试的成绩门槛（四级口语自 2016 年 11 月起已取消 425 分限制，只要完成当次四级笔试报名即可报考；以中国教育考试网 cet.neea.edu.cn 的说明为准，本站核对时间 2026-10）。它考四块：写作 15%、听力 35%、阅读 35%、翻译 15%，一共 125 分钟。听力 25 题只播一遍；阅读由选词填空、长篇匹配、仔细阅读组成；写作要求 120–180 词；翻译是把 140–160 个汉字的中文段落译成英文。\n为什么基础薄弱也来得及：四级要求约 4500 词，其中大部分是中学已经学过、只是换了用法和搭配的词，真正全新的不到 1500 个；而听力和阅读合起来占 70%，靠方法和熟练度就能明显提分，不像写作那样吃长期功底。\n更重要的是，四级的话题——校园、求职、交通、环保、科技、文化——和真实生活几乎完全重合。所以本课程每一关都会写清「这个能力能用在哪里」：练听力是为了听懂机场广播和会议，练写作是为了写邮件，练翻译是为了看懂说明书和公告。",
       usage: "把考试目标翻译成生活目标：能听懂广播、能开口问路、能写一封像样的英文邮件——四级只是顺手拿下的结果。",
       takeaways: [
         "710 分制，425 分为常见参考线；听力 + 阅读合计占 70%",
@@ -32,7 +32,7 @@ window.CET4_MODULES.push({
           q: "四级总分和通过分数线分别是多少？",
           options: ["710 分，425 分是常见参考线", "750 分，500 分通过", "100 分，60 分通过", "990 分，600 分通过"],
           answer: 0,
-          explain: "四级满分 710 分。官方不设及格线、成绩采用常模参照；425 分是常用参考线，也是报考六级与口语的常见门槛。以中国教育考试网 cet.neea.edu.cn 的说明为准（本站核对时间 2026-10）。"
+          explain: "四级满分 710 分。官方不设及格线、成绩采用常模参照；425 分是常用参考线，也是报考六级笔试的成绩门槛（四级口语自 2016 年 11 月起已无 425 分要求，完成当次四级笔试报名即可报考）。以中国教育考试网 cet.neea.edu.cn 的说明为准（本站核对时间 2026-10）。"
         },
         {
           q: "四个板块里，合起来占比最高的是？",
@@ -82,7 +82,7 @@ window.CET4_MODULES.push({
       audioTip: "先听一遍，再跟着读一遍，感受「一般现在 / 一般过去 / 现在完成」在口中的差别。",
       passageLabel: "五种句型示例",
       passageTag: "对照讲解",
-      passage: "① 主 + 谓：The bus stopped.\n② 主 + 谓 + 宾：I like coffee.\n③ 主 + 系 + 表：She is happy.\n④ 主 + 谓 + 双宾：He gave me a book.\n⑤ 主 + 谓 + 宾 + 宾补：They made him captain.\n\n对照练习：先说出每句属于哪种句型；前两句改写成「昨天发生」的版本（谓语改为过去式），后三句本身已是过去式，试着说出它们对应的「一般现在」版本。",
+      passage: "① 主 + 谓：The bus stopped.\n② 主 + 谓 + 宾：I like coffee.\n③ 主 + 系 + 表：She is happy.\n④ 主 + 谓 + 双宾：He gave me a book.\n⑤ 主 + 谓 + 宾 + 宾补：They made him captain.\n\n对照练习：先说出每句属于哪种句型；其中 ②③ 句是一般现在时，试着改写成「昨天发生」的过去式版本（liked / was）；①④⑤ 句本身已是过去式，试着说出它们对应的「一般现在」版本（stops / gives / make）。",
       passRatio: 0.75,
       questions: [
         {
@@ -120,11 +120,11 @@ window.CET4_MODULES.push({
       placeholder: "I have ... / I sent ...",
       minWords: 12,
       points: [
-        ["have worked", "have been working", "'ve worked"],
-        ["for three years", "three years"],
-        ["sent", "wrote"],
+        ["have worked", "have been working", "'ve worked", "'ve been working"],
+        ["for three years", "three years", "for 3 years", "3 years"],
+        ["sent", "wrote", "emailed", "e-mailed", "sent him an email"],
         ["yesterday"],
-        ["email", "e-mail"]
+        ["email", "e-mail", "emailed", "e-mailed"]
       ],
       sample: "I have worked in this company for three years.\nI sent him an email yesterday."
     },
@@ -184,18 +184,18 @@ window.CET4_MODULES.push({
       placeholder: "I don't know ... / If you ...",
       minWords: 12,
       points: [
-        ["don't know", "do not know"],
-        ["why he was late", "why he is late", "why he had been late"],
-        ["if you need help", "if you need any help", "if you need a hand"],
+        ["don't know", "do not know", "have no idea", "had no idea"],
+        ["why he was late", "why he is late", "why he's late", "why he had been late", "why he came late", "why he arrived late", "was late", "came late", "arrived late"],
+        ["if you need help", "if you need any help", "if you need a hand", "if you need some help"],
         ["call me", "give me a call", "phone me", "ring me"]
       ],
       sample: "I don't know why he was late.\nIf you need help, call me."
     },
     {
       id: 104,
-      title: "高频词 300（一）：动词与固定搭配",
+      title: "高频核心搭配（一）：动词与固定搭配",
       minutes: 16,
-      gist: "动词不单独背，要整块背。四级最爱考这些搭配。",
+      gist: "动词不单独背，要整块背。四级最爱考这些高频核心搭配。",
       lesson: "四级词汇题真正的考点不是「认不认识」，而是「搭不搭得上」。下面是最高频的一批，请整块记：\n· make a decision 做决定 / make progress 取得进步 / make an effort 努力\n· take a break 休息一下 / take part in 参加 / take care of 照顾\n· get in touch 联系 / get used to 习惯于 / get rid of 摆脱\n· have a look 看一看 / have trouble (in) doing 做……有困难\n· do research 做研究 / do sb a favour 帮某人一个忙\n· pay attention to 注意 / keep in touch 保持联系\n· come up with 想出 / look forward to 期待\n两个高频陷阱：look forward to 和 get used to 里的 to 都是介词，后面要接动名词（looking forward to hearing from you）；take part in 是参加活动，take place 是「发生」，主语通常是事件。",
       usage: "这些搭配在邮件和口语里天天出现：I'm looking forward to hearing from you. / Let's keep in touch. 直接抄进你的邮件模板就能用。",
       takeaways: [
@@ -211,9 +211,9 @@ window.CET4_MODULES.push({
       questions: [
         {
           q: "We need to ______ a decision before Friday.",
-          options: ["do", "take", "make", "get"],
+          options: ["do", "give", "make", "get"],
           answer: 2,
-          explain: "固定搭配 make a decision（做决定），不能用 do。"
+          explain: "固定搭配 make a decision（做决定），不能用 do 或 give。"
         },
         {
           q: "Please ______ care of my dog while I'm away.",
@@ -243,9 +243,9 @@ window.CET4_MODULES.push({
     },
     {
       id: 105,
-      title: "高频词 300（二）：名词、形容词与副词",
+      title: "高频核心搭配（二）：名词、形容词与副词",
       minutes: 16,
-      gist: "阅读里的「题眼」多是这些词，尤其是 however 和 therefore。",
+      gist: "阅读里的「题眼」多是这些高频核心搭配与逻辑词，尤其是 however 和 therefore。",
       lesson: "名词高频：issue 议题 / situation 情况 / benefit 好处 / measure 措施 / attitude 态度 / opportunity 机会 / pressure 压力 / progress 进步。\n形容词高频：available 可获得的 / likely 可能的 / aware 意识到的 / similar 相似的 / effective 有效的 / willing 愿意的 / responsible 负责的。\n副词与连接词：however 然而 / therefore 因此 / otherwise 否则 / instead 反而、代替 / actually 实际上 / especially 尤其。\n固定用法要连介词一起记：be aware of、be responsible for、be willing to do、be likely to do、be similar to。\n为什么这些词重要：阅读题的答案常常就藏在转折和因果词后面——however 之后往往是作者真正的观点，therefore 前面是原因、后面是结论。看到它们，笔就要停一下。",
       usage: "写作文时用 however 转折、therefore 总结、be willing to 表达态度，比反复用 but 和 so 显得成熟得多。",
       takeaways: [
@@ -266,10 +266,10 @@ window.CET4_MODULES.push({
           explain: "available 表示「可以买到、可以获得的」，是四级阅读里出现频率极高的形容词。"
         },
         {
-          q: "She is responsible ______ the whole team.",
+          q: "She is responsible ______ the whole project.",
           options: ["of", "to", "for", "with"],
           answer: 2,
-          explain: "be responsible for 是固定搭配，表示「对……负责」。"
+          explain: "be responsible for 是固定搭配，表示「对……（事情/项目）负责」；be responsible to 后常接人或上级，表示「向某人负责/汇报」。"
         },
         {
           q: "The weather was terrible; ______, we decided to stay at home.",
@@ -346,7 +346,7 @@ window.CET4_MODULES.push({
       title: "长难句三步法：主干先读懂",
       minutes: 20,
       gist: "一句话看懂四五十词的长句，靠的是固定三步，不是天赋。",
-      lesson: "三步拆句：\n① 数谓语：一句话里有几个谓语动词，就有几个分句。先排除非谓语形式（to do / doing / done 都不算谓语），剩下的才是分句数。\n② 括从句：遇到 that / which / who / when / if / because 这类连词或关系词，把后面的从句用括号括起来，整体当成「一个词」。\n③ 抓主干：把括号里的内容全部拿掉，剩下的就是主干（主语 + 谓语 + 宾语或表语）。先读懂主干，再回头补修饰。\n为什么有用：主干决定「这句话在说什么」，修饰决定「细节是什么」，而四级题目偏偏爱考细节。先主干后细节，做题时你不会被长句吓住。",
+      lesson: "三步拆句：\n① 数谓语：一句话里有几个谓语动词，就有几个分句。先排除非谓语形式（to do / doing / done 都不算谓语），剩下的才是分句数。\n② 括从句：遇到 that / which / who / when / if / because 这类连词或关系词，把后面的从句用括号括起来，整体当成「一个词」。\n③ 抓主干：把括号里的内容全部拿掉，剩下的就是主干（主语 + 谓语 + 宾语或表语）。先读懂主干，再回头补修饰。\n顺便认清两个后面反复遇到的高频结构：被动语态由 be + done 构成（如 the test was taken），表示主语承受动作，整体算一个谓语；非谓语动词则分 to do（目的/将来）、doing（主动/进行）、done（被动/完成）三种，它们只作修饰或补充，不能单独充当谓语。\n为什么有用：主干决定「这句话在说什么」，修饰决定「细节是什么」，而四级题目偏偏爱考细节。先主干后细节，做题时你不会被长句吓住。",
       usage: "读英文新闻、论文摘要、合同条款时同样适用：先抓主干，再决定哪句需要细看。",
       takeaways: [
         "谓语数量 = 分句数量",
@@ -407,7 +407,7 @@ window.CET4_MODULES.push({
       title: "日常高频句型 40 句：开口就能用",
       minutes: 20,
       gist: "8 类场景共 40 句万能句型，背下来日常、校园、职场都能开口。",
-      lesson: "八类场景，每类 5 句，共 40 句。先跟读示范音频，再自己说一遍：\n① 寒暄：How's it going? / Long time no see. / What have you been up to? / How was your weekend? / Nice to meet you.\n② 请求：Could you do me a favour? / Would you mind closing the window? / I was wondering if you could help me. / Could you give me a hand? / Do you have a minute?\n③ 致谢与回应：Thanks a lot. / I really appreciate it. / You're welcome. / No worries. / My pleasure.\n④ 道歉：Sorry, my mistake. / I do apologize for the delay. / It won't happen again. / Sorry to keep you waiting. / Excuse me for interrupting.\n⑤ 建议：Why don't we…? / How about…? / You'd better… / It might be a good idea to… / Shall we…?\n⑥ 表达观点：As far as I'm concerned… / I'd say… / That's a good point, but… / In my opinion… / I'm afraid I disagree.\n⑦ 没听懂时的救命句：Sorry, could you say that again? / Could you speak a little slower? / Do you mean…? / Sorry, I didn't catch that. / Could you spell that for me?\n⑧ 结束对话：Anyway, I'd better get going. / Let's keep in touch. / It was nice talking to you. / See you around. / Take care.\n第 ⑦ 类最值得先背：听不懂时不要沉默或硬撑，用这几句把对话拉回来，比装作听懂得体得多。",
+      lesson: "八类场景，每类 5 句，共 40 句。先跟读示范音频，再自己说一遍：\n① 寒暄：How's it going? / Long time no see. / What have you been up to? / How was your weekend? / Nice to meet you.\n② 请求：Could you do me a favour? / Would you mind closing the window? / I was wondering if you could help me. / Could you give me a hand? / Do you have a minute?\n③ 致谢与回应：Thanks a lot. / I really appreciate it. / You're welcome. / No worries. / My pleasure.\n④ 道歉：Sorry, my mistake. / I do apologise for the delay. / It won't happen again. / Sorry to keep you waiting. / Excuse me for interrupting.\n⑤ 建议：Why don't we…? / How about…? / You'd better… / It might be a good idea to… / Shall we…?\n⑥ 表达观点：As far as I'm concerned… / I'd say… / That's a good point, but… / In my opinion… / I'm afraid I disagree.\n⑦ 没听懂时的救命句：Sorry, could you say that again? / Could you speak a little slower? / Do you mean…? / Sorry, I didn't catch that. / Could you spell that for me?\n⑧ 结束对话：Anyway, I'd better get going. / Let's keep in touch. / It was nice talking to you. / See you around. / Take care.\n第 ⑦ 类最值得先背：听不懂时不要沉默或硬撑，用这几句把对话拉回来，比装作听懂得体得多。",
       usage: "这 40 句覆盖日常、校园、职场绝大多数开口场景；尤其在外企会议、留学课堂、出国旅行时，第 ⑦ 类是真正救场的话。",
       takeaways: [
         "八类场景各 5 句，覆盖大部分日常开口需求",
@@ -418,7 +418,7 @@ window.CET4_MODULES.push({
       type: "speak",
       taskTitle: "跟读与自评",
       taskCopy: "先听示范，再跟着读；录一段自己的声音回放对比，最后勾完自评清单。",
-      prompt: "跟着示范音频逐句跟读，重点练第 ⑦ 类「没听懂时」的三句；读完录一段自己的声音，回放对比示范音。",
+      prompt: "跟着示范音频逐句跟读，重点练第 ⑦ 类「没听懂时」的常用救命句（示范录音收录代表句，讲义共 5 句，至少熟背其中 3 句）；读完录一段自己的声音，回放对比示范音。",
       model: {
         file: "108-1.mp3",
         voice: "女声",
@@ -428,7 +428,7 @@ window.CET4_MODULES.push({
         "我跟着示范音频读了一遍（示范里每类抽了 1–2 句）",
         "我把 8 类共 40 句都念过一遍",
         "我能不看文本说出至少 5 句",
-        "我把「没听懂时」的三句背下来了",
+        "我重点背下了第 ⑦ 类「没听懂时」的常用救命句（讲义共 5 句，至少熟背其中 3 句）",
         "我录了音并回放对比过自己的发音"
       ],
       passRatio: 0.8,
@@ -453,7 +453,7 @@ window.CET4_MODULES.push({
         },
         {
           q: "结束一段对话，可以说？",
-          options: ["Anyway, I'd better get going.", "What have you been up to?", "Would you mind…?", "I do apologize."],
+          options: ["Anyway, I'd better get going.", "What have you been up to?", "Would you mind…?", "I do apologise."],
           answer: 0,
           explain: "Anyway, I'd better get going. 是自然的收尾说法；What have you been up to? 是寒暄提问，不是告别。"
         },
